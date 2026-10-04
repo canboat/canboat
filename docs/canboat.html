@@ -1286,7 +1286,7 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Heave</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-2147483.647 .. 2147483.644</div></td><td>32 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Heave</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-2147483.648 .. 2147483.644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
@@ -1723,7 +1723,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Indicator Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Breaker Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Breaker Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
@@ -2004,7 +2004,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-TANK_TYPE">TANK_TYPE</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Fluid Flow Rate</td><td/><td>0.0001 <div class="xs">-838.8607 .. 838.8604</div></td><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Fluid Flow Rate</td><td/><td>0.0001 <div class="xs">-838.8608 .. 838.8604</div></td><td>24 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65287">0xFF07:
@@ -2282,7 +2282,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Data Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Rotational Rate</td><td/><td>0.25 <div class="xs">-8191.75 .. 8191</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Rotational Rate</td><td/><td>0.25 <div class="xs">-8192 .. 8191</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
@@ -3248,7 +3248,7 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>A</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>A</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65310">0xFF1E:
@@ -3327,7 +3327,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Signal Strength</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
@@ -3356,7 +3356,7 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Depth Quality</td><td>Depth signal quality ratio (0 = no bottom lock .. <sub/></td><td>0.01 <div class="xs">-1.27 .. 1.24</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Depth Quality</td><td>Depth signal quality ratio (0 = no bottom lock .. <sub/></td><td>0.01 <div class="xs">-1.28 .. 1.24</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
@@ -3693,7 +3693,7 @@ limitations under the License.
                       <a href="#lookup-SIMNET_ZC_FUNCTION">SIMNET_ZC_FUNCTION</a></td><td>true</td></tr><tr><td>6</td><td>Parameter</td><td>0 on observed encoder frames; meaning unknown</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Ticks</td><td>Encoder step; +1 left / -1 right on the ZC1/OP40</td><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Ticks</td><td>Encoder step; +1 left / -1 right on the ZC1/OP40</td><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Unknown</td><td>0x08 on every observed encoder frame</td><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -3928,13 +3928,13 @@ limitations under the License.
             8
             bytes long and contains 5 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Field X</td><td/><td>0.0001 <div class="xs">-3.2767 .. 3.2764</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Field X</td><td/><td>0.0001 <div class="xs">-3.2768 .. 3.2764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Field Y</td><td/><td>0.0001 <div class="xs">-3.2767 .. 3.2764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Field Y</td><td/><td>0.0001 <div class="xs">-3.2768 .. 3.2764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Field Z</td><td/><td>0.0001 <div class="xs">-3.2767 .. 3.2764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Field Z</td><td/><td>0.0001 <div class="xs">-3.2768 .. 3.2764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Marker</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -4283,7 +4283,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Internal Device Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Supply Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Supply Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
@@ -5502,7 +5502,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Response Setting</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Response Setting</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -6256,31 +6256,31 @@ limitations under the License.
                       <a href="#lookup-AIRMAR_CALIBRATE_STATUS">AIRMAR_CALIBRATE_STATUS</a></td><td/></tr><tr><td>7</td><td>Verify Score</td><td>TBD</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>X-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>X-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Y-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Y-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Z-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Z-axis gain value</td><td>default 100, range 50 to 500</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>X-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>X-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Y-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Y-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Z-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Z-axis linear offset</td><td/><td>0.01 <a href="#pq-MAGNETIC_FIELD">T</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>X-axis angular offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>X-axis angular offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pitch and Roll damping</td><td>default 30, range 0 to 200</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.35 .. 1638.2</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pitch and Roll damping</td><td>default 30, range 0 to 200</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.4 .. 1638.2</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>16</td><td>Compass/Rate gyro damping</td><td>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.35 .. 1638.2</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>16</td><td>Compass/Rate gyro damping</td><td>default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations</td><td>0.05 <a href="#pq-DURATION">s</a><div class="xs">-1638.4 .. 1638.2</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
@@ -7289,7 +7289,7 @@ limitations under the License.
                       <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -7321,7 +7321,7 @@ limitations under the License.
                       <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -7481,13 +7481,13 @@ limitations under the License.
                       <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -8123,13 +8123,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Off-Heading Limit</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Radius of Turn Order</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Radius of Turn Order</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Rate of Turn Order</td><td/><td>3.125e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-1.02396875 .. 1.023875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Rate of Turn Order</td><td/><td>3.125e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-1.024 .. 1.023875</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Off-Track Limit</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Off-Track Limit</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Vessel Heading</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
@@ -8213,7 +8213,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Rate</td><td/><td>3.125e-08 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-67.10886396875 .. 67.108863875</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Rate</td><td/><td>3.125e-08 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-67.108864 .. 67.108863875</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
@@ -8233,7 +8233,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Heave</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Heave</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>40 bits
@@ -8319,7 +8319,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Boost Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Tilt/Trim</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Tilt/Trim</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
@@ -8350,10 +8350,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alternator Potential</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alternator Potential</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Fuel Rate</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Fuel Rate</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Total Engine hours</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -8372,10 +8372,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookupbit-ENGINE_STATUS_1">ENGINE_STATUS_1</a></td><td/></tr><tr><td>12</td><td>Discrete Status 2</td><td/><td><div class="xs">0 .. 65535</div></td><td>16 bits
                   
                       bitfield
-                      <a href="#lookupbit-ENGINE_STATUS_2">ENGINE_STATUS_2</a></td><td/></tr><tr><td>13</td><td>Engine Load</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#lookupbit-ENGINE_STATUS_2">ENGINE_STATUS_2</a></td><td/></tr><tr><td>13</td><td>Engine Load</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Engine Torque</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Engine Torque</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127490">0x1F202:
@@ -8440,10 +8440,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Average Cell Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Max Discharge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Max Discharge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Max Charge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Max Charge Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Cooling System Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -8635,13 +8635,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-ENGINE_INSTANCE">ENGINE_INSTANCE</a></td><td>true</td></tr><tr><td>2</td><td>Trip Fuel Used</td><td/><td><a href="#pq-VOLUME">L</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Fuel Rate, Average</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Fuel Rate, Average</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Fuel Rate, Economy</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Fuel Rate, Economy</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instantaneous Fuel Economy</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instantaneous Fuel Economy</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127498">0x1F20A:
@@ -9046,7 +9046,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-TANK_TYPE">TANK_TYPE</a></td><td/></tr><tr><td>3</td><td>Level</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.068 .. 131.056</div></td><td>16 bits
+                      <a href="#lookup-TANK_TYPE">TANK_TYPE</a></td><td/></tr><tr><td>3</td><td>Level</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.072 .. 131.056</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 429496729.2</div></td><td>32 bits
@@ -9150,10 +9150,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -9339,14 +9339,14 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-BATTERY_CHEMISTRY">BATTERY_CHEMISTRY</a></td><td/></tr><tr><td>7</td><td>Capacity</td><td/><td><a href="#pq-ELECTRICAL_CHARGE">Ah</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Temperature Coefficient</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Temperature Coefficient</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Peukert Exponent</td><td/><td>0.002 <div class="xs">1 .. 1.5</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 1</div></td><td/></tr><tr><td>10</td><td>Charge Efficiency Factor</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 1</div></td><td/></tr><tr><td>10</td><td>Charge Efficiency Factor</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127514">0x1F21A:
@@ -9402,7 +9402,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC RMS Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127745">0x1F301:
@@ -9425,7 +9425,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC RMS Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127746">0x1F302:
@@ -9448,7 +9448,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC RMS Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127747">0x1F303:
@@ -9582,7 +9582,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>DC Current</td><td/><td>0.01 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-83886.07 .. 83886.04</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>DC Current</td><td/><td>0.01 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-83886.08 .. 83886.04</div></td><td>24 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -9620,13 +9620,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Longitudinal Acceleration</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Longitudinal Acceleration</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Transverse Acceleration</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Transverse Acceleration</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Vertical Acceleration</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Vertical Acceleration</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -9657,7 +9657,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Motor DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Motor DC Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Motor DC Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-128003">0x1F403:
@@ -9686,7 +9686,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Battery Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Battery Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Battery Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
@@ -9836,7 +9836,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Depth</td><td>Depth below transducer</td><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.92</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Offset</td><td>Distance between transducer and surface (positive) or keel (negative)</td><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Offset</td><td>Distance between transducer and surface (positive) or keel (negative)</td><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Range</td><td>Max measurement range</td><td>10 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 2520</div></td><td>8 bits
@@ -9905,7 +9905,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Bearing</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Course</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
@@ -9914,10 +9914,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>CPA</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>CPA</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>TCPA</td><td>negative = time elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>TCPA</td><td>negative = time elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.648 .. 2147483.644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>UTC of Fix</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
@@ -10018,7 +10018,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>28</td><td>Weight of Load Cell 4</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>29</td><td>Speed of Elevator Car</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>29</td><td>Speed of Elevator Car</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>30</td><td>Elevator Brake Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -10304,10 +10304,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.26</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td>2.777777777777778e-09 deg<div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td>2.777777777777778e-09 deg<div class="xs">-0.0233016888888889 .. 0.0233016777777778</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td>2.777777777777778e-09 deg<div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td>2.777777777777778e-09 deg<div class="xs">-0.0233016888888889 .. 0.0233016777777778</div></td><td>24 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129028">0x1F804:
@@ -10341,7 +10341,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>COG</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Altitude Delta</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-8388.607 .. 8388.604</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Altitude Delta</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-8388.608 .. 8388.604</div></td><td>24 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129029">0x1F805:
@@ -10396,13 +10396,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Number of SVs</td><td>Number of satellites used in solution</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>HDOP</td><td>Horizontal dilution of precision</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>HDOP</td><td>Horizontal dilution of precision</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>PDOP</td><td>Positional dilution of precision</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>PDOP</td><td>Positional dilution of precision</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Geoidal Separation</td><td>Geoidal Separation</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Geoidal Separation</td><td>Geoidal Separation</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Reference Stations</td><td>Number of reference stations</td><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -10436,7 +10436,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>2</td><td>Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>3</td><td>Local Offset</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">-1966020 .. 1965840</div></td><td>16 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>3</td><td>Local Offset</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">-1966080 .. 1965840</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-129038">0x1F80E:
@@ -10492,7 +10492,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>13</td><td>Heading</td><td>True heading</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Rate of Turn</td><td/><td>3.125e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-1.02396875 .. 1.023875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Rate of Turn</td><td/><td>3.125e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-1.024 .. 1.023875</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Nav Status</td><td/><td><div class="xs">0 .. 14</div></td><td>4 bits
@@ -10775,7 +10775,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delta Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Delta Altitude</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Delta Altitude</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reference Datum</td><td>defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth char is local datum subdivision code.</td><td> </td><td>32 bits
@@ -10794,13 +10794,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Delta X</td><td>Delta shift in X axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Delta X</td><td>Delta shift in X axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Delta Y</td><td>Delta shift in Y axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Delta Y</td><td>Delta shift in Y axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delta Z</td><td>Delta shift in Z axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delta Z</td><td>Delta shift in Z axis from WGS 84</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Rotation in X</td><td>Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the positive axis towards the origin, counter-clockwise rotations are positive.</td><td><a href="#pq-ANGLE">rad</a><div class="xs">-3.14159265358979 .. 3.14159265358979</div></td><td>32 bits
@@ -10815,7 +10815,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-FLOAT">FLOAT</a></td><td/></tr><tr><td>7</td><td>Scale</td><td/><td><a href="#pq-CONCENTRATION">ppm</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-FLOAT">FLOAT</a></td><td/></tr><tr><td>8</td><td>Ellipsoid Semi-major Axis</td><td>Semi-major axis (a) of the User Datum ellipsoid</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-FLOAT">FLOAT</a></td><td/></tr><tr><td>8</td><td>Ellipsoid Semi-major Axis</td><td>Semi-major axis (a) of the User Datum ellipsoid</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Ellipsoid Flattening Inverse</td><td>Flattening (1/f) of the User Datum ellipsoid</td><td><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
@@ -10847,7 +10847,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Navigation Terminated</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>5</td><td>XTE</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>5</td><td>XTE</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
@@ -10906,7 +10906,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Destination Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Waypoint Closing Velocity</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Waypoint Closing Velocity</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129285">0x1F905:
@@ -11012,7 +11012,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time to mark</td><td>negative = elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time to mark</td><td>negative = elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.648 .. 2147483.644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Mark Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -11081,13 +11081,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SV Elevation Mask</td><td>Will not use SV below this elevation</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.14159265358979 .. 3.14159265358979</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>PDOP Mask</td><td>Will not report position above this PDOP</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>PDOP Mask</td><td>Will not report position above this PDOP</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>PDOP Switch</td><td>Will report 2D position above this PDOP</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>PDOP Switch</td><td>Will report 2D position above this PDOP</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>SNR Mask</td><td>Will not use SV below this SNR</td><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>SNR Mask</td><td>Will not use SV below this SNR</td><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>GNSS Mode (desired)</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
@@ -11102,7 +11102,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>8</td><td>Max Correction Age</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>9</td><td>Antenna Altitude for 2D Mode</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>9</td><td>Antenna Altitude for 2D Mode</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Use Antenna Altitude for 2D Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -11134,13 +11134,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   
                       lookup
                       <a href="#lookup-GNSS_MODE">GNSS_MODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>HDOP</td><td>Horizontal dilution of precision</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>HDOP</td><td>Horizontal dilution of precision</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>VDOP</td><td>Vertical dilution of precision</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>VDOP</td><td>Vertical dilution of precision</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>TDOP</td><td>Time dilution of precision</td><td>0.01 <div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>TDOP</td><td>Time dilution of precision</td><td>0.01 <div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129540">0x1FA04:
@@ -11185,10 +11185,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Azimuth</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Range residuals</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83647 .. 21474.83644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Range residuals</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83648 .. 21474.83644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -11225,28 +11225,28 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Almanac Reference Time</td><td>'t oa' in table 20-VI in ICD-GPS-200</td><td>4096 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1032192</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Inclination Angle</td><td>'delta i' in table 20-VI in ICD-GPS-200</td><td>1.9073486328125e-06 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-0.0624980926513672 .. 0.0624923706054688</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Inclination Angle</td><td>'delta i' in table 20-VI in ICD-GPS-200</td><td>1.9073486328125e-06 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-0.0625 .. 0.0624923706054688</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Rate of Right Ascension</td><td>'OMEGADOT' in table 20-VI in ICD-GPS-200</td><td>3.637978807091713e-12 <a href="#pq-ANGULAR_VELOCITY">semi-circle/s</a><div class="xs">-1.19205651571974e-07 .. 1.19194737635553e-07</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Rate of Right Ascension</td><td>'OMEGADOT' in table 20-VI in ICD-GPS-200</td><td>3.637978807091713e-12 <a href="#pq-ANGULAR_VELOCITY">semi-circle/s</a><div class="xs">-1.19209289550781e-07 .. 1.19194737635553e-07</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Root of Semi-major Axis</td><td>'(A)^0.5' in table 20-VI in ICD-GPS-200</td><td>0.00048828125 <a href="#pq-SQUARE_ROOT_LENGTH">sqrt(m)</a><div class="xs">0 .. 8191.998046875</div></td><td>24 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Argument of Perigee</td><td>'(OMEGA)0' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-0.99999988079071 .. 0.999999523162842</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Argument of Perigee</td><td>'(OMEGA)0' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-1 .. 0.999999523162842</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Ascension Node</td><td>'small-omega' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-0.99999988079071 .. 0.999999523162842</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Ascension Node</td><td>'small-omega' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-1 .. 0.999999523162842</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Mean Anomaly</td><td>'M 0' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-0.99999988079071 .. 0.999999523162842</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Mean Anomaly</td><td>'M 0' in table 20-VI in ICD-GPS-200</td><td>1.1920928955078125e-07 <a href="#pq-ANGLE">semi-circle</a><div class="xs">-1 .. 0.999999523162842</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Clock Parameter 1</td><td>'a f0' in table 20-VI in ICD-GPS-200</td><td>9.5367431640625e-07 <a href="#pq-DURATION">s</a><div class="xs">-0.000975608825683594 .. 0.000972747802734375</div></td><td>11 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Clock Parameter 1</td><td>'a f0' in table 20-VI in ICD-GPS-200</td><td>9.5367431640625e-07 <a href="#pq-DURATION">s</a><div class="xs">-0.0009765625 .. 0.000972747802734375</div></td><td>11 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Clock Parameter 2</td><td>'a f1' in table 20-VI in ICD-GPS-200</td><td>3.637978807091713e-12 <a href="#pq-DIMENSIONLESS_RATIO">s/s</a><div class="xs">-3.72165231965482e-09 .. 3.71073838323355e-09</div></td><td>11 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Clock Parameter 2</td><td>'a f1' in table 20-VI in ICD-GPS-200</td><td>3.637978807091713e-12 <a href="#pq-DIMENSIONLESS_RATIO">s/s</a><div class="xs">-3.72529029846191e-09 .. 3.71073838323355e-09</div></td><td>11 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>2 bits
@@ -11313,25 +11313,25 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   
                       lookup
                       <a href="#lookup-GNS_INTEGRITY">GNS_INTEGRITY</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>6 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Latitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Latitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Altitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Altitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>SV ID of most likely failed sat</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Probability of missed detection</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Probability of missed detection</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Estimate of pseudorange bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Estimate of pseudorange bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Std Deviation of bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Std Deviation of bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129546">0x1FA0A:
@@ -11352,10 +11352,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Radial Position Error Maximum Threshold</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Probability of False Alarm</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Probability of False Alarm</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Probability of Missed Detection</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Probability of Missed Detection</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Pseudorange Residual Filtering Time Constant</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -11435,10 +11435,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Satellite ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>PRC</td><td/><td>0.0001 <a href="#pq-DISTANCE">m</a><div class="xs">-214748.3647 .. 214748.3644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>PRC</td><td/><td>0.0001 <a href="#pq-DISTANCE">m</a><div class="xs">-214748.3648 .. 214748.3644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>RRC</td><td/><td>0.0001 <a href="#pq-SPEED">m/s</a><div class="xs">-3.2767 .. 3.2764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>RRC</td><td/><td>0.0001 <a href="#pq-SPEED">m/s</a><div class="xs">-3.2768 .. 3.2764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>UDRE</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -11502,10 +11502,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Channel</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Signal Strength</td><td>Signal strength in dB relative to 1 uV/m</td><td>0.01 <a href="#pq-SIGNAL_STRENGTH">dB</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Signal Strength</td><td>Signal strength in dB relative to 1 uV/m</td><td>0.01 <a href="#pq-SIGNAL_STRENGTH">dB</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Signal SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Signal SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Frequency</td><td/><td>10 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 42949672920</div></td><td>32 bits
@@ -11950,7 +11950,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>13</td><td>Altitude</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>13</td><td>Altitude</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.48 .. 21474836.44</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reserved for Regional Applications</td><td/><td/><td>8 bits
@@ -12953,25 +12953,25 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
@@ -13011,25 +13011,25 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
@@ -13069,17 +13069,17 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Station identifier</td><td/><td> </td><td>8 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>3</td><td>Station SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>3</td><td>Station SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Station ECD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Station ECD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Station ASF</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Station ASF</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483648 .. 2.147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130060">0x1FC0C:
@@ -13300,7 +13300,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-WP_IDENTIFICATION_METHOD">WP_IDENTIFICATION_METHOD</a></td><td/></tr><tr><td>11</td><td>Route Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-WP_ROUTE_STATUS">WP_ROUTE_STATUS</a></td><td/></tr><tr><td>12</td><td>XTE Limit for the Route</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#lookup-WP_ROUTE_STATUS">WP_ROUTE_STATUS</a></td><td/></tr><tr><td>12</td><td>XTE Limit for the Route</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130067">0x1FC13:
@@ -13436,7 +13436,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>XTE Limit in the leg after WP</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>XTE Limit in the leg after WP</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Nav. Method in the leg after WP</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -13604,7 +13604,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Radius of Turn</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Radius of Turn</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130074">0x1FC1A:
@@ -13739,7 +13739,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td/></tr><tr><td>4</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.068 .. 131.056</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.072 .. 131.056</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Atmospheric Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
@@ -13800,10 +13800,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.068 .. 131.056</div></td><td>16 bits
+                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.072 .. 131.056</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Set Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.068 .. 131.056</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Set Humidity</td><td/><td>0.004 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-131.072 .. 131.056</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
@@ -13831,7 +13831,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
+                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.8 .. 214748364.4</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -13859,7 +13859,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
+                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.8 .. 214748364.4</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -13928,7 +13928,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Tide Level</td><td>Relative to MLLW</td><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Tide Level</td><td>Relative to MLLW</td><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Tide Level standard deviation</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -14132,7 +14132,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>Atmospheric Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pressure Tendency Rate</td><td/><td>10 <a href="#pq-PRESSURE_RATE">Pa/hr</a><div class="xs">-327670 .. 327640</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pressure Tendency Rate</td><td/><td>10 <a href="#pq-PRESSURE_RATE">Pa/hr</a><div class="xs">-327680 .. 327640</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Air Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -14197,10 +14197,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Upper Temperature Setpoint</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Lower Humidity Setpoint</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Lower Humidity Setpoint</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Upper Humidity Setpoint</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Upper Humidity Setpoint</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Auxiliary Heat Control Supported</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -14215,7 +14215,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>19</td><td>Current Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>20</td><td>Current Humidity</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>20</td><td>Current Humidity</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>21</td><td>Supported Modes</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -14233,7 +14233,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>25</td><td>Inlet Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>26</td><td>Inlet Humidity</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>26</td><td>Inlet Humidity</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130330">0x1FD1A:
@@ -14641,16 +14641,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Post-filter Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>19</td><td>Feed Pressure</td><td/><td>1000 <a href="#pq-PRESSURE">Pa</a><div class="xs">-32767000 .. 32764000</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>19</td><td>Feed Pressure</td><td/><td>1000 <a href="#pq-PRESSURE">Pa</a><div class="xs">-32768000 .. 32764000</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>20</td><td>System High Pressure</td><td/><td>1000 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 65532000</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>21</td><td>Product Water Flow</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>21</td><td>Product Water Flow</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>22</td><td>Brine Water Flow</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>22</td><td>Brine Water Flow</td><td/><td>0.1 <a href="#pq-VOLUMETRIC_FLOW">L/h</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>23</td><td>Run Time</td><td/><td><a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -15043,10 +15043,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 200 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Port trim tab</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Port trim tab</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Starboard trim tab</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Starboard trim tab</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>48 bits
@@ -15108,22 +15108,22 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 250 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Longitudinal Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Longitudinal Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Transverse Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Transverse Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Longitudinal Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Longitudinal Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Transverse Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Transverse Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Stern Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Stern Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Stern Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Stern Speed, Ground-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.768 .. 32.764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130579">0x1FE13:
@@ -15348,22 +15348,22 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE</a></td><td/></tr><tr><td>2</td><td>Volume limit</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Fade</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Fade</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Balance</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Balance</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Sub volume</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>EQ - Treble</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>EQ - Treble</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>EQ - Mid range</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>EQ - Mid range</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>EQ - Bass</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>EQ - Bass</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Preset type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -16247,7 +16247,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Operation Pressure</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Product Flow</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Product Flow</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Prefilter Pressure Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -16509,7 +16509,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>Motor Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -16561,7 +16561,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>Motor Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -16625,13 +16625,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Rotation smoothing</td><td/><td>0.1 <a href="#pq-DURATION">s</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Heading offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Heading offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Pitch offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Pitch offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Roll offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.7 .. 3276.4</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Roll offset</td><td/><td>0.1 <a href="#pq-ANGLE">deg</a><div class="xs">-3276.8 .. 3276.4</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>F8</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -16640,10 +16640,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>F9</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>SOG and COG smoothing</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>SOG and COG smoothing</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.648 .. 2147483.644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>11</td><td>3 Axis speed smoothing</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.644</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>11</td><td>3 Axis speed smoothing</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.648 .. 2147483.644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>12</td><td>FC</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -17961,7 +17961,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -18148,7 +18148,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -18256,13 +18256,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -19002,7 +19002,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -19036,7 +19036,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -20397,7 +20397,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Rudder Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.28318530717959</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -20458,7 +20458,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -20879,7 +20879,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Equipment Identification</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Antenna position X</td><td>Athwartship offset</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Antenna position X</td><td>Athwartship offset</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Antenna position Y</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
@@ -21091,10 +21091,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>G</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>H</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>H</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>I</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>I</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130836">0x1FF14:
@@ -21548,28 +21548,28 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Roll Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602728857 .. 37480.6602205258</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Roll Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602903389 .. 37480.6602205258</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Pitch Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602728857 .. 37480.6602205258</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Pitch Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602903389 .. 37480.6602205258</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Yaw Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602728857 .. 37480.6602205258</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Yaw Rate</td><td/><td>1.7453292519943296e-05 <a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-37480.6602903389 .. 37480.6602205258</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>I</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>I</td><td/><td><div class="xs">-32768 .. 32764</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130842">0x1FF1A:
@@ -21850,10 +21850,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Azimuth</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.14159265358979 .. 3.14159265358979</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">14<div>Set 1</div></td><td>SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">14<div>Set 1</div></td><td>SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">15<div>Set 1</div></td><td>Range residual</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83647 .. 21474.83644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">15<div>Set 1</div></td><td>Range residual</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83648 .. 21474.83644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">16<div>Set 1</div></td><td>Baseline status</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
@@ -22883,16 +22883,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>F</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -23017,13 +23017,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Frequency</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Real Power</td><td>W</td><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Real Power</td><td>W</td><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reactive Power</td><td>VAR</td><td><div class="xs">-2147483647 .. 2147483644</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reactive Power</td><td>VAR</td><td><div class="xs">-2147483648 .. 2147483644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Power Factor</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Power Factor</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-128 .. 124</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130910">0x1FF5E:

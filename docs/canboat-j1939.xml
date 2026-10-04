@@ -3864,7 +3864,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -3899,7 +3899,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
