@@ -326,6 +326,31 @@ fn pgn_unit_coverage_json() {
     );
 }
 
+/// J1939 temperatures: 1 deg C per bit from -40 deg C (raw 0 is -40 C,
+/// 233.15 K; raw 90 is 50 C) and 0.03125 deg C per bit from -273 deg C
+/// (raw 0 is 0.15 K), with the 8-bit sentinels at the top. In Metric and SI.
+#[test]
+fn j1939_temperature_json() {
+    for (expected, units) in [
+        ("j1939-temperature.out", "metric"),
+        ("j1939-temperature-si.out", "si"),
+    ] {
+        run_case(
+            "j1939-temperature.in",
+            expected,
+            &[
+                "--json",
+                "--units",
+                units,
+                "--protocol",
+                "j1939",
+                "--fixtime",
+                "2026-10-04T00:00:00.000Z",
+            ],
+        );
+    }
+}
+
 /// The units only J1939 uses, each with a real value, in Metric and SI:
 /// kg/h, cP, g/cm3, kWh, Hz, VAR, Cos Phi, W and VA with their offset, A,
 /// revolutions (r) and L/h.

@@ -209,7 +209,7 @@ struct FieldType
 
   // The following are only set for numbers
   const char *unit;       // String containing the 'Dimension' (e.g. s, h, m/s, etc.)
-  int32_t     offset;     // For numbers with excess-K offset
+  double      offset;     // For numbers with excess-K offset, in raw steps (may have a fraction)
   double      resolution; // A positive real value, or 1 for integral values
   Bool        hasSign;    // Is the value signed, e.g. has both positive and negative values?
 

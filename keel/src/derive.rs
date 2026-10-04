@@ -32,10 +32,29 @@ pub fn reserved_count_for_size(size: u32) -> u32 {
     }
 }
 
-pub fn get_min_range(size: u32, resolution: f64, sign: bool, offset: i32) -> f64 {
-    let highbit = if sign && offset == 0 { size - 1 } else { size };
-    if !sign || offset != 0 {
-        (offset as f64) * resolution
+/// The decimals `x` needs to be printed exactly (at most 9): 233.15 needs
+/// 2, -40.000000000000028 (233.15 - 273.15) none. A value printed with an
+/// offset that has a fraction needs at least as many decimals as that
+/// offset, in the units it is printed in, or 233.15 K prints as 233.
+pub fn decimals_in(x: f64) -> u8 {
+    let mut scaled = x.abs();
+    for p in 0..9u8 {
+        if (scaled - scaled.round()).abs() <= 1e-9 * scaled.max(1.0) {
+            return p;
+        }
+        scaled *= 10.0;
+    }
+    9
+}
+
+pub fn get_min_range(size: u32, resolution: f64, sign: bool, offset: f64) -> f64 {
+    let highbit = if sign && offset == 0.0 {
+        size - 1
+    } else {
+        size
+    };
+    if !sign || offset != 0.0 {
+        offset * resolution
     } else {
         // The full negative end: NMEA 2000 reserves its sentinels at the
         // top of the range only (DF84, an int16 at 0.004%, is -131.072%
@@ -48,19 +67,25 @@ pub fn get_max_range(
     size: u32,
     resolution: f64,
     sign: bool,
-    offset: i32,
+    offset: f64,
     lookup: Option<&crate::model::Lookup>,
     specialvalues: u32,
 ) -> f64 {
-    let highbit = if sign && offset == 0 { size - 1 } else { size };
+    let highbit = if sign && offset == 0.0 {
+        size - 1
+    } else {
+        size
+    };
     let mut max_value: i128 = if highbit >= 64 {
         u64::MAX as i128
     } else {
         (1i128 << highbit) - 1
     } - specialvalues as i128;
-    if offset != 0 {
-        max_value += offset as i128;
-    }
+    // A whole offset joins the integer maximum; one with a fraction (J1939's
+    // -40 C is 233.15 K) is added as a float, in one step, so 250 raw reads
+    // 483.15 rather than 483 plus the fraction's rounding error.
+    let whole_offset = if offset.fract() == 0.0 { offset } else { 0.0 };
+    max_value += whole_offset as i128;
     if let Some(lk) = lookup
         && lk.kind == "pair"
         && !lk.pairs.is_empty()
@@ -69,7 +94,7 @@ pub fn get_max_range(
         let named_max = lk.pairs.iter().map(|(v, _)| *v as i128).max().unwrap();
         max_value = max_value.max(named_max);
     }
-    (max_value as f64) * resolution
+    (max_value as f64 + (offset - whole_offset)) * resolution
 }
 
 /// Field types (by ROOT name) whose pgn.h field macros set no resolution;
@@ -265,14 +290,22 @@ fn fill_pgn_list(db: &mut Database, protocol: Protocol) -> Result<(), String> {
 
             // offset: lives only on the fieldtype - the C aborts on any
             // field-level offset differing from the type (fieldtype.c:384)
-            let mut offset = f.offset.unwrap_or(0);
-            if ft.offset != 0 && offset == 0 {
+            let mut offset = f.offset.unwrap_or(0.0);
+            if ft.offset != 0.0 && offset == 0.0 {
                 offset = ft.offset;
             }
             if ft.offset != offset {
                 return Err(format!(
                     "PGN {} field '{}': cannot overrule offset of '{}'",
                     pgn.pgn, f.name, ft.name
+                ));
+            }
+            // The fraction of an offset is added after the sign is read, so a
+            // signed field's offset, read in Excess-K notation, must be whole.
+            if offset.fract() != 0.0 && ft.has_sign == Some(true) {
+                return Err(format!(
+                    "PGN {} field '{}': offset {offset} of a signed field must be a whole number",
+                    pgn.pgn, f.name
                 ));
             }
             f.res_offset = offset;
@@ -337,7 +370,7 @@ fn fill_pgn_list(db: &mut Database, protocol: Protocol) -> Result<(), String> {
                 // off (Peukert Exponent's 1.0..1.5 is raw 0..250 plus 500),
                 // as in fieldtype.c.
                 let raw_range_max =
-                    (f.res_range_max / f.res_resolution - f.res_offset as f64 + 0.5) as u64;
+                    (f.res_range_max / f.res_resolution - f.res_offset + 0.5) as u64;
                 f.reserved_count = if raw_range_max >= raw_max {
                     0
                 } else {
@@ -496,17 +529,37 @@ mod tests {
     /// -131.072% to 131.056% (raw -32768 to 32764).
     #[test]
     fn a_signed_range_reaches_the_full_negative_end() {
-        assert_eq!(get_min_range(8, 1.0, true, 0), -128.0);
-        assert_eq!(get_min_range(16, 0.004, true, 0), -131.072);
-        assert_eq!(get_min_range(64, 1.0, true, 0), -(2f64.powi(63)));
-        assert_eq!(get_max_range(16, 0.004, true, 0, None, 3), 131.056);
+        assert_eq!(get_min_range(8, 1.0, true, 0.0), -128.0);
+        assert_eq!(get_min_range(16, 0.004, true, 0.0), -131.072);
+        assert_eq!(get_min_range(64, 1.0, true, 0.0), -(2f64.powi(63)));
+        assert_eq!(get_max_range(16, 0.004, true, 0.0, None, 3), 131.056);
     }
 
     /// Unsigned, or signed with an offset (which reads as unsigned): the
     /// minimum is the offset.
     #[test]
     fn an_unsigned_range_starts_at_its_offset() {
-        assert_eq!(get_min_range(16, 1.0, false, 0), 0.0);
-        assert_eq!(get_min_range(8, 1.0, true, -40), -40.0);
+        assert_eq!(get_min_range(16, 1.0, false, 0.0), 0.0);
+        assert_eq!(get_min_range(8, 1.0, true, -40.0), -40.0);
+    }
+
+    /// J1939's 8-bit temperature: 1 deg C per bit from -40 deg C is 1 K per
+    /// bit from 233.15 K, and its top three values are sentinels.
+    #[test]
+    fn an_offset_can_have_a_fraction() {
+        assert_eq!(get_min_range(8, 1.0, false, 233.15), 233.15);
+        assert_eq!(get_max_range(8, 1.0, false, 233.15, None, 3), 485.15);
+        // 0.15 K at 0.03125 K per bit: 4.8 steps.
+        assert_eq!(get_min_range(16, 0.03125, false, 4.8), 0.15);
+        assert_eq!(get_max_range(16, 0.03125, false, 4.8, None, 3), 2048.025);
+    }
+
+    #[test]
+    fn decimals_in_a_value() {
+        assert_eq!(decimals_in(233.15), 2);
+        assert_eq!(decimals_in(233.15 - 273.15), 0);
+        assert_eq!(decimals_in(-62.5), 1);
+        assert_eq!(decimals_in(0.15 - 273.15), 0);
+        assert_eq!(decimals_in(0.0), 0);
     }
 }

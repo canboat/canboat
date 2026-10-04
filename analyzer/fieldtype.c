@@ -49,14 +49,14 @@ static bool isPhysicalQuantityListed(const PhysicalQuantity *pq)
   return false;
 }
 
-static double getMinRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
+static double getMinRange(const char *name, uint32_t size, double resolution, bool sign, double offset)
 {
   uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
   double   r;
 
   if (!sign || offset != 0)
   {
-    r = (double) offset * resolution;
+    r = offset * resolution;
   }
   else
   {
@@ -66,7 +66,7 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
     // -2^highbit, in a double: 2^63 does not fit an int64_t.
     r = -ldexp(resolution, (int) highbit);
   }
-  logDebug("%s bits=%u sign=%u res=%g offset=%d -> rangeMin %g\n", name, highbit, sign, resolution, offset, r);
+  logDebug("%s bits=%u sign=%u res=%g offset=%g -> rangeMin %g\n", name, highbit, sign, resolution, offset, r);
   return r;
 }
 
@@ -108,6 +108,25 @@ extern int decimalsForResolution(double resolution)
   return precision;
 }
 
+/*
+ * The decimals x needs to be printed exactly (at most 9): 233.15 needs 2, -40.000000000000028
+ * (233.15 - 273.15) none. Mirrors decimals_in in keel.
+ */
+static int decimalsIn(double x)
+{
+  double scaled = fabs(x);
+
+  for (int p = 0; p < 9; p++)
+  {
+    if (fabs(scaled - round(scaled)) <= 1e-9 * fmax(scaled, 1.0))
+    {
+      return p;
+    }
+    scaled *= 10.0;
+  }
+  return 9;
+}
+
 extern const char *sentinelsName(Sentinels s)
 {
   switch (s)
@@ -126,13 +145,8 @@ extern const char *sentinelsName(Sentinels s)
   }
 }
 
-static double getMaxRange(const char *name,
-                          uint32_t    size,
-                          double      resolution,
-                          bool        sign,
-                          int32_t     offset,
-                          LookupInfo *lookup,
-                          uint8_t     specialvalues)
+static double
+getMaxRange(const char *name, uint32_t size, double resolution, bool sign, double offset, LookupInfo *lookup, uint8_t specialvalues)
 {
   uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
@@ -141,15 +155,17 @@ static double getMaxRange(const char *name,
   // highbit == 64 for a full-width 64-bit field; shifting a 64-bit value by 64
   // is undefined, so clamp to UINT64_MAX (== (1 << 64) - 1) in that case.
   maxValue = (highbit >= 64 ? UINT64_MAX : (UINT64_C(1) << highbit) - 1) - specialvalues;
-  if (offset != 0)
+  // A whole offset joins the integer maximum; one with a fraction (J1939's
+  // -40 C is 233.15 K) is added as a double, in one step, as keel does.
+  double wholeOffset = (offset == trunc(offset)) ? offset : 0.0;
+  if (wholeOffset != 0.0)
   {
-    maxValue += offset;
+    maxValue += (int64_t) wholeOffset;
   }
 
-
-  r = maxValue * resolution;
+  r = ((double) maxValue + (offset - wholeOffset)) * resolution;
   logDebug(
-      "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%d -> rangeMax %g\n", name, highbit, sign, maxValue, resolution, offset, r);
+      "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%g -> rangeMax %g\n", name, highbit, sign, maxValue, resolution, offset, r);
   return r;
 }
 
@@ -182,6 +198,7 @@ static const struct
 static void scaleUnit(Field *f, double mul, double div, const char *unit)
 {
   f->resolution = f->resolution * mul / div;
+  f->unitOffset = f->unitOffset * mul / div;
   f->rangeMin   = f->rangeMin * mul / div;
   f->rangeMax   = f->rangeMax * mul / div;
   f->unit       = unit;
@@ -241,7 +258,7 @@ void fixupUnit(Field *f)
     }
     else if (strcmp(f->unit, "K") == 0 && !f->hasSign)
     {
-      f->unitOffset = -273.15;
+      f->unitOffset += -273.15;
       f->rangeMin += -273.15;
       f->rangeMax += -275.15;
       f->unit = "C";
@@ -434,13 +451,13 @@ extern void fillFieldType(bool doUnitFixup)
             "Cannot overrule size %d in '%s' with %d in PGN %u field '%s'\n", ft->size, ft->name, f->size, pgnList[i].pgn, f->name);
       }
 
-      if (ft->offset != 0 && f->offset == 0)
+      if (ft->offset != 0.0 && f->offset == 0.0)
       {
         f->offset = ft->offset;
       }
       if (ft->offset != f->offset)
       {
-        logAbort("Cannot overrule offset %d in '%s' with %d in PGN %u field '%s'\n",
+        logAbort("Cannot overrule offset %g in '%s' with %g in PGN %u field '%s'\n",
                  ft->offset,
                  ft->name,
                  f->offset,
@@ -469,6 +486,9 @@ extern void fillFieldType(bool doUnitFixup)
         f->rangeMin = ft->rangeMin;
         f->rangeMax = ft->rangeMax;
       }
+      // The whole steps of an offset are added to the raw value; its
+      // fraction is added after scaling, along with any unit conversion.
+      f->unitOffset = (f->offset - trunc(f->offset)) * f->resolution;
       if (doUnitFixup && f->unit != NULL && f->resolution != 0.0)
       {
         fixupUnit(f);
@@ -476,6 +496,17 @@ extern void fillFieldType(bool doUnitFixup)
       if (f->precision == 0)
       {
         f->precision = decimalsForResolution(f->resolution);
+      }
+      // An offset with a fraction needs its decimals too, in the printed
+      // unit: 233.15 K needs 2, but -40 C (233.15 - 273.15) none.
+      if (f->offset != trunc(f->offset))
+      {
+        int d = decimalsIn(trunc(f->offset) * f->resolution + f->unitOffset);
+
+        if (d > f->precision)
+        {
+          f->precision = d;
+        }
       }
       if (f->hasMatchValue)
       {
@@ -499,8 +530,9 @@ extern void fillFieldType(bool doUnitFixup)
       // SPECIAL_VALUES() override wins. Otherwise the count is the gap between the raw bit-width
       // maximum and the field's raw rangeMax, capped at the width-derived count. The raw rangeMax
       // is the bit pattern that decodes to rangeMax: rangeMax already includes the field's offset
-      // (Peukert Exponent's 1.0..1.5 is raw 0..250 plus 500) and, in Metric, the unit offset (K to
-      // C), so both come off. This makes it
+      // (Peukert Exponent's 1.0..1.5 is raw 0..250 plus 500) and the unit offset (K to C in Metric,
+      // and the fraction of an offset such as J1939's 233.15 K), so both come off: the offset's whole
+      // steps, and the unit offset. This makes it
       // follow a rangeMax that was pulled up: a field spanning its full UNSIGNED width reserves
       // none (the "all values valid" idiom), and a LOOKUP whose enumeration names values in the
       // sentinel region (getMaxRange raised its rangeMax for them) reserves only the sentinels left
@@ -516,7 +548,7 @@ extern void fillFieldType(bool doUnitFixup)
       else if (f->size != 0 && f->size < 64 && f->resolution > 0.0 && !isnan(f->rangeMax))
       {
         uint64_t rawMax      = (UINT64_C(1) << f->size) - 1;
-        double   rawRangeMax = (f->rangeMax - f->unitOffset) / f->resolution - f->offset + 0.5;
+        double   rawRangeMax = (f->rangeMax - f->unitOffset) / f->resolution - trunc(f->offset) + 0.5;
 
         if (rawRangeMax >= (double) rawMax)
         {

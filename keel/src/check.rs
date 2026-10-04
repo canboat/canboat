@@ -161,7 +161,7 @@ fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>)
             ));
         }
         if f.resolution.unwrap_or(1.0) != 1.0
-            || f.offset.unwrap_or(0) != 0
+            || f.offset.unwrap_or(0.0) != 0.0
             || f.unit.is_some()
             || f.lookup_ref().is_some()
             || f.match_.is_some()
@@ -175,7 +175,7 @@ fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>)
         }
         // The bits are joined as they are: a sign or an offset would have to
         // apply to the whole value, which neither decoder does.
-        if db.fieldtypes[low.ft].has_sign == Some(true) || low.res_offset != 0 {
+        if db.fieldtypes[low.ft].has_sign == Some(true) || low.res_offset != 0.0 {
             err(format!(
                 "field '{target}' is continued, so it must be unsigned and have no offset"
             ));
@@ -193,7 +193,7 @@ fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>)
 const MAX_SPN: u32 = 0x7FFFF;
 
 /// How a field decodes its SPN: bits, resolution, raw offset, unit.
-type SpnScaling = (u32, f64, i32, Option<String>);
+type SpnScaling = (u32, f64, f64, Option<String>);
 
 // R42: spn: only on J1939 fields, within 19 bits, and decoded alike by every
 // field that carries the same SPN.

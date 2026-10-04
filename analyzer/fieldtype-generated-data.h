@@ -466,15 +466,17 @@ FieldType fieldTypeList[] = {
 
     {.name = "TEMPERATURE_UINT8_OFFSET",
      .description = "Temperature",
+     .encodingDescription = "SAE J1939's 8-bit temperature encoding: 1 deg C per bit from -40 deg C, which is 1 K per bit from 233.15 K.",
      .baseFieldType = "UINT8",
-     .offset = 233,
+     .offset = 233.15,
      .resolution = 1.0,
      .physical = &TEMPERATURE},
 
     {.name = "TEMPERATURE_UFIX16_J1939",
      .description = "Temperature, J1939 16 bit",
-     .encodingDescription = "SAE J1939's 16-bit temperature encoding: 0.03125 deg C per bit from -273 deg C, which is 0.03125 K per bit from 0.15 K. Read as 0.03125 K per bit from 0 K: the 0.15 K is dropped, as TEMPERATURE_UINT8_OFFSET drops it from its -40 deg C.",
+     .encodingDescription = "SAE J1939's 16-bit temperature encoding: 0.03125 deg C per bit from -273 deg C, which is 0.03125 K per bit from 0.15 K. The offset is 4.8 steps of 0.03125 K.",
      .baseFieldType = "UFIX16",
+     .offset = 4.8,
      .resolution = 0.03125,
      .physical = &TEMPERATURE},
 

@@ -1484,6 +1484,29 @@ mod tests {
         assert_eq!(frame.data.as_slice(), &[0x14, 0xf0, 0x01]);
     }
 
+    /// J1939 temperatures are exact: -40 C is raw 0 of an 8-bit field, 1 K
+    /// per bit from 233.15 K, and 100 C is raw 11936 of a 16-bit one,
+    /// 0.03125 K per bit from 0.15 K. In SI and in Metric.
+    #[test]
+    fn j1939_temperatures_encode_exactly() {
+        use crate::engine::Units;
+        for (units, coolant, fuel, oil) in [
+            (Units::Si, 323.15, 233.15, 373.15),
+            (Units::Metric, 50.0, -40.0, 100.0),
+        ] {
+            let db = PgnDatabase::embedded_j1939(units);
+            let mut b = db.encode_by_pgn(65262).unwrap();
+            b.push_by_name("Engine Coolant Temp", coolant)
+                .unwrap()
+                .push_by_name("Engine Fuel Temp 1", fuel)
+                .unwrap()
+                .push_by_name("Engine Oil Temp 1", oil)
+                .unwrap();
+            let frame = b.build().unwrap();
+            assert_eq!(&frame.data[..4], &[90, 0, 0xa0, 0x2e], "{units:?}");
+        }
+    }
+
     /// A J1939 DM1 trouble code's SPN is split around the FMI (J1939-73).
     /// Setting the one `spn` field writes both halves; decoding joins them
     /// and names the SPN, and the high-bits field stays out of the output.

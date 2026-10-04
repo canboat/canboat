@@ -283,7 +283,7 @@ pub fn emit_fieldtype_data_h(authored: &[FieldType]) -> String {
         if let Some(v) = &ft.unit {
             parts.push(format!(".unit = {}", c_str(v)));
         }
-        if ft.offset != 0 {
+        if ft.offset != 0.0 {
             parts.push(format!(".offset = {}", ft.offset));
         }
         if ft.resolution != 0.0 {
