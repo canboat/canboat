@@ -24,8 +24,8 @@ scatter of CANboat utilities:
 | `format-message` | build one frame from `FIELD=VALUE` pairs, for any PGN |
 | `replay`, `n2kd` | pace a capture at wall-clock rhythm; multiplex analyzer JSON to TCP clients |
 
-Pre-built binaries for Linux (static musl, x86_64 / aarch64 / armv7), macOS
-and Windows are on the
+Pre-built binaries for Linux (static musl, x86_64 / aarch64 / armv7 / armv6),
+macOS and Windows (x86_64 / aarch64) are on the
 [releases page](https://github.com/canboat/canboat/releases).
 
 ## The library
