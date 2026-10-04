@@ -526,6 +526,23 @@ static bool extractNumberNotEmpty(const Field   *field,
     return false;
   }
 
+  /* Below the field's rangeMin, a value is out of range (#983): a latitude of
+   * -111 deg is not a position. Only a signed field without an offset can get
+   * there: an unsigned one starts at its offset, which is its rangeMin. Since a
+   * signed field's derived rangeMin is the full negative end of its bits, this
+   * only catches a range the database states narrower than the bits. The raw
+   * threshold is rounded the way the encoder rounds its range check. */
+  if (field != NULL && field->hasSign && field->offset == 0 && field->resolution > 0.0 && isfinite(field->rangeMin))
+  {
+    double range_min_raw = (field->rangeMin - field->unitOffset) / field->resolution;
+
+    if (range_min_raw > -0x1p63 && *value < llround(range_min_raw))
+    {
+      printEmpty(fieldName, DATAFIELD_OUT_OF_RANGE);
+      return false;
+    }
+  }
+
   return true;
 }
 

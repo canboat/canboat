@@ -115,6 +115,25 @@ fn range_max_sentinel(f: &FieldInfo, ex: Extracted, bits: u32) -> Option<FieldVa
     })
 }
 
+/// A signed field's value below its `RangeMin` is out of range (#983):
+/// a latitude of -111 degrees is not a position. A signed field's derived
+/// `RangeMin` is the full negative end of its bits, so this only catches
+/// a range the database states narrower than the bits (latitude,
+/// longitude, angles of +/-pi, ...). The raw threshold is rounded the way
+/// the encoder rounds its range check, so the two agree on the edge.
+/// Mirrors the C `extractNumberNotEmpty`.
+fn range_min_out_of_range(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
+    let range_min = f.range_min?;
+    let resolution = f.resolution.unwrap_or(1.0);
+    if resolution <= 0.0 || !range_min.is_finite() {
+        return None;
+    }
+    let display_offset = f.offset.map(|o| o as f64).unwrap_or(0.0);
+    let raw_min = ((range_min - display_offset - f.unit_offset) / resolution).round();
+    (raw_min > i64::MIN as f64 && ex.value < raw_min as i64)
+        .then_some(FieldValue::OutOfRange { value: ex.raw })
+}
+
 /// One decoded field.
 ///
 /// Schema metadata (`id`, `name`, `order`, `unit`, `resolution`,
@@ -1453,6 +1472,10 @@ fn decode_number(
     if !effective_signed && let Some(sent) = range_max_sentinel(f, ex, bit_length) {
         return sent;
     }
+    // Signed only: an unsigned field starts at its offset, its RangeMin.
+    if effective_signed && let Some(sent) = range_min_out_of_range(f, ex) {
+        return sent;
+    }
     let resolution = f.resolution.unwrap_or(1.0);
     let unit = f.unit;
     if resolution == 1.0
@@ -2489,6 +2512,61 @@ mod tests {
             matches!(unknown, Some(FieldValue::NotAvailable)),
             "{unknown:?}"
         );
+    }
+
+    /// Below RangeMin is out of range (#983); at it, or at an int16's full
+    /// negative end, is a reading.
+    #[test]
+    fn a_value_below_range_min_is_out_of_range() {
+        let decode = |pgn: u32, hex: &str| {
+            let data: smallvec::SmallVec<[u8; 8]> = hex
+                .split(',')
+                .map(|h| u8::from_str_radix(h, 16).unwrap())
+                .collect();
+            let frame = RawFrame {
+                timestamp: None,
+                prio: 3,
+                pgn,
+                src: 1,
+                dst: 255,
+                data,
+            };
+            db().decode(&frame).expect("decode")
+        };
+        let value = |d: &DecodedPgn, name: &str| d.field_by_name(name).map(|f| f.value.clone());
+        // An AtoN at raw 0xbd555556: latitude -111.8 deg, below -90.
+        let aton = decode(
+            129041,
+            "ff,30,86,27,3b,56,55,55,bd,56,55,55,bd,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,fe,ff,ff,02,01",
+        );
+        assert!(matches!(
+            value(&aton, "Latitude"),
+            Some(FieldValue::OutOfRange { value: 0xbd55_5556 })
+        ));
+        assert!(matches!(
+            value(&aton, "Longitude"),
+            Some(FieldValue::Number(_))
+        ));
+        // Yaw 0x8000 and pitch one step below -pi; roll at -pi.
+        let attitude = decode(127257, "01,00,80,47,85,48,85,ff");
+        assert!(matches!(
+            value(&attitude, "Yaw"),
+            Some(FieldValue::OutOfRange { .. })
+        ));
+        assert!(matches!(
+            value(&attitude, "Pitch"),
+            Some(FieldValue::OutOfRange { .. })
+        ));
+        assert!(matches!(
+            value(&attitude, "Roll"),
+            Some(FieldValue::Number(_))
+        ));
+        // -3276.8 A: an int16's full negative end is a reading.
+        let battery = decode(127508, "00,e2,04,00,80,ff,ff,ff");
+        match value(&battery, "Current") {
+            Some(FieldValue::Number(a)) => assert!((a + 3276.8).abs() < 1e-9, "{a}"),
+            other => panic!("expected a current, got {other:?}"),
+        }
     }
 
     #[test]

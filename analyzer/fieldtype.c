@@ -249,6 +249,12 @@ void fixupUnit(Field *f)
     }
     else if (strcmp(f->unit, "rad") == 0)
     {
+      // A signed angle stops at -pi, as in SI (and in keel, which converts the
+      // clamped SI range): -187.7 deg is not an angle.
+      if (f->hasSign)
+      {
+        f->rangeMin = max(f->rangeMin, -Pi);
+      }
       f->resolution *= RadianToDegree;
       f->rangeMin *= RadianToDegree;
       f->rangeMax *= RadianToDegree;
@@ -586,6 +592,11 @@ extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t 
   {
     fixupUnit(f);
   }
+  // No range to check below: the value is read at whatever width its key's
+  // length gives, not the field type's, so the field type's rangeMin does not
+  // apply. Set after fixupUnit, which would clamp a NaN to -pi. (Left at zero,
+  // every negative reading would be out of range.)
+  f->rangeMin = nan("");
   if (f->precision == 0)
   {
     f->precision = decimalsForResolution(f->resolution);

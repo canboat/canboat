@@ -240,6 +240,23 @@ fn pgn_decimal_json() {
     );
 }
 
+/// Below RangeMin (#983, test35 in analyzer/tests/Makefile): a latitude
+/// below -90 deg and angles below -pi are out of range, a reading at the
+/// edge or at an int16's full negative end is not. In Metric and SI.
+#[test]
+fn pgn_below_range_min_json() {
+    run_case(
+        "pgn-below-range-min.in",
+        "pgn-below-range-min.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "pgn-below-range-min.in",
+        "pgn-below-range-min-si.out",
+        &["--json", "--fixtime", "pgn-test", "--units", "si"],
+    );
+}
+
 /// A real value for every unit the database uses, static and dynamic, in
 /// Metric and SI (test31 in analyzer/tests/Makefile).
 #[test]
