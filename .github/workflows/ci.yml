@@ -161,5 +161,8 @@ jobs:
         run: |
           cd "$(cygpath -u "$GITHUB_WORKSPACE")"
           ls -l rel/*/
+          cygcheck rel/*/analyzer.exe || true
+          ldd rel/*/analyzer.exe || true
           rel/*/analyzer -version || echo "analyzer -version exited $?"
+          mv rel/*/cygwin1.dll /tmp/ && { rel/*/analyzer -version || echo "without the copied cygwin1.dll: exited $?"; mv /tmp/cygwin1.dll rel/*/; }
           make tests || { tail -n 20 /tmp/*.err; exit 1; }
