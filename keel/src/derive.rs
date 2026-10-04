@@ -333,7 +333,11 @@ fn fill_pgn_list(db: &mut Database, protocol: Protocol) -> Result<(), String> {
                 && !f.res_range_max.is_nan()
             {
                 let raw_max: u64 = (1u64 << f.value_bits()) - 1;
-                let raw_range_max = (f.res_range_max / f.res_resolution + 0.5) as u64;
+                // The raw value that decodes to rangeMax: the offset comes
+                // off (Peukert Exponent's 1.0..1.5 is raw 0..250 plus 500),
+                // as in fieldtype.c.
+                let raw_range_max =
+                    (f.res_range_max / f.res_resolution - f.res_offset as f64 + 0.5) as u64;
                 f.reserved_count = if raw_range_max >= raw_max {
                     0
                 } else {

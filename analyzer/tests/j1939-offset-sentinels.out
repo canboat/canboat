@@ -1,0 +1,3 @@
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65262,"description":"Engine Temp #1","fields":{"Engine Coolant Temp":85,"Engine Fuel Temp 1":40}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65262,"description":"Engine Temp #1","fields":{"Engine Coolant Temp":212}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65262,"description":"Engine Temp #1"}

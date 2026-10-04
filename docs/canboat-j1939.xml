@@ -7868,6 +7868,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -7885,6 +7888,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -7902,6 +7908,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -7919,6 +7928,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -7936,6 +7948,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -9064,6 +9079,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -9081,6 +9099,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -9136,6 +9157,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
@@ -9513,6 +9537,9 @@ limitations under the License.
           <Offset>233</Offset>
           <RangeMin>233</RangeMin>
           <RangeMax>485</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>

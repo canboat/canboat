@@ -274,6 +274,42 @@ fn pgn_below_range_min_json() {
     );
 }
 
+/// Sentinels in a field with an offset (#984, test33 in
+/// analyzer/tests/Makefile): 127513 Peukert Exponent 0xfd, 0xfe and 0xff
+/// have no value, while 1.25 and the top value 1.5 decode.
+#[test]
+fn pgn_offset_sentinels_json() {
+    run_case(
+        "pgn-offset-sentinels.in",
+        "pgn-offset-sentinels.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
+/// The same for J1939 Excess-K temperatures (#984, test34 in
+/// analyzer/tests/Makefile), in Metric and SI.
+#[test]
+fn j1939_offset_sentinels_json() {
+    run_case(
+        "j1939-offset-sentinels.in",
+        "j1939-offset-sentinels.out",
+        &["--json", "--protocol", "j1939", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "j1939-offset-sentinels.in",
+        "j1939-offset-sentinels-si.out",
+        &[
+            "--json",
+            "--units",
+            "si",
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "pgn-test",
+        ],
+    );
+}
+
 /// A real value for every unit the database uses, static and dynamic, in
 /// Metric and SI (test31 in analyzer/tests/Makefile).
 #[test]

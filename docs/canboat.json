@@ -37636,6 +37636,9 @@
             "Offset":1,
             "RangeMin":1,
             "RangeMax":1.5,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER"
           },
           {

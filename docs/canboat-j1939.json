@@ -7862,6 +7862,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -7879,6 +7882,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -7896,6 +7902,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -7913,6 +7922,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -7930,6 +7942,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -9052,6 +9067,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -9069,6 +9087,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -9124,6 +9145,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
@@ -9497,6 +9521,9 @@
             "Offset":233,
             "RangeMin":233,
             "RangeMax":485,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"TEMPERATURE"
           },
