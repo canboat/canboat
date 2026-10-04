@@ -52,21 +52,21 @@ static bool isPhysicalQuantityListed(const PhysicalQuantity *pq)
 static double getMinRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset)
 {
   uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
-  int64_t  minValue;
   double   r;
 
   if (!sign || offset != 0)
   {
-    minValue = INT64_C(0) + offset;
-    r        = minValue * resolution;
+    r = (double) offset * resolution;
   }
   else
   {
-    minValue = (UINT64_C(1) << highbit) - 1;
-    r        = minValue * resolution * -1.0;
+    // The full negative end: NMEA 2000 reserves its sentinels at the top
+    // of the range only (DF84, an int16 at 0.004%, is -131.072% to
+    // 131.056%: raw -32768 to 32764).
+    // -2^highbit, in a double: 2^63 does not fit an int64_t.
+    r = -ldexp(resolution, (int) highbit);
   }
-  logDebug(
-      "%s bits=%llu sign=%u minValue=%lld res=%g offset=%d -> rangeMin %g\n", name, highbit, sign, minValue, resolution, offset, r);
+  logDebug("%s bits=%u sign=%u res=%g offset=%d -> rangeMin %g\n", name, highbit, sign, resolution, offset, r);
   return r;
 }
 
