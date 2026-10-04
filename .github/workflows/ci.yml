@@ -156,5 +156,10 @@ jobs:
       - name: make
         run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"
 
+      # The tests send stderr to /tmp/*.err; show it when one fails.
       - name: make tests
-        run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")" tests
+        run: |
+          cd "$(cygpath -u "$GITHUB_WORKSPACE")"
+          ls -l rel/*/
+          rel/*/analyzer -version || echo "analyzer -version exited $?"
+          make tests || { tail -n 20 /tmp/*.err; exit 1; }
