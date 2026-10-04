@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test35 tests
 
 all:	tests
 
@@ -315,7 +315,25 @@ test32:
 	diff $(TEMPDIR)/pgn-decimal.out pgn-decimal.out
 	diff $(TEMPDIR)/pgn-decimal.err pgn-decimal.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32
+#
+# Below RangeMin (#983): an AtoN at raw 0xbd555556 has latitude -111.8 deg,
+# below -90, so no latitude (its longitude, -111.8, is valid); the same AtoN
+# at a real position; Attitude with yaw raw 0x8000 and pitch one step below
+# -pi, both out of range, next to roll at exactly -pi; and Battery Status
+# Current raw 0x8000, -3276.8 A, the full negative end of an int16 and so a
+# reading. In Metric and SI.
+#
+test35:
+	$(ANALYZER) -json < pgn-below-range-min.in > $(TEMPDIR)/pgn-below-range-min.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-below-range-min.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-below-range-min.out
+	diff $(TEMPDIR)/pgn-below-range-min.out pgn-below-range-min.out
+	diff $(TEMPDIR)/pgn-below-range-min.err pgn-below-range-min.err
+	$(ANALYZER) -json -si < pgn-below-range-min.in > $(TEMPDIR)/pgn-below-range-min-si.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-below-range-min-si.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-below-range-min-si.out
+	diff $(TEMPDIR)/pgn-below-range-min-si.out pgn-below-range-min-si.out
+	diff $(TEMPDIR)/pgn-below-range-min-si.err pgn-below-range-min.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test35
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so
