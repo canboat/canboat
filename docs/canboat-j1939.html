@@ -523,10 +523,11 @@ limitations under the License.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2</td><td>
-                    SPN 5862</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 5862</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI</td><td>
                     SPN 5863</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>43 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64740">0xFCE4:
@@ -551,10 +552,11 @@ limitations under the License.
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Fuel Relative Dielectricity</td><td>
                     SPN 5539</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Fuel Temperature 2</td><td>
-                    SPN 5540</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 5540</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-64751">0xFCEF:
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr></table><h3 id="pgn-64751">0xFCEF:
             PGN 64751
             - Engine Fluid Level/Pressure 11</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -607,10 +609,11 @@ limitations under the License.
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Oil Relative Dielectricity</td><td>
                     SPN 5468, 1/8192 per bit</td><td>0.0001220703125 <div class="xs">0 .. 7.99951171875</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Oil Temperature 3</td><td>
-                    SPN 5925</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 5925</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-64777">0xFD09:
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr></table><h3 id="pgn-64777">0xFD09:
             PGN 64777
             - Fuel Consumption (Liquid)</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -649,14 +652,16 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature</td><td>
-                    SPN 4765</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 4765</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature</td><td>
-                    SPN 4766</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature</td><td>
+                    SPN 4766</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure</td><td>
                     SPN 4767, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
@@ -762,14 +767,16 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Exhaust Gas Temperature 2</td><td>
-                    SPN 3249</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 3249</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature</td><td>
-                    SPN 3250</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature</td><td>
+                    SPN 3250</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Particulate Filter Differential Pressure</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Particulate Filter Differential Pressure</td><td>
                     SPN 3251, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
@@ -796,10 +803,11 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Outlet Gas Temperature 2</td><td>
-                    SPN 3245</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 3245</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Outlet Gas Pressure 2</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Outlet Gas Pressure 2</td><td>
                     SPN 3246, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
@@ -825,10 +833,11 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Intake Gas Temperature 2</td><td>
-                    SPN 3241</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 3241</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Intake Gas Pressure 2</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Intake Gas Pressure 2</td><td>
                     SPN 3242, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
@@ -1523,22 +1532,26 @@ limitations under the License.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Exhaust Manifold Bank 2 Temperature 1</td><td>
-                    SPN 2433</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 2433</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Exhaust Manifold Bank 1 Temperature 1</td><td>
-                    SPN 2434</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Engine Exhaust Manifold Bank 1 Temperature 1</td><td>
+                    SPN 2434</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Manifold Bank 2 Temperature 2</td><td>
-                    SPN 5969</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>3</td><td>Engine Exhaust Manifold Bank 2 Temperature 2</td><td>
+                    SPN 5969</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Exhaust Manifold Bank 1 Temperature 2</td><td>
-                    SPN 5970</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>4</td><td>Engine Exhaust Manifold Bank 1 Temperature 2</td><td>
+                    SPN 5970</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65130">0xFE6A:
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr></table><h3 id="pgn-65130">0xFE6A:
             PGN 65130
             - Engine Fuel/Lube Systems</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -1606,23 +1619,26 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Oil Temperature 2</td><td>
-                    SPN 1135</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 1135</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine ECU Temperature</td><td>
-                    SPN 1136</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>2</td><td>Engine ECU Temperature</td><td>
+                    SPN 1136</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 1 Differential Pressure</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 1 Differential Pressure</td><td>
                     SPN 411, 1/128 kPa per bit with a -250 kPa offset</td><td>7.8125 <a href="#pq-PRESSURE">Pa</a><div class="xs">-250000 .. 261968.75</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
                           stored with <a href="#offset">offset</a> -250000</div></td><td/></tr><tr><td>4</td><td>Engine Exhaust Gas Recirculation 1 Temperature</td><td>
-                    SPN 412</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 412</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65189">0xFEA5:
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr></table><h3 id="pgn-65189">0xFEA5:
             PGN 65189
             - Intake Manifold Information 2</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -1638,31 +1654,31 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Intake Manifold 2 Temperature</td><td>
-                    SPN 1131</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                    SPN 1131</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>2</td><td>Engine Intake Manifold 3 Temperature</td><td>
-                    SPN 1132</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>2</td><td>Engine Intake Manifold 3 Temperature</td><td>
+                    SPN 1132</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>3</td><td>Engine Intake Manifold 4 Temperature</td><td>
-                    SPN 1133</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>3</td><td>Engine Intake Manifold 4 Temperature</td><td>
+                    SPN 1133</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>4</td><td>Engine Intake Manifold 5 Temperature</td><td>
-                    SPN 1802</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>4</td><td>Engine Intake Manifold 5 Temperature</td><td>
+                    SPN 1802</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>5</td><td>Engine Intake Manifold 6 Temperature</td><td>
-                    SPN 1803</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>5</td><td>Engine Intake Manifold 6 Temperature</td><td>
+                    SPN 1803</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65190">0xFEA6:
             PGN 65190
             - Intake Manifold Information 1</h3><p/><p>
@@ -1989,29 +2005,31 @@ limitations under the License.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Coolant Temp</td><td>
-                    SPN 110</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                    SPN 110</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>2</td><td>Engine Fuel Temp 1</td><td>
-                    SPN 174</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>2</td><td>Engine Fuel Temp 1</td><td>
+                    SPN 174</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>3</td><td>Engine Oil Temp 1</td><td>
-                    SPN 175</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Turbocharger Oil Temp</td><td>
-                    SPN 176</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine Intercooler Temp</td><td>
-                    SPN 52</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>3</td><td>Engine Oil Temp 1</td><td>
+                    SPN 175</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>6</td><td>Engine Intercooler Thermostat Opening</td><td>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>4</td><td>Engine Turbocharger Oil Temp</td><td>
+                    SPN 176</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>5</td><td>Engine Intercooler Temp</td><td>
+                    SPN 52</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>6</td><td>Engine Intercooler Thermostat Opening</td><td>
                     SPN 1134</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
                         unsigned
@@ -2130,11 +2148,11 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Intake Manifold Temp</td><td>
-                    SPN 105</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                    SPN 105</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233.15 .. 485.15</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>4</td><td>Air Inlet Pressure</td><td>
+                          stored with <a href="#offset">offset</a> 233.15</div></td><td/></tr><tr><td>4</td><td>Air Inlet Pressure</td><td>
                     SPN 106</td><td>2000 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 504000</div></td><td>8 bits
                   
                         unsigned
@@ -2143,10 +2161,11 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Exhaust Gas Temperature</td><td>
-                    SPN 173</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 173</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Coolant Filter Differential Pressure</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>7</td><td>Coolant Filter Differential Pressure</td><td>
                     SPN 112, 0.5 kPa per bit</td><td>500 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 126000</div></td><td>8 bits
                   
                         unsigned
@@ -2194,10 +2213,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Transmission 1 Oil Pressure</td><td>
                     SPN 127, 16 kPa per bit</td><td>16000 Pa<div class="xs">0 .. 4032000</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Transmission 1 Oil Temperature 1</td><td>
-                    SPN 177</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 177</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transmission Oil Level 1 High / Low</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>6</td><td>Transmission Oil Level 1 High / Low</td><td>
                     SPN 3027, 0.5 litre per bit with a -62.5 litre offset</td><td>0.5 <a href="#pq-VOLUME">L</a><div class="xs">-62.5 .. 63.5</div></td><td>8 bits
                   
                         unsigned
@@ -2238,10 +2258,11 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Cargo Ambient Temperature</td><td>
-                    SPN 169</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
+                    SPN 169</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0.15 .. 2048.025</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Fuel Level 2</td><td>
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> 0.15</div></td><td/></tr><tr><td>6</td><td>Fuel Level 2</td><td>
                     SPN 38</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
                         unsigned

@@ -253,6 +253,12 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
     if v.precision == 0 {
         v.precision = decimals_for(v.resolution);
     }
+    // An offset with a fraction needs its decimals too, in this view's
+    // units: 233.15 K needs 2, but -40 C (233.15 - 273.15) none.
+    if f.offset_exact.fract() != 0.0 {
+        let offset = v.offset.unwrap_or(0) as f64 + v.unit_offset;
+        v.precision = v.precision.max(crate::derive::decimals_in(offset));
+    }
     v
 }
 
@@ -1055,7 +1061,7 @@ fn sentinels(
     // being reported unavailable. The C never had the problem because it
     // recomputes the bound from the bit width at decode time. So: no width
     // guard here.
-    let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
+    let highbit = if ft.has_sign == Some(true) && f.res_offset == 0.0 {
         f.value_bits() - 1
     } else {
         f.value_bits()
@@ -1105,8 +1111,8 @@ fn raw_field(
         // units (PEUKERT_EXPONENT is 500) but the published Offset is in the
         // field's own units (500 * 0.002 = 1), and the decoder adds it after
         // scaling. Passing the raw value made Peukert read 500.002.
-        offset: Some((f.res_offset as f64 * f.res_resolution) as i64).filter(|o| *o != 0),
-        offset_exact: f.res_offset as f64 * f.res_resolution,
+        offset: Some((f.res_offset * f.res_resolution) as i64).filter(|o| *o != 0),
+        offset_exact: f.res_offset * f.res_resolution,
         // Ranges follow emit_xml exactly, including its two special cases:
         // a non-match lookup field with a NaN range still reports 0 ..
         // 2^bits-1 (QUIRKS Q16), and an unsigned 64-bit resolution-1 field
@@ -1122,7 +1128,7 @@ fn raw_field(
             if f.res_resolution == 1.0
                 && f.res_bits == 64
                 && ft.has_sign == Some(false)
-                && f.res_offset == 0
+                && f.res_offset == 0.0
             {
                 Some(u64::MAX as f64)
             } else {

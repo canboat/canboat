@@ -132,15 +132,16 @@ fn explain_field(db: &Database, f: &Field, out: &mut String) {
             "false"
         }
     ));
-    if f.res_offset != 0 {
-        if f.res_resolution == 1.0 || f.res_resolution == 0.0 {
-            out.push_str(&format!("                  Offset: {}\n", f.res_offset));
+    if f.res_offset != 0.0 {
+        let o = if f.res_resolution == 0.0 {
+            f.res_offset
         } else {
-            out.push_str(&format!(
-                "                  Offset: {}\n",
-                (f.res_offset as f64 * f.res_resolution) as i64
-            ));
-        }
+            f.res_offset * f.res_resolution
+        };
+        out.push_str(&format!(
+            "                  Offset: {}\n",
+            crate::cformat::c_15g(o)
+        ));
     }
     if f.primary_key {
         out.push_str("                  Part Of Primary Key: true\n");

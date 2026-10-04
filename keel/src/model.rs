@@ -45,7 +45,7 @@ pub struct FieldType {
     pub variable_size: bool,
     pub base: Option<String>,
     pub unit: Option<String>,
-    pub offset: i32,
+    pub offset: f64,
     pub resolution: f64,
     pub has_sign: Option<bool>,
     pub sentinels: String, // "None" | "TopOfRange" | "NaN" | "EmptyString" | "Variable"
@@ -98,7 +98,7 @@ pub struct Field {
     pub bits: Option<u32>,
     pub resolution: Option<f64>,
     pub unit: Option<String>,
-    pub offset: Option<i32>,
+    pub offset: Option<f64>,
     pub description: Option<String>,
     /// SAE J1939 Suspect Parameter Number: the identifier J1939-71 gives
     /// this value, independent of the PGN that carries it. J1939 tree only.
@@ -147,7 +147,7 @@ pub struct Field {
     pub res_bits: u32,
     pub res_resolution: f64,
     pub res_unit: Option<String>,
-    pub res_offset: i32,
+    pub res_offset: f64,
     pub res_range_min: f64,
     pub res_range_max: f64,
     pub reserved_count: u32,

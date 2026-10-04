@@ -82,6 +82,22 @@ impl<'a> Emitter<'a> {
         c_15g(v)
     }
 
+    /// An offset of `offset` raw steps, in the field's own units. A
+    /// fraction is kept (J1939's -62.5 L and 233.15 K), which
+    /// canboat.xsd's xs:decimal allows.
+    fn offset_text(&self, offset: f64, resolution: f64) -> String {
+        let o = if resolution == 0.0 {
+            offset
+        } else {
+            offset * resolution
+        };
+        if o.fract() == 0.0 {
+            format!("{}", o as i64)
+        } else {
+            self.g15(o)
+        }
+    }
+
     /// Resolution only: `%g` style at whatever digit count round-trips (Q6).
     fn gres(&self, v: f64) -> String {
         c_g_roundtrip(v)
@@ -182,15 +198,9 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             if ft.size != 0 {
                 self.p(&format!("      <Bits>{}</Bits>\n", ft.size));
             }
-            if ft.offset != 0 {
-                if ft.resolution == 1.0 || ft.resolution == 0.0 {
-                    self.p(&format!("      <Offset>{}</Offset>\n", ft.offset));
-                } else {
-                    self.p(&format!(
-                        "      <Offset>{}</Offset>\n",
-                        (ft.offset as f64 * ft.resolution) as i64
-                    ));
-                }
+            if ft.offset != 0.0 {
+                let o = self.offset_text(ft.offset, ft.resolution);
+                self.p(&format!("      <Offset>{o}</Offset>\n"));
             }
             if ft.variable_size {
                 self.p("      <VariableSize>true</VariableSize>\n");
@@ -536,20 +546,9 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
                 if s { "true" } else { "false" }
             ));
         }
-        if f.res_offset != 0 {
-            if f.res_resolution == 1.0 || f.res_resolution == 0.0 {
-                self.p(&format!("          <Offset>{}</Offset>\n", f.res_offset));
-            } else {
-                // In the field's own units; a fraction is kept (J1939's
-                // -62.5 L), which canboat.xsd's xs:decimal allows.
-                let o = f.res_offset as f64 * f.res_resolution;
-                if o.fract() == 0.0 {
-                    self.p(&format!("          <Offset>{}</Offset>\n", o as i64));
-                } else {
-                    let o = self.g15(o);
-                    self.p(&format!("          <Offset>{o}</Offset>\n"));
-                }
-            }
+        if f.res_offset != 0.0 {
+            let o = self.offset_text(f.res_offset, f.res_resolution);
+            self.p(&format!("          <Offset>{o}</Offset>\n"));
         }
 
         if f.dynamic_field_length && f.dynamic_field_length_overhead != 0 {
@@ -572,7 +571,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             if f.res_resolution == 1.0
                 && f.res_bits == 64
                 && ft.has_sign == Some(false)
-                && f.res_offset == 0
+                && f.res_offset == 0.0
             {
                 self.p(&format!("          <RangeMax>{}</RangeMax>\n", u64::MAX));
             } else {
@@ -590,7 +589,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             && !is_match
             && ft.root_sentinels == "TopOfRange"
         {
-            let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
+            let highbit = if ft.has_sign == Some(true) && f.res_offset == 0.0 {
                 f.value_bits() - 1
             } else {
                 f.value_bits()
