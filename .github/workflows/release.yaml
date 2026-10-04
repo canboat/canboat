@@ -233,6 +233,65 @@ jobs:
             canboat-rust-linux-armv7l
             keel-linux-armv7l
 
+  # ARMv6 (Raspberry Pi Zero and 1), Rust only: the canboat binary and keel,
+  # static musl, linked by rust-lld against the musl Rust ships. The names
+  # follow `uname -m` there (armv6l), as keel/keel expects.
+  armv6:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RUST_TARGET: arm-unknown-linux-musleabihf
+      CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABIHF_LINKER: rust-lld
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build canboat and keel (Rust, static musl)
+        run: |
+          rustup target add "${RUST_TARGET}"
+          cargo build --release -p canboat --target "${RUST_TARGET}"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${RUST_TARGET}"
+          cp "target/${RUST_TARGET}/release/canboat" canboat-rust-linux-armv6l
+          cp "target/${RUST_TARGET}/release/keel" keel-linux-armv6l
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-rust-linux-armv6l
+            keel-linux-armv6l
+
+  # Windows on ARM, Rust only: native MSVC builds on the arm64 runner.
+  windows-aarch64:
+    runs-on: windows-11-arm
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # The arm64 image does not come with Rust installed.
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build canboat and keel (Rust, MSVC)
+        shell: pwsh
+        run: |
+          cargo build --release -p canboat
+          cargo build --release --manifest-path keel/Cargo.toml
+          Copy-Item target/release/canboat.exe canboat-rust-windows-aarch64.exe
+          Copy-Item target/release/keel.exe keel-windows-aarch64.exe
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-rust-windows-aarch64.exe
+            keel-windows-aarch64.exe
+
   windows:
     runs-on: windows-latest
     permissions:

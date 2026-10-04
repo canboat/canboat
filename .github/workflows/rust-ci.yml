@@ -16,9 +16,13 @@
 # fixtures come from this checkout for the same reason.
 #
 # Jobs:
-#   - test:       build + full test suite on Linux / macOS / Windows. The Linux
-#                 leg also brings up a vcan interface so the SocketCAN device
-#                 tests exercise a real socket.
+#   - test:       build + full test suite on Linux / macOS / Windows, and on
+#                 Windows on ARM. The Linux leg also brings up a vcan
+#                 interface so the SocketCAN device tests exercise a real
+#                 socket.
+#   - armv6:      static musl cross-build for 32-bit ARMv6 (Raspberry Pi Zero
+#                 and 1), with the full test suite run under qemu as an
+#                 ARM1176.
 #   - msrv:       cargo check at the workspace's declared rust-version.
 #   - wasm:       the sans-I/O library features (decode, json-input, node)
 #                 build for wasm32-unknown-unknown, which canboat-wasm needs.
@@ -62,7 +66,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest, windows-11-arm]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -123,6 +127,52 @@ jobs:
       # the toolchain explicitly and wins over the file.
       - name: Check
         run: rustup run ${{ steps.msrv.outputs.version }} cargo check --workspace --all-targets --locked
+
+  # ARMv6 with VFPv2: the Raspberry Pi Zero and 1, which the armv7 build does
+  # not run on. Static musl like the other linux builds, linked by rust-lld
+  # against the musl Rust ships, so no cross toolchain is needed. The tests
+  # run under qemu-user as an ARM1176 (the Pi Zero's core): QEMU_CPU reaches
+  # the binaries the golden tests spawn through binfmt too. This is also the
+  # only 32-bit run of the test suite.
+  armv6:
+    name: Rust armv6 (qemu)
+    runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABIHF_LINKER: rust-lld
+      CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABIHF_RUNNER: qemu-arm-static
+      QEMU_CPU: arm1176
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Rust stable with the armv6 target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: arm-unknown-linux-musleabihf
+
+      - name: Install qemu-user
+        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --workspace --locked --target arm-unknown-linux-musleabihf
+
+      - name: The binaries are static ARMv6
+        run: |
+          for bin in canboat keel; do
+            f="target/arm-unknown-linux-musleabihf/debug/$bin"
+            file "$f"
+            file "$f" | grep -q "statically linked" || { echo "::error::$bin is not static"; exit 1; }
+            readelf -A "$f" | grep -Eq "Tag_CPU_arch: v6(KZ)?$" || { echo "::error::$bin is not ARMv6"; exit 1; }
+          done
+
+      - name: Test (golden fixtures required)
+        run: cargo test --workspace --locked --target arm-unknown-linux-musleabihf
+        env:
+          CANBOAT_DIR: ${{ github.workspace }}
+          CANBOAT_GOLDEN: required
 
   # canboat-wasm builds the `decode` (engine + `codec`) and `json-input`
   # features for the browser. Checked here rather than by building that repo,
