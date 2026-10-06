@@ -91,11 +91,12 @@ pub fn iso_ack_frame(src: u8, dst: u8, control: u8, pgn: u32) -> RawFrame {
 }
 
 /// PGN 126993 Heartbeat. `interval_ms` is the transmit interval this node
-/// advertises (field resolution 0.01 s); `seq` is the wrapping sequence
-/// counter (0..=252). Controller/equipment status bytes mirror a healthy
+/// advertises (the field counts milliseconds, up to 65.534 s; 0xFFFF
+/// means "do not change"); `seq` is the wrapping sequence counter
+/// (0..=252). Controller/equipment status bytes mirror a healthy
 /// node (Error-Active / not-available / Operational).
 pub fn heartbeat_frame(src: u8, seq: u8, interval_ms: u64) -> RawFrame {
-    let offset = (interval_ms / 10) as u16;
+    let offset = interval_ms.min(0xFFFE) as u16;
     let data = [
         offset as u8,
         (offset >> 8) as u8,
@@ -158,5 +159,19 @@ mod tests {
         assert_eq!(f.pgn, PGN_ISO_ACK);
         assert_eq!(f.data[0], 1); // NAK
         assert_eq!(&f.data[5..8], &[0x14, 0xf0, 0x01]); // 126996 LE
+    }
+
+    #[test]
+    fn heartbeat_advertises_its_interval_in_milliseconds() {
+        // The field is DURATION_UFIX16_MS: a 60 s heartbeat is 60000 (0xEA60),
+        // as the Furuno sample in database/pgns/126993-heartbeat.yaml carries.
+        let db = PgnDatabase::embedded(Units::Si);
+        let frame = heartbeat_frame(7, 155, 60_000);
+        assert_eq!(&frame.data[..2], &[0x60, 0xea]);
+        let decoded = db.decode(&frame).unwrap();
+        let offset = decoded.field_by_name("Data transmit offset").unwrap();
+        assert_eq!(offset.value.as_f64(), Some(60.0));
+        // Longer than the field can say saturates below "do not change".
+        assert_eq!(&heartbeat_frame(7, 0, 3_600_000).data[..2], &[0xfe, 0xff]);
     }
 }
