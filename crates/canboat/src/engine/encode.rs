@@ -537,6 +537,14 @@ impl PgnBuilder {
                 continue;
             }
             let f = &self.pgn.fields[idx];
+            // A conditional field (the manufacturer header a group function
+            // carries only for a proprietary PGN) is skipped by decode, so
+            // leave it out unless the caller set it: writing its default
+            // shifts every later field.
+            if f.condition.is_some() && self.staged[idx].is_none() {
+                idx += 1;
+                continue;
+            }
             // A declared count field left unset takes the number of
             // staged instances for its set (0 when none were added — a
             // zero-iteration message, not "unavailable").
@@ -2282,5 +2290,28 @@ mod tests {
             crate::engine::FieldValue::Number(x) => assert_eq!(*x, 0.0),
             other => panic!("count: expected a number, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn unset_conditional_fields_are_not_written() {
+        // A 126208 Write Fields for PGN 127508 (not proprietary): decode
+        // skips the proprietary-only Manufacturer Code / Industry Code
+        // header, so encode must too, or every later field shifts by two
+        // bytes. Captured as 05 14f201 00 01 01 [01 01] 66 [01 05].
+        let wire = [
+            0x05, 0x14, 0xf2, 0x01, 0x00, 0x01, 0x01, 0x01, 0x66, 0x01, 0x05,
+        ];
+        let db = db();
+        let mut b = db.encode("nmeaWriteFieldsGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127508)).unwrap();
+        b.push_by_name("Unique ID", 0i64).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "selectionParameter", Raw(1)).unwrap();
+        b.push_in_set(1, i, "selectionValue", Raw(0x66)).unwrap();
+        let i = b.add_set_instance(2).unwrap();
+        b.push_in_set(2, i, "parameter", Raw(1)).unwrap();
+        b.push_in_set(2, i, "value", Raw(5)).unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        assert_eq!(frame.data.as_slice(), &wire);
     }
 }
