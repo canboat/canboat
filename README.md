@@ -285,13 +285,32 @@ this repository in v8 and is the `canboat-*` crates described above.)
 
 ### Other projects using the CANboat PGN definitions
 
-- [go-nmea-client](https://github.com/aldas/go-nmea-client) — Go
-- [korri-n2k](https://github.com/fard-draf/korri-n2k) — NMEA 2000 stack for embedded Rust targets
-- [n2k](https://github.com/mbj4668/n2k) — Erlang
-- [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) — Windows GUI
-- [nmea2000](https://github.com/tomer-w/nmea2000) — pure Python NMEA 2000 decoder and encoder library
-- [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) — expose NMEA 2000 PGNs as Home Assistant devices and entities
-- [Smart Boat Innovations Home Assistant integrations](https://github.com/SmartBoatInnovations) — [ha-smart2000usb](https://github.com/SmartBoatInnovations/ha-smart2000usb) and [ha-smart2000esp](https://github.com/SmartBoatInnovations/ha-smart2000esp) bring NMEA 2000 into Home Assistant over USB-CAN or an ESP32; their decoders are generated from CANboat v5.0.3
+> **Snapshot of early October 2026.** The CANboat version each project uses and
+> when it was last updated were taken from GitHub on 7 October 2026 and will
+> drift. The current CANboat release is v8.3.0. The survey behind this table,
+> with more projects, is in [research/downstream-survey-2026-10.md](research/downstream-survey-2026-10.md).
+> Maintain one of these, or another project built on CANboat?
+> [Open an issue](https://github.com/canboat/canboat/issues/new?template=release-notifications.yml)
+> to correct your entry or to be notified of new major and minor releases.
+
+| Project | What it is | Uses CANboat as | CANboat version | Project last updated |
+|---|---|---|---|---|
+| [AvNav](https://github.com/wellenvogel/avnav) | Chart plotter | NMEA 2000 data from the `n2kd` server | binaries | 2026-10 |
+| [boatkit n2k](https://github.com/boatkit-io/n2k) | Go NMEA 2000 library | Go types generated from canboat.json at a pinned release | v8.1.0 | 2026-10 |
+| [CanLab](https://github.com/Sherin-SEF-AI/CanLab) | CAN, J1939 and NMEA 2000 analysis workbench (Python) | PGN table built from canboat.json | v8.2.1 | 2026-09 |
+| [canboat_vendor](https://github.com/robotic-esp/canboat_vendor) | ROS 2 package | builds the CANboat tools | 2026-08 (pre-v8.0.0-beta3) | 2026-08 |
+| [go-nmea-client](https://github.com/aldas/go-nmea-client) | Go NMEA 2000 library | canboat.json loaded at runtime | whichever file is supplied | 2023-07 |
+| [korri-n2k](https://github.com/fard-draf/korri-n2k) | NMEA 2000 stack for embedded Rust | code generated from canboat.json | v7.1.0 | 2026-09 |
+| [maritime-dissector](https://github.com/fkie-cad/maritime-dissector) | Wireshark dissectors for maritime protocols | NMEA 2000 dissector generated from canboat.json | latest, at generation time | 2026-03 |
+| [n2k](https://github.com/mbj4668/n2k) | Erlang NMEA 2000 library | vendored CANboat definitions | v4.12.0 | 2026-04 |
+| [nmea2000](https://github.com/tomer-w/nmea2000) | Python NMEA 2000 decoder and encoder | vendored canboat.json, synced weekly | v8.1.0 | 2026-10 |
+| [nmea2000 Home Assistant integration](https://github.com/tomer-w/ha-nmea2000) | NMEA 2000 PGNs as Home Assistant devices and entities | through nmea2000 | v8.1.0 | 2026-10 |
+| [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) | Windows GUI | canboat.json downloaded from master at runtime | latest | 2026-07 |
+| [nmea2000-rs](https://github.com/herostrat/nmea2000-rs) | Rust NMEA 2000 decoder and encoder | code generated from canboat.json at build time | v6.1.3 | 2026-02 |
+| [open-ships n2k](https://github.com/open-ships/n2k) | Go NMEA 2000 library and bus node | decoders generated from a vendored canboat.json | v7.1.0 | 2026-09 |
+| [pgntui](https://github.com/phobicdotno/pgntui) | Terminal UI for NMEA 2000 (Python) | vendored canboat.json | v6.2.0 | 2026-06 |
+| [signalk-server-go](https://github.com/wdantuma/signalk-server-go) | Signal K server in Go | decodes NMEA 2000 with a vendored canboat.xml | v6.2.2 | 2026-09 |
+| [Smart Boat Innovations integrations](https://github.com/SmartBoatInnovations) | [ha-smart2000usb](https://github.com/SmartBoatInnovations/ha-smart2000usb) and [ha-smart2000esp](https://github.com/SmartBoatInnovations/ha-smart2000esp): NMEA 2000 into Home Assistant over USB-CAN or an ESP32 | decoders generated from canboat.json | v5.0.3 | 2026-04 |
 
 ### For non-technical sailors
 
