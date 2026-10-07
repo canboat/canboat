@@ -22,8 +22,8 @@ use crate::engine::format::InputFormat;
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
-    ActisenseN2kReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
-    PlainWriter, TextLineWriter, analyze, container, copy,
+    BstD0Reader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter,
+    TextLineWriter, analyze, container, copy,
 };
 
 /// Output format for `convert --to`.
@@ -99,10 +99,11 @@ enum FromFormat {
     /// EBL frame reader, so it has no [`InputFormat`] mapping.
     #[value(name = "actisense-ebl")]
     ActisenseEbl,
-    /// Actisense binary N2K messages (BST `0xD0`), as a W2K-1 sends them
-    /// in its Actisense data mode. Binary too, with its own frame reader.
-    #[value(name = "actisense-n2k")]
-    ActisenseN2k,
+    /// Actisense BST-D0: reassembled NMEA 2000 messages in BDTP framing,
+    /// as a W2K-1 or PRO-NDC-1E2K sends them in Actisense mode. Binary
+    /// too, with its own frame reader.
+    #[value(name = "bst-d0", alias = "actisense-n2k")]
+    BstD0,
 }
 
 impl FromFormat {
@@ -120,7 +121,7 @@ impl FromFormat {
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
-            FromFormat::ActisenseEbl | FromFormat::ActisenseN2k | FromFormat::Json => return None,
+            FromFormat::ActisenseEbl | FromFormat::BstD0 | FromFormat::Json => return None,
         })
     }
 }
@@ -138,7 +139,7 @@ Input line formats (auto-detected from the first line, or forced with --from):
 
 Binary input formats (forced with --from; a .ebl file is recognised by name):
   actisense-ebl  Actisense .ebl binary log
-  actisense-n2k  Actisense N2K messages (BST 0xD0): a W2K-1 in Actisense mode
+  bst-d0         Actisense BST-D0 messages: a W2K-1 or PRO-NDC-1E2K in Actisense mode
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)
@@ -319,15 +320,15 @@ pub fn run(args: Args) -> Result<()> {
 enum Binary {
     /// An Actisense `.ebl` binary log.
     Ebl,
-    /// Actisense BST `0xD0` N2K messages.
-    ActisenseN2k,
+    /// Actisense BST-D0 messages.
+    BstD0,
 }
 
 impl Binary {
     fn reader<R: io::Read + 'static>(self, source: R) -> Box<dyn FrameReader> {
         match self {
             Binary::Ebl => Box::new(EblReader::new(source)),
-            Binary::ActisenseN2k => Box::new(ActisenseN2kReader::new(source)),
+            Binary::BstD0 => Box::new(BstD0Reader::new(source)),
         }
     }
 }
@@ -337,7 +338,7 @@ impl Binary {
 fn binary_input(args: &Args) -> Option<Binary> {
     match args.from {
         Some(FromFormat::ActisenseEbl) => Some(Binary::Ebl),
-        Some(FromFormat::ActisenseN2k) => Some(Binary::ActisenseN2k),
+        Some(FromFormat::BstD0) => Some(Binary::BstD0),
         Some(_) => None,
         None => args
             .input()

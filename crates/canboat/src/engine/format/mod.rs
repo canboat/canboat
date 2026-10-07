@@ -8,8 +8,8 @@
 //! when the user forces it with `--format`.
 
 pub mod actisense_ascii;
-pub mod actisense_n2k;
 pub mod airmar;
+pub mod bst_d0;
 pub mod candump;
 pub mod chetco;
 pub mod common;

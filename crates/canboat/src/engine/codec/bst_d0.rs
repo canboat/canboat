@@ -1,7 +1,7 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Actisense W2K-1 in its Actisense data mode: BST `0xD0` "N2K" messages
-//! over TCP (#993). See [`crate::engine::format::actisense_n2k`] for the
+//! Actisense BST-D0 messages over TCP: a W2K-1 or PRO-NDC-1E2K in its
+//! Actisense data mode (#993). See [`crate::engine::format::bst_d0`] for the
 //! message layout.
 //!
 //! The link needs no handshake. A message carries the device's own clock,
@@ -9,24 +9,24 @@
 //! codec does.
 
 use crate::engine::RawFrame;
-use crate::engine::format::actisense_n2k::{ActisenseN2kDecoder, encode_frame};
+use crate::engine::format::bst_d0::{BstD0Decoder, encode_frame};
 use crate::engine::format_iso_ms;
 
 use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
 
 /// The W2K-1's Actisense mode. See the [module docs](self).
 #[derive(Debug, Default)]
-pub struct ActisenseN2k {
-    decoder: ActisenseN2kDecoder,
+pub struct BstD0 {
+    decoder: BstD0Decoder,
 }
 
-impl ActisenseN2k {
+impl BstD0 {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl Codec for ActisenseN2k {
+impl Codec for BstD0 {
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
         let skipped = self.decoder.skipped;
         for mut frame in self.decoder.push_bytes(bytes) {
@@ -36,7 +36,7 @@ impl Codec for ActisenseN2k {
         let skipped = self.decoder.skipped - skipped;
         if skipped > 0 {
             events.push(Event::Error(format!(
-                "skipped {skipped} bytes that are not a BST 0xD0 message"
+                "skipped {skipped} bytes that are not a BST-D0 message"
             )));
         }
     }
@@ -60,7 +60,7 @@ mod tests {
     #[test]
     fn frames_are_stamped_with_the_time_received() {
         let sent = frame(129025, 255, &[1, 2, 3, 4, 5, 6, 7, 8]);
-        let mut codec = ActisenseN2k::new();
+        let mut codec = BstD0::new();
         let bytes = codec.send(&sent).unwrap();
         let mut events = Vec::new();
         codec.receive(&bytes, 1_759_536_000_000, &mut events);
@@ -77,14 +77,14 @@ mod tests {
     #[test]
     fn skipped_bytes_are_reported() {
         let mut events = Vec::new();
-        ActisenseN2k::new().receive(&[0x55; 7], 0, &mut events);
+        BstD0::new().receive(&[0x55; 7], 0, &mut events);
         assert!(matches!(events.as_slice(), [Event::Error(e)] if e.contains("skipped 7 bytes")));
     }
 
     #[test]
     fn a_synthetic_pgn_is_not_sent() {
         assert_eq!(
-            ActisenseN2k::new().send(&frame(0x40000, 255, &[0])),
+            BstD0::new().send(&frame(0x40000, 255, &[0])),
             Err(Refused::Synthetic)
         );
     }

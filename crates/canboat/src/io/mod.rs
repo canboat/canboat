@@ -31,8 +31,8 @@ pub mod usb;
 
 #[cfg(feature = "io")]
 pub use stream::{
-    ActisenseN2kReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
-    PlainWriter, TextLineWriter, copy,
+    BstD0Reader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter,
+    TextLineWriter, copy,
 };
 
 #[cfg(feature = "io")]
