@@ -27,9 +27,10 @@ is the maintained, short version of this survey.
   (2021), technocreatives/n2k-gen (2022), jxltom/nmea2000 (frozen at v6.0.0-alpha) and
   Sterwen-Technology/navigation_server (2012 XML base). mbj4668/n2k, in the README list,
   vendors **v4.12.0**. Several active Signal K plugins pin canboatjs 1.x or 2.x.
-- **Suspected malware:** one repository re-uploads open-ships/n2k with a README that
-  pushes a "Download" badge for a zip file kept in the repository. It is not named or
-  linked here; it was not downloaded.
+- **A suspicious copy:** one repository re-uploads open-ships/n2k with a README that
+  pushes a "Download" badge for a zip file kept in the repository, a pattern often used
+  to spread malware. The zip was not downloaded or inspected, so this is not confirmed.
+  It is not named or linked here.
 
 ## 1. Projects that use CANboat
 
@@ -58,6 +59,7 @@ repository's, as of 7 October 2026.
 | [sergei/sailvue](https://github.com/sergei/sailvue) | C++ | 14 | 2026-09-24 | Submodule `n2k/canboat` from fork sergei/canboat (last push 2023-12); `InitCanBoat.c` | **≤ v5** (the submodule commit is not on the fork's default branch, so uncertain) | yes, since 2026-10-07 ([sailvue#3](https://github.com/sergei/sailvue/issues/3)) | `.gitmodules` |
 | [Sterwen-Technology/navigation_server](https://github.com/Sterwen-Technology/navigation_server) | Python | 3 | 2026-10-02 | `PGNDefns.N2kDfn.xml` "derived from Keversoft NMEA2000 Analyzer" (the 2012 XML, via OpenSkipper), heavily modified | 2012 base | in `doc/NMEA2000.md` only | doc: "XML … initially published by Keversoft … moved into canboat" |
 | [jxltom/nmea2000](https://github.com/jxltom/nmea2000) | Python | 0 | 2025-12-08 | A non-fork copy of tomer-w/nmea2000 | **v6.0.0-alpha** (2025-05); its copied sync workflow does not run | yes | `nmea2000/canboat.json` |
+| [OpenSkipper](https://github.com/OpenSkipper/OpenSkipper) | C# | 71 | 2023-04-03 | The 2012 Keversoft/CANboat PGN XML | 2012 | yes | inactive since 2023 |
 | [MO-RISE/marulc](https://github.com/MO-RISE/marulc) | Python | 11 | 2023-09-14 | Vendored CANboat JSON | **2.0.0** (2021) | yes | README "identical to … CANBOAT" |
 | [technocreatives/n2k-gen](https://github.com/technocreatives/n2k-gen) | Rust | 1 | 2024-08-08 | Code generation from CANboat's `pgns.xml` | 2022 (pre-v6) | yes | README |
 | [MENIER/RaymarineAutoPilot](https://github.com/MENIER/RaymarineAutoPilot) (and fgorina/Autopilot2000, MeteoGNSS, Test_NMEA_2000) | C / C++ | 4 / 0 | 2023-04 / 2026-07 | CANboat PGN id strings in `pgnsToString.h` | about 2021–2023 | header only (`pgns_def.h`: "base of works: CANboat"); the fgorina copies keep only MENIER's header | `case 126208L: return PSTR("nmeaRequestGroupFunction")` |
@@ -154,7 +156,6 @@ auvents-brave/BoatTools, lnx13/Actisense-Emulator.
 | AK-Homberger/\* | 92 | Built on ttlappalainen |
 | hatlabs/SH-ESP32-nmea2000-gateway | 33 | Built on ttlappalainen |
 | TwoCanPlugIn | 10 | Own decoders, "inspired by Canboat"; supports the CANboat log format |
-| OpenSkipper | 71 | Does use the 2012 Keversoft/CANboat XML, credited; inactive since 2023 |
 | digitalyacht/iKonvert | — | Own SDK |
 | sankeysoft/nmea_dashboard | — | Own Dart parsers |
 
