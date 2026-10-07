@@ -331,8 +331,7 @@ mod tests {
             init,
         )
         .join();
-        let out = sink.0.lock().unwrap().clone();
-        out
+        sink.0.lock().unwrap().clone()
     }
 
     #[test]
