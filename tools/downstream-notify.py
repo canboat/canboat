@@ -14,9 +14,12 @@
 # release notes. It then comments on the sign-up issue with a link.
 #
 # Anyone can open an issue here, so a sign-up only counts when the target
-# repository's owner opened it, or when a maintainer has approved it with the
-# "downstream-approved" label. Otherwise this would open issues, as the token's
-# owner, in any repository someone typed in.
+# repository's owner opened it, or when a maintainer has approved that very
+# repository with a comment "Approved for release notifications: owner/repo".
+# Otherwise this would open issues, as the token's owner, in any repository
+# someone typed in. The approval names the repository because the sign-up's
+# body can be edited after it was approved; a maintainer's comment cannot be
+# edited by its author, and an edit cannot change who opened the issue.
 #
 # A repository that already has an issue for this version is skipped, so the
 # script can be re-run safely. Closing the sign-up issue unsubscribes.
@@ -43,7 +46,9 @@ sys.path.insert(0, HERE)
 import contract  # noqa: E402
 
 SIGNUP_PREFIX = "Release notifications:"
-APPROVED_LABEL = "downstream-approved"
+APPROVAL_PREFIX = "Approved for release notifications:"
+# Who may approve: the comment's author_association, as GitHub reports it.
+MAINTAINERS = ("OWNER", "MEMBER", "COLLABORATOR")
 CONTRACTS = (
     ("NMEA 2000", "docs/canboat.json"),
     ("SAE J1939", "docs/canboat-j1939.json"),
@@ -132,18 +137,30 @@ def parse_signup(issue):
     return repo, wants
 
 
-def approved(issue, repo):
+def approved(issue, repo, comments):
     """Whether a sign-up may send issues to `repo`.
 
     Anyone can open an issue here, so a sign-up naming somebody else's
     repository must not be enough to make us open issues there. It counts when
-    the target's owner opened it, or when a maintainer has approved it with the
-    APPROVED_LABEL (which only maintainers can set; the issue template's
-    "downstream" label does not count).
+    the target's owner opened it, or when a maintainer approved this very
+    repository in a comment: "Approved for release notifications: owner/repo".
+    A label would not do, as the sign-up could be edited to name another
+    repository after it was approved.
     """
-    labels = {lab["name"] for lab in issue.get("labels", [])}
     author = (issue.get("user") or {}).get("login", "")
-    return APPROVED_LABEL in labels or author.lower() == repo.split("/")[0].lower()
+    if author.lower() == repo.split("/")[0].lower():
+        return True
+    for c in comments:
+        if c.get("author_association") not in MAINTAINERS:
+            continue
+        for line in (c.get("body") or "").splitlines():
+            line = line.strip()
+            if line.lower().startswith(APPROVAL_PREFIX.lower()):
+                named = line[len(APPROVAL_PREFIX):].strip(" \t`'\".,;:<>")
+                r = REPO_RE.search(named)
+                if (r.group(1) if r else named).lower() == repo.lower():
+                    return True
+    return False
 
 
 def signups(canboat_repo):
@@ -159,10 +176,17 @@ def signups(canboat_repo):
         if not (i["title"].startswith(SIGNUP_PREFIX) or "downstream" in labels):
             continue
         parsed = parse_signup(i)
-        if parsed:
-            out.append((i["number"], parsed[0], parsed[1], approved(i, parsed[0])))
-        else:
+        if not parsed:
             sys.stderr.write("#%d names no repository, skipped\n" % i["number"])
+            continue
+        comments = []
+        if i.get("comments"):
+            pages = gh_json([
+                "api", "--paginate", "--slurp",
+                "repos/%s/issues/%d/comments?per_page=100" % (canboat_repo, i["number"]),
+            ]) or []
+            comments = [c for page in pages for c in page]
+        out.append((i["number"], parsed[0], parsed[1], approved(i, parsed[0], comments)))
     return out
 
 
@@ -297,7 +321,7 @@ def main(argv=None):
     subs = signups(args.repo)
     wanting = [(n, repo, ok) for n, repo, wants, ok in subs if wants_release(wants, level)]
     targets = [(n, repo) for n, repo, ok in wanting if ok]
-    summary = ["| %s | #%d | awaiting approval (label `%s`) |" % (repo, n, APPROVED_LABEL)
+    summary = ["| %s | #%d | awaiting approval (a maintainer's \"%s %s\") |" % (repo, n, APPROVAL_PREFIX, repo)
                for n, repo, ok in wanting if not ok]
     print("%d sign-up(s), %d for a %s release, %d of them approved."
           % (len(subs), len(wanting), level, len(targets)))

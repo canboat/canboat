@@ -305,8 +305,10 @@ prints the required level directly.
 > Third-party projects can ask to be told, though. A project signs up with an
 > open issue titled `Release notifications: <owner/repo>` (the "Release
 > notifications for a downstream project" issue template). It counts once the
-> target repository's owner opened it, or a maintainer adds the
-> `downstream-approved` label (check the sign-up is genuine first). On every major or
+> target repository's owner opened it, or once a maintainer has checked it is
+> genuine and commented `Approved for release notifications: owner/repo` (the
+> comment names the repository, so editing the sign-up afterwards does not
+> carry the approval to another one). On every major or
 > minor release tag, `.github/workflows/downstream-notify.yml` runs
 > `tools/downstream-notify.py`, which opens an issue in each signed-up
 > repository with the `tools/contract.py` summary of what changed and the
