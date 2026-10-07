@@ -840,7 +840,7 @@ impl core::fmt::Debug for canboat::DecodeError
 pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::fmt::Display for canboat::DecodeError
 pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
-pub enum canboat::EncodeError
+#[non_exhaustive] pub enum canboat::EncodeError
 pub canboat::EncodeError::AmbiguousPgn
 pub canboat::EncodeError::AmbiguousPgn::pgn: u32
 pub canboat::EncodeError::AmbiguousPgn::variants: usize
@@ -861,6 +861,10 @@ pub canboat::EncodeError::NoSuchInstance::set: usize
 pub canboat::EncodeError::NoSuchPgn(u32)
 pub canboat::EncodeError::NoSuchPgnId(alloc::string::String)
 pub canboat::EncodeError::NotFixedLength(&'static str)
+pub canboat::EncodeError::ProprietaryHeader
+pub canboat::EncodeError::ProprietaryHeader::field: &'static str
+pub canboat::EncodeError::ProprietaryHeader::proprietary: bool
+pub canboat::EncodeError::ProprietaryHeader::target_pgn: core::option::Option<u32>
 pub canboat::EncodeError::TypeMismatch
 pub canboat::EncodeError::TypeMismatch::expected: &'static str
 pub canboat::EncodeError::TypeMismatch::field: &'static str

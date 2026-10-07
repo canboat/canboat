@@ -39,6 +39,7 @@
 use std::error::Error;
 use std::fmt;
 
+use crate::engine::decode::field_present;
 use crate::engine::types::{FieldInfo, FieldRef, FieldType, PgnInfo};
 
 use crate::engine::db::PgnDatabase;
@@ -132,8 +133,10 @@ impl From<&[u8]> for EncodeValue {
     }
 }
 
-/// Why a message could not be encoded.
+/// Why a message could not be encoded. Non-exhaustive: new ways to fail
+/// can be added without a breaking release.
 #[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive]
 pub enum EncodeError {
     /// No PGN with this schema id (e.g. `"isoRequest"`).
     NoSuchPgnId(String),
@@ -183,6 +186,17 @@ pub enum EncodeError {
         pgn_id: &'static str,
         set: usize,
         instance: usize,
+    },
+    /// The Manufacturer Code / Industry Code header of a 126208 Read or
+    /// Write Fields (or their replies) is in the message only when the
+    /// commanded PGN is proprietary. `proprietary` says which way it went
+    /// wrong: `true` when a proprietary `target_pgn` left `field` unset,
+    /// `false` when `field` was set for a PGN that is not proprietary
+    /// (`None` when no PGN was set at all).
+    ProprietaryHeader {
+        field: &'static str,
+        target_pgn: Option<u32>,
+        proprietary: bool,
     },
 }
 
@@ -241,6 +255,33 @@ impl fmt::Display for EncodeError {
             }
             EncodeError::TypeMismatch { field, expected } => {
                 write!(f, "field '{field}': expected {expected}")
+            }
+            EncodeError::ProprietaryHeader {
+                field,
+                target_pgn: Some(pgn),
+                proprietary: true,
+            } => {
+                write!(f, "field '{field}' must be set: PGN {pgn} is proprietary")
+            }
+            EncodeError::ProprietaryHeader {
+                field,
+                target_pgn: Some(pgn),
+                proprietary: false,
+            } => {
+                write!(
+                    f,
+                    "field '{field}' is only sent for a proprietary PGN, and {pgn} is not"
+                )
+            }
+            EncodeError::ProprietaryHeader {
+                field,
+                target_pgn: None,
+                ..
+            } => {
+                write!(
+                    f,
+                    "field '{field}' is only sent for a proprietary PGN, and no PGN is set"
+                )
             }
             EncodeError::LengthMismatch { pgn, expected, got } => {
                 write!(f, "PGN {pgn}: packed {got} bytes, schema says {expected}")
@@ -537,6 +578,33 @@ impl PgnBuilder {
                 continue;
             }
             let f = &self.pgn.fields[idx];
+            // The Manufacturer / Industry header of a 126208 Read or Write
+            // Fields is in the message exactly when the commanded PGN is
+            // proprietary, as decode reads it: required then (bar its
+            // Reserved bits), and refused otherwise, as it would shift
+            // every later field.
+            if f.condition.is_some() {
+                let target_pgn = self.staged_target_pgn();
+                let staged = self.staged[idx].is_some();
+                if !field_present(f.condition, target_pgn) {
+                    if staged {
+                        return Err(EncodeError::ProprietaryHeader {
+                            field: f.name,
+                            target_pgn,
+                            proprietary: false,
+                        });
+                    }
+                    idx += 1;
+                    continue;
+                }
+                if !staged && f.field_type != Some(FieldType::Reserved) {
+                    return Err(EncodeError::ProprietaryHeader {
+                        field: f.name,
+                        target_pgn,
+                        proprietary: true,
+                    });
+                }
+            }
             // A declared count field left unset takes the number of
             // staged instances for its set (0 when none were added — a
             // zero-iteration message, not "unavailable").
@@ -661,6 +729,19 @@ impl PgnBuilder {
     /// nothing can be narrowed — the caller falls back to the leading
     /// definition, so every previously-working single-variant target
     /// resolves exactly as before.
+    /// The PGN the message's PGN field names (a group function's
+    /// commanded PGN), when it is staged.
+    fn staged_target_pgn(&self) -> Option<u32> {
+        self.pgn
+            .fields
+            .iter()
+            .position(|tf| tf.field_type == Some(FieldType::Pgn))
+            .and_then(|i| match self.staged[i] {
+                Some(Staged::Scalar(p)) => Some(p as u32),
+                _ => None,
+            })
+    }
+
     fn match_target_variant(&self, target_pgn: u32) -> Option<&'static PgnInfo> {
         let first = self.db.first_pgn(target_pgn)?;
         if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
@@ -726,14 +807,7 @@ impl PgnBuilder {
             reason,
         };
         let target_pgn = self
-            .pgn
-            .fields
-            .iter()
-            .position(|tf| tf.field_type == Some(FieldType::Pgn))
-            .and_then(|i| match self.staged[i] {
-                Some(Staged::Scalar(p)) => Some(p as u32),
-                _ => None,
-            })
+            .staged_target_pgn()
             .ok_or(unresolved("no staged PGN field names the referenced PGN"))?;
         // Resolve the target the way decode does: first let the staged
         // parameter pairs pick the variant (a command that sets
@@ -2282,5 +2356,83 @@ mod tests {
             crate::engine::FieldValue::Number(x) => assert_eq!(*x, 0.0),
             other => panic!("count: expected a number, got {other:?}"),
         }
+    }
+
+    /// A 126208 Write Fields commanding `pgn`, with one selection pair
+    /// and one parameter, header fields left to the caller.
+    fn write_fields(pgn: u32) -> PgnBuilder {
+        let mut b = db().encode("nmeaWriteFieldsGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(pgn)).unwrap();
+        b.push_by_name("Unique ID", 0i64).unwrap();
+        b
+    }
+
+    #[test]
+    fn group_function_header_is_left_out_for_a_standard_pgn() {
+        // A Write Fields for PGN 127508 (not proprietary) has no
+        // Manufacturer Code / Industry Code header; writing one shifts
+        // every later field by two bytes. Captured as
+        // 05 14f201 00 01 01 [01 01] 66 [01 05] (canboat#1002).
+        let mut b = write_fields(127508);
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "selectionParameter", Raw(1)).unwrap();
+        b.push_in_set(1, i, "selectionValue", Raw(0x66)).unwrap();
+        let i = b.add_set_instance(2).unwrap();
+        b.push_in_set(2, i, "parameter", Raw(1)).unwrap();
+        b.push_in_set(2, i, "value", Raw(5)).unwrap();
+        let frame = b.build().unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[
+                0x05, 0x14, 0xf2, 0x01, 0x00, 0x01, 0x01, 0x01, 0x66, 0x01, 0x05
+            ]
+        );
+    }
+
+    #[test]
+    fn group_function_header_is_written_for_a_proprietary_pgn() {
+        // Furuno's 130845: the header follows the commanded PGN, its
+        // Reserved bits all ones -- the bytes the C decodes as
+        // Manufacturer Code = Furuno, Industry Code = Marine.
+        let mut b = write_fields(130845);
+        b.push_by_name("Manufacturer Code", Raw(1855)).unwrap();
+        b.push_by_name("Industry Code", Raw(4)).unwrap();
+        let frame = b.build().unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[0x05, 0x1d, 0xff, 0x01, 0x3f, 0x9f, 0x00, 0x00, 0x00]
+        );
+        let decoded = db().decode(&frame).unwrap();
+        assert!(matches!(
+            decoded.field_by_name("Manufacturer Code").map(|f| &f.value),
+            Some(crate::engine::FieldValue::Lookup { value: 1855, .. })
+        ));
+    }
+
+    #[test]
+    fn group_function_header_must_match_the_commanded_pgn() {
+        // Proprietary, but no Manufacturer Code: refused, not sent as
+        // "not available".
+        let mut b = write_fields(130845);
+        b.push_by_name("Industry Code", Raw(4)).unwrap();
+        assert_eq!(
+            b.build().unwrap_err(),
+            EncodeError::ProprietaryHeader {
+                field: "Manufacturer Code",
+                target_pgn: Some(130845),
+                proprietary: true,
+            }
+        );
+        // Standard, but given a header: refused rather than dropped.
+        let mut b = write_fields(127508);
+        b.push_by_name("Manufacturer Code", Raw(1855)).unwrap();
+        assert_eq!(
+            b.build().unwrap_err(),
+            EncodeError::ProprietaryHeader {
+                field: "Manufacturer Code",
+                target_pgn: Some(127508),
+                proprietary: false,
+            }
+        );
     }
 }

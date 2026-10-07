@@ -604,7 +604,7 @@ pub canboat::device::ProductInfo::software_version: &'a str
 impl canboat::device::ProductInfo<'_>
 pub fn canboat::device::ProductInfo<'_>::frame(&self, u8) -> core::option::Option<canboat::Frame>
 pub const canboat::device::MAX_PGN_LIST_LEN: usize
-pub fn canboat::device::heartbeat_frame(u8, u8, u64) -> canboat::Frame
+pub fn canboat::device::heartbeat_frame(u8, u8, u64) -> core::result::Result<canboat::Frame, canboat::EncodeError>
 pub fn canboat::device::iso_ack_frame(u8, u8, u8, u32) -> canboat::Frame
 pub fn canboat::device::pgn_list_frames(u8, u8, &[u32], &[u32]) -> alloc::vec::Vec<canboat::Frame>
 pub mod canboat::ids
@@ -1118,7 +1118,7 @@ impl core::fmt::Debug for canboat::DecodeError
 pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::fmt::Display for canboat::DecodeError
 pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
-pub enum canboat::EncodeError
+#[non_exhaustive] pub enum canboat::EncodeError
 pub canboat::EncodeError::AmbiguousPgn
 pub canboat::EncodeError::AmbiguousPgn::pgn: u32
 pub canboat::EncodeError::AmbiguousPgn::variants: usize
@@ -1139,6 +1139,10 @@ pub canboat::EncodeError::NoSuchInstance::set: usize
 pub canboat::EncodeError::NoSuchPgn(u32)
 pub canboat::EncodeError::NoSuchPgnId(alloc::string::String)
 pub canboat::EncodeError::NotFixedLength(&'static str)
+pub canboat::EncodeError::ProprietaryHeader
+pub canboat::EncodeError::ProprietaryHeader::field: &'static str
+pub canboat::EncodeError::ProprietaryHeader::proprietary: bool
+pub canboat::EncodeError::ProprietaryHeader::target_pgn: core::option::Option<u32>
 pub canboat::EncodeError::TypeMismatch
 pub canboat::EncodeError::TypeMismatch::expected: &'static str
 pub canboat::EncodeError::TypeMismatch::field: &'static str

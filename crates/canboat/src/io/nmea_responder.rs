@@ -13,7 +13,7 @@
 //! builder rather than hand-laid bytes. Pairs with
 //! [`crate::io::address_claim`], which owns the claim state machine itself.
 
-use crate::engine::encode::Raw;
+use crate::engine::encode::{EncodeError, Raw};
 use crate::engine::{ADDR_GLOBAL, PgnDatabase, RawFrame, Units, field};
 
 const PGN_ISO_ACK: u32 = 59392;
@@ -91,11 +91,25 @@ pub fn iso_ack_frame(src: u8, dst: u8, control: u8, pgn: u32) -> RawFrame {
 }
 
 /// PGN 126993 Heartbeat. `interval_ms` is the transmit interval this node
-/// advertises (field resolution 0.01 s); `seq` is the wrapping sequence
-/// counter (0..=252). Controller/equipment status bytes mirror a healthy
-/// node (Error-Active / not-available / Operational).
-pub fn heartbeat_frame(src: u8, seq: u8, interval_ms: u64) -> RawFrame {
-    let offset = (interval_ms / 10) as u16;
+/// advertises (the field counts milliseconds, up to 65.532 s; the top
+/// three values are reserved, 0xFFFF meaning "do not change"); `seq` is
+/// the wrapping sequence counter (0..=252). Controller/equipment status
+/// bytes mirror a healthy node (Error-Active / not-available / Operational).
+///
+/// A longer interval than the field can carry is an
+/// [`EncodeError::ValueOutOfRange`], in seconds as the field is.
+pub fn heartbeat_frame(src: u8, seq: u8, interval_ms: u64) -> Result<RawFrame, EncodeError> {
+    let f = field::heartbeat::DATA_TRANSMIT_OFFSET.field;
+    let (min, max) = (f.range_min.unwrap_or(0.0), f.range_max.unwrap_or(0.0));
+    let interval = interval_ms as f64 / 1000.0;
+    if interval > max {
+        return Err(EncodeError::ValueOutOfRange {
+            field: f.name,
+            value: interval,
+            range: Some((min, max)),
+        });
+    }
+    let offset = interval_ms as u16;
     let data = [
         offset as u8,
         (offset >> 8) as u8,
@@ -106,7 +120,14 @@ pub fn heartbeat_frame(src: u8, seq: u8, interval_ms: u64) -> RawFrame {
         0xff,
         0xff,
     ];
-    RawFrame::new(None, 7, PGN_HEARTBEAT, src, ADDR_GLOBAL, data)
+    Ok(RawFrame::new(
+        None,
+        7,
+        PGN_HEARTBEAT,
+        src,
+        ADDR_GLOBAL,
+        data,
+    ))
 }
 
 #[cfg(test)]
@@ -158,5 +179,42 @@ mod tests {
         assert_eq!(f.pgn, PGN_ISO_ACK);
         assert_eq!(f.data[0], 1); // NAK
         assert_eq!(&f.data[5..8], &[0x14, 0xf0, 0x01]); // 126996 LE
+    }
+
+    #[test]
+    fn heartbeat_advertises_its_interval_in_milliseconds() {
+        // The field is DURATION_UFIX16_MS: a 60 s heartbeat is 60000 (0xEA60),
+        // as the Furuno sample in database/pgns/126993-heartbeat.yaml carries.
+        let db = PgnDatabase::embedded(Units::Si);
+        let frame = heartbeat_frame(7, 155, 60_000).unwrap();
+        assert_eq!(&frame.data[..2], &[0x60, 0xea]);
+        let decoded = db.decode(&frame).unwrap();
+        let offset = decoded.field_by_name("Data transmit offset").unwrap();
+        assert_eq!(offset.value.as_f64(), Some(60.0));
+        // The field's largest value still decodes as a duration.
+        let frame = heartbeat_frame(7, 0, 65_532).unwrap();
+        assert_eq!(&frame.data[..2], &[0xfc, 0xff]);
+        let decoded = db.decode(&frame).unwrap();
+        let offset = decoded.field_by_name("Data transmit offset").unwrap();
+        assert_eq!(offset.value.as_f64(), Some(65.532));
+    }
+
+    #[test]
+    fn heartbeat_refuses_an_interval_the_field_cannot_carry() {
+        // 0xFFFD..0xFFFF are reserved, so 65533 ms is the first refused.
+        for interval_ms in [65_533, 65_535, 3_600_000] {
+            match heartbeat_frame(7, 0, interval_ms) {
+                Err(EncodeError::ValueOutOfRange {
+                    field,
+                    value,
+                    range,
+                }) => {
+                    assert_eq!(field, "Data transmit offset");
+                    assert_eq!(value, interval_ms as f64 / 1000.0);
+                    assert_eq!(range, Some((0.0, 65.532)));
+                }
+                other => panic!("{interval_ms} ms: expected ValueOutOfRange, got {other:?}"),
+            }
+        }
     }
 }

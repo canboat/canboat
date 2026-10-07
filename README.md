@@ -291,6 +291,7 @@ this repository in v8 and is the `canboat-*` crates described above.)
 - [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) — Windows GUI
 - [nmea2000](https://github.com/tomer-w/nmea2000) — pure Python NMEA 2000 decoder and encoder library
 - [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) — expose NMEA 2000 PGNs as Home Assistant devices and entities
+- [Smart Boat Innovations Home Assistant integrations](https://github.com/SmartBoatInnovations) — [ha-smart2000usb](https://github.com/SmartBoatInnovations/ha-smart2000usb) and [ha-smart2000esp](https://github.com/SmartBoatInnovations/ha-smart2000esp) bring NMEA 2000 into Home Assistant over USB-CAN or an ESP32; their decoders are generated from CANboat v5.0.3
 
 ### For non-technical sailors
 
