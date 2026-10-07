@@ -107,6 +107,8 @@ pub struct Encoder {
     protocol: BusProtocol,
     /// Per-(pgn, src) fast-packet TX sequence counters, mod 8.
     seq: Mutex<HashMap<(u32, u8), u8>>,
+    /// Bytes to write as soon as the link opens.
+    init: Vec<u8>,
 }
 
 impl Encoder {
@@ -120,7 +122,14 @@ impl Encoder {
             format,
             protocol,
             seq: Mutex::new(HashMap::new()),
+            init: Vec::new(),
         }
+    }
+
+    /// Write `init` as soon as the link opens.
+    pub fn with_init(mut self, init: &[u8]) -> Self {
+        self.init = init.to_vec();
+        self
     }
 
     fn next_seq(&self, pgn: u32, src: u8) -> u8 {
@@ -133,6 +142,10 @@ impl Encoder {
 }
 
 impl DeviceEncoder for Encoder {
+    fn init_bytes(&self) -> Vec<u8> {
+        self.init.clone()
+    }
+
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
         // Synthetic canboat-internal PGNs never go on the wire.
         if frame.pgn >= fastpacket::CANBOAT_PGN_START {
@@ -184,16 +197,23 @@ impl DeviceEncoder for Encoder {
     }
 }
 
-/// Start the gateway reader/writer threads over any byte transport.
+/// What a Yacht Devices USB gateway (YDNU-02) is sent when its serial
+/// port opens, to put it in RAW mode, as canboatjs does: `0` and a line
+/// feed.
+pub const YDNU_RAW_MODE: &[u8] = b"0\n";
+
+/// Start the gateway reader/writer threads over any byte transport,
+/// writing `init` as soon as the link opens.
 pub fn run(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,
     format: LineFormat,
     protocol: BusProtocol,
+    init: &[u8],
 ) -> DeviceHandle {
     super::run(
         Decoder::with_protocol(format, protocol),
-        Encoder::with_protocol(format, protocol),
+        Encoder::with_protocol(format, protocol).with_init(init),
         reader,
         writer,
     )
@@ -285,6 +305,40 @@ mod tests {
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].pgn, 129029);
         assert_eq!(out[0].data.as_slice(), payload.as_slice());
+    }
+
+    /// Collects what the writer thread writes.
+    #[derive(Clone, Default)]
+    struct Sink(std::sync::Arc<Mutex<Vec<u8>>>);
+    impl Write for Sink {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.0.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// What `run` writes as the link opens, before any frame.
+    fn written_on_open(init: &[u8]) -> Vec<u8> {
+        let sink = Sink::default();
+        run(
+            Box::new(std::io::empty()),
+            Box::new(sink.clone()),
+            LineFormat::YdwgRaw,
+            BusProtocol::Nmea2000,
+            init,
+        )
+        .join();
+        sink.0.lock().unwrap().clone()
+    }
+
+    #[test]
+    fn ydnu_is_put_in_raw_mode_on_open() {
+        // A network gateway is sent nothing; a YDNU-02 gets `0` + LF.
+        assert!(written_on_open(&[]).is_empty());
+        assert_eq!(written_on_open(YDNU_RAW_MODE), b"0\n");
     }
 
     #[test]
