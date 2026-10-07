@@ -891,15 +891,20 @@ mod imp {
 
         // NMEA 2000 Heartbeat, PGN 126993. Sent every heartbeat_interval ms
         // once we own an address so other nodes know we are alive.
+        // An interval the frame cannot carry stops the heartbeat.
         fn send_heartbeat(&mut self, bus: &mut Bus<'_>) {
-            emit(
-                bus,
-                vec![nmea_responder::heartbeat_frame(
-                    self.addr(),
-                    self.heartbeat_seq,
-                    self.heartbeat_interval,
-                )],
-            );
+            match nmea_responder::heartbeat_frame(
+                self.addr(),
+                self.heartbeat_seq,
+                self.heartbeat_interval,
+            ) {
+                Ok(frame) => emit(bus, vec![frame]),
+                Err(e) => {
+                    log::error!("Heartbeat disabled: {e}");
+                    self.heartbeat_interval = 0;
+                    return;
+                }
+            }
             self.heartbeat_seq = if self.heartbeat_seq >= 252 {
                 0
             } else {
