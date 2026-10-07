@@ -147,8 +147,15 @@ pub struct Args {
     #[arg(short = 'm', long, value_name = "N", default_value_t = 999)]
     manufacturer: u16,
 
-    /// SocketCAN: Heartbeat (PGN 126993) interval in ms; 0 disables.
-    #[arg(long, alias = "hb", value_name = "MS", default_value_t = 60_000)]
+    /// SocketCAN: Heartbeat (PGN 126993) interval in ms, up to 65532;
+    /// 0 disables.
+    #[arg(
+        long,
+        alias = "hb",
+        value_name = "MS",
+        default_value_t = 60_000,
+        value_parser = clap::value_parser!(u64).range(0..=65_532)
+    )]
     heartbeat: u64,
 
     /// SocketCAN: ISO NAME System Instance, 0..15. Default 15 (max) so
