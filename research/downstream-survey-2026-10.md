@@ -18,9 +18,10 @@ is the maintained, short version of this survey.
 - About **20 projects** outside the README list generate their code from canboat.json
   or canboat.xml, or vendor it. About 8 more use canboatjs or ts-pgns outside the
   Signal K core, and about 15 run or package the CANboat tools.
-- **Credit** is missing, or only in a file header, in ioBroker.nmea, sergei/sailvue,
+- **Credit** is missing, or only in a file header, in ioBroker.nmea,
   antipole2/JavaScript_pi, jpilet/anemomind, phobicdotno/actuisense, si6n/UCANLAB and
-  MENIER/RaymarineAutoPilot (and the fgorina copies of it).
+  MENIER/RaymarineAutoPilot (and the fgorina copies of it). sergei/sailvue added an
+  acknowledgement on 7 October 2026, the day it was asked.
 - **Old data** (pre-v6, or not updated for years): jpilet/anemomind (regenerated in June
   2026 from a pre-v6 `pgns.xml`), sergei/sailvue (fork last synced 2023), MO-RISE/marulc
   (2021), technocreatives/n2k-gen (2022), jxltom/nmea2000 (frozen at v6.0.0-alpha) and
@@ -54,7 +55,7 @@ repository's, as of 7 October 2026.
 | [fkie-cad/maritime-dissector](https://github.com/fkie-cad/maritime-dissector) | Lua | 22 | 2026-03-24 | Wireshark dissector generated from canboat.json, downloaded at generation time | not pinned | yes | README "based on … CANBoat Documentation" |
 | [Maps-Messaging/canbus_interface](https://github.com/Maps-Messaging/canbus_interface) (and Maps-Messaging/n2k) | Java | 0 / 1 | 2026-09-28 / 2026-04 | Parses `NMEA_database_1_300.xml`, CANboat's `sources/` file contributed by @elmue (in CANboat from 2025-05 to 2026-06) | the NMEA v1.300 subset, not canboat.json | in the docs ("derived from public CANboat XML metadata"), not the README | the XML file |
 | [jpilet/anemomind](https://github.com/jpilet/anemomind) | C++ | 16 | 2026-07-14 | `PgnClasses.*` generated from a local CANboat checkout's `analyzer/pgns.xml` | **pre-v6** (regenerated 2026-06-17) | header only | generated header "index.js ../canboat/analyzer/pgns.xml" |
-| [sergei/sailvue](https://github.com/sergei/sailvue) | C++ | 14 | 2026-09-24 | Submodule `n2k/canboat` from fork sergei/canboat (last push 2023-12); `InitCanBoat.c` | **≤ v5** (the submodule commit is not on the fork's default branch, so uncertain) | no | `.gitmodules` |
+| [sergei/sailvue](https://github.com/sergei/sailvue) | C++ | 14 | 2026-09-24 | Submodule `n2k/canboat` from fork sergei/canboat (last push 2023-12); `InitCanBoat.c` | **≤ v5** (the submodule commit is not on the fork's default branch, so uncertain) | yes, since 2026-10-07 ([sailvue#3](https://github.com/sergei/sailvue/issues/3)) | `.gitmodules` |
 | [Sterwen-Technology/navigation_server](https://github.com/Sterwen-Technology/navigation_server) | Python | 3 | 2026-10-02 | `PGNDefns.N2kDfn.xml` "derived from Keversoft NMEA2000 Analyzer" (the 2012 XML, via OpenSkipper), heavily modified | 2012 base | in `doc/NMEA2000.md` only | doc: "XML … initially published by Keversoft … moved into canboat" |
 | [jxltom/nmea2000](https://github.com/jxltom/nmea2000) | Python | 0 | 2025-12-08 | A non-fork copy of tomer-w/nmea2000 | **v6.0.0-alpha** (2025-05); its copied sync workflow does not run | yes | `nmea2000/canboat.json` |
 | [MO-RISE/marulc](https://github.com/MO-RISE/marulc) | Python | 11 | 2023-09-14 | Vendored CANboat JSON | **2.0.0** (2021) | yes | README "identical to … CANBOAT" |
