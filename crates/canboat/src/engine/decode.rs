@@ -775,7 +775,7 @@ fn decode_fields(
             continue;
         }
 
-        if f.condition.is_some() {
+        if !field_present(f.condition, ctx.target_pgn) {
             i += 1;
             continue;
         }
@@ -886,7 +886,7 @@ fn decode_repeating(
         let mut produced_any = false;
         let mut first_field_of_iter = true;
         for sf in set {
-            if sf.condition.is_some() {
+            if !field_present(sf.condition, ctx.target_pgn) {
                 continue;
             }
             // Iteration 0 honors the explicit BitOffset from JSON;
@@ -1230,6 +1230,20 @@ pub(crate) fn is_pgn_proprietary(n: u32) -> bool {
         || (0xFF00..=0xFFFF).contains(&n)
         || (0x1_EF00..=0x1_EFFF).contains(&n)
         || (0x1_FF00..=0x1_FFFF).contains(&n)
+}
+
+/// Whether a field with this `condition` is in the message, given the
+/// PGN that the message's PGN field names. The one condition the schema
+/// has, `PGNIsProprietary`, is the Manufacturer Code / Industry Code
+/// header of a 126208 Read or Write Fields (and their replies): there
+/// only when the commanded PGN is proprietary, as the C reads it
+/// (`field->proprietary`, analyzer.c). Shared with the encoder.
+pub(crate) fn field_present(condition: Option<&str>, target_pgn: Option<u32>) -> bool {
+    match condition {
+        None => true,
+        Some("PGNIsProprietary") => target_pgn.is_some_and(is_pgn_proprietary),
+        Some(_) => false,
+    }
 }
 
 /// Pick the definition of `pgn_id` that a PGN 126208 parameter list
@@ -3372,5 +3386,59 @@ mod tests {
         let dec = db().decode(&frame).expect("decode");
         let instance = &dec.fields[0];
         assert!(matches!(instance.value, FieldValue::NotAvailable));
+    }
+
+    #[test]
+    fn group_function_header_is_read_only_for_a_proprietary_pgn() {
+        // A Write Fields for Furuno's proprietary PGN 130845 carries the
+        // Manufacturer Code (1855) / Industry Code (Marine) header after
+        // the commanded PGN, as the C reads it:
+        //   05 [1d ff 01] [3f 9f] 00 00 00
+        let frame = RawFrame::new(
+            None,
+            3,
+            126208,
+            7,
+            80,
+            [0x05, 0x1d, 0xff, 0x01, 0x3f, 0x9f, 0x00, 0x00, 0x00],
+        );
+        let dec = db().decode(&frame).expect("decode");
+        let value = |name: &str| dec.field_by_name(name).map(|f| f.value.clone());
+        assert!(matches!(
+            value("Manufacturer Code"),
+            Some(FieldValue::Lookup { value: 1855, .. })
+        ));
+        assert!(matches!(
+            value("Industry Code"),
+            Some(FieldValue::Lookup { value: 4, .. })
+        ));
+        assert!(matches!(value("Unique ID"), Some(FieldValue::Integer(0))));
+        assert!(matches!(
+            value("Number of Selection Pairs"),
+            Some(FieldValue::Integer(0))
+        ));
+
+        // For a standard PGN (127508) there is no header.
+        let frame = RawFrame::new(
+            None,
+            3,
+            126208,
+            7,
+            80,
+            [
+                0x05, 0x14, 0xf2, 0x01, 0x00, 0x01, 0x01, 0x01, 0x66, 0x01, 0x05,
+            ],
+        );
+        let dec = db().decode(&frame).expect("decode");
+        assert!(dec.field_by_name("Manufacturer Code").is_none());
+        assert!(matches!(
+            dec.field_by_name("Unique ID").map(|f| &f.value),
+            Some(FieldValue::Integer(0))
+        ));
+        assert!(matches!(
+            dec.field_by_name("Number of Selection Pairs")
+                .map(|f| &f.value),
+            Some(FieldValue::Integer(1))
+        ));
     }
 }
