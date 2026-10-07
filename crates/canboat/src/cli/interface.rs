@@ -44,9 +44,9 @@ enum Kind {
     Maretron,
     /// Linux SocketCAN interface (e.g. `can0`).
     Socketcan,
-    /// Yacht Devices RAW gateway (YDWG-02 / YDEN / NavLink2 RAW port),
-    /// over TCP (`tcp://host[:port]`) or receive-only UDP
-    /// (`udp://[bind:]port`).
+    /// Yacht Devices RAW gateway: YDWG-02 / YDEN / NavLink2 RAW port over
+    /// TCP (`tcp://host[:port]`) or receive-only UDP (`udp://[bind:]port`),
+    /// or the YDNU-02 USB gateway over its serial port (38400 baud).
     Ydwg,
     /// Actisense W2K-1 in N2K ASCII mode, over TCP.
     #[value(name = "w2k-ascii")]
@@ -72,7 +72,8 @@ impl Kind {
         match self {
             Kind::Ngt1 => 115_200,
             Kind::Ikonvert => 230_400,
-            Kind::Maretron | Kind::Socketcan | Kind::Ydwg | Kind::W2kAscii => 0,
+            Kind::Ydwg => 38_400,
+            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii => 0,
         }
     }
 }
@@ -83,15 +84,19 @@ pub struct Args {
     #[arg(long, value_enum)]
     kind: Kind,
 
-    /// Endpoint: serial path (ngt1/ikonvert), `host:port` (maretron),
-    /// or CAN interface name such as `can0` (socketcan). An FTDI-based
+    /// Endpoint: serial path (ngt1/ikonvert, and ydwg for a YDNU-02),
+    /// `tcp://host[:port]` (ydwg, w2k-*, and ngt1/ikonvert through a
+    /// network bridge), `udp://[bind:]port` (ydwg, receive only),
+    /// `host:port` (maretron), or CAN interface name such as `can0`
+    /// (socketcan). An FTDI-based
     /// gateway such as the NGT-1 can also be opened directly over USB as
     /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
     /// serial driver does not recognise the NGT-1.
     #[arg(value_name = "DEVICE")]
     device: String,
 
-    /// Serial baud rate. Defaults to 115200 (ngt1) / 230400 (ikonvert).
+    /// Serial baud rate. Defaults to 115200 (ngt1) / 230400 (ikonvert) /
+    /// 38400 (ydwg).
     /// `-s` is the C actisense-serial/ikonvert-serial spelling; the
     /// argv[0] shims must stay drop-in compatible with it.
     #[arg(short = 'b', long, short_alias = 's')]
@@ -359,12 +364,26 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             Ok(device::maretron::run(reader, writer, config))
         }
         Kind::Ydwg => {
-            let (reader, writer) = open_line_endpoint(&args.device, 1457)?;
+            // A network endpoint is a YDWG-02 / YDEN; anything else is the
+            // serial port of a YDNU-02, which is first put in RAW mode.
+            let network = ["tcp://", "udp://"]
+                .iter()
+                .any(|p| args.device.starts_with(p));
+            let (reader, writer, init) = if network {
+                let (r, w) = open_line_endpoint(&args.device, 1457)?;
+                (r, w, &[][..])
+            } else {
+                let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
+                let (r, w) = open_serial_rw(&args.device, baud)
+                    .with_context(|| format!("opening serial port {}", args.device))?;
+                (r, w, device::line_gateway::YDNU_RAW_MODE)
+            };
             Ok(device::line_gateway::run(
                 reader,
                 writer,
                 device::line_gateway::LineFormat::YdwgRaw,
                 protocol,
+                init,
             ))
         }
         Kind::W2kAscii => {
@@ -374,6 +393,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 writer,
                 device::line_gateway::LineFormat::N2kAscii,
                 protocol,
+                &[],
             ))
         }
         Kind::Socketcan => {
