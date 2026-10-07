@@ -1,0 +1,57 @@
+name: Release notifications for a downstream project
+description: >-
+  Your project uses CANboat (canboat.json, canboat.xml, the crates, canboatjs
+  or the tools) and you would like an issue opened in your repository when
+  CANboat has a new major or minor release. Also use this to correct your entry
+  in the README's list of projects.
+title: "Release notifications: <owner/repo>"
+labels: ["downstream"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thanks for building on CANboat! When CANboat makes a release you
+        signed up for, we will open an issue in your repository with the
+        version and a summary of what changed in the database, so you can
+        decide when to update. You can unsubscribe at any time by closing
+        this issue or commenting on it. If you are not the repository's
+        owner, a maintainer will confirm the sign-up first.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Where the release issues should be opened.
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: dropdown
+    id: releases
+    attributes:
+      label: Which releases?
+      options:
+        - Major and minor releases
+        - Major releases only
+        - None, just correct the README entry
+    validations:
+      required: true
+  - type: dropdown
+    id: uses
+    attributes:
+      label: How does your project use CANboat?
+      multiple: true
+      options:
+        - canboat.json / canboat.xml (vendored, generated from, or loaded at runtime)
+        - the canboat Rust crates
+        - canboatjs or @canboat/ts-pgns
+        - the CANboat tools (analyzer, n2kd, gateway drivers, …)
+        - other
+  - type: input
+    id: version
+    attributes:
+      label: CANboat version you use now
+      placeholder: v8.3.0
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: A one-line description for the README, a different contact, or what you would like in the release issue.
