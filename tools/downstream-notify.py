@@ -13,6 +13,11 @@
 # published databases, as tools/contract.py classifies it, and links the
 # release notes. It then comments on the sign-up issue with a link.
 #
+# Anyone can open an issue here, so a sign-up only counts when the target
+# repository's owner opened it, or when a maintainer has approved it with the
+# "downstream-approved" label. Otherwise this would open issues, as the token's
+# owner, in any repository someone typed in.
+#
 # A repository that already has an issue for this version is skipped, so the
 # script can be re-run safely. Closing the sign-up issue unsubscribes.
 #
@@ -38,6 +43,7 @@ sys.path.insert(0, HERE)
 import contract  # noqa: E402
 
 SIGNUP_PREFIX = "Release notifications:"
+APPROVED_LABEL = "downstream-approved"
 CONTRACTS = (
     ("NMEA 2000", "docs/canboat.json"),
     ("SAE J1939", "docs/canboat-j1939.json"),
@@ -126,7 +132,22 @@ def parse_signup(issue):
     return repo, wants
 
 
+def approved(issue, repo):
+    """Whether a sign-up may send issues to `repo`.
+
+    Anyone can open an issue here, so a sign-up naming somebody else's
+    repository must not be enough to make us open issues there. It counts when
+    the target's owner opened it, or when a maintainer has approved it with the
+    APPROVED_LABEL (which only maintainers can set; the issue template's
+    "downstream" label does not count).
+    """
+    labels = {lab["name"] for lab in issue.get("labels", [])}
+    author = (issue.get("user") or {}).get("login", "")
+    return APPROVED_LABEL in labels or author.lower() == repo.split("/")[0].lower()
+
+
 def signups(canboat_repo):
+    """(issue number, repository, wants, approved) for every open sign-up."""
     pages = gh_json([
         "api", "--paginate", "--slurp",
         "repos/%s/issues?state=open&per_page=100" % canboat_repo,
@@ -139,7 +160,7 @@ def signups(canboat_repo):
             continue
         parsed = parse_signup(i)
         if parsed:
-            out.append((i["number"], parsed[0], parsed[1]))
+            out.append((i["number"], parsed[0], parsed[1], approved(i, parsed[0])))
         else:
             sys.stderr.write("#%d names no repository, skipped\n" % i["number"])
     return out
@@ -223,12 +244,19 @@ def issue_body(canboat_repo, tag, previous, level, signup_number, changes, notes
         "This issue was opened by CANboat's release workflow; feel free to close it "
         "once you have updated." % (canboat_repo, signup_number),
     ]
+    # The database summary may take at most half the issue; the release notes
+    # get what is left, and are left out when that is too little to be useful.
+    more = "\n\n… (truncated; see the release notes)"
+    if len(changes) > MAX_BODY // 2:
+        head[-1] = changes[: MAX_BODY // 2] + more
     body = "\n".join(head)
+    tail = "\n".join(tail)
     if notes:
-        room = MAX_BODY - len(body) - len("\n".join(tail)) - 200
-        notes = notes if len(notes) <= room else notes[:room] + "\n\n… (truncated; see the release notes)"
-        body += "\n\n## Release notes\n\n" + notes
-    return body + "\n".join(tail)
+        room = MAX_BODY - len(body) - len(tail) - len("\n\n## Release notes\n\n") - len(more)
+        if room >= 500:
+            notes = notes if len(notes) <= room else notes[:room] + more
+            body += "\n\n## Release notes\n\n" + notes
+    return body + tail
 
 
 # --------------------------------------------------------------------------- #
@@ -236,9 +264,13 @@ def issue_body(canboat_repo, tag, previous, level, signup_number, changes, notes
 # --------------------------------------------------------------------------- #
 
 def already_notified(repo, title):
+    """True or False, or None when the search failed: then nobody knows, and
+    opening another issue could make a duplicate."""
     r = run(["gh", "issue", "list", "-R", repo, "--state", "all", "--search", "%s in:title" % title,
              "--json", "title", "--jq", ".[].title"], check=False)
-    return r.returncode == 0 and title in r.stdout.splitlines()
+    if r.returncode != 0:
+        return None
+    return title in r.stdout.splitlines()
 
 
 def main(argv=None):
@@ -263,25 +295,34 @@ def main(argv=None):
         return 0
 
     subs = signups(args.repo)
-    targets = [(n, repo) for n, repo, wants in subs if wants_release(wants, level)]
-    print("%d sign-up(s), %d for a %s release." % (len(subs), len(targets), level))
-    if not targets:
-        return 0
+    wanting = [(n, repo, ok) for n, repo, wants, ok in subs if wants_release(wants, level)]
+    targets = [(n, repo) for n, repo, ok in wanting if ok]
+    summary = ["| %s | #%d | awaiting approval (label `%s`) |" % (repo, n, APPROVED_LABEL)
+               for n, repo, ok in wanting if not ok]
+    print("%d sign-up(s), %d for a %s release, %d of them approved."
+          % (len(subs), len(wanting), level, len(targets)))
+    for line in summary:
+        print(line)
 
-    changes = database_changes(previous, args.tag)
-    notes, notes_url = release_notes(args.repo, args.tag)
+    changes = database_changes(previous, args.tag) if targets else ""
+    notes, notes_url = release_notes(args.repo, args.tag) if targets else (None, "")
     title = issue_title(args.tag, level)
-    summary = []
     failed = 0
     for number, repo in targets:
+        notified = already_notified(repo, title)
+        if notified is None:
+            failed += 1
+            print("%s: could not search its issues; not sent, to avoid a duplicate" % repo)
+            summary.append("| %s | #%d | failed: could not check for an existing issue |" % (repo, number))
+            continue
+        if notified:
+            print("%s: already has \"%s\", skipped" % (repo, title))
+            summary.append("| %s | #%d | already notified |" % (repo, number))
+            continue
         body = issue_body(args.repo, args.tag, previous, level, number, changes, notes, notes_url)
         if args.dry_run:
             print("\n=== would open in %s (sign-up #%d): %s\n%s" % (repo, number, title, body))
             summary.append("| %s | #%d | dry run |" % (repo, number))
-            continue
-        if already_notified(repo, title):
-            print("%s: already has \"%s\", skipped" % (repo, title))
-            summary.append("| %s | #%d | already notified |" % (repo, number))
             continue
         with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as fh:
             fh.write(body)
