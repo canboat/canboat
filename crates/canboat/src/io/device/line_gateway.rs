@@ -307,12 +307,39 @@ mod tests {
         assert_eq!(out[0].data.as_slice(), payload.as_slice());
     }
 
+    /// Collects what the writer thread writes.
+    #[derive(Clone, Default)]
+    struct Sink(std::sync::Arc<Mutex<Vec<u8>>>);
+    impl Write for Sink {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.0.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// What `run` writes as the link opens, before any frame.
+    fn written_on_open(init: &[u8]) -> Vec<u8> {
+        let sink = Sink::default();
+        run(
+            Box::new(std::io::empty()),
+            Box::new(sink.clone()),
+            LineFormat::YdwgRaw,
+            BusProtocol::Nmea2000,
+            init,
+        )
+        .join();
+        let out = sink.0.lock().unwrap().clone();
+        out
+    }
+
     #[test]
     fn ydnu_is_put_in_raw_mode_on_open() {
         // A network gateway is sent nothing; a YDNU-02 gets `0` + LF.
-        assert!(Encoder::new(LineFormat::YdwgRaw).init_bytes().is_empty());
-        let enc = Encoder::new(LineFormat::YdwgRaw).with_init(YDNU_RAW_MODE);
-        assert_eq!(enc.init_bytes(), b"0\n");
+        assert!(written_on_open(&[]).is_empty());
+        assert_eq!(written_on_open(YDNU_RAW_MODE), b"0\n");
     }
 
     #[test]
