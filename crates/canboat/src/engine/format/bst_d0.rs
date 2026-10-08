@@ -55,18 +55,22 @@ pub const MAX_DATA_LEN: usize = RAWFRAME_MAX_SIZE;
 /// on: a header, the largest data and the checksum.
 const MAX_COLLECT: usize = HEADER_LEN + MAX_DATA_LEN + 1;
 
+/// The largest PGN a CAN identifier carries: 18 bits.
+const MAX_PGN: u32 = 0x3ffff;
+
 /// Control byte: the message is going to the bus.
 const C_TO_BUS: u8 = 1 << 3;
 
 /// `frame` as one BDTP-framed BST-D0 message for the gateway to send, or
-/// `None` when its data is longer than [`MAX_DATA_LEN`].
+/// `None` when its data is longer than [`MAX_DATA_LEN`] or its PGN does not
+/// fit the 18 bits of a CAN identifier (canboat's synthetic PGNs do not).
 ///
 /// The control byte tells the gateway how to send it: as one frame, as a
 /// fast-packet, or with ISO transport when it is too long for either. The
 /// fast-packet sequence and the time are left 0, as the SDK allows.
 pub fn encode_frame(frame: &RawFrame) -> Option<Vec<u8>> {
     let n = frame.data.len();
-    if n > MAX_DATA_LEN {
+    if n > MAX_DATA_LEN || frame.pgn > MAX_PGN {
         return None;
     }
     let message_type = match fastpacket::packet_type(frame.pgn) {
@@ -455,6 +459,17 @@ mod tests {
             MAX_DATA_LEN
         );
         assert!(encode_frame(&frame(0x0DF8_0503, 255, &[0x55; MAX_DATA_LEN])).is_some());
+    }
+
+    /// A PGN that does not fit 18 bits is refused: composing the CAN id
+    /// would shift it into the priority and send a different PGN.
+    #[test]
+    fn a_pgn_beyond_18_bits_is_refused() {
+        let mut f = frame(POSITION, 255, &POSITION_DATA);
+        f.pgn = 0x40000;
+        assert!(encode_frame(&f).is_none());
+        f.pgn = 0x3ffff;
+        assert!(encode_frame(&f).is_some());
     }
 
     /// A stream with no message in it does not grow the buffer.
