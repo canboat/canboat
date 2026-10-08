@@ -1,0 +1,59 @@
+name: downstream notifications
+
+# Open an issue in every downstream repository that signed up for CANboat
+# release notifications (an open "Release notifications: <owner/repo>" issue
+# here) when a major or minor release is tagged. See tools/downstream-notify.py.
+#
+# Opening issues in other people's repositories needs a classic personal access
+# token with the public_repo scope, stored as the DOWNSTREAM_NOTIFY_TOKEN
+# secret; the workflow's own GITHUB_TOKEN can only reach this repository. The
+# issues appear as opened by that token's owner. Without the secret a tag push
+# only reports what it would have done.
+#
+# Run it by hand (Actions → downstream notifications → Run workflow) to preview
+# a release's notifications (dry run, the default) or to send them for a tag
+# whose push did not.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (vX.Y.Z)"
+        required: true
+      dry_run:
+        description: "Only report what would be sent"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: downstream-notify-${{ github.event.inputs.tag || github.ref_name }}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: notify downstream projects
+        env:
+          GH_TOKEN: ${{ secrets.DOWNSTREAM_NOTIFY_TOKEN || github.token }}
+          HAS_TOKEN: ${{ secrets.DOWNSTREAM_NOTIFY_TOKEN != '' }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
+        run: |
+          args=(--tag "$TAG")
+          if [ "$DRY_RUN" = "true" ]; then
+            args+=(--dry-run)
+          elif [ "$HAS_TOKEN" != "true" ]; then
+            echo "::warning::DOWNSTREAM_NOTIFY_TOKEN is not set; reporting what would be sent instead."
+            args+=(--dry-run)
+          fi
+          python3 tools/downstream-notify.py "${args[@]}"
