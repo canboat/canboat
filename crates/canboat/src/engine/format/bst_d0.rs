@@ -24,7 +24,8 @@
 //!
 //! `data` is a whole message: fast-packets and ISO transport already joined.
 //! A frame with a bad checksum, length or escape is dropped, as the SDK's
-//! BDTP parser does, and decoding resumes at the next `DLE STX`. Other BST
+//! BDTP parser does, and decoding resumes at the next `DLE STX`. So is one
+//! with more data than [`MAX_DATA_LEN`], which no NMEA 2000 message has. Other BST
 //! messages in the stream (a BEM reply, say) are skipped.
 //!
 //! [BDTP]: https://github.com/Actisense/SDK/blob/main/docs/DataProtocols/bdtp-protocol.md
@@ -33,7 +34,7 @@ use smallvec::SmallVec;
 
 use super::common::{iso11783_compose, iso11783_decompose};
 use crate::engine::fastpacket;
-use crate::engine::{FASTPACKET_MAX_SIZE, FramePacketType, RawFrame};
+use crate::engine::{FASTPACKET_MAX_SIZE, FramePacketType, RAWFRAME_MAX_SIZE, RawFrame};
 
 /// BST message ID of a BST-D0 message.
 pub const BST_D0: u8 = 0xD0;
@@ -45,12 +46,14 @@ const ETX: u8 = 0x03;
 /// `D0`, `L`, `D`, `S PDUS PDUF DPP`, `C` and `T`: everything before the data.
 const HEADER_LEN: usize = 13;
 
-/// The largest data a message can carry: `L` is 16 bits.
-pub const MAX_DATA_LEN: usize = u16::MAX as usize - HEADER_LEN;
+/// The largest data a message can carry. `L` is 16 bits and would allow
+/// more, but no NMEA 2000 message is longer than ISO transport's 255
+/// packets of 7 bytes, and a [`RawFrame`] holds no more.
+pub const MAX_DATA_LEN: usize = RAWFRAME_MAX_SIZE;
 
 /// Most unframed bytes collected for one message before it is given up
 /// on: a header, the largest data and the checksum.
-const MAX_COLLECT: usize = u16::MAX as usize + 1;
+const MAX_COLLECT: usize = HEADER_LEN + MAX_DATA_LEN + 1;
 
 /// Control byte: the message is going to the bus.
 const C_TO_BUS: u8 = 1 << 3;
@@ -226,7 +229,7 @@ fn to_frame(m: &[u8]) -> Option<RawFrame> {
         return None;
     }
     let len = u16::from_le_bytes([m[1], m[2]]) as usize;
-    if len < HEADER_LEN || len + 1 != m.len() {
+    if len < HEADER_LEN || len + 1 != m.len() || len - HEADER_LEN > MAX_DATA_LEN {
         return None;
     }
     if m.iter().fold(0u8, |s, &b| s.wrapping_add(b)) != 0 {
@@ -431,6 +434,27 @@ mod tests {
             assert_eq!(m[8], message_type | C_TO_BUS, "{:x}", f.pgn);
             assert_eq!(u16::from_le_bytes([m[1], m[2]]) as usize, 13 + data.len());
         }
+    }
+
+    /// A message with more data than [`MAX_DATA_LEN`] is dropped, not
+    /// passed on truncated, and the next message still decodes.
+    #[test]
+    fn an_oversized_message_is_dropped() {
+        let big = message(255, 0x0DF8_0503, &vec![0x55; MAX_DATA_LEN + 1]);
+        let mut stream = big.clone();
+        stream.extend(message(255, POSITION, &POSITION_DATA));
+        let mut d = BstD0Decoder::new();
+        let frames = d.push_bytes(&stream);
+        assert_eq!(frames.len(), 1);
+        assert_eq!(frames[0].pgn, 129025);
+        assert_eq!(d.skipped, big.len() as u64);
+        // The largest message there can be still decodes.
+        let max = message(255, 0x0DF8_0503, &vec![0x55; MAX_DATA_LEN]);
+        assert_eq!(
+            BstD0Decoder::new().push_bytes(&max)[0].data.len(),
+            MAX_DATA_LEN
+        );
+        assert!(encode_frame(&frame(0x0DF8_0503, 255, &[0x55; MAX_DATA_LEN])).is_some());
     }
 
     /// A stream with no message in it does not grow the buffer.
