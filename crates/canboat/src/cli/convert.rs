@@ -22,8 +22,8 @@ use crate::engine::format::InputFormat;
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
-    EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter, TextLineWriter,
-    analyze, container, copy,
+    BstD0Reader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter,
+    TextLineWriter, analyze, container, copy,
 };
 
 /// Output format for `convert --to`.
@@ -99,11 +99,16 @@ enum FromFormat {
     /// EBL frame reader, so it has no [`InputFormat`] mapping.
     #[value(name = "actisense-ebl")]
     ActisenseEbl,
+    /// Actisense BST-D0: reassembled NMEA 2000 messages in BDTP framing,
+    /// as a W2K-1 or PRO-NDC-1E2K sends them in Actisense mode. Binary
+    /// too, with its own frame reader.
+    #[value(name = "bst-d0", alias = "actisense-n2k")]
+    BstD0,
 }
 
 impl FromFormat {
-    /// Map to the engine line-parser selector. `None` for the
-    /// binary `.ebl` format, which uses its own frame reader.
+    /// Map to the engine line-parser selector. `None` for the binary
+    /// formats, which use their own frame readers.
     fn to_input_format(self) -> Option<InputFormat> {
         Some(match self {
             FromFormat::Plain => InputFormat::Plain,
@@ -116,7 +121,7 @@ impl FromFormat {
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
-            FromFormat::ActisenseEbl | FromFormat::Json => return None,
+            FromFormat::ActisenseEbl | FromFormat::BstD0 | FromFormat::Json => return None,
         })
     }
 }
@@ -131,6 +136,10 @@ Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 Input line formats (auto-detected from the first line, or forced with --from):
   plain, plain-mix-fast, actisense, ydwg02, ikonvert, airmar, chetco,
   garmin, garmin-csv2, candump.
+
+Binary input formats (forced with --from; a .ebl file is recognised by name):
+  actisense-ebl  Actisense .ebl binary log
+  bst-d0         Actisense BST-D0 messages: a W2K-1 or PRO-NDC-1E2K in Actisense mode
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)
@@ -295,25 +304,47 @@ pub fn run(args: Args) -> Result<()> {
     // half-written output behind, whichever path runs.
     let protocol = args.protocol.resolve()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
-    let ebl = ebl_input(&args);
+    let binary = binary_input(&args);
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
 
     if args.to.is_frame_level() {
-        convert_raw(&args, protocol, forced, ebl, &mut out)
+        convert_raw(&args, protocol, forced, binary, &mut out)
     } else {
-        convert_decoded(&args, protocol, forced, ebl, &mut out)
+        convert_decoded(&args, protocol, forced, binary, &mut out)
     }
 }
 
-/// True when the input is an Actisense `.ebl` binary log: `--from
-/// actisense-ebl`, or (unforced) a `.ebl` filename.
-fn ebl_input(args: &Args) -> bool {
-    matches!(args.from, Some(FromFormat::ActisenseEbl))
-        || (args.from.is_none()
-            && args
-                .input()
-                .is_some_and(|p| p.extension().is_some_and(|e| e.eq_ignore_ascii_case("ebl"))))
+/// A binary input, read by its own frame reader rather than a line parser.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Binary {
+    /// An Actisense `.ebl` binary log.
+    Ebl,
+    /// Actisense BST-D0 messages.
+    BstD0,
+}
+
+impl Binary {
+    fn reader<R: io::Read + 'static>(self, source: R) -> Box<dyn FrameReader> {
+        match self {
+            Binary::Ebl => Box::new(EblReader::new(source)),
+            Binary::BstD0 => Box::new(BstD0Reader::new(source)),
+        }
+    }
+}
+
+/// The binary format of the input, if it is one: forced with `--from`,
+/// or (unforced) a `.ebl` filename.
+fn binary_input(args: &Args) -> Option<Binary> {
+    match args.from {
+        Some(FromFormat::ActisenseEbl) => Some(Binary::Ebl),
+        Some(FromFormat::BstD0) => Some(Binary::BstD0),
+        Some(_) => None,
+        None => args
+            .input()
+            .is_some_and(|p| p.extension().is_some_and(|e| e.eq_ignore_ascii_case("ebl")))
+            .then_some(Binary::Ebl),
+    }
 }
 
 /// Raw path: input frames → the selected frame-level format, no decode.
@@ -324,12 +355,12 @@ fn convert_raw<W: Write>(
     args: &Args,
     protocol: BusProtocol,
     forced: Option<InputFormat>,
-    ebl: bool,
+    binary: Option<Binary>,
     out: &mut W,
 ) -> Result<()> {
     let source = open_source(args.input(), args.container_opts())?;
-    let mut reader: Box<dyn FrameReader> = if ebl {
-        Box::new(EblReader::new(source))
+    let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
+        binary.reader(source)
     } else if args.from == Some(FromFormat::Json) {
         // Bare physical values are read against whatever unit system the
         // input's banner declares; `--units` is only the assumption for
@@ -374,7 +405,7 @@ fn convert_decoded<W: Write>(
     args: &Args,
     protocol: BusProtocol,
     forced: Option<InputFormat>,
-    ebl: bool,
+    binary: Option<Binary>,
     out: &mut W,
 ) -> Result<()> {
     let json_opts = JsonOptions {
@@ -440,8 +471,8 @@ fn convert_decoded<W: Write>(
     };
 
     let source = open_source(args.input(), args.container_opts())?;
-    if ebl || args.from == Some(FromFormat::Json) {
-        // `.ebl` records and re-encoded JSON records are already
+    if binary.is_some() || args.from == Some(FromFormat::Json) {
+        // Binary records and re-encoded JSON records are already
         // complete N2K messages, so skip the line-reader / reassembly /
         // coalesced-mode machinery entirely: pull each frame and decode
         // it directly, honouring the filters.
@@ -450,8 +481,8 @@ fn convert_decoded<W: Write>(
         // so `--from json` doubles as a unit converter: read a canboat C
         // `"units":"std"` stream, emit SI (or the other way round).
         let db = cfg.protocol.database(cfg.units);
-        let mut reader: Box<dyn FrameReader> = if ebl {
-            Box::new(EblReader::new(source))
+        let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
+            binary.reader(source)
         } else {
             Box::new(crate::json_input::JsonFrameReader::new(source, db))
         };

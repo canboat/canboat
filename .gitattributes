@@ -19,6 +19,8 @@ samples/** -text
 # break the golden-file comparison.
 analyzer/tests/mixed-format.in    -text
 analyzer/tests/recombine-frames.in -text
+# Binary: Actisense BST 0xD0 messages.
+analyzer/tests/*.bin               -text
 
 # Generated artifacts. The database is authored as YAML under database/ and
 # these files are produced from it by `keel generate` / `make generated`; they

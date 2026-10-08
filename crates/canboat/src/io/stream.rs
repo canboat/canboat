@@ -23,6 +23,7 @@ use std::io::{self, BufRead, Read, Write};
 
 use crate::engine::RawFrame;
 use crate::engine::format::actisense_ascii::write_line as write_actisense;
+use crate::engine::format::bst_d0::BstD0Decoder;
 use crate::engine::format::ebl::encode_frame as encode_ebl;
 use crate::engine::format::ngt1::{EblHeader, Ngt1Decoder, NgtEvent};
 use crate::engine::format::plain::write_line as write_plain;
@@ -349,6 +350,52 @@ impl<R: Read> FrameReader for EblReader<R> {
                     NgtEvent::Header(_) | NgtEvent::Error(_) => {}
                 }
             }
+        }
+    }
+}
+
+/// A [`FrameReader`] over a stream of Actisense BST-D0 messages: what a
+/// W2K-1 or PRO-NDC-1E2K sends over TCP in its Actisense data mode
+/// (#993). The messages carry only the device's own clock, so the frames
+/// have no timestamp.
+///
+/// Binary, not line-based, so it implements [`FrameReader`] directly
+/// rather than going through [`LineFrameReader`].
+pub struct BstD0Reader<R: Read> {
+    inner: R,
+    decoder: BstD0Decoder,
+    queue: VecDeque<RawFrame>,
+    buf: Box<[u8; 8192]>,
+    eof: bool,
+}
+
+impl<R: Read> BstD0Reader<R> {
+    pub fn new(inner: R) -> Self {
+        Self {
+            inner,
+            decoder: BstD0Decoder::new(),
+            queue: VecDeque::new(),
+            buf: Box::new([0u8; 8192]),
+            eof: false,
+        }
+    }
+}
+
+impl<R: Read> FrameReader for BstD0Reader<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        loop {
+            if let Some(frame) = self.queue.pop_front() {
+                return Ok(Some(frame));
+            }
+            if self.eof {
+                return Ok(None);
+            }
+            let n = self.inner.read(&mut self.buf[..])?;
+            if n == 0 {
+                self.eof = true;
+                continue;
+            }
+            self.queue.extend(self.decoder.push_bytes(&self.buf[..n]));
         }
     }
 }

@@ -4,7 +4,7 @@
 //! NMEA 2000 gateway, with no port, thread or clock of its own.
 //!
 //! One stateful object per gateway ([`ngt1::Ngt1`], [`ikonvert::Ikonvert`],
-//! [`maretron::Maretron`]) owns everything the protocol needs — the partial
+//! [`maretron::Maretron`], [`bst_d0::BstD0`]) owns everything the protocol needs — the partial
 //! message between reads, the init handshake, the transmit list — and is
 //! driven entirely by its caller through the [`Codec`] trait:
 //!
@@ -20,6 +20,7 @@
 //! codec needs one, so the same code runs under the threaded `bus::open_*`
 //! runners, in an async task, or in a browser over WebSerial.
 
+pub mod bst_d0;
 pub mod ikonvert;
 pub mod maretron;
 pub mod ngt1;

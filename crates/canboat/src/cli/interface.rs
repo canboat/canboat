@@ -51,6 +51,10 @@ enum Kind {
     /// Actisense W2K-1 in N2K ASCII mode, over TCP.
     #[value(name = "w2k-ascii")]
     W2kAscii,
+    /// Actisense BST-D0 (binary, reassembled NMEA 2000) over TCP: a W2K-1
+    /// or PRO-NDC-1E2K in Actisense mode.
+    #[value(name = "bst-d0", alias = "w2k-actisense")]
+    BstD0,
 }
 
 impl Kind {
@@ -63,7 +67,7 @@ impl Kind {
             Kind::Maretron => "maretron-ipg",
             Kind::Socketcan => "socketcan-serial",
             Kind::Ydwg => "ydwg-gateway",
-            Kind::W2kAscii => "w2k-gateway",
+            Kind::W2kAscii | Kind::BstD0 => "w2k-gateway",
         }
     }
 
@@ -73,7 +77,7 @@ impl Kind {
             Kind::Ngt1 => 115_200,
             Kind::Ikonvert => 230_400,
             Kind::Ydwg => 38_400,
-            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii => 0,
+            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 => 0,
         }
     }
 }
@@ -402,6 +406,10 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 protocol,
                 &[],
             ))
+        }
+        Kind::BstD0 => {
+            let (reader, writer) = open_tcp(&args.device, 60002)?;
+            Ok(device::bst_d0::run(reader, writer))
         }
         Kind::Socketcan => {
             let config = device::socketcan::Config {
