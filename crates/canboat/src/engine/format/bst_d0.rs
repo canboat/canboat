@@ -228,7 +228,7 @@ impl BstD0Decoder {
 /// The frame in an unframed BST message, or `None` when it is not a
 /// well-formed BST-D0 message: another BST ID, a length that does not
 /// match, or a bad checksum.
-fn to_frame(m: &[u8]) -> Option<RawFrame> {
+pub(crate) fn to_frame(m: &[u8]) -> Option<RawFrame> {
     if m.len() < HEADER_LEN + 1 || m[0] != BST_D0 {
         return None;
     }

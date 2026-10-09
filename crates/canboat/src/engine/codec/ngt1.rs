@@ -379,10 +379,6 @@ impl Codec for Ngt1 {
                     }
                 }
                 NgtEvent::Error(e) => events.push(Event::Error(e.to_string())),
-                // EBL header records (timestamp etc.) only appear when
-                // the decoder is in EBL mode, which a live link never
-                // enables.
-                NgtEvent::Header(_) => {}
             }
         }
     }

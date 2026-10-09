@@ -23,9 +23,12 @@ use std::io::{self, BufRead, Read, Write};
 
 use crate::engine::RawFrame;
 use crate::engine::format::actisense_ascii::write_line as write_actisense;
+use crate::engine::format::bst::to_raw_frame as bst_frame;
 use crate::engine::format::bst_d0::BstD0Decoder;
-use crate::engine::format::ebl::encode_frame as encode_ebl;
-use crate::engine::format::ngt1::{EblHeader, Ngt1Decoder, NgtEvent};
+use crate::engine::format::ebl::{
+    EBL_FORMAT_VERSION, EblDecoder, EblEvent, encode_frame as encode_ebl, encode_preamble,
+    frame_unix_ms,
+};
 use crate::engine::format::plain::write_line as write_plain;
 use crate::engine::format::ydwg02::write_line as write_ydwg02;
 use crate::engine::format::{
@@ -258,11 +261,13 @@ impl<W: Write> FrameWriter for TextLineWriter<W> {
 }
 
 /// A [`FrameWriter`] emitting each frame as an Actisense `.ebl` binary
-/// record pair (timestamp header + `N2K_MSG_RECEIVED`). No line
+/// record pair (`TimeUTC` metatag + `N2K_MSG_RECEIVED`), after the
+/// `TimeUTC` and `Version` metatags an `.ebl` file starts with. No line
 /// terminator — the framing is self-delimiting.
 pub struct EblWriter<W: Write> {
     inner: W,
     buf: Vec<u8>,
+    started: bool,
 }
 
 impl<W: Write> EblWriter<W> {
@@ -270,6 +275,7 @@ impl<W: Write> EblWriter<W> {
         Self {
             inner,
             buf: Vec::with_capacity(256),
+            started: false,
         }
     }
 }
@@ -277,6 +283,10 @@ impl<W: Write> EblWriter<W> {
 impl<W: Write> FrameWriter for EblWriter<W> {
     fn write_frame(&mut self, frame: &RawFrame) -> io::Result<()> {
         self.buf.clear();
+        if !self.started {
+            self.started = true;
+            encode_preamble(frame_unix_ms(frame), &mut self.buf);
+        }
         encode_ebl(frame, &mut self.buf);
         self.inner.write_all(&self.buf)
     }
@@ -287,20 +297,21 @@ impl<W: Write> FrameWriter for EblWriter<W> {
 }
 
 /// A [`FrameReader`] over an Actisense `.ebl` byte stream — the inverse
-/// of [`EblWriter`]. Drives [`Ngt1Decoder::with_ebl`] (EBL framing is a
-/// superset of NGT-1 framing) and hands back one [`RawFrame`] per
-/// `N2K_MSG_RECEIVED` record. The per-record `ESC SOH` timestamp header
-/// is folded onto the following frame as an ISO-8601 UTC timestamp.
+/// of [`EblWriter`], and a reader for the logs of other Actisense gateways
+/// and tools. It hands back the frame of every BST-93 (NGT-1), BST-95 (raw
+/// CAN frame) and BST-D0 (W2K-1) message, whether in the stream or in a
+/// `BSTRawFrame` metatag, dated by the `TimeUTC` metatag before it. A
+/// BST-95 frame is one CAN frame, so a fast-packet comes as its frames.
 ///
 /// Binary, not line-based, so it implements [`FrameReader`] directly
 /// rather than going through [`LineFrameReader`].
 pub struct EblReader<R: Read> {
     inner: R,
-    decoder: Ngt1Decoder,
+    decoder: EblDecoder,
+    events: Vec<EblEvent>,
     queue: VecDeque<RawFrame>,
-    /// Most recent `.ebl` header timestamp (Unix ms) to stamp onto the
-    /// next message frame.
-    pending_ts: Option<u64>,
+    /// The latest `TimeUTC`, formatted, for the frames after it.
+    time: Option<String>,
     buf: Box<[u8; 8192]>,
     eof: bool,
 }
@@ -309,11 +320,36 @@ impl<R: Read> EblReader<R> {
     pub fn new(inner: R) -> Self {
         Self {
             inner,
-            decoder: Ngt1Decoder::with_ebl(),
+            decoder: EblDecoder::new(),
+            events: Vec::new(),
             queue: VecDeque::new(),
-            pending_ts: None,
+            time: None,
             buf: Box::new([0u8; 8192]),
             eof: false,
+        }
+    }
+
+    fn take_events(&mut self) {
+        for ev in self.events.drain(..) {
+            match ev {
+                EblEvent::Time(ms) => self.time = Some(crate::engine::format_iso_ms(ms)),
+                EblEvent::Message { bytes, raw } => {
+                    if let Some(mut frame) = bst_frame(&bytes, raw) {
+                        frame.timestamp = self.time.clone();
+                        self.queue.push_back(frame);
+                    }
+                }
+                EblEvent::Version(v) if v > EBL_FORMAT_VERSION => log::warn!(
+                    "ebl: the file is EBL v{}.{:03}, newer than the v1.002 canboat knows; reading it anyway",
+                    v / 1000,
+                    v % 1000
+                ),
+                EblEvent::Warning(why) => log::warn!("ebl: {why}"),
+                EblEvent::Version(_)
+                | EblEvent::Direction(_)
+                | EblEvent::Description(_)
+                | EblEvent::Unknown { .. } => {}
+            }
         }
     }
 }
@@ -330,26 +366,11 @@ impl<R: Read> FrameReader for EblReader<R> {
             let n = self.inner.read(&mut self.buf[..])?;
             if n == 0 {
                 self.eof = true;
-                continue;
+                self.decoder.finish(&mut self.events);
+            } else {
+                self.decoder.push_bytes(&self.buf[..n], &mut self.events);
             }
-            for ev in self.decoder.push_bytes(&self.buf[..n]) {
-                match ev {
-                    NgtEvent::Header(EblHeader::Timestamp(ms)) => self.pending_ts = Some(ms),
-                    NgtEvent::Message(m) => {
-                        if let Some(mut frame) = m.to_raw_frame() {
-                            // The NGT message's own timestamp is 0 in an
-                            // `.ebl`; the real instant rides in the header.
-                            if let Some(ms) = self.pending_ts.take() {
-                                frame.timestamp = Some(crate::engine::format_iso_ms(ms));
-                            }
-                            self.queue.push_back(frame);
-                        }
-                    }
-                    // Skip an unknown header record or a framing error —
-                    // resync on the next valid `ESC SOH` / `DLE STX`.
-                    NgtEvent::Header(_) | NgtEvent::Error(_) => {}
-                }
-            }
+            self.take_events();
         }
     }
 }

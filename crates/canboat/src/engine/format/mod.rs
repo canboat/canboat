@@ -9,6 +9,7 @@
 
 pub mod actisense_ascii;
 pub mod airmar;
+pub mod bst;
 pub mod bst_d0;
 pub mod candump;
 pub mod chetco;
