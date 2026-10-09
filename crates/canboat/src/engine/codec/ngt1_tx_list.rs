@@ -4,37 +4,43 @@
 //! the bus, and — for an addressable NGT-1 — the Transmit list it answers
 //! PGN 126464 with. A PGN missing from it is silently not transmitted.
 //!
-//! Actisense does not document the commands, so they are taken from
-//! canboatjs (`lib/actisense-serial.ts`), which reverse-engineered them.
-//! Each goes out as an `NGT_MSG_SEND` (0xA1) message and is answered by an
-//! `NGT_MSG_RECEIVED` (0xA0) one carrying the same command byte first:
+//! The commands were first reverse engineered by canboatjs
+//! (`lib/actisense-serial.ts`); the [Actisense SDK] now documents them.
+//! Each goes out as an `NGT_MSG_SEND` (0xA1) BEM command and is answered by
+//! an `NGT_MSG_RECEIVED` (0xA0) BEM response: the BEM id, a sequence byte,
+//! the model id, the serial number and an error code (12 bytes), then the
+//! command's data.
 //!
-//! | Command | Sent                                    | Answer                      |
-//! |---------|-----------------------------------------|-----------------------------|
-//! | `0x49`  | read the Transmit PGN Enable list       | `[0x49, 1, …]` with PGNs, then `[0x49, 4, …]` at the end |
-//! | `0x47`  | `[0x47, pgn u32, 1, 0xfffffffe u32 ×2]`: enable one PGN | `[0x47, 1, …, result i32 @8, pgn u32 @12, …]` |
-//! | `0x01`  | save the lists to EEPROM                | `[0x01, …]`                 |
-//! | `0x4b`  | activate the saved lists                | `[0x4b, …]`                 |
+//! | BEM    | SDK name                         | Sent                 | Answer data |
+//! |--------|----------------------------------|----------------------|-------------|
+//! | `0x49` | Get Tx PGN Enable List F1        | —                    | four messages, sequence 1 to 4: the PGNs, their rates, their timeouts, their priorities; each a count, then `u32`s (`u8`s for the priorities) |
+//! | `0x47` | Set Tx PGN Enable                | PGN `u32`, enable `1`, rate `0xfffffffe` (the PGN's default), timeout (ignored); no priority, so it is left as it is | PGN `u32`, enable, rate `u32`, timeout `u32`, priority |
+//! | `0x01` | Commit To EEPROM                 | —                    | —           |
+//! | `0x4b` | Activate PGN Enable Lists        | —                    | —           |
 //!
-//! In a `[0x49, 1, …]` answer the PGN count is at byte 12 and the PGNs
-//! follow as little-endian `u32`s from byte 13. The two `0xfffffffe`
-//! words of `0x47` are copied from canboatjs.
+//! [Actisense SDK]: https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/README.md
+//!
+//! The SDK marks F1 deprecated in favour of Get Tx PGN Enable List F2
+//! (`0x4f`), from firmware v2.500. canboat still reads F1: F2 lists indexes
+//! into the gateway's Supported PGN List (`0x40`), which then has to be read
+//! too, and the NGT-1s in canboat's captures run firmware 2.190. Moving to
+//! F2 waits for a test on an NGT-1 that has it.
 //!
 //! Seen on an NGT-1-A (2026-09):
 //!
-//! - The list comes back in four parts, all with the same count. Part 1
-//!   has the PGNs; part 2 a per-PGN `u32` that reads as a transmit interval
-//!   in ms (`65535` for all but 126993 Heartbeat's `60000`); part 3 a
-//!   per-PGN `u32`, all zero; part 4 ends it. The two words of `0x47` are
-//!   presumably those two attributes, set to "default".
 //! - **The read is truncated on a long list**: with 17 PGNs enabled it
 //!   reported 14, with 23 it reported 13 (the lowest ones). A PGN past that
 //!   point looks missing although it is enabled.
-//! - `0x47` answers status 1 whatever happens; the outcome is the `i32` at
-//!   byte 8: 0 added, −996 already on the list (see the truncated read),
-//!   −997 refused (PGN 0x40000).
+//! - `0x47`'s answer has sequence 1 whatever happens; the outcome is the
+//!   error code: 0 added, −996 already on the list (see the truncated
+//!   read), −997 refused (PGN 0x40000). The rates read back as `65535`
+//!   ("non periodic") for all but 126993 Heartbeat's `60000`.
 //! - A PDU1 PGN is stored with its low (destination) byte cleared: enabling
 //!   PGN 1 enables PGN 0.
+//!
+//! The SDK says current firmware saves a Set Tx PGN Enable at once, and
+//! still accepts Commit To EEPROM and Activate; canboat sends both, as the
+//! NGT-1 predates that.
 //!
 //! Hence: nothing is saved unless an enable actually added a PGN, and a
 //! run remembers what the gateway confirmed ([`TxListRecord`]): a PGN the
@@ -52,17 +58,30 @@ use std::sync::{Arc, Mutex};
 
 pub use crate::engine::format::ngt1::NGT_MSG_RECEIVED;
 use crate::engine::format::ngt1::{
-    BEM_OPERATING_MODE, BemResponse, NGT_MSG_SEND, encode_ngt_message,
+    BEM_OPERATING_MODE, BemResponse, NGT_MSG_SEND, describe_error, encode_ngt_message,
 };
 
-const CMD_COMMIT: u8 = 0x01;
-const CMD_ENABLE_TX_PGN: u8 = 0x47;
-const CMD_READ_TX_LIST: u8 = 0x49;
-const CMD_ACTIVATE: u8 = 0x4b;
+/// BEM Commit To EEPROM.
+const BEM_COMMIT_TO_EEPROM: u8 = 0x01;
+/// BEM Get / Set Tx PGN Enable.
+const BEM_TX_PGN_ENABLE: u8 = 0x47;
+/// BEM Get Tx PGN Enable List F1.
+const BEM_TX_PGN_ENABLE_LIST_F1: u8 = 0x49;
+/// BEM Activate PGN Enable Lists.
+const BEM_ACTIVATE_PGN_ENABLE_LISTS: u8 = 0x4b;
 
-const LIST_PART: u8 = 1;
-const LIST_END: u8 = 4;
-const ENABLE_OK: u8 = 1;
+/// The F1 list's first message, by its sequence byte: the PGNs.
+const F1_PGNS: u8 = 1;
+/// The F1 list's last message (the priorities).
+const F1_LAST: u8 = 4;
+/// The sequence byte of a Set Tx PGN Enable answer.
+const ENABLE_SEQUENCE: u8 = 1;
+
+/// A Tx Rate of "the PGN's default".
+const TX_RATE_DEFAULT: u32 = 0xffff_fffe;
+/// The Tx Timeout of Set Tx PGN Enable, which the gateway ignores. canboat
+/// has always sent this value.
+const TX_TIMEOUT_IGNORED: u32 = 0xffff_fffe;
 
 /// Wait after the gateway confirms startup before reading the list, as
 /// canboatjs does.
@@ -177,12 +196,12 @@ impl TxListSync {
                 };
                 Vec::new()
             }
-            (State::Reading { have, .. }, CMD_READ_TX_LIST) if status == Some(LIST_PART) => {
+            (State::Reading { have, .. }, BEM_TX_PGN_ENABLE_LIST_F1) if status == Some(F1_PGNS) => {
                 have.extend(list_pgns(payload));
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 Vec::new()
             }
-            (State::Reading { have, .. }, CMD_READ_TX_LIST) if status == Some(LIST_END) => {
+            (State::Reading { have, .. }, BEM_TX_PGN_ENABLE_LIST_F1) if status == Some(F1_LAST) => {
                 log::debug!("ngt1: the gateway's transmit PGN list: {have:?}");
                 let missing: Vec<u32> = self
                     .wanted
@@ -218,7 +237,7 @@ impl TxListSync {
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 vec![first]
             }
-            (State::Enabling { todo, added }, CMD_ENABLE_TX_PGN) => {
+            (State::Enabling { todo, added }, BEM_TX_PGN_ENABLE) => {
                 let pgn = todo.remove(0);
                 let result = enable_result(payload, status);
                 if let Ok(mut record) = self.record.lock() {
@@ -251,17 +270,17 @@ impl TxListSync {
                     None => {
                         let added = std::mem::take(added);
                         self.state = State::Committing { added };
-                        vec![command(&[CMD_COMMIT])]
+                        vec![command(&[BEM_COMMIT_TO_EEPROM])]
                     }
                 }
             }
-            (State::Committing { added }, CMD_COMMIT) => {
+            (State::Committing { added }, BEM_COMMIT_TO_EEPROM) => {
                 let added = std::mem::take(added);
                 self.state = State::Activating { added };
                 self.deadline = now + ANSWER_TIMEOUT_MS;
-                vec![command(&[CMD_ACTIVATE])]
+                vec![command(&[BEM_ACTIVATE_PGN_ENABLE_LISTS])]
             }
-            (State::Activating { added }, CMD_ACTIVATE) => {
+            (State::Activating { added }, BEM_ACTIVATE_PGN_ENABLE_LISTS) => {
                 log::info!("ngt1: transmit PGN list saved and active");
                 if let Ok(mut record) = self.record.lock() {
                     record.saved.append(added);
@@ -310,11 +329,12 @@ impl TxListSync {
             attempt,
         };
         self.deadline = now + ANSWER_TIMEOUT_MS;
-        vec![command(&[CMD_READ_TX_LIST])]
+        vec![command(&[BEM_TX_PGN_ENABLE_LIST_F1])]
     }
 }
 
-/// The PGNs in one `[0x49, 1, …]` answer.
+/// The PGNs in the F1 list's first message: a count at payload byte 12,
+/// then the PGNs as `u32`s.
 fn list_pgns(payload: &[u8]) -> Vec<u32> {
     let Some(&count) = payload.get(12) else {
         return Vec::new();
@@ -330,7 +350,7 @@ fn list_pgns(payload: &[u8]) -> Vec<u32> {
         .collect()
 }
 
-/// What an accepted `0x47` did.
+/// What an accepted Set Tx PGN Enable did.
 #[derive(Debug, PartialEq, Eq)]
 enum Enabled {
     /// The PGN was added: the list changed and needs saving.
@@ -339,33 +359,34 @@ enum Enabled {
     Already,
 }
 
-/// The `0x47` result code for a PGN already on the list.
+/// The Set Tx PGN Enable error code for a PGN already on the list.
 const ALREADY_ENABLED: i32 = -996;
 
-/// What an `0x47` answer says. The status byte only says the command was
-/// taken — an NGT-1-A answers 1 whatever happened — and the outcome is an
-/// `i32` at payload byte 8: 0 added, −996 already on the list, other
-/// values refused (−997 for 0x40000).
+/// What a Set Tx PGN Enable answer says. Its sequence byte is 1 whatever
+/// happened (on an NGT-1-A); the outcome is the error code: 0 added, −996
+/// already on the list, other values refused (−997 for 0x40000).
 fn enable_result(payload: &[u8], status: Option<u8>) -> Result<Enabled, String> {
-    if status != Some(ENABLE_OK) {
-        return Err(format!("status {status:?}"));
+    if status != Some(ENABLE_SEQUENCE) {
+        return Err(format!("sequence {status:?}"));
     }
-    match payload.get(8..12) {
-        Some(b) => match i32::from_le_bytes([b[0], b[1], b[2], b[3]]) {
+    match BemResponse::parse(payload) {
+        Some(answer) => match answer.error {
             0 => Ok(Enabled::Now),
             ALREADY_ENABLED => Ok(Enabled::Already),
-            code => Err(format!("error {code}")),
+            code => Err(format!("error {}", describe_error(code))),
         },
         None => Err("short answer".into()),
     }
 }
 
+/// Set Tx PGN Enable: enable `pgn` at its default rate, leaving its
+/// priority as it is.
 fn enable_command(pgn: u32) -> Vec<u8> {
-    let mut payload = vec![CMD_ENABLE_TX_PGN];
+    let mut payload = vec![BEM_TX_PGN_ENABLE];
     payload.extend_from_slice(&pgn.to_le_bytes());
     payload.push(1);
-    payload.extend_from_slice(&0xffff_fffe_u32.to_le_bytes());
-    payload.extend_from_slice(&0xffff_fffe_u32.to_le_bytes());
+    payload.extend_from_slice(&TX_RATE_DEFAULT.to_le_bytes());
+    payload.extend_from_slice(&TX_TIMEOUT_IGNORED.to_le_bytes());
     command(&payload)
 }
 
@@ -379,9 +400,9 @@ fn command(payload: &[u8]) -> Vec<u8> {
 mod tests {
     use super::*;
 
-    /// A `[0x49, 1, …]` answer carrying `pgns`.
+    /// The F1 list's first message, carrying `pgns`.
     fn list_part(pgns: &[u32]) -> Vec<u8> {
-        let mut p = vec![CMD_READ_TX_LIST, LIST_PART];
+        let mut p = vec![BEM_TX_PGN_ENABLE_LIST_F1, F1_PGNS];
         p.extend_from_slice(&[0; 10]);
         p.push(pgns.len() as u8);
         for pgn in pgns {
@@ -390,10 +411,10 @@ mod tests {
         p
     }
 
-    /// An `0x47` answer as an NGT-1-A sends it: status 1 whatever the
+    /// A Set Tx PGN Enable answer as an NGT-1-A sends it: sequence 1 whatever the
     /// outcome, `result` at byte 8 (0 accepted), the PGN at byte 12.
     fn answer(pgn: u32, result: i32) -> Vec<u8> {
-        let mut p = vec![CMD_ENABLE_TX_PGN, 1, 0x0e, 0x00, 0xac, 0x9f, 0x01, 0x00];
+        let mut p = vec![BEM_TX_PGN_ENABLE, 1, 0x0e, 0x00, 0xac, 0x9f, 0x01, 0x00];
         p.extend_from_slice(&result.to_le_bytes());
         p.extend_from_slice(&pgn.to_le_bytes());
         p.extend_from_slice(&[0x01, 0xff, 0xff, 0, 0, 0, 0, 0, 0, 0x07, 0x9e]);
@@ -422,7 +443,7 @@ mod tests {
     #[test]
     fn an_already_enabled_pgn_is_not_saved() {
         let mut s = started(vec![127508]);
-        s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
+        s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_100);
         assert!(
             s.on_message(&answer(127508, ALREADY_ENABLED), 2_200)
                 .is_empty()
@@ -475,7 +496,10 @@ mod tests {
             s.on_tick(READ_DELAY_MS - 1).is_empty(),
             "waits before reading"
         );
-        assert_eq!(s.on_tick(READ_DELAY_MS), vec![command(&[CMD_READ_TX_LIST])]);
+        assert_eq!(
+            s.on_tick(READ_DELAY_MS),
+            vec![command(&[BEM_TX_PGN_ENABLE_LIST_F1])]
+        );
         s
     }
 
@@ -493,7 +517,7 @@ mod tests {
         assert!(s.on_message(&list_part(&[59392, 127508]), 2_100).is_empty());
         assert!(s.on_message(&list_part(&[127506]), 2_200).is_empty());
         assert!(
-            s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_300)
+            s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_300)
                 .is_empty()
         );
         assert!(s.is_done());
@@ -504,7 +528,7 @@ mod tests {
         let mut s = started(vec![127508, 127506, 127258]);
         s.on_message(&list_part(&[127506]), 2_100);
         assert_eq!(
-            s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_200),
+            s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_200),
             vec![enable_command(127508)]
         );
         assert_eq!(
@@ -513,13 +537,16 @@ mod tests {
         );
         assert_eq!(
             s.on_message(&answer(127258, 0), 2_400),
-            vec![command(&[CMD_COMMIT])]
+            vec![command(&[BEM_COMMIT_TO_EEPROM])]
         );
         assert_eq!(
-            s.on_message(&[CMD_COMMIT], 2_500),
-            vec![command(&[CMD_ACTIVATE])]
+            s.on_message(&[BEM_COMMIT_TO_EEPROM], 2_500),
+            vec![command(&[BEM_ACTIVATE_PGN_ENABLE_LISTS])]
         );
-        assert!(s.on_message(&[CMD_ACTIVATE], 2_600).is_empty());
+        assert!(
+            s.on_message(&[BEM_ACTIVATE_PGN_ENABLE_LISTS], 2_600)
+                .is_empty()
+        );
         assert!(s.is_done());
     }
 
@@ -542,10 +569,10 @@ mod tests {
     fn an_unanswered_read_is_retried_then_given_up() {
         let mut s = started(vec![127508]);
         let t = READ_DELAY_MS + ANSWER_TIMEOUT_MS;
-        assert_eq!(s.on_tick(t), vec![command(&[CMD_READ_TX_LIST])]);
+        assert_eq!(s.on_tick(t), vec![command(&[BEM_TX_PGN_ENABLE_LIST_F1])]);
         assert_eq!(
             s.on_tick(t + ANSWER_TIMEOUT_MS),
-            vec![command(&[CMD_READ_TX_LIST])]
+            vec![command(&[BEM_TX_PGN_ENABLE_LIST_F1])]
         );
         assert!(s.on_tick(t + 2 * ANSWER_TIMEOUT_MS).is_empty());
         assert!(s.is_done());
@@ -565,7 +592,7 @@ mod tests {
     #[test]
     fn nothing_is_saved_when_every_pgn_is_refused() {
         let mut s = started(vec![127508]);
-        s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
+        s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_100);
         assert!(s.on_message(&answer(127508, -996), 2_200).is_empty());
         assert!(s.is_done());
     }
@@ -581,7 +608,7 @@ mod tests {
         s.on_message(&MODE_ANSWER, 0);
         s.on_tick(READ_DELAY_MS);
         s.on_message(&list_part(have), READ_DELAY_MS + 1);
-        let sent = s.on_message(&[CMD_READ_TX_LIST, LIST_END], READ_DELAY_MS + 2);
+        let sent = s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], READ_DELAY_MS + 2);
         (s, sent)
     }
 
@@ -594,10 +621,10 @@ mod tests {
         assert_eq!(sent, vec![enable_command(127508)]);
         assert_eq!(
             s.on_message(&answer(127508, 0), 3_000),
-            vec![command(&[CMD_COMMIT])]
+            vec![command(&[BEM_COMMIT_TO_EEPROM])]
         );
-        s.on_message(&[CMD_COMMIT], 3_100);
-        s.on_message(&[CMD_ACTIVATE], 3_200);
+        s.on_message(&[BEM_COMMIT_TO_EEPROM], 3_100);
+        s.on_message(&[BEM_ACTIVATE_PGN_ENABLE_LISTS], 3_200);
 
         let (mut s, sent) = session(vec![127508], &record, &[]);
         assert_eq!(sent, vec![enable_command(127508)]);
@@ -619,7 +646,7 @@ mod tests {
         assert_eq!(sent, vec![enable_command(127508)]);
         assert_eq!(
             s.on_message(&answer(127508, 0), 3_000),
-            vec![command(&[CMD_COMMIT])]
+            vec![command(&[BEM_COMMIT_TO_EEPROM])]
         );
     }
 
@@ -640,7 +667,7 @@ mod tests {
     #[test]
     fn a_refused_pgn_does_not_stop_the_rest() {
         let mut s = started(vec![127508, 127506]);
-        s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
+        s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_100);
         assert_eq!(
             s.on_message(&answer(127508, -996), 2_200),
             vec![enable_command(127506)]
