@@ -1,0 +1,5 @@
+# PGN 130824 B&G key/value list in which one record ("Distance to Start Line
+# Port") carries Length 13 for a numeric value type. The value is
+# 104 bits wide, more than a 64-bit word: the record must be reported without a
+# value and the following records must still decode at the right offsets.
+2026-01-01-00:00:00.000,3,130824,7,25,42,7d,99,7e,20,cb,00,7c,20,00,05,32,21,a8,46,33,21,b5,4d,12,d1,f4,03,50,21,56,5e,51,21,95,0a,21,6b,f5,6c,21,56,2c,6d,21,56,2b,ff

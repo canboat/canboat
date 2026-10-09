@@ -234,6 +234,20 @@ bool extractNumber(const Field   *field,
 
   logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
 
+  // Define the outputs on every path: callers such as fillGlobalsBasedOnField()
+  // and showBytesOrBits() read them without checking the return value.
+  *value    = 0;
+  *maxValue = 0;
+
+  // A key/value record (fieldPrintKeyValue) reads a numeric value type at the
+  // width its Length byte announces. Anything wider than a 64-bit word cannot
+  // be a number; shifting by `magnitude` past 63 below would be undefined.
+  if (bits > 64)
+  {
+    logDebug("Field '%s' is %zu bits wide, wider than a 64-bit value\n", name, bits);
+    return false;
+  }
+
   /* A field whose value another field continues (keel R43): read its own bits, then join the high bits above them.
    * Only for a read of the field's whole width; a truncated read stays its own bits, as before. */
   if (field != NULL && field->continuationBits != 0 && bits == field->size && bits + field->continuationBits <= 64)
@@ -259,7 +273,6 @@ bool extractNumber(const Field   *field,
   }
 
   firstBit = startBit;
-  *value   = 0;
   maxv     = 0;
 
   while (bitsRemaining > 0 && dataLen > 0)
@@ -2215,7 +2228,20 @@ extern bool fieldPrintKeyValue(const Field   *field,
         f.reservedCount = reservedCountForSize((uint32_t) *bits);
       }
 
-      r = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+      if (*bits > 64 && f.ft->pf != fieldPrintBinary && f.ft->pf != fieldPrintStringFix
+          && f.ft->pf != fieldPrintStringLZ && f.ft->pf != fieldPrintStringLAU)
+      {
+        // The key says the value is a number, the record's length says it is
+        // wider than any number can be. Skip the value but keep the announced
+        // width, so the next record is still read from the right offset.
+        logDebug("fieldPrintKeyValue('%s'): %zu bits is wider than a %s value, skipping\n", fieldName, *bits, f.ft->name);
+        g_skip = true;
+        r      = true;
+      }
+      else
+      {
+        r = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
+      }
     }
     else
     {
