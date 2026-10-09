@@ -436,18 +436,135 @@ pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Option<
     Some(out)
 }
 
-/// The reverse-engineered NGT-1 startup sequence (3 bytes wrapped in an
-/// `NGT_MSG_SEND` command). Sent on connect and periodically afterwards
-/// to keep the NGT-1's TX queue unlocked. Magic comes from canboat's
-/// `actisense-serial.c` (originally from Actisense NMEAreader).
-pub const NGT_STARTUP_SEQ: [u8; 3] = [0x11, 0x02, 0x00];
+/// Actisense's "NGT-specific message received" command: the gateway's
+/// BEM responses to [`NGT_MSG_SEND`] commands.
+pub const NGT_MSG_RECEIVED: u8 = 0xA0;
 
-/// Encode the NGT-1 startup / keepalive ping as a ready-to-write byte
-/// string.
-pub fn encode_startup_ping() -> Vec<u8> {
-    let mut out = Vec::with_capacity(NGT_STARTUP_SEQ.len() + 8);
-    encode_ngt_message(NGT_MSG_SEND, &NGT_STARTUP_SEQ, &mut out);
+/// BEM `0x11`, Get / Set Operating Mode
+/// ([SDK](https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/operating-mode.md)):
+/// with a 16-bit LE mode it sets the mode (with no data it only reads it).
+/// The answer carries the mode in force either way.
+pub const BEM_OPERATING_MODE: u8 = 0x11;
+
+/// An Actisense gateway's operating mode, numbered and named as in the
+/// Actisense SDK (`operating_mode.hpp`). Only the NGT / NGX modes are
+/// listed; a gateway reporting another mode shows as [`Self::Other`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum OperatingMode {
+    /// "NGT Transfer Normal Mode": the Receive and Transmit PGN Enable
+    /// lists both apply, so only listed PGNs reach the host.
+    NgTransferNormal,
+    /// "NGT Transfer Rx All Mode": every received PGN is forwarded; the
+    /// Transmit PGN Enable list still applies. What canboat has always
+    /// set, as the reverse-engineered "startup sequence".
+    NgTransferRxAll,
+    /// "NGT Transfer Raw Mode": never implemented by the NGT-1, and a
+    /// spare slot on the NGX (raw CAN moved to mode 5, CAN Packet).
+    NgTransferRaw,
+    /// "NGW Convert Normal Mode": NMEA 0183 conversion (NGW-1, NGX).
+    NgConvertNormal,
+    /// "CAN Packet": raw CAN frames as BST-95, both ways (NGX).
+    CanPacket,
+    /// "CAN Packet ASCII": raw CAN frames as ASCII (NGX).
+    CanPacketAscii,
+    /// Any other mode number.
+    Other(u16),
+}
+
+impl OperatingMode {
+    /// The mode's number on the wire.
+    pub fn code(self) -> u16 {
+        match self {
+            Self::NgTransferNormal => 1,
+            Self::NgTransferRxAll => 2,
+            Self::NgTransferRaw => 3,
+            Self::NgConvertNormal => 4,
+            Self::CanPacket => 5,
+            Self::CanPacketAscii => 6,
+            Self::Other(code) => code,
+        }
+    }
+
+    /// The mode numbered `code`.
+    pub fn from_code(code: u16) -> Self {
+        match code {
+            1 => Self::NgTransferNormal,
+            2 => Self::NgTransferRxAll,
+            3 => Self::NgTransferRaw,
+            4 => Self::NgConvertNormal,
+            5 => Self::CanPacket,
+            6 => Self::CanPacketAscii,
+            _ => Self::Other(code),
+        }
+    }
+}
+
+impl std::fmt::Display for OperatingMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NgTransferNormal => f.write_str("NGT Transfer Normal Mode"),
+            Self::NgTransferRxAll => f.write_str("NGT Transfer Rx All Mode"),
+            Self::NgTransferRaw => f.write_str("NGT Transfer Raw Mode"),
+            Self::NgConvertNormal => f.write_str("NGW Convert Normal Mode"),
+            Self::CanPacket => f.write_str("CAN Packet Mode"),
+            Self::CanPacketAscii => f.write_str("CAN Packet ASCII Mode"),
+            Self::Other(code) => write!(f, "operating mode {code}"),
+        }
+    }
+}
+
+/// Encode BEM Set Operating Mode as a ready-to-write byte string.
+pub fn encode_set_operating_mode(mode: OperatingMode) -> Vec<u8> {
+    let [lo, hi] = mode.code().to_le_bytes();
+    let mut out = Vec::with_capacity(12);
+    encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE, lo, hi], &mut out);
     out
+}
+
+/// A BEM response: the payload of an [`NGT_MSG_RECEIVED`] message
+/// ([SDK](https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bst-bem-response.md)).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BemResponse<'a> {
+    /// The BEM command this answers.
+    pub bem: u8,
+    /// Sequence number; a long answer comes in several parts.
+    pub sequence: u8,
+    /// Actisense (ARL) model id of the gateway.
+    pub model_id: u16,
+    pub serial: u32,
+    /// Actisense (ARL) error code; 0 is success.
+    pub error: u32,
+    /// The command's own data.
+    pub data: &'a [u8],
+}
+
+impl<'a> BemResponse<'a> {
+    /// Split `payload` into the 12-byte BEM header and its data; `None`
+    /// when it is shorter than the header.
+    pub fn parse(payload: &'a [u8]) -> Option<Self> {
+        if payload.len() < 12 {
+            return None;
+        }
+        Some(Self {
+            bem: payload[0],
+            sequence: payload[1],
+            model_id: u16::from_le_bytes([payload[2], payload[3]]),
+            serial: u32::from_le_bytes([payload[4], payload[5], payload[6], payload[7]]),
+            error: u32::from_le_bytes([payload[8], payload[9], payload[10], payload[11]]),
+            data: &payload[12..],
+        })
+    }
+
+    /// The operating mode an Operating Mode answer reports.
+    pub fn operating_mode(&self) -> Option<OperatingMode> {
+        match (self.bem, self.data) {
+            (BEM_OPERATING_MODE, [lo, hi, ..]) => {
+                Some(OperatingMode::from_code(u16::from_le_bytes([*lo, *hi])))
+            }
+            _ => None,
+        }
+    }
 }
 
 impl NgtMessage {
@@ -704,19 +821,50 @@ mod tests {
         assert_eq!(&payload[6..], &frame.data[..]);
     }
 
+    /// The SDK's Set Operating Mode example: `A1 03 11 02 00`, which is
+    /// the old reverse-engineered "startup sequence".
     #[test]
-    fn startup_ping_decodes_to_ngt_msg_send() {
-        let bytes = encode_startup_ping();
+    fn set_operating_mode_matches_the_sdk_example() {
+        let bytes = encode_set_operating_mode(OperatingMode::NgTransferRxAll);
         let mut d = Ngt1Decoder::new();
         let events = d.push_bytes(&bytes);
         assert_eq!(events.len(), 1);
         match &events[0] {
             NgtEvent::Message(m) => {
                 assert_eq!(m.command, NGT_MSG_SEND);
-                assert_eq!(m.payload, NGT_STARTUP_SEQ);
+                assert_eq!(m.payload, [0x11, 0x02, 0x00]);
             }
             other => panic!("got {other:?}"),
         }
+    }
+
+    /// The SDK's Get Operating Mode response example, less its BST id and
+    /// length: `11 05 0E 00 78 56 34 12 00 00 00 00 02 00`.
+    #[test]
+    fn bem_response_reports_the_operating_mode() {
+        let payload = [
+            0x11, 0x05, 0x0e, 0x00, 0x78, 0x56, 0x34, 0x12, 0, 0, 0, 0, 0x02, 0x00,
+        ];
+        let r = BemResponse::parse(&payload).unwrap();
+        assert_eq!(r.bem, BEM_OPERATING_MODE);
+        assert_eq!(r.sequence, 5);
+        assert_eq!(r.model_id, 0x000e);
+        assert_eq!(r.serial, 0x1234_5678);
+        assert_eq!(r.error, 0);
+        assert_eq!(r.operating_mode(), Some(OperatingMode::NgTransferRxAll));
+        assert_eq!(
+            r.operating_mode().unwrap().to_string(),
+            "NGT Transfer Rx All Mode"
+        );
+        assert!(BemResponse::parse(&payload[..11]).is_none());
+    }
+
+    #[test]
+    fn operating_mode_codes_round_trip() {
+        for code in 0..=8 {
+            assert_eq!(OperatingMode::from_code(code).code(), code);
+        }
+        assert_eq!(OperatingMode::from_code(512), OperatingMode::Other(512));
     }
 
     #[test]

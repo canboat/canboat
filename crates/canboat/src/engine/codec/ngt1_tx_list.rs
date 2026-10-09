@@ -50,13 +50,11 @@
 
 use std::sync::{Arc, Mutex};
 
-use crate::engine::format::ngt1::{NGT_MSG_SEND, encode_ngt_message};
+pub use crate::engine::format::ngt1::NGT_MSG_RECEIVED;
+use crate::engine::format::ngt1::{
+    BEM_OPERATING_MODE, BemResponse, NGT_MSG_SEND, encode_ngt_message,
+};
 
-/// Actisense's "NGT-specific message received" command: the gateway's
-/// answers to [`NGT_MSG_SEND`] commands.
-pub const NGT_MSG_RECEIVED: u8 = 0xa0;
-
-const CMD_STARTUP: u8 = 0x11;
 const CMD_COMMIT: u8 = 0x01;
 const CMD_ENABLE_TX_PGN: u8 = 0x47;
 const CMD_READ_TX_LIST: u8 = 0x49;
@@ -163,7 +161,11 @@ impl TxListSync {
             return Vec::new();
         };
         match (&mut self.state, cmd) {
-            (State::AwaitStartup, CMD_STARTUP) => {
+            // Any well-formed answer will do, even one refusing the mode:
+            // the gateway is up, and its list does not depend on the mode.
+            (State::AwaitStartup, BEM_OPERATING_MODE)
+                if BemResponse::parse(payload).is_some_and(|r| r.operating_mode().is_some()) =>
+            {
                 self.state = State::ReadAt {
                     at: now + READ_DELAY_MS,
                 };
@@ -429,9 +431,40 @@ mod tests {
     }
 
     /// Walk a sync through startup up to the list request.
+    /// The gateway's answer to Set Operating Mode: NGT Transfer Rx All Mode.
+    const MODE_ANSWER: [u8; 14] = [
+        BEM_OPERATING_MODE,
+        1,
+        0x0e,
+        0x00,
+        0xac,
+        0x9f,
+        0x01,
+        0x00,
+        0,
+        0,
+        0,
+        0,
+        0x02,
+        0x00,
+    ];
+
+    /// A malformed answer to Set Operating Mode does not start the sync; a
+    /// refusal does, as the gateway is up.
+    #[test]
+    fn only_a_well_formed_mode_answer_starts_the_sync() {
+        let mut s = TxListSync::new(vec![127508], Arc::default());
+        s.on_message(&[BEM_OPERATING_MODE, 1], 0);
+        assert_eq!(s.state, State::AwaitStartup);
+        let mut refused = MODE_ANSWER;
+        refused[8..12].copy_from_slice(&(-1159i32).to_le_bytes());
+        s.on_message(&refused, 0);
+        assert!(matches!(s.state, State::ReadAt { .. }));
+    }
+
     fn started(wanted: Vec<u32>) -> TxListSync {
         let mut s = TxListSync::new(wanted, Arc::default());
-        assert!(s.on_message(&[CMD_STARTUP, 1], 0).is_empty());
+        assert!(s.on_message(&MODE_ANSWER, 0).is_empty());
         assert!(
             s.on_tick(READ_DELAY_MS - 1).is_empty(),
             "waits before reading"
@@ -444,7 +477,7 @@ mod tests {
     fn nothing_wanted_means_nothing_sent() {
         let mut s = TxListSync::new(Vec::new(), Arc::default());
         assert!(s.is_done());
-        assert!(s.on_message(&[CMD_STARTUP, 1], 0).is_empty());
+        assert!(s.on_message(&MODE_ANSWER, 0).is_empty());
         assert!(s.on_tick(u64::MAX).is_empty());
     }
 
@@ -512,12 +545,12 @@ mod tests {
         assert!(s.is_done());
     }
 
-    /// The periodic startup ping keeps being confirmed; only the first
+    /// The periodic Set Operating Mode keeps being answered; only the first
     /// confirmation starts the sync.
     #[test]
     fn later_startup_confirmations_are_ignored() {
         let mut s = started(vec![127508]);
-        assert!(s.on_message(&[CMD_STARTUP, 1], 2_100).is_empty());
+        assert!(s.on_message(&MODE_ANSWER, 2_100).is_empty());
         assert!(matches!(s.state, State::Reading { .. }));
     }
 
@@ -539,7 +572,7 @@ mod tests {
         have: &[u32],
     ) -> (TxListSync, Vec<Vec<u8>>) {
         let mut s = TxListSync::new(wanted, record.clone());
-        s.on_message(&[CMD_STARTUP, 1], 0);
+        s.on_message(&MODE_ANSWER, 0);
         s.on_tick(READ_DELAY_MS);
         s.on_message(&list_part(have), READ_DELAY_MS + 1);
         let sent = s.on_message(&[CMD_READ_TX_LIST, LIST_END], READ_DELAY_MS + 2);

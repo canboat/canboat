@@ -25,6 +25,7 @@ use std::thread;
 
 use anyhow::{Context, Result};
 
+use crate::engine::format::ngt1::OperatingMode;
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
@@ -82,6 +83,22 @@ impl Kind {
     }
 }
 
+/// The NGT-1 operating modes `--mode` offers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+enum Ngt1Mode {
+    RxAll,
+    Normal,
+}
+
+impl From<Ngt1Mode> for OperatingMode {
+    fn from(mode: Ngt1Mode) -> Self {
+        match mode {
+            Ngt1Mode::RxAll => OperatingMode::NgTransferRxAll,
+            Ngt1Mode::Normal => OperatingMode::NgTransferNormal,
+        }
+    }
+}
+
 #[derive(Debug, clap::Args)]
 pub struct Args {
     /// Gateway type.
@@ -113,6 +130,13 @@ pub struct Args {
     /// Write-only: send stdin frames to the device, drop received ones.
     #[arg(short = 'w', long = "write-only")]
     write_only: bool,
+
+    /// NGT-1: the operating mode to put the gateway in. `rx-all` ("NGT
+    /// Transfer Rx All Mode") forwards every PGN received; `normal` ("NGT
+    /// Transfer Normal Mode") only those on the gateway's Receive PGN
+    /// Enable list.
+    #[arg(long, value_enum, default_value_t = Ngt1Mode::RxAll)]
+    mode: Ngt1Mode,
 
     /// iKonvert: comma-separated receive PGN allow-list.
     #[arg(long, value_name = "PGN,...")]
@@ -338,7 +362,11 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     match args.kind {
         Kind::Ngt1 => {
             let (r, w) = open_stream(args)?;
-            Ok(device::ngt1::run(r, w))
+            let config = device::ngt1::Config {
+                operating_mode: args.mode.into(),
+                ..Default::default()
+            };
+            Ok(device::ngt1::run_with_config(r, w, config))
         }
         Kind::Ikonvert => {
             let (r, w) = open_stream(args)?;

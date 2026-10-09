@@ -1,0 +1,30 @@
+name: ACTISENSE_OPERATING_MODE
+kind: pair
+bits: 16
+note: >-
+  The operating modes of Actisense devices, named as in the Actisense SDK
+  (code/cpp/src/public/operating_mode.hpp,
+  https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/operating-mode.md).
+  Modes 1-6 are the NGT-1 / NGX gateway modes; the NGT-1 never implemented
+  mode 3. Modes 50000-59999 are user modes.
+values:
+  0: Undefined
+  1: NGT Transfer Normal Mode
+  2: NGT Transfer Rx All Mode
+  3: NGT Transfer Raw Mode
+  4: NGW Convert Normal Mode
+  5: CAN Packet Mode
+  6: CAN Packet ASCII Mode
+  16: Buffer Mode 1
+  17: Buffer Mode 2
+  18: Buffer Mode 3
+  19: Autoswitch Direct Mode
+  20: Autoswitch Smart Mode
+  21: Combine Slow Mode
+  22: Combine Fast Mode
+  23: Test Mode 1
+  24: NSI Mode 1
+  25: IEC 61162-450 Mode 1
+  512: Normal
+  40000: Predefined Mode 1
+  40001: Predefined Mode 2

@@ -17,7 +17,9 @@ fields:
   type: UINT32
 - id: operatingMode
   name: Operating Mode
-  type: UINT16
+  type: LOOKUP
+  bits: 16
+  lookup: ACTISENSE_OPERATING_MODE
 samples:
 - raw: "2023-01-01-00:00:00.000,0,262161,0,0,13,01,0e,00,ab,b0,01,00,00,00,00,00,02,00"  # from merrimac-actisense-serial-2011.raw
   expects:

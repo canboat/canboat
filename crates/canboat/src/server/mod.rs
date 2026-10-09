@@ -674,6 +674,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
                 pgn_lists: pgn_lists.clone(),
                 extra_tx_pgns: extra_tx_pgns.clone(),
                 tx_list_record: Arc::clone(&tx_list_record),
+                ..Default::default()
             };
             Ok(device::ngt1::run_with_config(reader, writer, config))
         });
