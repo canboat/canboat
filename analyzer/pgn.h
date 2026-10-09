@@ -96,13 +96,15 @@ typedef struct
                           *    string "=<number>" (see keel/QUIRKS.md Q19). */
   int64_t matchValue;
 
-  int32_t offset;          /* Mostly used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+  double offset;           /* Mostly used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
                             *    of two's complement as used by NMEA 2000.
                             *    See http://en.wikipedia.org/wiki/Offset_binary
+                            *    In raw steps. The whole steps are added to the raw value; a fraction, which only
+                            *    an unsigned field has (J1939's -40 C is 233.15 K), goes into unitOffset.
                             */
   double resolution;       /* Either a positive real value or zero */
   int    precision;        /* How many decimal digits after the decimal point to print; usually 0 = automatic */
-  double unitOffset;       /* Only used for K->C conversion in non-SI print */
+  double unitOffset;       /* Added after scaling: an offset's fraction and the K->C conversion in non-SI print */
   bool   proprietary;      /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */

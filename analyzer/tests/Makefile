@@ -330,8 +330,8 @@ test33:
 
 #
 # The same for J1939 temperatures in Excess-K notation (#984), where raw 0 is
-# 233 K: PGN 65262 with a coolant and fuel temperature, then the top coolant
-# value 485 K next to sentinels, then all 0xff. In Metric and SI.
+# 233.15 K (-40 C): PGN 65262 with a coolant and fuel temperature, then the
+# top coolant value 485.15 K next to sentinels, then all 0xff. In Metric and SI.
 #
 test34:
 	$(ANALYZER_J1939) -json < j1939-offset-sentinels.in > $(TEMPDIR)/j1939-offset-sentinels.out -fixtime pgn-test 2> $(TEMPDIR)/j1939-offset-sentinels.err

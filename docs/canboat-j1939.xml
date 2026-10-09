@@ -4031,8 +4031,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4136,8 +4137,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4314,8 +4316,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4399,8 +4402,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4418,8 +4422,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4866,8 +4871,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4885,8 +4891,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -4992,8 +4999,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -5094,8 +5102,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7464,8 +7473,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7483,8 +7493,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7502,8 +7513,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7521,8 +7533,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7774,8 +7787,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7793,8 +7807,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7833,8 +7848,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7865,9 +7881,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -7885,9 +7901,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -7905,9 +7921,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -7925,9 +7941,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -7945,9 +7961,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9076,9 +9092,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9096,9 +9112,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9116,8 +9132,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -9135,8 +9152,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -9154,9 +9172,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9534,9 +9552,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <Offset>233</Offset>
-          <RangeMin>233</RangeMin>
-          <RangeMax>485</RangeMax>
+          <Offset>233.15</Offset>
+          <RangeMin>233.15</RangeMin>
+          <RangeMax>485.15</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9593,8 +9611,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -9774,8 +9793,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -9933,8 +9953,9 @@ limitations under the License.
           <Unit>K</Unit>
           <Resolution>0.03125</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2047.875</RangeMax>
+          <Offset>0.15</Offset>
+          <RangeMin>0.15</RangeMin>
+          <RangeMax>2048.025</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>

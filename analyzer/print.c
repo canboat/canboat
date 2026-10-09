@@ -296,10 +296,10 @@ bool extractNumber(const Field   *field,
   {
     maxv >>= 1;
 
-    if (field && field->offset) /* J1939 Excess-K notation */
+    if (field && field->offset != 0.0) /* J1939 Excess-K notation; a fraction is in unitOffset */
     {
-      *value += field->offset;
-      maxv += field->offset;
+      *value += (int64_t) field->offset;
+      maxv += (int64_t) field->offset;
     }
     else
     {
@@ -318,10 +318,10 @@ bool extractNumber(const Field   *field,
   }
   else
   {
-    if (field && field->offset) /* J1939 Excess-K notation */
+    if (field && field->offset != 0.0) /* J1939 Excess-K notation; a fraction is in unitOffset */
     {
-      *value += field->offset;
-      maxv += field->offset;
+      *value += (int64_t) field->offset;
+      maxv += (int64_t) field->offset;
     }
   }
 
@@ -532,7 +532,7 @@ static bool extractNumberNotEmpty(const Field   *field,
    * signed field's derived rangeMin is the full negative end of its bits, this
    * only catches a range the database states narrower than the bits. The raw
    * threshold is rounded the way the encoder rounds its range check. */
-  if (field != NULL && field->hasSign && field->offset == 0 && field->resolution > 0.0 && isfinite(field->rangeMin))
+  if (field != NULL && field->hasSign && field->offset == 0.0 && field->resolution > 0.0 && isfinite(field->rangeMin))
   {
     double range_min_raw = (field->rangeMin - field->unitOffset) / field->resolution;
 

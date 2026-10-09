@@ -569,7 +569,9 @@ limitations under the License.
             Excess K format and this element contains the (negative) offset that
             must be added to the unsigned binary number to end up with the 
             appropriate signed value. It is in the field's own units, so it can
-            have a fraction (J1939's -62.5 L fluid level deviation).
+            have a fraction (J1939's -62.5 L fluid level deviation). An unsigned
+            value can have an offset too: J1939's 8-bit temperature starts at
+            -40 deg C, which is an Offset of 233.15 K.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
