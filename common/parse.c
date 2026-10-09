@@ -55,7 +55,8 @@ static int setParsedValues(RawMessage *m, unsigned int prio, unsigned int pgn, u
 
 int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 {
-  unsigned int prio, pgn, dst, src, len, junk, r, i;
+  unsigned int prio, pgn, dst, src, len, junk, i;
+  int          r;
   char        *p;
   unsigned int data[8];
 
@@ -92,7 +93,7 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
              &junk);
   if (r < 5)
   {
-    logError("Error reading message, scanned %zu from %s", r, msg);
+    logError("Error reading message, scanned %d from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -104,16 +105,25 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
     return -1;
   }
 
-  if (r <= 5 + 8)
-  {
-    for (i = 0; i < len; i++)
-    {
-      m->data[i] = data[i];
-    }
-  }
-  else
+  if (r > 5 + 8)
   {
     return -1;
+  }
+
+  if (r < 5 + len)
+  {
+    // Fewer hex bytes on the line than the length field announces. The
+    // missing entries of data[] were never written by sscanf, so copying
+    // them would decode stack garbage as PGN field values.
+    logError("Error reading message, %u data bytes declared but only %u present in %s", len, r - 5, msg);
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  for (i = 0; i < len; i++)
+  {
+    m->data[i] = data[i];
   }
 
   return setParsedValues(m, prio, pgn, dst, src, len);
@@ -121,7 +131,8 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
 
 int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 {
-  unsigned int prio, pgn, dst, src, len, r, i;
+  unsigned int prio, pgn, dst, src, len, i;
+  int          r;
   char        *p;
 
   p = findOccurrence(msg, ',', 1);
@@ -140,7 +151,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
   {
-    logError("Error reading message, scanned %zu from %s", r, msg);
+    logError("Error reading message, scanned %d from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;

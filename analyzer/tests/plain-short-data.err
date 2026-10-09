@@ -1,0 +1,14 @@
+INFO pgn-test [analyzer] Timestamp fixed
+INFO pgn-test [analyzer] Assuming PLAIN_OR_FAST format with one line per frame or one line per message
+ERROR pgn-test [analyzer] Error reading message, 8 data bytes declared but only 1 present in 2026-01-01-00:00:00.000,3,127250,1,255,8,01
+ERROR pgn-test [analyzer] Unknown message error 2: '2026-01-01-00:00:00.000,3,127250,1,255,8,01
+'
+ERROR pgn-test [analyzer] Error reading message, 8 data bytes declared but only 3 present in 2026-01-01-00:00:00.000,3,127250,1,255,8,01,02,03
+ERROR pgn-test [analyzer] Unknown message error 2: '2026-01-01-00:00:00.000,3,127250,1,255,8,01,02,03
+'
+ERROR pgn-test [analyzer] Error reading message, 3 data bytes declared but only 0 present in 2026-01-01-00:00:00.000,3,127250,1,255,3
+ERROR pgn-test [analyzer] Unknown message error 2: '2026-01-01-00:00:00.000,3,127250,1,255,3
+'
+ERROR pgn-test [analyzer] Error reading message, scanned -1 from 2026-01-01-00:00:00.000,
+ERROR pgn-test [analyzer] Unknown message error 2: '2026-01-01-00:00:00.000,
+'
