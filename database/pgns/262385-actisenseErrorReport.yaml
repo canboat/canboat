@@ -1,0 +1,32 @@
+pgn: 262385
+id: actisenseErrorReport
+description: 'Actisense: Error report'
+explanation: >-
+  BEM F1H, sent unsolicited by an Actisense gateway that hits an error; the
+  Error ID names it. The error data that follows the Structure Variant
+  depends on that variant and is not decoded. See the Actisense SDK,
+  https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/error-report.md.
+type: Fast
+missing:
+- Fields
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: INT32
+  description: Actisense error code; 0 is success
+- id: dataSize
+  name: Data size
+  type: UINT8
+  description: Bytes of error data that follow, including the Structure Variant
+- id: structureVariant
+  name: Structure Variant
+  type: UINT32

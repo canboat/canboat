@@ -446,6 +446,145 @@ pub const NGT_MSG_RECEIVED: u8 = 0xA0;
 /// The answer carries the mode in force either way.
 pub const BEM_OPERATING_MODE: u8 = 0x11;
 
+/// BEM `0x41`, Get Product Info
+/// ([SDK](https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md)).
+pub const BEM_PRODUCT_INFO: u8 = 0x41;
+/// BEM `0xF0`, Startup Status: sent unsolicited when the gateway has
+/// (re)started.
+pub const BEM_STARTUP_STATUS: u8 = 0xF0;
+/// BEM `0xF1`, Error Report: sent unsolicited when the gateway hits an
+/// error.
+pub const BEM_ERROR_REPORT: u8 = 0xF1;
+/// BEM `0xF2`, System Status: bus load and error counts, about once a
+/// second when P-codes are on.
+pub const BEM_SYSTEM_STATUS: u8 = 0xF2;
+/// BEM `0xF4`, Negative Ack: the gateway could not carry out a command.
+pub const BEM_NEGATIVE_ACK: u8 = 0xF4;
+
+/// The Actisense SDK's name for the (negative) error code in a BEM
+/// response, for the codes it documents. The SDK publishes only part of
+/// the list, so other codes have no name.
+pub fn error_name(code: i32) -> Option<&'static str> {
+    Some(match code {
+        -1137 => "BST-BEM message not valid",
+        -1138 => "model ID unknown",
+        -1139 => "no definition for the datatype",
+        -1140 => "bad comms data",
+        -1152 => "command does not fit the model",
+        -1153 => "invalid stream",
+        -1154 => "invalid address",
+        -1156 => "unexpected datatype",
+        -1158 => "command timeout",
+        -1159 => "command data out of range",
+        -1160 => "command buffer overrun",
+        -1168 => "invalid checksum",
+        -1169 => "buffer underflow",
+        -1170 => "buffer overflow",
+        -1173 => "invalid baud rate",
+        -1176 => "port does not exist",
+        -1177 => "port number out of range",
+        -1497 => "EEPROM sector error",
+        -1498 => "malloc/free error",
+        -1499 => "model ID invalid",
+        -1995 => "null value",
+        -1997 => "bad pointer",
+        -1998 => "null pointer",
+        _ => return None,
+    })
+}
+
+/// `code` with its SDK name, if it has one: `-1158 (command timeout)`.
+pub fn describe_error(code: i32) -> String {
+    match error_name(code) {
+        Some(name) => format!("{code} ({name})"),
+        None => code.to_string(),
+    }
+}
+
+/// Encode BEM Get Product Info as a ready-to-write byte string.
+pub fn encode_get_product_info() -> Vec<u8> {
+    let mut out = Vec::with_capacity(8);
+    encode_ngt_message(NGT_MSG_SEND, &[BEM_PRODUCT_INFO], &mut out);
+    out
+}
+
+/// A gateway's product information, from its answer(s) to Get Product
+/// Info. Older firmware (the NGT-1, NGW-1) answers in five parts, numbered
+/// 1 to 5 by the sequence byte; newer firmware may answer in one, numbered
+/// 6.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ProductInfo {
+    /// NMEA 2000 version × 1000.
+    pub nmea2000_version: u16,
+    pub product_code: u16,
+    pub model: String,
+    pub software_version: String,
+    pub hardware_version: String,
+    pub serial_number: String,
+    /// Which parts have arrived, by bit: 1 to 5.
+    parts: u8,
+}
+
+impl ProductInfo {
+    /// Take in one Product Info answer; true once the information is
+    /// complete.
+    pub fn add(&mut self, response: &BemResponse<'_>) -> bool {
+        let d = response.data;
+        let u16_at = |i: usize| u16::from_le_bytes([d[i], d[i + 1]]);
+        match (response.sequence, d.len()) {
+            (6, 138..) => {
+                self.nmea2000_version = u16_at(4);
+                self.product_code = u16_at(6);
+                self.model = product_string(&d[8..40]);
+                self.software_version = product_string(&d[40..72]);
+                self.hardware_version = product_string(&d[72..104]);
+                self.serial_number = product_string(&d[104..136]);
+                self.parts = 0b11_1110;
+            }
+            (1, 6..) => {
+                self.nmea2000_version = u16_at(0);
+                self.product_code = u16_at(2);
+                self.parts |= 1 << 1;
+            }
+            (part @ 2..=5, 32..) => {
+                let text = product_string(&d[..32]);
+                match part {
+                    2 => self.model = text,
+                    3 => self.software_version = text,
+                    4 => self.hardware_version = text,
+                    _ => self.serial_number = text,
+                }
+                self.parts |= 1 << part;
+            }
+            _ => {}
+        }
+        self.parts == 0b11_1110
+    }
+}
+
+/// A Product Info string: ASCII, ended by a NUL or 0xFF padding.
+fn product_string(bytes: &[u8]) -> String {
+    let end = bytes
+        .iter()
+        .position(|&b| b == 0 || b == 0xff)
+        .unwrap_or(bytes.len());
+    String::from_utf8_lossy(&bytes[..end]).trim().to_string()
+}
+
+/// The firmware version and reset status a Startup Status carries:
+/// `(version × 1000, reset status)`. The reset status is one byte on older
+/// firmware, four on newer.
+pub fn startup_status(response: &BemResponse<'_>) -> Option<(u16, u32)> {
+    match response.data {
+        [v0, v1, r0, r1, r2, r3, ..] => Some((
+            u16::from_le_bytes([*v0, *v1]),
+            u32::from_le_bytes([*r0, *r1, *r2, *r3]),
+        )),
+        [v0, v1, r0, ..] => Some((u16::from_le_bytes([*v0, *v1]), u32::from(*r0))),
+        _ => None,
+    }
+}
+
 /// An Actisense gateway's operating mode, numbered and named as in the
 /// Actisense SDK (`operating_mode.hpp`). Only the NGT / NGX modes are
 /// listed; a gateway reporting another mode shows as [`Self::Other`].
@@ -533,8 +672,8 @@ pub struct BemResponse<'a> {
     /// Actisense (ARL) model id of the gateway.
     pub model_id: u16,
     pub serial: u32,
-    /// Actisense (ARL) error code; 0 is success.
-    pub error: u32,
+    /// Actisense (ARL) error code; 0 is success, an error is negative.
+    pub error: i32,
     /// The command's own data.
     pub data: &'a [u8],
 }
@@ -551,7 +690,7 @@ impl<'a> BemResponse<'a> {
             sequence: payload[1],
             model_id: u16::from_le_bytes([payload[2], payload[3]]),
             serial: u32::from_le_bytes([payload[4], payload[5], payload[6], payload[7]]),
-            error: u32::from_le_bytes([payload[8], payload[9], payload[10], payload[11]]),
+            error: i32::from_le_bytes([payload[8], payload[9], payload[10], payload[11]]),
             data: &payload[12..],
         })
     }

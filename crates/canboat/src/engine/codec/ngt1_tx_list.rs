@@ -150,6 +150,12 @@ impl TxListSync {
         }
     }
 
+    /// Start over, as after the gateway restarted: wait for it to answer
+    /// the operating mode again, then read its list afresh.
+    pub fn restart(&mut self) {
+        *self = Self::new(std::mem::take(&mut self.wanted), Arc::clone(&self.record));
+    }
+
     /// Whether the sync has finished, successfully or not.
     pub fn is_done(&self) -> bool {
         self.state == State::Done

@@ -1,0 +1,27 @@
+pgn: 262209
+id: actisenseProductInfoSoftwareVersion
+description: 'Actisense: Product info, software version'
+explanation: >-
+  BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md.
+type: Fast
+variantOrder: 3
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+  description: Part 3 of 5
+  match: 3
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: INT32
+  description: Actisense error code; 0 is success
+- id: softwareVersion
+  name: Software Version
+  type: STRING_FIX
+  bits: 256

@@ -18,16 +18,16 @@ fields:
   type: UINT32
 - id: errorId
   name: Error ID
-  type: UINT32
+  type: INT32
+  description: Actisense error code; 0 is success
 - id: firmwareVersion
   name: Firmware version
   type: VERSION
 - id: resetStatus
   name: Reset status
-  type: UINT8
-- id: a
-  name: A
-  type: UINT8
+  type: BINARY
+  bits: 32
+  description: Device-specific reset causes; only the first byte on older firmware
 samples:
 - raw: "2023-01-01-00:00:00.000,0,262384,0,0,14,01,0e,00,ab,b0,01,00,00,00,00,00,8e,08,00"  # from merrimac-actisense-serial-2011.raw
   expects:
@@ -36,8 +36,7 @@ samples:
     serialId: 110763
     errorId: 0
     firmwareVersion: 2.190
-    resetStatus: 0
-    a: ~
+    resetStatus: "00"
 - raw: "2023-01-01-00:00:00.000,0,262384,0,0,14,01,0e,00,ac,9f,01,00,00,00,00,00,8e,08,00"  # from merrimac-actisense-serial-2011.raw
   expects:
     sid: 1
@@ -45,5 +44,4 @@ samples:
     serialId: 106412
     errorId: 0
     firmwareVersion: 2.190
-    resetStatus: 0
-    a: ~
+    resetStatus: "00"

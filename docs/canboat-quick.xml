@@ -461,6 +461,10 @@ limitations under the License.
       <EnumPair Value="40000" Name="Predefined Mode 1" />
       <EnumPair Value="40001" Name="Predefined Mode 2" />
     </LookupEnumeration>
+    <LookupEnumeration Name="CERTIFICATION_LEVEL" MaxValue="255">
+      <EnumPair Value="0" Name="Level A" />
+      <EnumPair Value="1" Name="Level B" />
+    </LookupEnumeration>
     <LookupEnumeration Name="QUICK_CHAIN_UNITS" MaxValue="65535">
       <EnumPair Value="2" Name="Feet" />
     </LookupEnumeration>

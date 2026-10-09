@@ -14,7 +14,8 @@ fields:
   type: UINT32
 - id: errorId
   name: Error ID
-  type: UINT32
+  type: INT32
+  description: Actisense error code; 0 is success
 - id: operatingMode
   name: Operating Mode
   type: LOOKUP

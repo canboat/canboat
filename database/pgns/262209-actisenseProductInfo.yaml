@@ -1,0 +1,58 @@
+pgn: 262209
+id: actisenseProductInfo
+description: 'Actisense: Product info'
+explanation: >-
+  BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md.
+type: Fast
+variantOrder: 6
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+  description: Single message
+  match: 6
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: INT32
+  description: Actisense error code; 0 is success
+- id: structureVariant
+  name: Structure Variant
+  type: UINT32
+  description: 17 (SV_AppProdInfo)
+- id: nmea2000Version
+  name: NMEA 2000 Version
+  type: VERSION
+- id: productCode
+  name: Product Code
+  type: UINT16
+- id: modelIdString
+  name: Model ID String
+  type: STRING_FIX
+  bits: 256
+- id: softwareVersion
+  name: Software Version
+  type: STRING_FIX
+  bits: 256
+- id: hardwareVersion
+  name: Hardware Version
+  type: STRING_FIX
+  bits: 256
+- id: serialNumber
+  name: Serial Number
+  type: STRING_FIX
+  bits: 256
+- id: certificationLevel
+  name: Certification Level
+  type: LOOKUP
+  bits: 8
+  lookup: CERTIFICATION_LEVEL
+- id: loadEquivalency
+  name: Load Equivalency
+  type: UINT8
+  description: 50 mA per LEN
