@@ -40,15 +40,18 @@ limitations under the License.
 #include "license.h"
 #include "parse.h"
 
-/* The following startup command reverse engineered from Actisense NMEAreader.
- * It instructs the NGT1 to clear its PGN message TX list, thus it starts
- * sending all PGNs.
+/* BEM Set Operating Mode, "NGT Transfer Rx All Mode": the NGT-1 forwards
+ * every PGN it receives, whatever its Receive PGN Enable list says. Sent at
+ * startup and every 20 seconds. Once reverse engineered from Actisense
+ * NMEA Reader; see the Actisense SDK,
+ * docs/DataFormats/Binary/bem-detail/operating-mode.md.
  */
-static unsigned char NGT_STARTUP_SEQ[] = {
-    0x11, /* msg byte 1, meaning ? */
-    0x02, /* msg byte 2, meaning ? */
-    0x00  /* msg byte 3, meaning ? */
-};
+#define BEM_OPERATING_MODE (0x11)
+#define NGT_TRANSFER_RX_ALL_MODE (2)
+
+static unsigned char NGT_SET_OPERATING_MODE[] = {BEM_OPERATING_MODE,
+                                                 NGT_TRANSFER_RX_ALL_MODE & 0xff, /* mode, 16 bit LE */
+                                                 NGT_TRANSFER_RX_ALL_MODE >> 8};
 
 #define BUFFER_SIZE 900
 
@@ -285,7 +288,7 @@ int main(int argc, char **argv)
     else
     {
       // Serial / character device. Always R/W:
-      //  -r mode still needs to write NGT_STARTUP_SEQ and the
+      //  -r mode still needs to write NGT_SET_OPERATING_MODE and the
       //   20s ping so the NGT-1 stays in "emit all PGNs". Under
       //   the old O_RDONLY those writes failed silently and we
       //   only got away with it because the TX-list config is
@@ -345,9 +348,9 @@ int main(int argc, char **argv)
     tcflush(handle, TCIFLUSH);
     tcsetattr(handle, TCSANOW, &attr);
 
-    logDebug("Device is a serial port, send the startup sequence.\n");
+    logDebug("Device is a serial port, set the operating mode.\n");
 
-    writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
+    writeMessage(handle, NGT_MSG_SEND, NGT_SET_OPERATING_MODE, sizeof(NGT_SET_OPERATING_MODE), UINT64_C(0));
     sleep(2);
   }
 
@@ -436,7 +439,7 @@ int main(int argc, char **argv)
     }
     if (!isRegularFile && time(0) - lastPing > 20)
     {
-      writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
+      writeMessage(handle, NGT_MSG_SEND, NGT_SET_OPERATING_MODE, sizeof(NGT_SET_OPERATING_MODE), UINT64_C(0));
       lastPing = time(0);
     }
     /* Live fallback: when the gateway is not sending System Status messages

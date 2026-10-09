@@ -449,6 +449,32 @@
     ],
     "LookupEnumerations":[
       {
+        "Name":"ACTISENSE_OPERATING_MODE",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"Undefined", "Value":0},
+          {"Name":"NGT Transfer Normal Mode", "Value":1},
+          {"Name":"NGT Transfer Rx All Mode", "Value":2},
+          {"Name":"NGT Transfer Raw Mode", "Value":3},
+          {"Name":"NGW Convert Normal Mode", "Value":4},
+          {"Name":"CAN Packet Mode", "Value":5},
+          {"Name":"CAN Packet ASCII Mode", "Value":6},
+          {"Name":"Buffer Mode 1", "Value":16},
+          {"Name":"Buffer Mode 2", "Value":17},
+          {"Name":"Buffer Mode 3", "Value":18},
+          {"Name":"Autoswitch Direct Mode", "Value":19},
+          {"Name":"Autoswitch Smart Mode", "Value":20},
+          {"Name":"Combine Slow Mode", "Value":21},
+          {"Name":"Combine Fast Mode", "Value":22},
+          {"Name":"Test Mode 1", "Value":23},
+          {"Name":"NSI Mode 1", "Value":24},
+          {"Name":"IEC 61162-450 Mode 1", "Value":25},
+          {"Name":"Normal", "Value":512},
+          {"Name":"Predefined Mode 1", "Value":40000},
+          {"Name":"Predefined Mode 2", "Value":40001}
+        ]
+      },
+      {
         "Name":"QUICK_CHAIN_UNITS",
         "MaxValue":65535,
         "EnumValues":[

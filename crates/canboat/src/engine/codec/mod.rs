@@ -70,7 +70,7 @@ impl std::error::Error for Refused {}
 /// A gateway's protocol, driven by its caller. See the [module
 /// docs](self).
 pub trait Codec {
-    /// Bytes to write as soon as the link is up (NGT-1 startup ping,
+    /// Bytes to write as soon as the link is up (NGT-1 Set Operating Mode,
     /// iKonvert `N2NET_OFFLINE`, Maretron `CONNECT`). Empty when the
     /// gateway needs none.
     fn open(&mut self) -> Vec<u8> {

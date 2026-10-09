@@ -11099,7 +11099,7 @@ Pgn pgnList[] = {
       {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Operating Mode", .camelName = "operatingMode", .fieldType = "UINT16", .resolution = 1.0}
+      {.name = "Operating Mode", .camelName = "operatingMode", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupACTISENSE_OPERATING_MODE, .lookup.name = "ACTISENSE_OPERATING_MODE"}
      },
      .camelDescription = "actisenseOperatingMode"},
 

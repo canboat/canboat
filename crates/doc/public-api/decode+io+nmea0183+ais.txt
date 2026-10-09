@@ -245,8 +245,31 @@ pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut a
 pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::codec::ngt1
+#[non_exhaustive] pub enum canboat::codec::ngt1::OperatingMode
+pub canboat::codec::ngt1::OperatingMode::CanPacket
+pub canboat::codec::ngt1::OperatingMode::CanPacketAscii
+pub canboat::codec::ngt1::OperatingMode::NgConvertNormal
+pub canboat::codec::ngt1::OperatingMode::NgTransferNormal
+pub canboat::codec::ngt1::OperatingMode::NgTransferRaw
+pub canboat::codec::ngt1::OperatingMode::NgTransferRxAll
+pub canboat::codec::ngt1::OperatingMode::Other(u16)
+impl canboat::codec::ngt1::OperatingMode
+pub fn canboat::codec::ngt1::OperatingMode::code(self) -> u16
+pub fn canboat::codec::ngt1::OperatingMode::from_code(u16) -> Self
+impl core::clone::Clone for canboat::codec::ngt1::OperatingMode
+pub fn canboat::codec::ngt1::OperatingMode::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::ngt1::OperatingMode
+impl core::cmp::PartialEq for canboat::codec::ngt1::OperatingMode
+pub fn canboat::codec::ngt1::OperatingMode::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::ngt1::OperatingMode
+pub fn canboat::codec::ngt1::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::ngt1::OperatingMode
+pub fn canboat::codec::ngt1::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::codec::ngt1::OperatingMode
+impl core::marker::StructuralPartialEq for canboat::codec::ngt1::OperatingMode
 pub struct canboat::codec::ngt1::Config
 pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
+pub canboat::codec::ngt1::Config::operating_mode: canboat::codec::ngt1::OperatingMode
 pub canboat::codec::ngt1::Config::pgn_lists: canboat::codec::PgnLists
 pub canboat::codec::ngt1::Config::tx_list_record: alloc::sync::Arc<std::sync::poison::mutex::Mutex<canboat::codec::ngt1::TxListRecord>>
 impl core::clone::Clone for canboat::codec::ngt1::Config

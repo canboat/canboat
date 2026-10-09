@@ -4,8 +4,10 @@
 //!
 //! Wraps [`crate::engine::format::ngt1`]: received bytes go through
 //! `Ngt1Decoder`, frames for the bus go out as `N2K_MSG_SEND` (0x94)
-//! messages, and a 20-second keepalive resends the NGT-1 startup ping while
-//! the link is quiet. Synthetic PGNs (`>= 0x40000`) are refused, matching
+//! messages. On connect, and every 20 seconds while the link is quiet, the
+//! codec sets the gateway's operating mode (BEM Set Operating Mode,
+//! [`Config::operating_mode`]); the gateway answers with the mode in force,
+//! which is logged, and a mismatch is warned about. Synthetic PGNs (`>= 0x40000`) are refused, matching
 //! canboat's behaviour.
 //!
 //! Alongside the bus traffic the codec emits the synthetic `NMEA 2000
@@ -19,9 +21,9 @@ use std::time::Duration;
 
 use crate::engine::RawFrame;
 use crate::engine::format::ikonvert::{NetworkStatus, build_network_status};
-use crate::engine::format::{
-    encode_n2k_send_frame, encode_startup_ping,
-    ngt1::{Ngt1Decoder, NgtEvent},
+use crate::engine::format::ngt1::{
+    BEM_OPERATING_MODE, BemResponse, Ngt1Decoder, NgtEvent, OperatingMode, encode_n2k_send_frame,
+    encode_set_operating_mode,
 };
 use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
@@ -29,7 +31,7 @@ use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
 use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
 use crate::engine::format_iso_ms;
 
-/// Re-ping the NGT-1 startup sequence every 20 s — matches the C
+/// Set the operating mode again every 20 s — matches the C
 /// `actisense-serial` keepalive.
 pub const KEEPALIVE_INTERVAL: Duration = Duration::from_secs(20);
 
@@ -41,9 +43,15 @@ const ACTISENSE_SYSTEM_STATUS_PGN: u32 = SYNTHETIC_PGN_START + 0xf2;
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
 
-/// NGT-1 settings. `Config::default()` leaves the gateway's lists alone.
-#[derive(Debug, Clone, Default)]
+/// NGT-1 settings. `Config::default()` puts the gateway in NGT Transfer Rx
+/// All Mode and leaves its lists alone.
+#[derive(Debug, Clone)]
 pub struct Config {
+    /// The operating mode to set: [`OperatingMode::NgTransferRxAll`] (the
+    /// default) forwards every received PGN,
+    /// [`OperatingMode::NgTransferNormal`] only those on the gateway's
+    /// Receive PGN Enable list.
+    pub operating_mode: OperatingMode,
     /// PGNs the application sends and reads. The Transmit PGNs are added
     /// to the gateway's Transmit PGN Enable list when missing from it —
     /// the NGT-1 does not transmit a PGN that is not there. The Receive
@@ -65,6 +73,17 @@ pub struct Config {
     /// one across reconnects (clone the `Arc` into each session's
     /// `Config`), so a reconnect does not write again what is known.
     pub tx_list_record: Arc<Mutex<TxListRecord>>,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            operating_mode: OperatingMode::NgTransferRxAll,
+            pgn_lists: PgnLists::default(),
+            extra_tx_pgns: Vec::new(),
+            tx_list_record: Arc::default(),
+        }
+    }
 }
 
 /// The Transmit PGNs to enable: the named ones and canboat's own — none
@@ -106,6 +125,10 @@ pub struct Ngt1 {
     /// Brings the gateway's Transmit PGN Enable list up to date.
     tx_list: TxListSync,
     gate: Option<TxGate>,
+    /// The operating mode to set.
+    mode: OperatingMode,
+    /// The mode the gateway last reported, to log only a change.
+    reported_mode: Option<OperatingMode>,
 }
 
 struct NetworkStatusState {
@@ -141,6 +164,44 @@ impl Ngt1 {
             },
             tx_list: TxListSync::new(tx_pgns, config.tx_list_record.clone()),
             gate: TxGate::new("ngt1", &config.pgn_lists.tx, &config.extra_tx_pgns),
+            mode: config.operating_mode,
+            reported_mode: None,
+        }
+    }
+
+    /// Check the gateway's answer to Set Operating Mode: log the mode it
+    /// reports when that changes, and warn when it is not the one set.
+    fn on_operating_mode(&mut self, payload: &[u8]) {
+        let Some(response) = BemResponse::parse(payload) else {
+            return;
+        };
+        let Some(mode) = response.operating_mode() else {
+            return;
+        };
+        if response.error != 0 {
+            log::warn!(
+                "ngt1: the gateway refused {} (error {}); it stays in {mode}",
+                self.mode,
+                response.error as i32
+            );
+        }
+        if self.reported_mode == Some(mode) {
+            return;
+        }
+        self.reported_mode = Some(mode);
+        if mode == self.mode {
+            log::info!(
+                "ngt1: gateway model {:#06x}, serial {}, in {mode}",
+                response.model_id,
+                response.serial
+            );
+        } else {
+            log::warn!(
+                "ngt1: gateway model {:#06x}, serial {}, is in {mode}, not {}",
+                response.model_id,
+                response.serial,
+                self.mode
+            );
         }
     }
 
@@ -220,7 +281,7 @@ fn send_all(events: &mut Vec<Event>, commands: Vec<Vec<u8>>) {
 
 impl Codec for Ngt1 {
     fn open(&mut self) -> Vec<u8> {
-        encode_startup_ping()
+        encode_set_operating_mode(self.mode)
     }
 
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
@@ -228,6 +289,9 @@ impl Codec for Ngt1 {
         for ev in self.inner.push_bytes(bytes) {
             match ev {
                 NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
+                    if msg.payload.first() == Some(&BEM_OPERATING_MODE) {
+                        self.on_operating_mode(&msg.payload);
+                    }
                     send_all(events, self.tx_list.on_message(&msg.payload, now_ms));
                 }
                 NgtEvent::Message(msg) => {
@@ -281,7 +345,7 @@ impl Codec for Ngt1 {
     }
 
     fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
-        Some((KEEPALIVE_INTERVAL, encode_startup_ping()))
+        Some((KEEPALIVE_INTERVAL, encode_set_operating_mode(self.mode)))
     }
 }
 
@@ -494,4 +558,57 @@ mod network_status_tests {
         assert_eq!(f.data[0], 0xff, "load sentinel");
         assert_eq!(&f.data[1..5], &[0xff; 4], "errors sentinel");
     }
+}
+
+#[cfg(test)]
+mod operating_mode_tests {
+    use super::*;
+    use crate::engine::format::ngt1::{NGT_MSG_SEND, encode_ngt_message};
+
+    /// The gateway's answer to Operating Mode, reporting `mode`.
+    fn answer(mode: u16, error: u32) -> Vec<u8> {
+        let mut payload = vec![BEM_OPERATING_MODE, 0, 0x0e, 0x00];
+        payload.extend_from_slice(&1234u32.to_le_bytes());
+        payload.extend_from_slice(&error.to_le_bytes());
+        payload.extend_from_slice(&mode.to_le_bytes());
+        let mut wire = Vec::new();
+        encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
+        wire
+    }
+
+    #[test]
+    fn open_and_keepalive_set_the_configured_mode() {
+        let mut d = Ngt1::default();
+        assert_eq!(
+            d.open(),
+            encode_set_operating_mode(OperatingMode::NgTransferRxAll)
+        );
+
+        let mut d = Ngt1::new(Config {
+            operating_mode: OperatingMode::NgTransferNormal,
+            ..Config::default()
+        });
+        let mut wire = Vec::new();
+        encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE, 1, 0], &mut wire);
+        assert_eq!(d.open(), wire);
+        assert_eq!(d.keepalive().unwrap().1, wire);
+    }
+
+    #[test]
+    fn the_reported_mode_is_noted_and_never_a_frame() {
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.receive(&answer(2, 0), NOW, &mut events);
+        assert_eq!(d.reported_mode, Some(OperatingMode::NgTransferRxAll));
+        d.receive(&answer(1, 0x8000_0001), NOW, &mut events);
+        assert_eq!(d.reported_mode, Some(OperatingMode::NgTransferNormal));
+        assert!(
+            !events
+                .iter()
+                .any(|e| matches!(e, Event::Frame(f) if f.pgn < SYNTHETIC_PGN_START)),
+            "{events:?}"
+        );
+    }
+
+    const NOW: u64 = 1_780_082_164_826;
 }
