@@ -473,7 +473,11 @@ mod network_status_tests {
             ..Default::default()
         });
         let mut wire = Vec::new();
-        crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &[0x11, 1], &mut wire);
+        crate::engine::format::ngt1::encode_ngt_message(
+            NGT_MSG_RECEIVED,
+            &[0x11, 1, 0x0e, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+            &mut wire,
+        );
         let mut events = Vec::new();
         d.receive(&wire, NOW, &mut events);
         assert!(

@@ -40,13 +40,15 @@ limitations under the License.
 #include "license.h"
 #include "parse.h"
 
-/* BEM Set Operating Mode, "NGT Transfer Rx All Mode": the NGT-1 forwards
- * every PGN it receives, whatever its Receive PGN Enable list says. Sent at
- * startup and every 20 seconds. Once reverse engineered from Actisense
- * NMEA Reader; see the Actisense SDK,
+/* BEM Set Operating Mode, sent at startup and every 20 seconds. By default
+ * "NGT Transfer Rx All Mode": the NGT-1 forwards every PGN it receives,
+ * whatever its Receive PGN Enable list says; --mode normal selects "NGT
+ * Transfer Normal Mode", where that list applies. Once reverse engineered
+ * from Actisense NMEA Reader; see the Actisense SDK,
  * docs/DataFormats/Binary/bem-detail/operating-mode.md.
  */
 #define BEM_OPERATING_MODE (0x11)
+#define NGT_TRANSFER_NORMAL_MODE (1)
 #define NGT_TRANSFER_RX_ALL_MODE (2)
 
 static unsigned char NGT_SET_OPERATING_MODE[] = {BEM_OPERATING_MODE,
@@ -195,6 +197,27 @@ int main(int argc, char **argv)
     {
       outputCommands = 1;
     }
+    else if (strcasecmp(argv[1], "--mode") == 0 && argc > 2)
+    {
+      unsigned int mode = NGT_TRANSFER_RX_ALL_MODE;
+
+      argc--;
+      argv++;
+      if (strcasecmp(argv[1], "rx-all") == 0)
+      {
+        mode = NGT_TRANSFER_RX_ALL_MODE;
+      }
+      else if (strcasecmp(argv[1], "normal") == 0)
+      {
+        mode = NGT_TRANSFER_NORMAL_MODE;
+      }
+      else
+      {
+        logAbort("Invalid operating mode '%s': use rx-all or normal\n", argv[1]);
+      }
+      NGT_SET_OPERATING_MODE[1] = mode & 0xff;
+      NGT_SET_OPERATING_MODE[2] = mode >> 8;
+    }
     else if (!device)
     {
       device = argv[1];
@@ -211,7 +234,7 @@ int main(int argc, char **argv)
   if (!device)
   {
     fprintf(stderr,
-            "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] device\n"
+            "Usage: %s [-w] -[-p] [-r] [-v] [-d] [-s <n>] [-t <n>] [--mode rx-all|normal] device\n"
             "\n"
             "Options:\n"
             "  -w      writeonly mode, no data is read from device\n"
@@ -228,6 +251,8 @@ int main(int argc, char **argv)
 #endif
             "\n"
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
+            "  --mode rx-all|normal  the NGT-1's operating mode: rx-all (default) forwards every\n"
+            "          PGN received, normal only those on its Receive PGN Enable list\n"
             "  -o      alias for -p (kept for backward compatibility; -p is preferred)\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  an Actisense .ebl log, a W2K-1 JSON capture (auto-detected),\n"
