@@ -7,7 +7,14 @@
 //! messages. On connect, and every 20 seconds while the link is quiet, the
 //! codec sets the gateway's operating mode (BEM Set Operating Mode,
 //! [`Config::operating_mode`]); the gateway answers with the mode in force,
-//! which is logged, and a mismatch is warned about. Synthetic PGNs (`>= 0x40000`) are refused, matching
+//! which is logged, and a mismatch is warned about. It also asks for the
+//! gateway's product information, and logs it.
+//!
+//! The gateway's own BEM messages come out as canboat's `Actisense: …`
+//! PGNs (`0x40000` + the BEM id), as canboat C's `actisense-serial` gives
+//! them. A Startup Status (the gateway restarted) makes the codec set the
+//! operating mode and the transmit list again; an Error Report or a
+//! Negative Ack is logged with the Actisense SDK's name for its error. Synthetic PGNs (`>= 0x40000`) are refused, matching
 //! canboat's behaviour.
 //!
 //! Alongside the bus traffic the codec emits the synthetic `NMEA 2000
@@ -22,8 +29,10 @@ use std::time::Duration;
 use crate::engine::RawFrame;
 use crate::engine::format::ikonvert::{NetworkStatus, build_network_status};
 use crate::engine::format::ngt1::{
-    BEM_OPERATING_MODE, BemResponse, Ngt1Decoder, NgtEvent, OperatingMode, encode_n2k_send_frame,
-    encode_set_operating_mode,
+    BEM_ERROR_REPORT, BEM_NEGATIVE_ACK, BEM_OPERATING_MODE, BEM_PRODUCT_INFO, BEM_STARTUP_STATUS,
+    BEM_SYSTEM_STATUS, BemResponse, Ngt1Decoder, NgtEvent, OperatingMode, ProductInfo,
+    describe_error, encode_get_product_info, encode_n2k_send_frame, encode_set_operating_mode,
+    startup_status,
 };
 use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
@@ -38,7 +47,11 @@ pub const KEEPALIVE_INTERVAL: Duration = Duration::from_secs(20);
 /// `Actisense: System status` — `ACTISENSE_BEM + 0xf2`. The NGT-1 sends
 /// it about once a second, but only when P-codes are enabled for the
 /// port, so its two fields may never arrive.
-const ACTISENSE_SYSTEM_STATUS_PGN: u32 = SYNTHETIC_PGN_START + 0xf2;
+const ACTISENSE_SYSTEM_STATUS_PGN: u32 = ACTISENSE_BEM_PGN + BEM_SYSTEM_STATUS as u32;
+
+/// The canboat PGN a BEM message comes out as, less the BEM id:
+/// `Actisense: …`.
+const ACTISENSE_BEM_PGN: u32 = SYNTHETIC_PGN_START;
 
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
@@ -129,6 +142,8 @@ pub struct Ngt1 {
     mode: OperatingMode,
     /// The mode the gateway last reported, to log only a change.
     reported_mode: Option<OperatingMode>,
+    /// The gateway's product information as its parts arrive.
+    product_info: ProductInfo,
 }
 
 struct NetworkStatusState {
@@ -166,15 +181,71 @@ impl Ngt1 {
             gate: TxGate::new("ngt1", &config.pgn_lists.tx, &config.extra_tx_pgns),
             mode: config.operating_mode,
             reported_mode: None,
+            product_info: ProductInfo::default(),
         }
+    }
+
+    /// Act on a BEM message from the gateway: pass it on as an `Actisense:
+    /// …` PGN, and log or answer it.
+    fn on_bem(&mut self, payload: &[u8], now_ms: u64, events: &mut Vec<Event>) {
+        let Some(response) = BemResponse::parse(payload) else {
+            return;
+        };
+        match response.bem {
+            BEM_OPERATING_MODE => self.on_operating_mode(&response),
+            BEM_PRODUCT_INFO => {
+                if self.product_info.add(&response) {
+                    let info = &self.product_info;
+                    log::info!(
+                        "ngt1: gateway {} serial {}, software {}, hardware {}, product code {}, NMEA 2000 {}.{:03}",
+                        info.model,
+                        info.serial_number,
+                        info.software_version,
+                        info.hardware_version,
+                        info.product_code,
+                        info.nmea2000_version / 1000,
+                        info.nmea2000_version % 1000
+                    );
+                }
+            }
+            BEM_STARTUP_STATUS => {
+                if let Some((firmware, reset)) = startup_status(&response) {
+                    log::warn!(
+                        "ngt1: the gateway restarted (firmware {}.{:03}, reset status {reset:#x}); setting it up again",
+                        firmware / 1000,
+                        firmware % 1000
+                    );
+                }
+                self.reported_mode = None;
+                self.product_info = ProductInfo::default();
+                self.tx_list.restart();
+                events.push(Event::Send(encode_set_operating_mode(self.mode)));
+                events.push(Event::Send(encode_get_product_info()));
+            }
+            BEM_ERROR_REPORT => log::warn!(
+                "ngt1: the gateway reports error {}",
+                describe_error(response.error)
+            ),
+            BEM_NEGATIVE_ACK => log::warn!(
+                "ngt1: the gateway refused a command: error {}",
+                describe_error(response.error)
+            ),
+            _ => {}
+        }
+        let frame = RawFrame::new(
+            Some(format_iso_ms(now_ms)),
+            0,
+            ACTISENSE_BEM_PGN + u32::from(response.bem),
+            0,
+            0,
+            payload[1..].iter().copied(),
+        );
+        self.note_frame(frame, now_ms, events);
     }
 
     /// Check the gateway's answer to Set Operating Mode: log the mode it
     /// reports when that changes, and warn when it is not the one set.
-    fn on_operating_mode(&mut self, payload: &[u8]) {
-        let Some(response) = BemResponse::parse(payload) else {
-            return;
-        };
+    fn on_operating_mode(&mut self, response: &BemResponse<'_>) {
         let Some(mode) = response.operating_mode() else {
             return;
         };
@@ -182,7 +253,7 @@ impl Ngt1 {
             log::warn!(
                 "ngt1: the gateway refused {} (error {}); it stays in {mode}",
                 self.mode,
-                response.error as i32
+                describe_error(response.error)
             );
         }
         if self.reported_mode == Some(mode) {
@@ -218,7 +289,10 @@ impl Ngt1 {
     /// status` carries. Pushes the frame itself, plus a fresh status
     /// record when that message is what arrived.
     fn note_frame(&mut self, frame: RawFrame, now_ms: u64, events: &mut Vec<Event>) {
-        self.net.seen[frame.src as usize] = true;
+        // The gateway's own messages come from no bus device.
+        if frame.pgn < SYNTHETIC_PGN_START {
+            self.net.seen[frame.src as usize] = true;
+        }
         // Frame data drops the subcommand byte, so the C's msg[8..11]
         // and msg[14] are data[7..10] and data[13] here.
         if frame.pgn == ACTISENSE_SYSTEM_STATUS_PGN {
@@ -281,7 +355,9 @@ fn send_all(events: &mut Vec<Event>, commands: Vec<Vec<u8>>) {
 
 impl Codec for Ngt1 {
     fn open(&mut self) -> Vec<u8> {
-        encode_set_operating_mode(self.mode)
+        let mut out = encode_set_operating_mode(self.mode);
+        out.extend(encode_get_product_info());
+        out
     }
 
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
@@ -289,10 +365,8 @@ impl Codec for Ngt1 {
         for ev in self.inner.push_bytes(bytes) {
             match ev {
                 NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
-                    if msg.payload.first() == Some(&BEM_OPERATING_MODE) {
-                        self.on_operating_mode(&msg.payload);
-                    }
                     send_all(events, self.tx_list.on_message(&msg.payload, now_ms));
+                    self.on_bem(&msg.payload, now_ms, events);
                 }
                 NgtEvent::Message(msg) => {
                     if let Some(mut frame) = msg.to_raw_frame() {
@@ -405,8 +479,8 @@ mod network_status_tests {
             1234,
             "Error ID"
         );
-        // src 0, 3 and 9 seen by now.
-        assert_eq!(status.data[5], 3, "device count");
+        // src 3 and 9 seen by now; the gateway's own message is no device.
+        assert_eq!(status.data[5], 2, "device count");
         // The NGT-1 knows neither of these.
         assert_eq!(status.data[10], 0xff, "gateway address sentinel");
         assert_eq!(&status.data[11..15], &[0xff; 4], "rejected TX sentinel");
@@ -462,9 +536,9 @@ mod network_status_tests {
     }
 
     /// The gateway's own answers (`NGT_MSG_RECEIVED`) feed the transmit
-    /// list sync and never surface as bus frames.
+    /// list sync, and come out as `Actisense: …` PGNs, never as bus frames.
     #[test]
-    fn gateway_answers_are_not_frames() {
+    fn gateway_answers_are_actisense_pgns() {
         let mut d = Ngt1::new(Config {
             pgn_lists: PgnLists {
                 tx: vec![127508],
@@ -472,20 +546,21 @@ mod network_status_tests {
             },
             ..Default::default()
         });
+        let mut payload = vec![0x11, 1, 0x0e, 0];
+        payload.extend_from_slice(&[0; 8]);
+        payload.extend_from_slice(&[2, 0]);
         let mut wire = Vec::new();
-        crate::engine::format::ngt1::encode_ngt_message(
-            NGT_MSG_RECEIVED,
-            &[0x11, 1, 0x0e, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
-            &mut wire,
-        );
+        crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
         let mut events = Vec::new();
         d.receive(&wire, NOW, &mut events);
-        assert!(
-            !events
-                .iter()
-                .any(|e| matches!(e, Event::Frame(f) if f.pgn != 0x40100)),
-            "{events:?}"
-        );
+        let pgns: Vec<u32> = events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Frame(f) => Some(f.pgn),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(pgns, [262161], "Actisense: Operating mode");
         assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
     }
 
@@ -583,10 +658,9 @@ mod operating_mode_tests {
     #[test]
     fn open_and_keepalive_set_the_configured_mode() {
         let mut d = Ngt1::default();
-        assert_eq!(
-            d.open(),
-            encode_set_operating_mode(OperatingMode::NgTransferRxAll)
-        );
+        let mut open = encode_set_operating_mode(OperatingMode::NgTransferRxAll);
+        open.extend(encode_get_product_info());
+        assert_eq!(d.open(), open);
 
         let mut d = Ngt1::new(Config {
             operating_mode: OperatingMode::NgTransferNormal,
@@ -594,7 +668,7 @@ mod operating_mode_tests {
         });
         let mut wire = Vec::new();
         encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE, 1, 0], &mut wire);
-        assert_eq!(d.open(), wire);
+        assert!(d.open().starts_with(&wire));
         assert_eq!(d.keepalive().unwrap().1, wire);
     }
 
@@ -612,6 +686,157 @@ mod operating_mode_tests {
                 .any(|e| matches!(e, Event::Frame(f) if f.pgn < SYNTHETIC_PGN_START)),
             "{events:?}"
         );
+    }
+
+    /// A BEM message from the gateway: `bem`, part `sequence`, `data`.
+    fn bem(bem: u8, sequence: u8, error: i32, data: &[u8]) -> Vec<u8> {
+        let mut payload = vec![bem, sequence, 0x0e, 0x00];
+        payload.extend_from_slice(&1234u32.to_le_bytes());
+        payload.extend_from_slice(&error.to_le_bytes());
+        payload.extend_from_slice(data);
+        let mut wire = Vec::new();
+        encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
+        wire
+    }
+
+    fn padded(text: &str) -> Vec<u8> {
+        let mut v = text.as_bytes().to_vec();
+        v.resize(32, 0xff);
+        v
+    }
+
+    /// Before, every BEM message was dropped, so a live NGT-1's System
+    /// Status never reached the network status.
+    #[test]
+    fn a_live_system_status_reaches_the_network_status() {
+        let mut d = Ngt1::default();
+        let mut data = vec![0u8; 4];
+        data[2] = 37; // Ch1 Rx Load, after channel count and bandwidth
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_SYSTEM_STATUS, 0, 0, &data), NOW, &mut events);
+        assert_eq!(d.net.load_pct, Some(37));
+        assert!(
+            events
+                .iter()
+                .any(|e| matches!(e, Event::Frame(f) if f.pgn == 262386))
+        );
+        assert!(
+            events
+                .iter()
+                .any(|e| matches!(e, Event::Frame(f) if f.pgn == 0x40100))
+        );
+    }
+
+    #[test]
+    fn product_info_in_five_parts() {
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        let mut main = 2100u16.to_le_bytes().to_vec();
+        main.extend_from_slice(&1234u16.to_le_bytes());
+        main.extend_from_slice(&[0, 1]);
+        d.receive(&bem(BEM_PRODUCT_INFO, 1, 0, &main), NOW, &mut events);
+        for (part, text) in [(2, "NGT-1"), (3, "2.190"), (4, "Rev B"), (5, "110763")] {
+            d.receive(
+                &bem(BEM_PRODUCT_INFO, part, 0, &padded(text)),
+                NOW,
+                &mut events,
+            );
+        }
+        assert_eq!(d.product_info.model, "NGT-1");
+        assert_eq!(d.product_info.software_version, "2.190");
+        assert_eq!(d.product_info.serial_number, "110763");
+        assert_eq!(d.product_info.nmea2000_version, 2100);
+        let mut probe = d.product_info.clone();
+        let header = [BEM_PRODUCT_INFO, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let mut payload = header.to_vec();
+        payload.extend(padded("x"));
+        assert!(
+            probe.add(&BemResponse::parse(&payload).unwrap()),
+            "complete"
+        );
+    }
+
+    #[test]
+    fn product_info_in_one_message() {
+        let mut data = 17u32.to_le_bytes().to_vec();
+        data.extend_from_slice(&2100u16.to_le_bytes());
+        data.extend_from_slice(&1234u16.to_le_bytes());
+        for text in ["W2K-1", "1.010", "B", "123456"] {
+            data.extend(padded(text));
+        }
+        data.extend_from_slice(&[0, 2]);
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_PRODUCT_INFO, 6, 0, &data), NOW, &mut events);
+        assert_eq!(d.product_info.model, "W2K-1");
+        assert_eq!(d.product_info.hardware_version, "B");
+        assert_eq!(d.product_info.product_code, 1234);
+    }
+
+    /// A gateway that restarted is set up again: the operating mode, the
+    /// product information and the transmit list.
+    #[test]
+    fn a_startup_status_sets_the_gateway_up_again() {
+        let mut d = Ngt1::new(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            ..Default::default()
+        });
+        d.tx_list.on_message(&[BEM_OPERATING_MODE, 1], NOW);
+        let mut events = Vec::new();
+        d.receive(
+            &bem(BEM_STARTUP_STATUS, 0, 0, &[0x8e, 0x08, 0]),
+            NOW,
+            &mut events,
+        );
+        let sent: Vec<&Vec<u8>> = events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Send(b) => Some(b),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            sent,
+            [
+                &encode_set_operating_mode(OperatingMode::NgTransferRxAll),
+                &encode_get_product_info()
+            ]
+        );
+        assert!(
+            events
+                .iter()
+                .any(|e| matches!(e, Event::Frame(f) if f.pgn == 262384))
+        );
+        assert!(!d.tx_list.is_done());
+    }
+
+    #[test]
+    fn errors_have_the_sdk_names() {
+        assert_eq!(describe_error(-1158), "-1158 (command timeout)");
+        assert_eq!(describe_error(-697), "-697");
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.receive(
+            &bem(BEM_NEGATIVE_ACK, 0, -1158, &[1, 0, 0, 0]),
+            NOW,
+            &mut events,
+        );
+        d.receive(
+            &bem(BEM_ERROR_REPORT, 0, -1497, &[4, 1, 0, 0, 0]),
+            NOW,
+            &mut events,
+        );
+        let pgns: Vec<u32> = events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Frame(f) => Some(f.pgn),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(pgns, [262388, 262385]);
     }
 
     const NOW: u64 = 1_780_082_164_826;

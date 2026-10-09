@@ -475,6 +475,14 @@
         ]
       },
       {
+        "Name":"CERTIFICATION_LEVEL",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Level A", "Value":0},
+          {"Name":"Level B", "Value":1}
+        ]
+      },
+      {
         "Name":"QUICK_CHAIN_UNITS",
         "MaxValue":65535,
         "EnumValues":[

@@ -11098,10 +11098,105 @@ Pgn pgnList[] = {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
       {.name = "Operating Mode", .camelName = "operatingMode", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupACTISENSE_OPERATING_MODE, .lookup.name = "ACTISENSE_OPERATING_MODE"}
      },
      .camelDescription = "actisenseOperatingMode"},
+
+    {"Actisense: Product info, main",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 1, .description = "Part 1 of 5"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "NMEA 2000 Version", .camelName = "nmea2000Version", .fieldType = "VERSION"},
+      {.name = "Product Code", .camelName = "productCode", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Certification Level", .camelName = "certificationLevel", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupCERTIFICATION_LEVEL, .lookup.name = "CERTIFICATION_LEVEL"},
+      {.name = "Load Equivalency", .camelName = "loadEquivalency", .fieldType = "UINT8", .resolution = 1.0, .description = "50 mA per LEN"}
+     },
+     .camelDescription = "actisenseProductInfoMain",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
+
+    {"Actisense: Product info, model ID",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "Part 2 of 5"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Model ID String", .camelName = "modelIdString", .fieldType = "STRING_FIX", .size = 256}
+     },
+     .camelDescription = "actisenseProductInfoModelId",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
+
+    {"Actisense: Product info, software version",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 3, .description = "Part 3 of 5"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Software Version", .camelName = "softwareVersion", .fieldType = "STRING_FIX", .size = 256}
+     },
+     .camelDescription = "actisenseProductInfoSoftwareVersion",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
+
+    {"Actisense: Product info, hardware version",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Part 4 of 5"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Hardware Version", .camelName = "hardwareVersion", .fieldType = "STRING_FIX", .size = 256}
+     },
+     .camelDescription = "actisenseProductInfoHardwareVersion",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
+
+    {"Actisense: Product info, serial number",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 5, .description = "Part 5 of 5"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Serial Number", .camelName = "serialNumber", .fieldType = "STRING_FIX", .size = 256}
+     },
+     .camelDescription = "actisenseProductInfoSerialNumber",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
+
+    {"Actisense: Product info",
+     262209,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 6, .description = "Single message"},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Structure Variant", .camelName = "structureVariant", .fieldType = "UINT32", .resolution = 1.0, .description = "17 (SV_AppProdInfo)"},
+      {.name = "NMEA 2000 Version", .camelName = "nmea2000Version", .fieldType = "VERSION"},
+      {.name = "Product Code", .camelName = "productCode", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Model ID String", .camelName = "modelIdString", .fieldType = "STRING_FIX", .size = 256},
+      {.name = "Software Version", .camelName = "softwareVersion", .fieldType = "STRING_FIX", .size = 256},
+      {.name = "Hardware Version", .camelName = "hardwareVersion", .fieldType = "STRING_FIX", .size = 256},
+      {.name = "Serial Number", .camelName = "serialNumber", .fieldType = "STRING_FIX", .size = 256},
+      {.name = "Certification Level", .camelName = "certificationLevel", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupCERTIFICATION_LEVEL, .lookup.name = "CERTIFICATION_LEVEL"},
+      {.name = "Load Equivalency", .camelName = "loadEquivalency", .fieldType = "UINT8", .resolution = 1.0, .description = "50 mA per LEN"}
+     },
+     .camelDescription = "actisenseProductInfo",
+     .explanation = "BEM 41H, an Actisense gateway's answer to Get Product Info. Older firmware, including the NGT-1 and NGW-1, answers in five parts numbered by the SID; firmware from v2.500 on may answer in one message with SID 6. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md."},
 
     {"Actisense: Startup status",
      262384,
@@ -11111,12 +11206,26 @@ Pgn pgnList[] = {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
       {.name = "Firmware version", .camelName = "firmwareVersion", .fieldType = "VERSION"},
-      {.name = "Reset status", .camelName = "resetStatus", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Reset status", .camelName = "resetStatus", .fieldType = "BINARY", .size = 32, .resolution = 1.0, .description = "Device-specific reset causes; only the first byte on older firmware"}
      },
      .camelDescription = "actisenseStartupStatus"},
+
+    {"Actisense: Error report",
+     262385,
+     PACKET_FIELDS_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Data size", .camelName = "dataSize", .fieldType = "UINT8", .resolution = 1.0, .description = "Bytes of error data that follow, including the Structure Variant"},
+      {.name = "Structure Variant", .camelName = "structureVariant", .fieldType = "UINT32", .resolution = 1.0}
+     },
+     .camelDescription = "actisenseErrorReport",
+     .explanation = "BEM F1H, sent unsolicited by an Actisense gateway that hits an error; the Error ID names it. The error data that follows the Structure Variant depends on that variant and is not decoded. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/error-report.md."},
 
     {"Actisense: System status",
      262386,
@@ -11126,7 +11235,7 @@ Pgn pgnList[] = {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
       {.name = "Indi channel count", .camelName = "indiChannelCount", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch1 Rx Bandwidth", .camelName = "ch1RxBandwidth", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch1 Rx Load", .camelName = "ch1RxLoad", .fieldType = "UINT8", .resolution = 1.0},
@@ -11152,16 +11261,19 @@ Pgn pgnList[] = {
      },
      .camelDescription = "actisenseSystemStatus"},
 
-    {"Actisense: ?",
+    {"Actisense: Negative Ack",
      262388,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0}
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "INT32", .resolution = 1.0, .hasSign = true, .description = "Actisense error code; 0 is success"},
+      {.name = "Unique Command ID", .camelName = "uniqueCommandId", .fieldType = "UINT32", .resolution = 1.0}
      },
-     .camelDescription = "actisense"},
+     .camelDescription = "actisenseNegativeAck",
+     .explanation = "BEM F4H, sent by an Actisense gateway when it cannot carry out a command; the Error ID says why. See the Actisense SDK, https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/negative-ack.md."},
 
     {"NMEA 2000 gateway: network status",
      262400,
