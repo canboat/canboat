@@ -423,13 +423,13 @@ pub struct BridgeConfig {
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
     /// A CANalyst-II USB adapter (`usb` or `usb:VVVV:PPPP`), run as a node
-    /// like `socketcan`, claiming `socketcan_address` at
+    /// like `socketcan`, claiming `address` at
     /// `socketcan_bitrate`.
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
     /// The address to claim with `socketcan` or `canalyst`.
-    pub socketcan_address: u8,
+    pub address: u8,
     /// When `true`, the SocketCAN driver brings the interface up itself (at
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
@@ -525,7 +525,7 @@ impl Default for BridgeConfig {
             socketcan: None,
             canalyst: None,
             canalyst_channel: 0,
-            socketcan_address: 0,
+            address: 0,
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
             protocol: crate::engine::BusProtocol::Nmea2000,
@@ -592,7 +592,7 @@ impl From<Args> for BridgeConfig {
             socketcan: a.socketcan,
             canalyst: a.canalyst,
             canalyst_channel: a.canalyst_channel,
-            socketcan_address: a.address,
+            address: a.address,
             // The standalone `canboat` CLI keeps assuming an externally
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
@@ -832,7 +832,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let iface = iface.to_string();
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
-            address: config.socketcan_address,
+            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
@@ -873,7 +873,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let channel = config.canalyst_channel;
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
-            address: config.socketcan_address,
+            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             pgn_lists: pgn_lists.clone(),
             learn_tx_pgns: config.learn_tx_pgns,

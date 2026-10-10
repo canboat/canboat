@@ -90,6 +90,7 @@ impl core::ops::drop::Drop for canboat::bridge::Bridge
 pub fn canboat::bridge::Bridge::drop(&mut self)
 pub struct canboat::bridge::BridgeConfig
 pub canboat::bridge::BridgeConfig::actisense: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::address: u8
 pub canboat::bridge::BridgeConfig::ais_port: u16
 pub canboat::bridge::BridgeConfig::analyzer_port: u16
 pub canboat::bridge::BridgeConfig::baud: core::option::Option<u32>
@@ -124,7 +125,6 @@ pub canboat::bridge::BridgeConfig::replay: core::option::Option<std::path::PathB
 pub canboat::bridge::BridgeConfig::replay_sent: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::snapshot_port: u16
 pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
-pub canboat::bridge::BridgeConfig::socketcan_address: u8
 pub canboat::bridge::BridgeConfig::socketcan_bitrate: u32
 pub canboat::bridge::BridgeConfig::socketcan_configure_link: bool
 pub canboat::bridge::BridgeConfig::units: canboat::Units
