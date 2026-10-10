@@ -140,8 +140,14 @@ pub struct Args {
     /// Preferred ISO source address to claim with `--socketcan` or
     /// `--canalyst`. Defaults to 0; the claim machine will pick a free
     /// address if this one is taken.
-    #[arg(long = "socketcan-address", value_name = "ADDR", default_value_t = 0)]
-    socketcan_address: u8,
+    /// (`--socketcan-address` is the old spelling.)
+    #[arg(
+        long = "address",
+        alias = "socketcan-address",
+        value_name = "ADDR",
+        default_value_t = 0
+    )]
+    address: u8,
 
     /// Chain into another `canboat server` instance over its raw
     /// output port (`--raw-port`, default 2603). Accepts `host:port`
@@ -586,7 +592,7 @@ impl From<Args> for BridgeConfig {
             socketcan: a.socketcan,
             canalyst: a.canalyst,
             canalyst_channel: a.canalyst_channel,
-            socketcan_address: a.socketcan_address,
+            socketcan_address: a.address,
             // The standalone `canboat` CLI keeps assuming an externally
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
