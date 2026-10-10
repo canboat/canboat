@@ -1,0 +1,2 @@
+Skipping candump line: [8] is more than 8 or more than the bytes it holds: <0x18eeff01> [8] 05
+Skipping candump line: [12] is more than 8 or more than the bytes it holds: <0x18eeff01> [12] 00 11 22 33 44 55 66 77 88 99 aa bb

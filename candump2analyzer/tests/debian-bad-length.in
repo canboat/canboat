@@ -1,0 +1,5 @@
+# The Debian (pretty) style, with the same rules as angstrom-bad-length.in.
+  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40
+  can0  18EEFF00   [8]  8E
+  can0  15FD0723   [3]  00 FF FF
+  can0  18EEFF00  [12]  00 11 22 33 44 55 66 77 88 99 AA BB

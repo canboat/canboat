@@ -1,0 +1,9 @@
+# Angstrom and Debian candump lines whose bytes do not match their [len]: cut
+# short, or more than a CAN frame holds. Each must be skipped, not padded or
+# passed on. The good lines around them must still come through. Shared with
+# the Rust candump reader (#998).
+<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0
+<0x18eeff01> [8] 05
+<0x15fd0723> [3] 00 ff ff
+<0x18eeff01> [12] 00 11 22 33 44 55 66 77 88 99 aa bb
+<0x09f50323> [8] 00 00 00 ff ff 00 ff ff

@@ -55,6 +55,39 @@ limitations under the License.
 // epoch (1970-01-01).
 #define OLE_EPOCH_TO_UNIX_DAYS 25569.0
 
+// The Angstrom and Debian styles declare the frame length in [n] and then list
+// the bytes. A classic CAN frame has at most 8, and a line cut short must not
+// be padded from whatever the data loop below reads past its end. The Rust
+// candump reader applies the same rules.
+static bool bracketPayloadComplete(const char *line, int size)
+{
+  const char *p = strchr(line, ']');
+  int         n = 0;
+
+  if (size < 0 || size > 8 || p == NULL)
+  {
+    return false;
+  }
+  for (p++; *p != 0;)
+  {
+    while (isspace((unsigned char) *p))
+    {
+      p++;
+    }
+    if (*p == 0)
+    {
+      break;
+    }
+    if (!isxdigit((unsigned char) p[0]) || !isxdigit((unsigned char) p[1]) || !(p[2] == 0 || isspace((unsigned char) p[2])))
+    {
+      break;
+    }
+    n++;
+    p += 2;
+  }
+  return n >= size;
+}
+
 void gettimeval(struct timeval *tv, double sec)
 {
   tv->tv_sec  = sec;
@@ -224,6 +257,16 @@ int main(int argc, char **argv)
       }
       currentTime = pcanStartTime + currentTime / 1000.0; // ms offset -> absolute seconds
       pcanData    = p + pcanDataOff;
+    }
+
+    if ((format == FMT_1 || format == FMT_2) && !bracketPayloadComplete(p, size))
+    {
+      fprintf(stderr,
+              "Skipping candump line: [%d] is more than 8 or more than the bytes it holds: %.*s\n",
+              size,
+              (int) strcspn(p, "\r\n"),
+              p);
+      continue;
     }
 
     // NMEA 2000 always uses 29-bit extended CAN identifiers. CAN 1.0 / 2.0A

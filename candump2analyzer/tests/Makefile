@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 tests all
+.PHONY: test1 test2 test3 tests all
 
 all:	tests
 
@@ -34,7 +34,7 @@ test1:
 	$(CANDUMP2ANALYZER) pcan-view.in > $(TEMPDIR)/pcan-view.out 2> $(TEMPDIR)/pcan-view.err
 	diff $(TEMPDIR)/pcan-view.out pcan-view.out
 
-tests:	test1 test2
+tests:	test1 test2 test3
 
 #
 # The Angstrom candump style ("<0x18eeff01> [8] 05 a0 ..."), FMT_1. Its lines
@@ -45,3 +45,15 @@ tests:	test1 test2
 test2:
 	$(CANDUMP2ANALYZER) angstrom.in | cut -d, -f2- > $(TEMPDIR)/angstrom.out 2> $(TEMPDIR)/angstrom.err
 	diff $(TEMPDIR)/angstrom.out angstrom.out
+
+#
+# Angstrom and Debian lines whose bytes do not match their [len] (cut short,
+# or more than 8) are skipped with a message, not padded or passed on (#998).
+# The Rust candump reader is checked against the same files.
+#
+test3:
+	for f in angstrom-bad-length debian-bad-length; do \
+	  $(CANDUMP2ANALYZER) $$f.in 2> $(TEMPDIR)/$$f.err | cut -d, -f2- > $(TEMPDIR)/$$f.out || exit 1; \
+	  diff $(TEMPDIR)/$$f.out $$f.out || exit 1; \
+	  diff $(TEMPDIR)/$$f.err $$f.err || exit 1; \
+	done

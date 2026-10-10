@@ -320,24 +320,38 @@ fn bst_95_decodes_as_pgn_test() {
     assert_eq!(got, want);
 }
 
-/// candump in the style of the Angstrom distribution's can-utils (#998),
-/// against the same golden file candump2analyzer is tested with. The
-/// lines carry no time, so both compare everything after the timestamp
-/// column. The capture starts with candump's `interface = …` banner,
-/// which must not make format detection pick PLAIN.
-#[test]
-fn candump_angstrom_matches_candump2analyzer() {
+/// `canboat convert --to plain` on `candump2analyzer/tests/<name>.in`, with
+/// the timestamp column taken off each line, against `<name>.out` there.
+/// The candump styles in these files carry no time and candump2analyzer
+/// stamps them with the wall clock, so both sides compare what follows.
+fn candump_matches_candump2analyzer(name: &str) -> usize {
     let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../candump2analyzer/tests");
-    let input = std::fs::read(dir.join("angstrom.in")).expect("read angstrom.in");
-    let want = std::fs::read_to_string(dir.join("angstrom.out")).expect("read angstrom.out");
+    let input = std::fs::read(dir.join(format!("{name}.in"))).expect("read .in");
+    let want = std::fs::read_to_string(dir.join(format!("{name}.out"))).expect("read .out");
     let out = run(&["convert", "--no-banner", "--to", "plain"], &input);
     let got: String = String::from_utf8(out)
         .expect("utf-8")
         .lines()
         .map(|l| format!("{}\n", l.split_once(',').map_or(l, |(_, rest)| rest)))
         .collect();
-    assert_eq!(got.lines().count(), 51);
-    assert_eq!(got, want.replace("\r\n", "\n"));
+    assert_eq!(got, want.replace("\r\n", "\n"), "{name}");
+    got.lines().count()
+}
+
+/// candump in the style of the Angstrom distribution's can-utils (#998).
+/// The capture starts with candump's `interface = …` banner, which must
+/// not make format detection pick PLAIN.
+#[test]
+fn candump_angstrom_matches_candump2analyzer() {
+    assert_eq!(candump_matches_candump2analyzer("angstrom"), 51);
+}
+
+/// Lines whose bytes do not match their `[len]` (cut short, or more than
+/// 8) are skipped by both readers, in both styles that declare a length.
+#[test]
+fn candump_bad_lengths_match_candump2analyzer() {
+    assert_eq!(candump_matches_candump2analyzer("angstrom-bad-length"), 3);
+    assert_eq!(candump_matches_candump2analyzer("debian-bad-length"), 2);
 }
 
 /// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)
