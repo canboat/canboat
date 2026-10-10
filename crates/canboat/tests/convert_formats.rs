@@ -347,10 +347,11 @@ fn candump_angstrom_matches_candump2analyzer() {
 }
 
 /// Lines whose bytes do not match their `[len]` (cut short, or more than
-/// 8) are skipped by both readers, in both styles that declare a length.
+/// 8) are skipped by both readers, in both styles that declare a length;
+/// tabs and runs of spaces between the bytes are read as they come.
 #[test]
 fn candump_bad_lengths_match_candump2analyzer() {
-    assert_eq!(candump_matches_candump2analyzer("angstrom-bad-length"), 3);
+    assert_eq!(candump_matches_candump2analyzer("angstrom-bad-length"), 4);
     assert_eq!(candump_matches_candump2analyzer("debian-bad-length"), 2);
 }
 

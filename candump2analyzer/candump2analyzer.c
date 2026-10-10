@@ -364,10 +364,27 @@ int main(int argc, char **argv)
         while (*(++p) == ' ')
           ;
       }
-      for (i = 0; i < size; i++, p += candump_data_inc)
+      if (format == FMT_1 || format == FMT_2)
       {
-        sscanf(p, "%2x", &data);
-        fprintf(outfile, ",%02x", data);
+        // Walk the bytes as bracketPayloadComplete() counted them: any
+        // whitespace between them, not a fixed stride.
+        for (i = 0; i < size; i++, p += 2)
+        {
+          while (isspace((unsigned char) *p))
+          {
+            p++;
+          }
+          sscanf(p, "%2x", &data);
+          fprintf(outfile, ",%02x", data);
+        }
+      }
+      else
+      {
+        for (i = 0; i < size; i++, p += candump_data_inc)
+        {
+          sscanf(p, "%2x", &data);
+          fprintf(outfile, ",%02x", data);
+        }
       }
     }
     fprintf(outfile, "\n");
