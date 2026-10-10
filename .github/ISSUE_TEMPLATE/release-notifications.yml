@@ -10,12 +10,12 @@ body:
   - type: markdown
     attributes:
       value: >-
-        Thanks for building on CANboat! When CANboat makes a release you
-        signed up for, we will open an issue in your repository with the
-        version and a summary of what changed in the database, so you can
-        decide when to update. You can unsubscribe at any time by closing
-        this issue or commenting on it. If you are not the repository's
-        owner, a maintainer will confirm the sign-up first.
+        Thanks for building on CANboat! A maintainer will add your repository
+        to the list of projects we notify and close this issue. When CANboat
+        makes a release you signed up for, we will open an issue in your
+        repository with the version and a summary of what changed in the
+        database, so you can decide when to update. To change or stop that,
+        comment on one of those issues or open a new one here.
   - type: input
     id: repository
     attributes:

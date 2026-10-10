@@ -302,17 +302,16 @@ prints the required level directly.
 > `canboatjs` fixtures after a rename is a manual follow-up in those repos, and
 > nothing here will remind you.
 >
-> Third-party projects can ask to be told, though. A project signs up with an
-> open issue titled `Release notifications: <owner/repo>` (the "Release
-> notifications for a downstream project" issue template). It counts once the
-> target repository's owner opened it, or once a maintainer has checked it is
-> genuine and commented `Approved for release notifications: owner/repo` (the
-> comment names the repository, so editing the sign-up afterwards does not
-> carry the approval to another one). On every major or
-> minor release tag, `.github/workflows/downstream-notify.yml` runs
-> `tools/downstream-notify.py`, which opens an issue in each signed-up
-> repository with the `tools/contract.py` summary of what changed and the
-> release notes. It needs a classic token with the `public_repo` scope in the
+> Third-party projects can ask to be told, though. A project asks with an
+> issue titled `Release notifications: <owner/repo>` (the "Release
+> notifications for a downstream project" issue template). A maintainer checks
+> the request is genuine (from the repository's owner or one of its
+> maintainers: the token opens issues in whatever repository is listed), adds
+> the repository to `.github/downstream-projects.toml` and closes the issue. On
+> every major or minor release tag, `.github/workflows/downstream-notify.yml`
+> runs `tools/downstream-notify.py`, which opens an issue in each listed
+> repository that asked for that kind of release, with the `tools/contract.py`
+> summary of what changed and the release notes. It needs a classic token with the `public_repo` scope in the
 > `DOWNSTREAM_NOTIFY_TOKEN` secret; without it, it only reports. Run it by hand
 > with `--dry-run` to preview a release's notifications.
 

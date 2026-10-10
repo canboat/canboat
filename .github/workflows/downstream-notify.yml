@@ -1,8 +1,8 @@
 name: downstream notifications
 
-# Open an issue in every downstream repository that signed up for CANboat
-# release notifications (an open "Release notifications: <owner/repo>" issue
-# here) when a major or minor release is tagged. See tools/downstream-notify.py.
+# Open an issue in every downstream repository listed in
+# .github/downstream-projects.toml when a major or minor release is tagged.
+# See tools/downstream-notify.py.
 #
 # Opening issues in other people's repositories needs a classic personal access
 # token with the public_repo scope, stored as the DOWNSTREAM_NOTIFY_TOKEN

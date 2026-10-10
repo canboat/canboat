@@ -4,34 +4,27 @@
 #
 # Tell downstream projects about a new CANboat release.
 #
-# A project that builds on CANboat signs up by opening an issue in
-# canboat/canboat titled "Release notifications: <owner/repo>", from the
-# "Release notifications for a downstream project" issue template or by hand.
-# When a release is tagged, this script opens an issue in every signed-up
-# repository that asked for that kind of release (major, or major and minor;
-# patch releases notify nobody). The issue summarises what changed in the
-# published databases, as tools/contract.py classifies it, and links the
-# release notes. It then comments on the sign-up issue with a link.
-#
-# Anyone can open an issue here, so a sign-up only counts when the target
-# repository's owner opened it, or when a maintainer has approved that very
-# repository with a comment "Approved for release notifications: owner/repo".
-# Otherwise this would open issues, as the token's owner, in any repository
-# someone typed in. The approval names the repository because the sign-up's
-# body can be edited after it was approved; a maintainer's comment cannot be
-# edited by its author, and an edit cannot change who opened the issue.
+# The projects to tell are listed in .github/downstream-projects.toml, which
+# only maintainers change: a project asks with an issue, a maintainer checks
+# the request and adds it there. When a release is tagged, this script opens an
+# issue in every listed repository that asked for that kind of release (major,
+# or major and minor; patch releases notify nobody). The issue summarises what
+# changed in the published databases, as tools/contract.py classifies it, and
+# links the release notes.
 #
 # A repository that already has an issue for this version is skipped, so the
-# script can be re-run safely. Closing the sign-up issue unsubscribes.
+# script can be re-run safely.
 #
 # Usage:
 #   tools/downstream-notify.py --tag v8.4.0 [--previous v8.3.0] [--dry-run]
+#                              [--projects .github/downstream-projects.toml]
 #
 # Needs git (with the tags fetched) and the GitHub CLI `gh`. Opening issues in
 # other repositories needs a classic token with the public_repo scope in
 # GH_TOKEN; --dry-run only reads.
 #
-# Pure Python 3 standard library (matches tools/contract.py).
+# Pure Python 3 standard library (matches tools/contract.py); 3.11 or later,
+# for tomllib.
 
 import argparse
 import json
@@ -40,15 +33,14 @@ import re
 import subprocess
 import sys
 import tempfile
+import tomllib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import contract  # noqa: E402
 
-SIGNUP_PREFIX = "Release notifications:"
-APPROVAL_PREFIX = "Approved for release notifications:"
-# Who may approve: the comment's author_association, as GitHub reports it.
-MAINTAINERS = ("OWNER", "MEMBER", "COLLABORATOR")
+PROJECTS = os.path.join(HERE, "..", ".github", "downstream-projects.toml")
+REPO_NAME_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 CONTRACTS = (
     ("NMEA 2000", "docs/canboat.json"),
     ("SAE J1939", "docs/canboat-j1939.json"),
@@ -59,7 +51,6 @@ MAX_BODY = 60000
 MAX_ITEMS = 40
 
 VERSION_RE = re.compile(r"^v(\d+)\.(\d+)\.(\d+)$")
-REPO_RE = re.compile(r"github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git)?(?=[/\s)\]>#?]|$)")
 
 
 def run(cmd, check=True):
@@ -67,10 +58,6 @@ def run(cmd, check=True):
     if check and r.returncode != 0:
         raise RuntimeError("%s failed: %s" % (" ".join(cmd), r.stderr.strip()))
     return r
-
-
-def gh_json(args):
-    return json.loads(run(["gh"] + args).stdout or "null")
 
 
 # --------------------------------------------------------------------------- #
@@ -100,93 +87,25 @@ def release_level(tag, previous):
 
 
 # --------------------------------------------------------------------------- #
-# Sign-ups
+# Projects
 # --------------------------------------------------------------------------- #
 
-def parse_signup(issue):
-    """(repository, wants) from a sign-up issue, or None when it names no
-    repository. `wants` is "major", "minor" (major and minor) or "none".
-
-    Understands both the issue form ("### Repository" / "### Which
-    releases?") and the plain "Repository: …" / "Releases: …" lines of a
-    sign-up written by hand.
-    """
-    body = issue.get("body") or ""
-    title = issue.get("title") or ""
-    repo = None
-    m = re.search(r"(?im)^(?:###\s*)?Repository:?\s*\n*\s*(.+)$", body)
-    if m:
-        r = REPO_RE.search(m.group(1))
-        repo = r.group(1) if r else None
-        if not repo and re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", m.group(1).strip()):
-            repo = m.group(1).strip()
-    if not repo:
-        t = title[len(SIGNUP_PREFIX):].strip() if title.startswith(SIGNUP_PREFIX) else ""
-        if re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", t):
-            repo = t
-    if not repo:
-        return None
-    m = re.search(r"(?im)^(?:###\s*)?(?:Which releases\?|Releases:?)\s*\n*\s*(.+)$", body)
-    choice = m.group(1).lower() if m else ""
-    if "none" in choice:
-        wants = "none"
-    elif "major" in choice and ("only" in choice or "minor" not in choice):
-        wants = "major"
-    else:
-        wants = "minor"
-    return repo, wants
-
-
-def approved(issue, repo, comments):
-    """Whether a sign-up may send issues to `repo`.
-
-    Anyone can open an issue here, so a sign-up naming somebody else's
-    repository must not be enough to make us open issues there. It counts when
-    the target's owner opened it, or when a maintainer approved this very
-    repository in a comment: "Approved for release notifications: owner/repo".
-    A label would not do, as the sign-up could be edited to name another
-    repository after it was approved.
-    """
-    author = (issue.get("user") or {}).get("login", "")
-    if author.lower() == repo.split("/")[0].lower():
-        return True
-    for c in comments:
-        if c.get("author_association") not in MAINTAINERS:
-            continue
-        for line in (c.get("body") or "").splitlines():
-            line = line.strip()
-            if line.lower().startswith(APPROVAL_PREFIX.lower()):
-                named = line[len(APPROVAL_PREFIX):].strip(" \t`'\".,;:<>")
-                r = REPO_RE.search(named)
-                if (r.group(1) if r else named).lower() == repo.lower():
-                    return True
-    return False
-
-
-def signups(canboat_repo):
-    """(issue number, repository, wants, approved) for every open sign-up."""
-    pages = gh_json([
-        "api", "--paginate", "--slurp",
-        "repos/%s/issues?state=open&per_page=100" % canboat_repo,
-    ]) or []
-    issues = [i for page in pages for i in page if "pull_request" not in i]
+def load_projects(path):
+    """[(repo, wants)] from the projects file; `wants` is "major" (major
+    releases only) or "minor" (major and minor). Raises ValueError on an entry
+    that is not well formed, so a typo fails the run instead of silently
+    dropping a project."""
+    with open(path, "rb") as fh:
+        data = tomllib.load(fh)
     out = []
-    for i in issues:
-        labels = {lab["name"] for lab in i.get("labels", [])}
-        if not (i["title"].startswith(SIGNUP_PREFIX) or "downstream" in labels):
-            continue
-        parsed = parse_signup(i)
-        if not parsed:
-            sys.stderr.write("#%d names no repository, skipped\n" % i["number"])
-            continue
-        comments = []
-        if i.get("comments"):
-            pages = gh_json([
-                "api", "--paginate", "--slurp",
-                "repos/%s/issues/%d/comments?per_page=100" % (canboat_repo, i["number"]),
-            ]) or []
-            comments = [c for page in pages for c in page]
-        out.append((i["number"], parsed[0], parsed[1], approved(i, parsed[0], comments)))
+    for n, p in enumerate(data.get("project", []), 1):
+        repo, wants = p.get("repo", ""), p.get("releases", "")
+        if not REPO_NAME_RE.match(repo):
+            raise ValueError("%s: project %d: repo %r is not owner/repo" % (path, n, repo))
+        if wants not in ("major", "minor"):
+            raise ValueError("%s: %s: releases must be \"major\" or \"minor\", not %r"
+                             % (path, repo, wants))
+        out.append((repo, wants))
     return out
 
 
@@ -249,13 +168,13 @@ def issue_title(tag, level):
     return "CANboat %s released (%s release)" % (tag, level)
 
 
-def issue_body(canboat_repo, tag, previous, level, signup_number, changes, notes, notes_url):
+def issue_body(canboat_repo, tag, previous, level, changes, notes, notes_url):
     head = [
         "CANboat [%s](%s) is out, a **%s** release (previous release: %s)."
         % (tag, notes_url, level, previous),
         "",
         "You are getting this because this repository signed up for CANboat release "
-        "notifications in %s#%d." % (canboat_repo, signup_number),
+        "notifications.",
         "",
         "## What changed in the databases",
         "",
@@ -264,9 +183,9 @@ def issue_body(canboat_repo, tag, previous, level, signup_number, changes, notes
     tail = [
         "",
         "---",
-        "To change which releases you hear about, edit %s#%d; to stop, close it. "
-        "This issue was opened by CANboat's release workflow; feel free to close it "
-        "once you have updated." % (canboat_repo, signup_number),
+        "To change which releases you hear about, or to stop, comment here or open an "
+        "issue in %s. This issue was opened by CANboat's release workflow; feel free "
+        "to close it once you have updated." % canboat_repo,
     ]
     # The database summary may take at most half the issue; the release notes
     # get what is left, and are left out when that is too little to be useful.
@@ -302,6 +221,7 @@ def main(argv=None):
     p.add_argument("--tag", required=True, help="the release tag, vX.Y.Z")
     p.add_argument("--previous", help="the release before it (default: the previous vX.Y.Z tag)")
     p.add_argument("--repo", default="canboat/canboat", help="the CANboat repository")
+    p.add_argument("--projects", default=PROJECTS, help="the projects file (default: %(default)s)")
     p.add_argument("--dry-run", action="store_true", help="print what would be done; write nothing")
     args = p.parse_args(argv)
 
@@ -318,35 +238,30 @@ def main(argv=None):
         print("Patch releases notify nobody.")
         return 0
 
-    subs = signups(args.repo)
-    wanting = [(n, repo, ok) for n, repo, wants, ok in subs if wants_release(wants, level)]
-    targets = [(n, repo) for n, repo, ok in wanting if ok]
-    summary = ["| %s | #%d | awaiting approval (a maintainer's \"%s %s\") |" % (repo, n, APPROVAL_PREFIX, repo)
-               for n, repo, ok in wanting if not ok]
-    print("%d sign-up(s), %d for a %s release, %d of them approved."
-          % (len(subs), len(wanting), level, len(targets)))
-    for line in summary:
-        print(line)
+    projects = load_projects(args.projects)
+    targets = [repo for repo, wants in projects if wants_release(wants, level)]
+    summary = []
+    print("%d project(s), %d of them for a %s release." % (len(projects), len(targets), level))
 
     changes = database_changes(previous, args.tag) if targets else ""
     notes, notes_url = release_notes(args.repo, args.tag) if targets else (None, "")
     title = issue_title(args.tag, level)
     failed = 0
-    for number, repo in targets:
+    for repo in targets:
         notified = already_notified(repo, title)
         if notified is None:
             failed += 1
             print("%s: could not search its issues; not sent, to avoid a duplicate" % repo)
-            summary.append("| %s | #%d | failed: could not check for an existing issue |" % (repo, number))
+            summary.append("| %s | failed: could not check for an existing issue |" % repo)
             continue
         if notified:
             print("%s: already has \"%s\", skipped" % (repo, title))
-            summary.append("| %s | #%d | already notified |" % (repo, number))
+            summary.append("| %s | already notified |" % repo)
             continue
-        body = issue_body(args.repo, args.tag, previous, level, number, changes, notes, notes_url)
+        body = issue_body(args.repo, args.tag, previous, level, changes, notes, notes_url)
         if args.dry_run:
-            print("\n=== would open in %s (sign-up #%d): %s\n%s" % (repo, number, title, body))
-            summary.append("| %s | #%d | dry run |" % (repo, number))
+            print("\n=== would open in %s: %s\n%s" % (repo, title, body))
+            summary.append("| %s | dry run |" % repo)
             continue
         with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as fh:
             fh.write(body)
@@ -355,19 +270,17 @@ def main(argv=None):
         if r.returncode != 0:
             failed += 1
             print("%s: FAILED: %s" % (repo, r.stderr.strip()))
-            summary.append("| %s | #%d | failed: %s |" % (repo, number, r.stderr.strip()[:120].replace("|", "/")))
+            summary.append("| %s | failed: %s |" % (repo, r.stderr.strip()[:120].replace("|", "/")))
             continue
         url = r.stdout.strip()
         print("%s: %s" % (repo, url))
-        summary.append("| %s | #%d | %s |" % (repo, number, url))
-        run(["gh", "issue", "comment", str(number), "-R", args.repo, "--body",
-             "Notified of %s: %s" % (args.tag, url)], check=False)
+        summary.append("| %s | %s |" % (repo, url))
 
     step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if step_summary:
         with open(step_summary, "a", encoding="utf-8") as fh:
             fh.write("## Downstream notifications for %s (%s release)\n\n" % (args.tag, level))
-            fh.write("| Repository | Sign-up | Result |\n|---|---|---|\n")
+            fh.write("| Repository | Result |\n|---|---|\n")
             fh.write("\n".join(summary) + "\n")
     return 1 if failed else 0
 

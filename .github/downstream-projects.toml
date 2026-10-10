@@ -1,0 +1,24 @@
+# Downstream projects that are told about CANboat releases.
+#
+# On every major or minor release tag, .github/workflows/downstream-notify.yml
+# runs tools/downstream-notify.py, which opens an issue in each repository
+# listed here that asked for that kind of release, summarising what changed in
+# the databases.
+#
+# A project asks with a "Release notifications: <owner/repo>" issue in
+# canboat/canboat (the "Release notifications for a downstream project"
+# template). A maintainer checks that the request is genuine (it comes from the
+# repository's owner or a maintainer of it), adds the repository here and closes
+# the issue. To change or stop its notifications, a project comments on one of
+# them or opens an issue; a maintainer then edits or removes its entry.
+#
+# Each [[project]]:
+#   repo     = "owner/repo"   where the issues are opened
+#   releases = "major"        major releases only, or
+#              "minor"        major and minor releases
+#   request  = "..."          link to where the project asked (for the record)
+
+[[project]]
+repo = "wellenvogel/avnav"
+releases = "major"
+request = "https://github.com/wellenvogel/avnav/issues/617"
