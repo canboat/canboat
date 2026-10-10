@@ -137,16 +137,14 @@ pub struct Args {
     #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
     canalyst_channel: u8,
 
-    /// CANalyst-II: the CAN bit rate, 250 000 for NMEA 2000 or 500 000 for
-    /// a J1939-14 bus. (A SocketCAN interface's bit rate is set outside
-    /// canboat.)
-    #[arg(
-        long,
-        value_name = "BIT/S",
-        default_value_t = 250_000,
-        requires = "canalyst"
-    )]
-    bitrate: u32,
+    /// The CAN bus bit rate, for `--canalyst` (250 000 if not given) and
+    /// `--socketcan`, where it brings the interface down, sets the rate and
+    /// brings it up again (needs root or CAP_NET_ADMIN). Without it a
+    /// SocketCAN interface is used as it was configured. 250 000 for NMEA
+    /// 2000, 500 000 for a J1939-14 bus. Not the serial speed to a gateway
+    /// such as the NGT-1: that is `--baud`.
+    #[arg(long, value_name = "BIT/S")]
+    bitrate: Option<u32>,
 
     /// Preferred ISO source address to claim with `--socketcan` or
     /// `--canalyst`. Defaults to 0; the claim machine will pick a free
@@ -590,6 +588,12 @@ impl Args {
     /// Reject what clap cannot: today, more than one `--protocol`. Call
     /// before converting to a [`BridgeConfig`].
     pub fn check(&self) -> anyhow::Result<()> {
+        if self.bitrate.is_some() && self.socketcan.is_none() && self.canalyst.is_none() {
+            anyhow::bail!(
+                "--bitrate sets the CAN bus rate of --socketcan or --canalyst \
+                 (for the serial speed to a gateway, use --baud)"
+            );
+        }
         self.protocol.resolve().map(|_| ())
     }
 }
@@ -605,12 +609,10 @@ impl From<Args> for BridgeConfig {
             canalyst: a.canalyst,
             canalyst_channel: a.canalyst_channel,
             address: a.address,
-            // The standalone `canboat` CLI keeps assuming an externally
-            // configured interface; only library embedders (merrimac) opt in.
-            socketcan_configure_link: false,
-            // Only the CANalyst takes a bit rate from the command line; a
-            // SocketCAN interface is configured outside canboat.
-            socketcan_bitrate: a.bitrate,
+            // The CLI uses a SocketCAN interface as it was configured,
+            // unless --bitrate asks canboat to configure it.
+            socketcan_configure_link: a.bitrate.is_some(),
+            socketcan_bitrate: a.bitrate.unwrap_or(250_000),
             protocol: a
                 .protocol
                 .resolve()

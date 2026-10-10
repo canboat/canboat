@@ -208,9 +208,15 @@ pub struct Args {
     #[arg(long, value_name = "N", default_value_t = 0)]
     channel: u8,
 
-    /// CANalyst-II: the CAN bit rate.
-    #[arg(long, value_name = "BIT/S", default_value_t = 250_000)]
-    bitrate: u32,
+    /// The CAN bus bit rate, for the gateways canboat drives as the CAN
+    /// controller: the CANalyst-II (250 000 if not given) and SocketCAN,
+    /// where it brings the interface down, sets the rate and brings it up
+    /// again (needs root or CAP_NET_ADMIN). Without it a SocketCAN
+    /// interface is used as it was configured. 250 000 for NMEA 2000,
+    /// 500 000 for a J1939-14 bus. Not the serial speed to a gateway such
+    /// as the NGT-1: that is `--baud`.
+    #[arg(long, value_name = "BIT/S")]
+    bitrate: Option<u32>,
 
     /// Quit if no frame is received for this many seconds (0 disables).
     /// SocketCAN and CANalyst only.
@@ -387,6 +393,12 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
              this one does NMEA 2000 framing itself"
         );
     }
+    if args.bitrate.is_some() && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst) {
+        anyhow::bail!(
+            "--bitrate sets the CAN bus rate of socketcan or canalyst; this gateway runs its own CAN side \
+             (for the serial speed to it, use --baud)"
+        );
+    }
     match args.kind {
         Kind::Ngt1 => {
             let (r, w) = open_stream(args)?;
@@ -481,7 +493,13 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         }
         Kind::Canalyst => open_canalyst(args, protocol),
         Kind::Socketcan => {
-            let config = node_config(args, protocol);
+            let config = device::socketcan::Config {
+                // Configure the link only when asked to; otherwise use the
+                // interface as it was set up.
+                configure_link: args.bitrate.is_some(),
+                bitrate: args.bitrate.unwrap_or(250_000),
+                ..node_config(args, protocol)
+            };
             let claim = Arc::new(AtomicU8::new(config.address));
             // On non-Linux this returns ErrorKind::Unsupported.
             device::socketcan::run(&args.device, config, claim)
@@ -513,7 +531,7 @@ fn open_canalyst(args: &Args, protocol: BusProtocol) -> Result<DeviceHandle> {
         .ok_or_else(|| anyhow::anyhow!("a CANalyst-II is named `usb` or `usb:VVVV:PPPP`"))??;
     let config = device::socketcan::Config {
         model_version: Some("canboat-canalyst"),
-        bitrate: args.bitrate,
+        bitrate: args.bitrate.unwrap_or(250_000),
         ..node_config(args, protocol)
     };
     let (reader, writer) = crate::io::canalyst::open_rw(&selector, args.channel, config.bitrate)
