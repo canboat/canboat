@@ -74,6 +74,15 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
 
     let mut data: SmallVec<[u8; 8]> = SmallVec::new();
     for (i, t) in toks.enumerate() {
+        // One CAN frame per line. More than 8 bytes means two lines were
+        // glued together (a lost datagram or a reconnect); the reassembler
+        // would decode it as a coalesced message.
+        if i == 8 {
+            return Err(ParseError::BadPayloadCount {
+                expected: 8,
+                found: line.split_whitespace().count() - 3,
+            });
+        }
         let b = u8::from_str_radix(t, 16).map_err(|_| ParseError::BadHexByte {
             index: i,
             value: t.to_string(),
@@ -163,6 +172,20 @@ mod tests {
         assert_eq!(f.pgn, 0xee00);
         assert_eq!(f.dst, 0xff);
         assert_eq!(f.src, 0x05);
+    }
+
+    #[test]
+    fn rejects_more_than_eight_data_bytes() {
+        // The head of one 129029 line glued to the tail of the next
+        // (canboat/canboatjs#497).
+        let line = "17:31:22.999 R 0DF80514 60 2F FC 25 C0 8A 5C 84 41 6A";
+        assert!(matches!(
+            parse_line(line),
+            Err(ParseError::BadPayloadCount {
+                expected: 8,
+                found: 10
+            })
+        ));
     }
 
     #[test]

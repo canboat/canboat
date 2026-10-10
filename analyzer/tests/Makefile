@@ -508,3 +508,16 @@ test27:
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-gps-rollover-all.out
 	diff $(TEMPDIR)/pgn-gps-rollover-all.out pgn-gps-rollover-all.out
 	diff $(TEMPDIR)/pgn-gps-rollover-all.err pgn-gps-rollover-all.err
+
+#
+# A YDWG-02 line with more than 8 data bytes is two lines glued together and
+# must be rejected (#1001). YDWG-02 lines carry no date, so the parser takes it
+# from the local clock: TZ=UTC pins the -fixtime date on every runner.
+#
+.PHONY: test38
+tests: test38
+test38:
+	TZ=UTC $(ANALYZER) -json -nv < ydwg-long-line.in > $(TEMPDIR)/ydwg-long-line.out -fixtime ydwg-long-line 2> $(TEMPDIR)/ydwg-long-line.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/ydwg-long-line.out
+	diff $(TEMPDIR)/ydwg-long-line.out ydwg-long-line.out
+	diff $(TEMPDIR)/ydwg-long-line.err ydwg-long-line.err
