@@ -511,12 +511,13 @@ test27:
 
 #
 # A YDWG-02 line with more than 8 data bytes is two lines glued together and
-# must be rejected (#1001).
+# must be rejected (#1001). YDWG-02 lines carry no date, so the parser takes it
+# from the local clock: TZ=UTC pins the -fixtime date on every runner.
 #
 .PHONY: test28
 tests: test28
 test28:
-	$(ANALYZER) -json -nv < ydwg-long-line.in > $(TEMPDIR)/ydwg-long-line.out -fixtime ydwg-long-line 2> $(TEMPDIR)/ydwg-long-line.err
+	TZ=UTC $(ANALYZER) -json -nv < ydwg-long-line.in > $(TEMPDIR)/ydwg-long-line.out -fixtime ydwg-long-line 2> $(TEMPDIR)/ydwg-long-line.err
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/ydwg-long-line.out
 	diff $(TEMPDIR)/ydwg-long-line.out ydwg-long-line.out
 	diff $(TEMPDIR)/ydwg-long-line.err ydwg-long-line.err
