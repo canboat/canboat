@@ -258,6 +258,25 @@ mod tests {
     }
 
     #[test]
+    fn raw_rejects_a_line_with_more_than_eight_bytes() {
+        // The head of one line glued to the tail of the next (#1001): an
+        // error and no frame, and the gateway goes on with the next line.
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
+        let mut events = Vec::new();
+        dec.decode(
+            b"17:31:22.999 R 0DF80514 60 2F FC 25 C0 8A 5C 84 41 6A\r\n",
+            &mut events,
+        );
+        assert!(matches!(events.as_slice(), [DeviceEvent::Error(_)]));
+        let out = decode_all(
+            &mut dec,
+            "17:31:23.000 R 09F80114 2B 49 79 21 D0 34 AD 01\r\n",
+        );
+        assert_eq!(out.len(), 1);
+        assert_eq!(out[0].pgn, 129025);
+    }
+
+    #[test]
     fn raw_fast_packet_fragments_and_reassembles() {
         // 129029 GNSS Position Data: 43-byte fast-packet payload.
         let payload: Vec<u8> = (0u8..43).collect();
