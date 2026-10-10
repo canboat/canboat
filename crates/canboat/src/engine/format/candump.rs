@@ -219,6 +219,14 @@ fn parse_len_and_bytes<'a>(
         })?;
         data.push(b);
     }
+    // A line cut short: decoding the bytes it has as the whole frame
+    // would read the missing ones as field values.
+    if data.len() < declared {
+        return Err(ParseError::BadPayloadCount {
+            expected: declared,
+            found: data.len(),
+        });
+    }
     Ok(Some(RawFrame {
         timestamp: None,
         prio,
@@ -427,6 +435,15 @@ mod tests {
         assert!(parse_line("<0x18eeff01> [12] 00 11 22 33 44 55 66 77 88 99 aa bb").is_err());
         assert!(parse_line("<0x18eeff01>").is_err());
         assert!(parse_line("<18eeff01> [1] 00").is_err());
+        // Fewer bytes than declared, in both shapes that declare a length.
+        assert!(matches!(
+            parse_line("<0x18eeff01> [8] 05"),
+            Err(ParseError::BadPayloadCount {
+                expected: 8,
+                found: 1
+            })
+        ));
+        assert!(parse_line("  can0  18EEFF00   [8]  8E").is_err());
     }
 
     #[test]
