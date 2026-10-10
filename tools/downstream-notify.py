@@ -97,8 +97,15 @@ def load_projects(path):
     dropping a project."""
     with open(path, "rb") as fh:
         data = tomllib.load(fh)
+    unknown = set(data) - {"project"}
+    if unknown:
+        raise ValueError("%s: unknown top-level %s (projects are [[project]] tables)"
+                         % (path, ", ".join(sorted(unknown))))
     out = []
     for n, p in enumerate(data.get("project", []), 1):
+        unknown = set(p) - {"repo", "releases", "request"}
+        if unknown:
+            raise ValueError("%s: project %d: unknown key(s) %s" % (path, n, ", ".join(sorted(unknown))))
         repo, wants = p.get("repo", ""), p.get("releases", "")
         if not REPO_NAME_RE.match(repo):
             raise ValueError("%s: project %d: repo %r is not owner/repo" % (path, n, repo))
