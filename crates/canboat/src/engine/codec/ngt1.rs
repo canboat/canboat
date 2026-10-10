@@ -9,13 +9,18 @@
 //! Operating Mode, [`Config::operating_mode`]); the gateway answers with the
 //! mode in force, which is logged, and a mismatch is warned about.
 //!
-//! There is no keepalive. canboat C's `actisense-serial` sets the mode again
-//! every 20 s, added in 2020 against NGT-1 hangs; the Actisense SDK has no
-//! keepalive, and the gateway keeps the mode in non-volatile memory. An
-//! NGT-1 with firmware 2.690 (2026-10) ran 15 minutes without one, through
-//! 5 minutes of nothing written and stalls of up to 60 s in reading with
-//! commands written meanwhile, and never hung. Setting the mode is not
-//! free: the gateway then ignores commands for 50 to 200 ms.
+//! There is no keepalive. canboat C's `actisense-serial` long set the mode
+//! again every 20 s, added in 2020 against NGT-1 hangs; the Actisense SDK
+//! has no keepalive, and the gateway keeps the mode in non-volatile memory.
+//! An NGT-1 with firmware 2.690 (2026-10) ran 15 minutes without one,
+//! through 5 minutes of nothing written and stalls of up to 60 s in reading
+//! with commands written meanwhile, and never hung.
+//!
+//! Setting the mode is not free: that NGT-1 then drops what is written to
+//! it, BEM commands for 50 to 200 ms and N2K messages for 400 to 450 ms. So
+//! frames for the bus that [`Codec::send`] is given in the 500 ms after
+//! the mode is set come back empty, held, and go out as [`Event::Send`]
+//! from [`Codec::receive`] or [`Codec::tick`] once that time is over.
 //!
 //! The gateway's own BEM messages come out as canboat's `Actisense: …`
 //! PGNs (`0x40000` + the BEM id), as canboat C's `actisense-serial` gives
@@ -152,6 +157,27 @@ pub struct Ngt1 {
     reported_mode: Option<OperatingMode>,
     /// The gateway's product information as its parts arrive.
     product_info: ProductInfo,
+    /// Whether frames for the bus wait for a Set Operating Mode to settle.
+    settle: Settle,
+    /// Frames for the bus held meanwhile, encoded.
+    held: Vec<Vec<u8>>,
+}
+
+/// How long after Set Operating Mode frames for the bus are held: an NGT-1
+/// (firmware 2.690) drops everything written in the 400 to 450 ms after
+/// it, N2K messages and BEM commands alike.
+const MODE_SETTLE_MS: u64 = 500;
+
+/// Holding frames for the bus after a Set Operating Mode.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Settle {
+    /// Nothing held.
+    Settled,
+    /// Set Operating Mode was written by [`Codec::open`], which has no
+    /// clock; the hold runs from the first time the codec is given.
+    Opened,
+    /// Held until then.
+    Until(u64),
 }
 
 struct NetworkStatusState {
@@ -190,6 +216,26 @@ impl Ngt1 {
             mode: config.operating_mode,
             reported_mode: None,
             product_info: ProductInfo::default(),
+            settle: Settle::Settled,
+            held: Vec::new(),
+        }
+    }
+
+    /// Start or end holding frames for the bus, as the time goes by.
+    fn settle(&mut self, now_ms: u64, events: &mut Vec<Event>) {
+        match self.settle {
+            Settle::Opened => self.settle = Settle::Until(now_ms + MODE_SETTLE_MS),
+            Settle::Until(until) if now_ms >= until => {
+                self.settle = Settle::Settled;
+                if !self.held.is_empty() {
+                    log::debug!(
+                        "ngt1: sending {} frames held after Set Operating Mode",
+                        self.held.len()
+                    );
+                }
+                send_all(events, std::mem::take(&mut self.held));
+            }
+            _ => {}
         }
     }
 
@@ -233,6 +279,8 @@ impl Ngt1 {
                 // Product Info first, as in `open`.
                 events.push(Event::Send(encode_get_product_info()));
                 events.push(Event::Send(encode_set_operating_mode(self.mode)));
+                // Frames already held keep their place, ahead of new ones.
+                self.settle = Settle::Until(now_ms + MODE_SETTLE_MS);
             }
             BEM_ERROR_REPORT => log::warn!(
                 "ngt1: the gateway reports error {}",
@@ -367,8 +415,11 @@ fn send_all(events: &mut Vec<Event>, commands: Vec<Vec<u8>>) {
 
 impl Codec for Ngt1 {
     /// Product Info goes first: an NGT-1 (firmware 2.690) ignores what
-    /// follows Set Operating Mode for 50 to 200 ms.
+    /// follows Set Operating Mode for a while. For the same reason frames
+    /// for the bus are held until [`MODE_SETTLE_MS`] after the first
+    /// [`Codec::receive`] or [`Codec::tick`].
     fn open(&mut self) -> Vec<u8> {
+        self.settle = Settle::Opened;
         let mut out = encode_get_product_info();
         out.extend(encode_set_operating_mode(self.mode));
         out
@@ -401,6 +452,7 @@ impl Codec for Ngt1 {
     /// on a quiet bus.
     fn tick(&mut self, now_ms: u64, events: &mut Vec<Event>) {
         self.started(now_ms);
+        self.settle(now_ms, events);
         // Wall-clock fallback, for a gateway whose P-codes are off and
         // so never sends a System Status to trigger on.
         if now_ms >= self.net.next_ms {
@@ -425,12 +477,103 @@ impl Codec for Ngt1 {
         if 6 + frame.data.len() > u8::MAX as usize {
             return Err(Refused::TooLarge);
         }
-        Ok(encode_n2k_send_frame(frame))
+        let bytes = encode_n2k_send_frame(frame);
+        if self.settle == Settle::Settled {
+            Ok(bytes)
+        } else {
+            // Written now it would be lost; `tick` sends it later.
+            self.held.push(bytes);
+            Ok(Vec::new())
+        }
     }
 
     /// None: the NGT-1 needs no keepalive (see the module documentation).
     fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
         None
+    }
+}
+
+#[cfg(test)]
+mod settle_tests {
+    use super::*;
+
+    const NOW: u64 = 1_780_082_164_826;
+
+    fn frame(pgn: u32) -> RawFrame {
+        RawFrame::new(None, 6, pgn, 0, 21, vec![0x14, 0xf0, 0x01])
+    }
+
+    fn sent(events: &[Event]) -> Vec<&Vec<u8>> {
+        events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Send(b) => Some(b),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Without `open` nothing was set, so nothing is held.
+    #[test]
+    fn frames_go_straight_out_without_open() {
+        let mut d = Ngt1::default();
+        assert_eq!(
+            d.send(&frame(59904)),
+            Ok(encode_n2k_send_frame(&frame(59904)))
+        );
+    }
+
+    /// Frames given before and in the 500 ms after the first tick are
+    /// held, then sent in order.
+    #[test]
+    fn frames_after_open_are_held_until_the_mode_settles() {
+        let mut d = Ngt1::default();
+        d.open();
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        assert!(sent(&events).is_empty());
+        assert_eq!(d.send(&frame(126208)), Ok(Vec::new()));
+        d.tick(NOW + MODE_SETTLE_MS - 1, &mut events);
+        assert!(sent(&events).is_empty(), "still settling");
+        d.tick(NOW + MODE_SETTLE_MS, &mut events);
+        assert_eq!(
+            sent(&events),
+            [
+                &encode_n2k_send_frame(&frame(59904)),
+                &encode_n2k_send_frame(&frame(126208))
+            ]
+        );
+        assert_eq!(
+            d.send(&frame(59904)),
+            Ok(encode_n2k_send_frame(&frame(59904)))
+        );
+    }
+
+    /// A refused frame is refused at once, not held.
+    #[test]
+    fn a_refused_frame_is_not_held() {
+        let mut d = Ngt1::default();
+        d.open();
+        assert_eq!(d.send(&frame(SYNTHETIC_PGN_START)), Err(Refused::Synthetic));
+        assert!(d.held.is_empty());
+    }
+
+    /// The gateway restarting sets the mode again, and holds frames again.
+    #[test]
+    fn a_startup_status_holds_frames_again() {
+        let mut d = Ngt1::default();
+        let mut payload = vec![BEM_STARTUP_STATUS, 1, 0x0e, 0];
+        payload.extend_from_slice(&[0; 8]);
+        payload.extend_from_slice(&[0x8e, 0x0a, 0]);
+        let mut wire = Vec::new();
+        crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
+        let mut events = Vec::new();
+        d.receive(&wire, NOW, &mut events);
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        events.clear();
+        d.tick(NOW + MODE_SETTLE_MS, &mut events);
+        assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
     }
 }
 
