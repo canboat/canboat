@@ -1,0 +1,14 @@
+# PLAIN lines that announce more data bytes than they carry. sscanf leaves the
+# unscanned entries of the parser's stack array untouched, and they used to be
+# copied into the message and decoded as field values (stack contents shown
+# as heading / deviation / variation). Each such line must be rejected.
+2026-01-01-00:00:00.000,3,127250,1,255,8,01
+2026-01-01-00:00:00.000,3,127250,1,255,8,01,02,03
+2026-01-01-00:00:00.000,3,127250,1,255,3
+# A line that ends right after the first comma makes sscanf return EOF (-1);
+# the parsers compared that against 5 as an unsigned value and went on with an
+# uninitialised length. It must be rejected like any other short line.
+2026-01-01-00:00:00.000,
+# Control lines: a complete frame and a genuinely short frame (len matches).
+2026-01-01-00:00:00.000,3,127250,1,255,8,01,5d,46,00,32,2d,30,fc
+2026-01-01-00:00:00.000,3,127250,1,255,3,01,5d,46

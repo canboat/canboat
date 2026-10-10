@@ -22,7 +22,7 @@ ANALYZER=$(TARGETDIR)/analyzer
 ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34 test35 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34 test35 test36 tests
 
 all:	tests
 
@@ -361,7 +361,17 @@ test35:
 	diff $(TEMPDIR)/pgn-below-range-min-si.out pgn-below-range-min-si.out
 	diff $(TEMPDIR)/pgn-below-range-min-si.err pgn-below-range-min.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34 test35
+#
+# A PLAIN line whose length field announces more data bytes than are on the line
+# must be rejected, not padded with whatever happened to be on the stack.
+#
+test36:
+	$(ANALYZER) -json < plain-short-data.in > $(TEMPDIR)/plain-short-data.out -fixtime pgn-test 2> $(TEMPDIR)/plain-short-data.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/plain-short-data.out
+	diff $(TEMPDIR)/plain-short-data.out plain-short-data.out
+	diff $(TEMPDIR)/plain-short-data.err plain-short-data.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34 test35 test36
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so

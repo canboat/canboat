@@ -1,0 +1,2 @@
+{"timestamp":"2026-01-01T00:00:00.000Z","prio":3,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Heading":103.2,"Deviation":73.3,"Variation":70.7,"Reference":"True"}}
+{"timestamp":"2026-01-01T00:00:00.000Z","prio":3,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Heading":103.2}}
