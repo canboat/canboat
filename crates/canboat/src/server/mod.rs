@@ -866,6 +866,13 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
                 .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
         });
     }
+    // The CANalyst-II is a USB device: without the `usb` feature (a
+    // library build with `bridge` alone) there is nothing to open it with.
+    #[cfg(not(feature = "usb"))]
+    if config.canalyst.is_some() {
+        anyhow::bail!("--canalyst needs canboat built with the `usb` feature");
+    }
+    #[cfg(feature = "usb")]
     if let Some(device) = config.canalyst.as_deref() {
         let selector = crate::io::usb::Selector::parse(device).ok_or_else(|| {
             anyhow::anyhow!("--canalyst takes `usb` or `usb:VVVV:PPPP`, not {device}")
