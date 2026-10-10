@@ -90,11 +90,14 @@ impl core::ops::drop::Drop for canboat::bridge::Bridge
 pub fn canboat::bridge::Bridge::drop(&mut self)
 pub struct canboat::bridge::BridgeConfig
 pub canboat::bridge::BridgeConfig::actisense: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::address: u8
 pub canboat::bridge::BridgeConfig::ais_port: u16
 pub canboat::bridge::BridgeConfig::analyzer_port: u16
 pub canboat::bridge::BridgeConfig::baud: core::option::Option<u32>
 pub canboat::bridge::BridgeConfig::bind: core::net::ip_addr::Ipv4Addr
 pub canboat::bridge::BridgeConfig::camel_case: canboat::output::CamelCase
+pub canboat::bridge::BridgeConfig::canalyst: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::canalyst_channel: u8
 pub canboat::bridge::BridgeConfig::canboat_csv: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
@@ -122,7 +125,6 @@ pub canboat::bridge::BridgeConfig::replay: core::option::Option<std::path::PathB
 pub canboat::bridge::BridgeConfig::replay_sent: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::snapshot_port: u16
 pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
-pub canboat::bridge::BridgeConfig::socketcan_address: u8
 pub canboat::bridge::BridgeConfig::socketcan_bitrate: u32
 pub canboat::bridge::BridgeConfig::socketcan_configure_link: bool
 pub canboat::bridge::BridgeConfig::units: canboat::Units
@@ -287,6 +289,20 @@ pub fn canboat::codec::bst_d0::BstD0::fmt(&self, &mut core::fmt::Formatter<'_>) 
 pub mod canboat::codec::can_id
 pub fn canboat::codec::can_id::compose(u8, u32, u8, u8) -> u32
 pub fn canboat::codec::can_id::decompose(u32) -> (u8, u32, u8, u8)
+pub mod canboat::codec::canalyst
+pub struct canboat::codec::canalyst::Canalyst
+impl canboat::codec::canalyst::Canalyst
+pub fn canboat::codec::canalyst::Canalyst::new(canboat::schema::BusProtocol) -> Self
+impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
+pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::canalyst::Canalyst::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::canalyst::Canalyst::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::canalyst::Canalyst
+pub fn canboat::codec::canalyst::Canalyst::default() -> Self
+pub const canboat::codec::canalyst::PACKET_LEN: usize
 pub mod canboat::codec::fastpacket
 pub fn canboat::codec::fastpacket::fragment(u8, &[u8]) -> core::option::Option<alloc::vec::Vec<[u8; 8]>>
 pub fn canboat::codec::fastpacket::packet_type(u32) -> canboat::FramePacketType
@@ -541,6 +557,13 @@ pub fn canboat::codec::bst_d0::BstD0::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::bst_d0::BstD0::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::bst_d0::BstD0::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
+pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::canalyst::Canalyst::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::canalyst::Canalyst::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
