@@ -62,6 +62,10 @@ enum Kind {
     /// fast-packets itself.
     #[value(name = "bst-95")]
     Bst95,
+    /// CANalyst-II raw CAN frames over USB (`usb`): the Waveshare
+    /// USB-CAN-B. canboat joins and splits fast-packets itself.
+    #[value(name = "canalyst", alias = "usb-can-b")]
+    Canalyst,
 }
 
 impl Kind {
@@ -75,6 +79,7 @@ impl Kind {
             Kind::Socketcan => "socketcan-serial",
             Kind::Ydwg => "ydwg-gateway",
             Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => "w2k-gateway",
+            Kind::Canalyst => "canalyst",
         }
     }
 
@@ -85,7 +90,7 @@ impl Kind {
             Kind::Ikonvert => 230_400,
             Kind::Ydwg => 38_400,
             Kind::Bst95 => 115_200,
-            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 => 0,
+            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 | Kind::Canalyst => 0,
         }
     }
 }
@@ -116,7 +121,7 @@ pub struct Args {
     /// for an NGX), `tcp://host[:port]` (ydwg, w2k-*, bst-d0, bst-95, and
     /// ngt1/ikonvert through a network bridge), `udp://[bind:]port` (ydwg, receive only),
     /// `host:port` (maretron), or CAN interface name such as `can0`
-    /// (socketcan). An FTDI-based
+    /// (socketcan), or `usb[:VVVV:PPPP]` (canalyst). An FTDI-based
     /// gateway such as the NGT-1 can also be opened directly over USB as
     /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
     /// serial driver does not recognise the NGT-1.
@@ -198,6 +203,14 @@ pub struct Args {
     #[arg(long, alias = "si", value_name = "N", default_value_t = 15)]
     system_instance: u8,
 
+    /// CANalyst-II: the CAN channel, 0 or 1.
+    #[arg(long, value_name = "N", default_value_t = 0)]
+    channel: u8,
+
+    /// CANalyst-II: the CAN bit rate.
+    #[arg(long, value_name = "BIT/S", default_value_t = 250_000)]
+    bitrate: u32,
+
     /// Quit if no frame is received for this many seconds (0 disables).
     /// SocketCAN only.
     #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
@@ -205,10 +218,10 @@ pub struct Args {
 
     /// `--protocol j1939` frames the traffic as J1939 (single frames and ISO
     /// TP, no fast-packet) and, on SocketCAN, leaves out the NMEA 2000
-    /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG and
-    /// BST-95 only: the other gateways do NMEA 2000 framing themselves. ISO TP
-    /// messages (longer than 8 bytes) are received on all three but sent on
-    /// SocketCAN only; YDWG and BST-95 refuse to send them.
+    /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG,
+    /// BST-95 and CANalyst only: the other gateways do NMEA 2000 framing
+    /// themselves. ISO TP messages (longer than 8 bytes) are received on all
+    /// four but sent on SocketCAN only; the others refuse to send them.
     #[command(flatten)]
     protocol: crate::cli::protocol::ProtocolArgs,
 }
@@ -363,10 +376,13 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         );
     }
     if protocol != BusProtocol::Nmea2000
-        && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg | Kind::Bst95)
+        && !matches!(
+            args.kind,
+            Kind::Socketcan | Kind::Ydwg | Kind::Bst95 | Kind::Canalyst
+        )
     {
         anyhow::bail!(
-            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg or bst-95); \
+            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg, bst-95 or canalyst); \
              this one does NMEA 2000 framing itself"
         );
     }
@@ -462,6 +478,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             Ok(device::bst95::run(reader, writer, protocol))
         }
+        Kind::Canalyst => open_canalyst(args, protocol),
         Kind::Socketcan => {
             let config = device::socketcan::Config {
                 address: args.address,
@@ -482,6 +499,15 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 .with_context(|| format!("opening SocketCAN interface {}", args.device))
         }
     }
+}
+
+/// Open a CANalyst-II over USB and start its codec.
+fn open_canalyst(args: &Args, protocol: BusProtocol) -> Result<DeviceHandle> {
+    let selector = crate::io::usb::Selector::parse(&args.device)
+        .ok_or_else(|| anyhow::anyhow!("a CANalyst-II is named `usb` or `usb:VVVV:PPPP`"))??;
+    let (reader, writer) = crate::io::canalyst::open_rw(&selector, args.channel, args.bitrate)
+        .with_context(|| format!("opening CANalyst-II {}", args.device))?;
+    Ok(device::canalyst::run(reader, writer, protocol))
 }
 
 /// Open the serial transport as an independent `(reader, writer)` pair.
