@@ -32,39 +32,97 @@ const MESSAGES_PER_PACKET: usize = 3;
 /// Bytes in one message.
 const MESSAGE_LEN: usize = 21;
 
-/// The CAN frame in one 21-byte message, when it is an extended data
-/// frame: `(identifier, data)`.
-fn message_frame(m: &[u8; MESSAGE_LEN]) -> Option<(u32, &[u8])> {
-    let id = u32::from_le_bytes([m[0], m[1], m[2], m[3]]);
-    let (remote, extended, len) = (m[10], m[11], usize::from(m[12]));
-    (remote == 0 && extended != 0 && len <= 8).then(|| (id & 0x1FFF_FFFF, &m[13..13 + len]))
+/// One CAN data frame from a packet. Remote frames are left out.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct Message<'a> {
+    /// 29 bits when `extended`, else 11.
+    pub id: u32,
+    pub extended: bool,
+    pub data: &'a [u8],
 }
 
-/// Append `frames` (identifier and at most 8 data bytes each) as packets
-/// of up to three messages.
-fn encode_packets(frames: &[(u32, &[u8])], out: &mut Vec<u8>) {
+/// The data frames in `packet`, or the message count it claims when that
+/// is more than a packet holds.
+pub(crate) fn messages(packet: &[u8; PACKET_LEN]) -> Result<Vec<Message<'_>>, usize> {
+    let count = usize::from(packet[0]);
+    if count > MESSAGES_PER_PACKET {
+        return Err(count);
+    }
+    Ok(packet[1..]
+        .as_chunks::<MESSAGE_LEN>()
+        .0
+        .iter()
+        .take(count)
+        .filter_map(|m| {
+            let id = u32::from_le_bytes([m[0], m[1], m[2], m[3]]);
+            let (remote, extended, len) = (m[10] != 0, m[11] != 0, usize::from(m[12]));
+            (!remote && len <= 8).then(|| Message {
+                id: id & if extended { 0x1FFF_FFFF } else { 0x7FF },
+                extended,
+                data: &m[13..13 + len],
+            })
+        })
+        .collect())
+}
+
+/// Append `frames` as packets of up to three messages.
+pub(crate) fn encode_packets(frames: &[Message<'_>], out: &mut Vec<u8>) {
     for chunk in frames.chunks(MESSAGES_PER_PACKET) {
         let start = out.len();
         out.resize(start + PACKET_LEN, 0);
         let packet = &mut out[start..];
         packet[0] = chunk.len() as u8;
-        for (i, (id, data)) in chunk.iter().enumerate() {
-            debug_assert!(data.len() <= 8);
+        for (i, f) in chunk.iter().enumerate() {
+            debug_assert!(f.data.len() <= 8);
             let m = &mut packet[1 + i * MESSAGE_LEN..1 + (i + 1) * MESSAGE_LEN];
-            m[0..4].copy_from_slice(&id.to_le_bytes());
+            m[0..4].copy_from_slice(&f.id.to_le_bytes());
             // Timestamp, time flag, send type (0: retry until sent) and
             // the remote flag stay 0.
-            m[11] = 1;
-            m[12] = data.len() as u8;
-            m[13..13 + data.len()].copy_from_slice(data);
+            m[11] = u8::from(f.extended);
+            m[12] = f.data.len() as u8;
+            m[13..13 + f.data.len()].copy_from_slice(f.data);
         }
+    }
+}
+
+/// Whole packets out of a byte stream that may split them.
+#[derive(Debug, Default)]
+pub(crate) struct Packets {
+    partial: Vec<u8>,
+}
+
+impl Packets {
+    /// Call `each` for every packet `bytes` completes.
+    pub fn push(&mut self, mut bytes: &[u8], mut each: impl FnMut(&[u8; PACKET_LEN])) {
+        if !self.partial.is_empty() {
+            let take = (PACKET_LEN - self.partial.len()).min(bytes.len());
+            self.partial.extend_from_slice(&bytes[..take]);
+            bytes = &bytes[take..];
+            if self.partial.len() < PACKET_LEN {
+                return;
+            }
+            let packet: [u8; PACKET_LEN] = self.partial[..].try_into().expect("a whole packet");
+            self.partial.clear();
+            each(&packet);
+        }
+        let (packets, rest) = bytes.as_chunks::<PACKET_LEN>();
+        packets.iter().for_each(each);
+        self.partial.extend_from_slice(rest);
+    }
+}
+
+/// An extended frame's message.
+fn extended(id: u32, data: &[u8]) -> Message<'_> {
+    Message {
+        id,
+        extended: true,
+        data,
     }
 }
 
 /// CANalyst-II, raw CAN frames. See the [module docs](self).
 pub struct Canalyst {
-    /// A packet split across reads, so far.
-    partial: Vec<u8>,
+    packets: Packets,
     /// Decides which frames are fast-packets.
     protocol: BusProtocol,
     reassembler: Reassembler,
@@ -82,7 +140,7 @@ impl Canalyst {
     /// A codec for a bus that carries `protocol`.
     pub fn new(protocol: BusProtocol) -> Self {
         Self {
-            partial: Vec::with_capacity(PACKET_LEN),
+            packets: Packets::default(),
             protocol,
             reassembler: Reassembler::new(),
             seq: HashMap::new(),
@@ -96,23 +154,28 @@ impl Canalyst {
         s
     }
 
-    fn packet(&mut self, packet: &[u8], now_ms: u64, events: &mut Vec<Event>) {
-        let count = usize::from(packet[0]);
-        if count > MESSAGES_PER_PACKET {
-            events.push(Event::Error(format!(
-                "CANalyst packet claims {count} messages"
-            )));
-            return;
-        }
-        for m in packet[1..].as_chunks::<MESSAGE_LEN>().0.iter().take(count) {
-            let Some((id, data)) = message_frame(m) else {
-                continue;
-            };
-            let (prio, pgn, src, dst) = iso11783_decompose(id);
-            let mut frame = RawFrame::new(None, prio, pgn, src, dst, data.iter().copied());
+    fn packet(
+        protocol: BusProtocol,
+        reassembler: &mut Reassembler,
+        packet: &[u8; PACKET_LEN],
+        now_ms: u64,
+        events: &mut Vec<Event>,
+    ) {
+        let messages = match messages(packet) {
+            Ok(m) => m,
+            Err(count) => {
+                events.push(Event::Error(format!(
+                    "CANalyst packet claims {count} messages"
+                )));
+                return;
+            }
+        };
+        for m in messages.iter().filter(|m| m.extended) {
+            let (prio, pgn, src, dst) = iso11783_decompose(m.id);
+            let mut frame = RawFrame::new(None, prio, pgn, src, dst, m.data.iter().copied());
             frame.timestamp = Some(format_iso_ms(now_ms));
-            let pt = self.protocol.packet_type(frame.pgn);
-            match self.reassembler.push(frame, pt) {
+            let pt = protocol.packet_type(frame.pgn);
+            match reassembler.push(frame, pt) {
                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
                     events.push(Event::Frame(f))
                 }
@@ -124,23 +187,11 @@ impl Canalyst {
 }
 
 impl Codec for Canalyst {
-    fn receive(&mut self, mut bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
-        if !self.partial.is_empty() {
-            let take = (PACKET_LEN - self.partial.len()).min(bytes.len());
-            self.partial.extend_from_slice(&bytes[..take]);
-            bytes = &bytes[take..];
-            if self.partial.len() < PACKET_LEN {
-                return;
-            }
-            let packet: [u8; PACKET_LEN] = self.partial[..].try_into().expect("a whole packet");
-            self.partial.clear();
-            self.packet(&packet, now_ms, events);
-        }
-        let (packets, rest) = bytes.as_chunks::<PACKET_LEN>();
-        for packet in packets {
-            self.packet(packet, now_ms, events);
-        }
-        self.partial.extend_from_slice(rest);
+    fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
+        let (protocol, reassembler) = (self.protocol, &mut self.reassembler);
+        self.packets.push(bytes, |packet| {
+            Self::packet(protocol, reassembler, packet, now_ms, events)
+        });
     }
 
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused> {
@@ -152,10 +203,10 @@ impl Codec for Canalyst {
         if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
             let seq = self.next_seq(frame.pgn, frame.src);
             let chunks = fastpacket::fragment(seq, &frame.data).ok_or(Refused::TooLarge)?;
-            let frames: Vec<(u32, &[u8])> = chunks.iter().map(|c| (id, &c[..])).collect();
+            let frames: Vec<Message> = chunks.iter().map(|c| extended(id, c)).collect();
             encode_packets(&frames, &mut out);
         } else if frame.data.len() <= 8 {
-            encode_packets(&[(id, &frame.data)], &mut out);
+            encode_packets(&[extended(id, &frame.data)], &mut out);
         } else {
             // One message is one CAN frame. A longer message needs ISO TP
             // (J1939), which this codec receives but does not send.

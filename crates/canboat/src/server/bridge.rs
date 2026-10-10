@@ -127,15 +127,15 @@ impl Bridge {
             );
         }
         // The scx20 and motion quirks impersonate a device (motion claims a
-        // whole new virtual node), so they need --socketcan — the one backend
-        // that preserves a frame's src on outbound. The wmm quirk emits
+        // whole new virtual node), so they need --socketcan or --canalyst —
+        // the backends that preserve a frame's src on outbound. The wmm quirk emits
         // canboat's own PGN 127258, so it only needs *some* writable backend
         // — that check happens below once one is known.
         for kind in [quirks::QuirkKind::Scx20, quirks::QuirkKind::Motion] {
-            if config.quirk.contains(&kind) && config.socketcan.is_none() {
+            if config.quirk.contains(&kind) && !config.is_node() {
                 let name = kind.name();
                 anyhow::bail!(
-                    "--quirk {name} only works with --socketcan; it claims/impersonates \
+                    "--quirk {name} only works with --socketcan or --canalyst; it claims/impersonates \
                      a device, and other backends rewrite src on outbound writes so the \
                      frame cannot reach the bus with the claimed source address"
                 );
@@ -385,7 +385,7 @@ impl Bridge {
     }
 
     /// The live claimed ISO source address, if the backend exposes one
-    /// (today only `--socketcan`) and it currently holds a valid unicast
+    /// (`--socketcan` or `--canalyst`) and it currently holds a valid unicast
     /// address. `None` otherwise.
     pub fn claimed_address(&self) -> Option<u8> {
         self.claim_addr

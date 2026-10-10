@@ -62,8 +62,9 @@ enum Kind {
     /// fast-packets itself.
     #[value(name = "bst-95")]
     Bst95,
-    /// CANalyst-II raw CAN frames over USB (`usb`): the Waveshare
-    /// USB-CAN-B. canboat joins and splits fast-packets itself.
+    /// CANalyst-II over USB (`usb`): the Waveshare USB-CAN-B. Like
+    /// socketcan, a full NMEA 2000 node — it claims an address — on every
+    /// platform.
     #[value(name = "canalyst", alias = "usb-can-b")]
     Canalyst,
 }
@@ -168,26 +169,26 @@ pub struct Args {
     #[arg(long, value_name = "PASSWORD")]
     password: Option<String>,
 
-    /// SocketCAN: preferred source address to claim.
+    /// SocketCAN, CANalyst: preferred source address to claim.
     #[arg(short = 'a', long, value_name = "ADDR", default_value_t = 0)]
     address: u8,
 
-    /// SocketCAN: passive sniff — skip the ISO address-claim handshake.
+    /// SocketCAN, CANalyst: passive sniff — skip the ISO address-claim handshake.
     #[arg(short = 'n', long)]
     no_claim: bool,
 
-    /// SocketCAN: unique number for the ISO NAME (default derived from
+    /// SocketCAN, CANalyst: unique number for the ISO NAME (default derived from
     /// the machine id, stable per-host across restarts; on a machine
     /// that can't be identified, a random one stored with the server's
     /// state files).
     #[arg(short = 'u', long, value_name = "N", default_value_t = 0)]
     unique: u32,
 
-    /// SocketCAN: manufacturer code for the ISO NAME (999 = Signal K).
+    /// SocketCAN, CANalyst: manufacturer code for the ISO NAME (999 = Signal K).
     #[arg(short = 'm', long, value_name = "N", default_value_t = 999)]
     manufacturer: u16,
 
-    /// SocketCAN: Heartbeat (PGN 126993) interval in ms, up to 65532;
+    /// SocketCAN, CANalyst: Heartbeat (PGN 126993) interval in ms, up to 65532;
     /// 0 disables.
     #[arg(
         long,
@@ -198,7 +199,7 @@ pub struct Args {
     )]
     heartbeat: u64,
 
-    /// SocketCAN: ISO NAME System Instance, 0..15. Default 15 (max) so
+    /// SocketCAN, CANalyst: ISO NAME System Instance, 0..15. Default 15 (max) so
     /// our NAME yields to real hardware rather than stealing addresses.
     #[arg(long, alias = "si", value_name = "N", default_value_t = 15)]
     system_instance: u8,
@@ -212,7 +213,7 @@ pub struct Args {
     bitrate: u32,
 
     /// Quit if no frame is received for this many seconds (0 disables).
-    /// SocketCAN only.
+    /// SocketCAN and CANalyst only.
     #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
     timeout: u64,
 
@@ -370,9 +371,9 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 fn open_device(args: &Args) -> Result<DeviceHandle> {
     let protocol = args.protocol.resolve()?;
     // Quick's 11-bit frames: only SocketCAN is known to pass them on.
-    if protocol == BusProtocol::Quick && !matches!(args.kind, Kind::Socketcan) {
+    if protocol == BusProtocol::Quick && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst) {
         anyhow::bail!(
-            "--protocol quick needs socketcan: the other gateways pass only 29-bit frames"
+            "--protocol quick needs socketcan or canalyst: the other gateways pass only 29-bit frames"
         );
     }
     if protocol != BusProtocol::Nmea2000
@@ -480,19 +481,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         }
         Kind::Canalyst => open_canalyst(args, protocol),
         Kind::Socketcan => {
-            let config = device::socketcan::Config {
-                address: args.address,
-                unique: args.unique,
-                manufacturer: args.manufacturer,
-                system_instance: args.system_instance,
-                heartbeat_ms: args.heartbeat,
-                no_claim: args.no_claim,
-                timeout_secs: args.timeout,
-                protocol,
-                // Probing creates the dir, so only when it may be needed.
-                state_dir: (args.unique == 0).then(super::app::resolve_config_dir),
-                ..device::socketcan::Config::default()
-            };
+            let config = node_config(args, protocol);
             let claim = Arc::new(AtomicU8::new(config.address));
             // On non-Linux this returns ErrorKind::Unsupported.
             device::socketcan::run(&args.device, config, claim)
@@ -501,13 +490,36 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     }
 }
 
-/// Open a CANalyst-II over USB and start its codec.
+/// The node configuration of a raw CAN gateway (socketcan, canalyst).
+fn node_config(args: &Args, protocol: BusProtocol) -> device::socketcan::Config {
+    device::socketcan::Config {
+        address: args.address,
+        unique: args.unique,
+        manufacturer: args.manufacturer,
+        system_instance: args.system_instance,
+        heartbeat_ms: args.heartbeat,
+        no_claim: args.no_claim,
+        timeout_secs: args.timeout,
+        protocol,
+        // Probing creates the dir, so only when it may be needed.
+        state_dir: (args.unique == 0).then(super::app::resolve_config_dir),
+        ..device::socketcan::Config::default()
+    }
+}
+
+/// Open a CANalyst-II over USB and run a node on it, as for SocketCAN.
 fn open_canalyst(args: &Args, protocol: BusProtocol) -> Result<DeviceHandle> {
     let selector = crate::io::usb::Selector::parse(&args.device)
         .ok_or_else(|| anyhow::anyhow!("a CANalyst-II is named `usb` or `usb:VVVV:PPPP`"))??;
-    let (reader, writer) = crate::io::canalyst::open_rw(&selector, args.channel, args.bitrate)
+    let config = device::socketcan::Config {
+        model_version: Some("canboat-canalyst"),
+        bitrate: args.bitrate,
+        ..node_config(args, protocol)
+    };
+    let (reader, writer) = crate::io::canalyst::open_rw(&selector, args.channel, config.bitrate)
         .with_context(|| format!("opening CANalyst-II {}", args.device))?;
-    Ok(device::canalyst::run(reader, writer, protocol))
+    let claim = Arc::new(AtomicU8::new(config.address));
+    Ok(device::canalyst::run(reader, writer, config, claim)?)
 }
 
 /// Open the serial transport as an independent `(reader, writer)` pair.
