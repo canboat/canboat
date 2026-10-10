@@ -21,9 +21,10 @@
 use std::collections::VecDeque;
 use std::io::{self, BufRead, Read, Write};
 
+use crate::engine::BusProtocol;
 use crate::engine::RawFrame;
 use crate::engine::format::actisense_ascii::write_line as write_actisense;
-use crate::engine::format::bst::to_raw_frame as bst_frame;
+use crate::engine::format::bst::{BdtpDecoder, MessageAssembler};
 use crate::engine::format::bst_d0::BstD0Decoder;
 use crate::engine::format::ebl::{
     EBL_FORMAT_VERSION, EblDecoder, EblEvent, encode_frame as encode_ebl, encode_preamble,
@@ -301,13 +302,15 @@ impl<W: Write> FrameWriter for EblWriter<W> {
 /// and tools. It hands back the frame of every BST-93 (NGT-1), BST-95 (raw
 /// CAN frame) and BST-D0 (W2K-1) message, whether in the stream or in a
 /// `BSTRawFrame` metatag, dated by the `TimeUTC` metatag before it. A
-/// BST-95 frame is one CAN frame, so a fast-packet comes as its frames.
+/// BST-95 message is one CAN frame; its fast-packets are joined into whole
+/// messages.
 ///
 /// Binary, not line-based, so it implements [`FrameReader`] directly
 /// rather than going through [`LineFrameReader`].
 pub struct EblReader<R: Read> {
     inner: R,
     decoder: EblDecoder,
+    messages: MessageAssembler,
     events: Vec<EblEvent>,
     queue: VecDeque<RawFrame>,
     /// The latest `TimeUTC`, formatted, for the frames after it.
@@ -321,6 +324,7 @@ impl<R: Read> EblReader<R> {
         Self {
             inner,
             decoder: EblDecoder::new(),
+            messages: MessageAssembler::new(BusProtocol::Nmea2000),
             events: Vec::new(),
             queue: VecDeque::new(),
             time: None,
@@ -334,7 +338,7 @@ impl<R: Read> EblReader<R> {
             match ev {
                 EblEvent::Time(ms) => self.time = Some(crate::engine::format_iso_ms(ms)),
                 EblEvent::Message { bytes, raw } => {
-                    if let Some(mut frame) = bst_frame(&bytes, raw) {
+                    if let Some(mut frame) = self.messages.push(&bytes, raw) {
                         frame.timestamp = self.time.clone();
                         self.queue.push_back(frame);
                     }
@@ -417,6 +421,61 @@ impl<R: Read> FrameReader for BstD0Reader<R> {
                 continue;
             }
             self.queue.extend(self.decoder.push_bytes(&self.buf[..n]));
+        }
+    }
+}
+
+/// A [`FrameReader`] over a stream of Actisense BST messages in BDTP
+/// framing: a capture of a PRO-NDC-1E2K or W2K-1 in its "CAN Actisense"
+/// mode, which sends BST-95 raw CAN frames. It hands back the frame of every
+/// BST-93, BST-94, BST-95 and BST-D0 message, and skips other messages and
+/// damaged frames. A BST-95 message is one CAN frame; its fast-packets are
+/// joined into whole messages. The messages carry only the device's own
+/// clock, so the frames have no timestamp.
+///
+/// Binary, not line-based, so it implements [`FrameReader`] directly
+/// rather than going through [`LineFrameReader`].
+pub struct BstReader<R: Read> {
+    inner: R,
+    decoder: BdtpDecoder,
+    messages: MessageAssembler,
+    queue: VecDeque<RawFrame>,
+    buf: Box<[u8; 8192]>,
+    eof: bool,
+}
+
+impl<R: Read> BstReader<R> {
+    pub fn new(inner: R) -> Self {
+        Self {
+            inner,
+            decoder: BdtpDecoder::default(),
+            messages: MessageAssembler::new(BusProtocol::Nmea2000),
+            queue: VecDeque::new(),
+            buf: Box::new([0u8; 8192]),
+            eof: false,
+        }
+    }
+}
+
+impl<R: Read> FrameReader for BstReader<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        loop {
+            if let Some(frame) = self.queue.pop_front() {
+                return Ok(Some(frame));
+            }
+            if self.eof {
+                return Ok(None);
+            }
+            let n = self.inner.read(&mut self.buf[..])?;
+            if n == 0 {
+                self.eof = true;
+                continue;
+            }
+            for &b in &self.buf[..n] {
+                if let Some(m) = self.decoder.push_byte(b) {
+                    self.queue.extend(self.messages.push(&m, false));
+                }
+            }
         }
     }
 }

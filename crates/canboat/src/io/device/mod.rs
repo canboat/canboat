@@ -27,6 +27,7 @@
 //! # Ok::<(), std::io::Error>(())
 //! ```
 
+pub mod bst95;
 pub mod bst_d0;
 pub mod canboat_csv;
 pub mod ikonvert;

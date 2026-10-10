@@ -302,3 +302,20 @@ fn bst_d0_decodes_as_pgn_test() {
     assert_eq!(got.lines().count(), 31);
     assert_eq!(got, want);
 }
+
+/// Actisense BST-95 raw CAN frames (#1011), as a PRO-NDC-1E2K or W2K-1
+/// sends them in its "CAN Actisense" mode. The fixture is pgn-test.in's 31
+/// messages as 115 CAN frames: the 26 fast-packets split into their frames,
+/// written from the Actisense SDK's description of BST-95 and BDTP (18 of
+/// its DLEs are doubled). Joined again, they decode exactly as pgn-test.in
+/// does.
+#[test]
+fn bst_95_decodes_as_pgn_test() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../analyzer/tests");
+    let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
+    let bst = std::fs::read(dir.join("pgn-test-bst-95.bin")).expect("read fixture");
+    let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
+    let got = without_timestamps(&run(&["convert", "--no-banner", "--from", "bst-95"], &bst));
+    assert_eq!(got.lines().count(), 31);
+    assert_eq!(got, want);
+}

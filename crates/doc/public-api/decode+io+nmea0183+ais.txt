@@ -88,6 +88,19 @@ pub fn canboat::bus::open_ikonvert(&str, u32) -> core::io::error::Result<canboat
 pub fn canboat::bus::open_ngt1(&str, u32) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub fn canboat::bus::open_socketcan(&str, u8) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub mod canboat::codec
+pub mod canboat::codec::bst95
+pub struct canboat::codec::bst95::Bst95
+impl canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::new(canboat::schema::BusProtocol) -> Self
+impl canboat::codec::Codec for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::default() -> Self
 pub mod canboat::codec::bst_d0
 pub struct canboat::codec::bst_d0::BstD0
 impl canboat::codec::bst_d0::BstD0
@@ -346,6 +359,13 @@ pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
@@ -602,6 +622,11 @@ impl<R: alloc::io::read::Read> canboat::read::BstD0Reader<R>
 pub fn canboat::read::BstD0Reader<R>::new(R) -> Self
 impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::BstD0Reader<R>
 pub fn canboat::read::BstD0Reader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+pub struct canboat::read::BstReader<R: alloc::io::read::Read>
+impl<R: alloc::io::read::Read> canboat::read::BstReader<R>
+pub fn canboat::read::BstReader<R>::new(R) -> Self
+impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::BstReader<R>
+pub fn canboat::read::BstReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 pub struct canboat::read::Decoder<S>
 impl<S: canboat::read::FrameSource> canboat::read::Decoder<S>
 pub fn canboat::read::Decoder<S>::new(S, &'static canboat::Database) -> Self
@@ -631,6 +656,8 @@ impl<R: alloc::io::buf_read::BufRead> canboat::read::FrameSource for canboat::re
 pub fn canboat::read::PlainReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::BstD0Reader<R>
 pub fn canboat::read::BstD0Reader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::BstReader<R>
+pub fn canboat::read::BstReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::EblReader<R>
 pub fn canboat::read::EblReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 pub fn canboat::read::from_analyzer_json(&str, &canboat::Database) -> core::option::Option<canboat::DecodedPgn>

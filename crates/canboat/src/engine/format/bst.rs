@@ -19,9 +19,10 @@
 use smallvec::SmallVec;
 
 use super::bst_d0::{self, BST_D0};
-use super::common::iso11783_decompose;
+use super::common::{iso11783_compose, iso11783_decompose};
 use super::ngt1::{N2K_MSG_RECEIVED, N2K_MSG_SEND, NgtMessage};
-use crate::engine::RawFrame;
+use crate::engine::reassembly::{Reassembled, Reassembler};
+use crate::engine::{BusProtocol, RawFrame};
 
 const DLE: u8 = 0x10;
 const STX: u8 = 0x02;
@@ -140,7 +141,7 @@ pub fn to_raw_frame(m: &[u8], checksum_optional: bool) -> Option<RawFrame> {
             Some(frame)
         }
         N2K_MSG_SEND => bst94_frame(data),
-        BST_95 => bst95_frame(data),
+        BST_95 => bst95_frame(data).map(|(frame, _)| frame),
         BST_D0 => {
             let mut whole = m[..message_len(m)?.1].to_vec();
             let sum = whole.iter().fold(0u8, |s, &b| s.wrapping_add(b));
@@ -148,6 +149,42 @@ pub fn to_raw_frame(m: &[u8], checksum_optional: bool) -> Option<RawFrame> {
             bst_d0::to_frame(&whole)
         }
         _ => None,
+    }
+}
+
+/// Whole NMEA 2000 messages from a run of BST messages: a BST-95 message is
+/// one CAN frame, so its fast-packets are joined here; the other messages
+/// carry whole messages already. For a reader of a capture.
+pub struct MessageAssembler {
+    protocol: BusProtocol,
+    reassembler: Reassembler,
+}
+
+impl MessageAssembler {
+    /// An assembler for a bus that carries `protocol`.
+    pub fn new(protocol: BusProtocol) -> Self {
+        Self {
+            protocol,
+            reassembler: Reassembler::new(),
+        }
+    }
+
+    /// The whole message the unframed BST message `m` completes, if any; see
+    /// [`to_raw_frame`] for `checksum_optional`.
+    pub fn push(&mut self, m: &[u8], checksum_optional: bool) -> Option<RawFrame> {
+        let frame = to_raw_frame(m, checksum_optional)?;
+        if m.first() != Some(&BST_95) {
+            return Some(frame);
+        }
+        let pt = self.protocol.packet_type(frame.pgn);
+        match self.reassembler.push(frame, pt) {
+            Reassembled::PassThrough(f) | Reassembled::Complete(f) => Some(f),
+            Reassembled::Partial => None,
+            Reassembled::Error(e) => {
+                log::debug!("bst-95: {e}");
+                None
+            }
+        }
     }
 }
 
@@ -172,23 +209,82 @@ fn bst94_frame(d: &[u8]) -> Option<RawFrame> {
 /// PDU format and a byte with the data page (bits 0–1), the priority (bits
 /// 2–4), the timestamp resolution (bits 5–6) and the direction (bit 7),
 /// then up to 8 bytes of data.
-fn bst95_frame(d: &[u8]) -> Option<RawFrame> {
+fn bst95_frame(d: &[u8]) -> Option<(RawFrame, bool)> {
     if d.len() < 6 || d.len() > 14 {
         return None;
     }
+    let to_bus = d[5] & DPPC_TO_BUS != 0;
     let canid = u32::from(d[2])
         | u32::from(d[3]) << 8
         | u32::from(d[4]) << 16
         | u32::from(d[5] & 0x1f) << 24;
     let (prio, pgn, src, dst) = iso11783_decompose(canid);
-    Some(RawFrame {
+    let frame = RawFrame {
         timestamp: None,
         prio,
         pgn,
         src,
         dst,
         data: SmallVec::from_slice(&d[6..]),
-    })
+    };
+    Some((frame, to_bus))
+}
+
+/// BST-95's direction bit: the frame goes from the host to the bus (sent
+/// by the host, or the gateway transmitting it), not from the bus.
+const DPPC_TO_BUS: u8 = 0x80;
+
+/// The CAN frame in the unframed BST message `m`, if it is a well-formed
+/// BST-95 message, and whether it is on its way to the bus (one the host
+/// sent, as the gateway echoes it) rather than received from it.
+pub fn bst95_message(m: &[u8]) -> Option<(RawFrame, bool)> {
+    match message_body(m, false)? {
+        (BST_95, data) => bst95_frame(data),
+        _ => None,
+    }
+}
+
+/// Append one CAN frame, `data` (at most 8 bytes) with the identifier of
+/// `prio`, `pgn`, `src` and `dst`, as a BDTP-framed BST-95 message from the
+/// host to the bus, for the gateway to transmit. The timestamp is left 0.
+pub fn encode_bst95(prio: u8, pgn: u32, src: u8, dst: u8, data: &[u8], out: &mut Vec<u8>) {
+    encode_bst95_message(prio, pgn, src, dst, data, true, out);
+}
+
+/// [`encode_bst95`], with the direction: `to_bus`, or (false) received
+/// from the bus, as a gateway sends it.
+pub(crate) fn encode_bst95_message(
+    prio: u8,
+    pgn: u32,
+    src: u8,
+    dst: u8,
+    data: &[u8],
+    to_bus: bool,
+    out: &mut Vec<u8>,
+) {
+    debug_assert!(data.len() <= 8);
+    let canid = iso11783_compose(prio & 7, pgn, src, dst);
+    let mut m = vec![
+        BST_95,
+        6 + data.len() as u8,
+        0,
+        0,
+        canid as u8,
+        (canid >> 8) as u8,
+        (canid >> 16) as u8,
+        ((canid >> 24) as u8 & 0x1f) | if to_bus { DPPC_TO_BUS } else { 0 },
+    ];
+    m.extend_from_slice(data);
+    let sum = m.iter().fold(0u8, |s, &b| s.wrapping_add(b));
+    m.push(0u8.wrapping_sub(sum));
+    out.extend_from_slice(&[DLE, STX]);
+    for b in m {
+        out.push(b);
+        if b == DLE {
+            out.push(DLE);
+        }
+    }
+    out.extend_from_slice(&[DLE, ETX]);
 }
 
 #[cfg(test)]
@@ -251,6 +347,28 @@ mod tests {
             (f.prio, f.pgn, f.src, f.dst, f.data.len()),
             (6, 127503, 0, 255, 20)
         );
+    }
+
+    /// What `encode_bst95` writes reads back, as a frame to the bus.
+    #[test]
+    fn bst95_round_trips() {
+        let mut wire = Vec::new();
+        // PDU1 (ISO Request to 0x23) and PDU2, with a DLE in the data.
+        encode_bst95(6, 59904, 3, 0x23, &[0x10, 0xf0, 0x01], &mut wire);
+        encode_bst95(2, 129025, 0x10, 255, &[1, 2, 3, 4, 5, 6, 7, 8], &mut wire);
+        let mut d = BdtpDecoder::default();
+        let got: Vec<(RawFrame, bool)> = wire
+            .iter()
+            .filter_map(|&b| d.push_byte(b))
+            .map(|m| bst95_message(&m).unwrap())
+            .collect();
+        let [(a, true), (b, true)] = &got[..] else {
+            panic!("{got:?}");
+        };
+        assert_eq!((a.prio, a.pgn, a.src, a.dst), (6, 59904, 3, 0x23));
+        assert_eq!(a.data.as_slice(), &[0x10, 0xf0, 0x01]);
+        assert_eq!((b.prio, b.pgn, b.src, b.dst), (2, 129025, 0x10, 255));
+        assert_eq!(b.data.len(), 8);
     }
 
     #[test]
