@@ -137,6 +137,17 @@ pub struct Args {
     #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
     canalyst_channel: u8,
 
+    /// CANalyst-II: the CAN bit rate, 250 000 for NMEA 2000 or 500 000 for
+    /// a J1939-14 bus. (A SocketCAN interface's bit rate is set outside
+    /// canboat.)
+    #[arg(
+        long,
+        value_name = "BIT/S",
+        default_value_t = 250_000,
+        requires = "canalyst"
+    )]
+    bitrate: u32,
+
     /// Preferred ISO source address to claim with `--socketcan` or
     /// `--canalyst`. Defaults to 0; the claim machine will pick a free
     /// address if this one is taken.
@@ -434,8 +445,9 @@ pub struct BridgeConfig {
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
     pub socketcan_configure_link: bool,
-    /// Bit rate `socketcan_configure_link` sets: 250 000 (the default,
-    /// and always right for NMEA 2000) or 500 000 for a J1939-14 bus.
+    /// Bit rate `socketcan_configure_link` sets, and the bit rate the
+    /// `canalyst` adapter runs at: 250 000 (the default, and always right
+    /// for NMEA 2000) or 500 000 for a J1939-14 bus.
     pub socketcan_bitrate: u32,
     /// What the bus carries (`--protocol`): picks the decode table and, with
     /// `socketcan`, whether the gateway is an NMEA 2000 or a J1939 node.
@@ -596,7 +608,9 @@ impl From<Args> for BridgeConfig {
             // The standalone `canboat` CLI keeps assuming an externally
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
-            socketcan_bitrate: 250_000,
+            // Only the CANalyst takes a bit rate from the command line; a
+            // SocketCAN interface is configured outside canboat.
+            socketcan_bitrate: a.bitrate,
             protocol: a
                 .protocol
                 .resolve()
