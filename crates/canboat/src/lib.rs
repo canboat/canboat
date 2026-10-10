@@ -446,7 +446,9 @@ pub mod codec {
 
     /// Actisense NGT-1 (Actisense binary protocol, typically 115 200 baud).
     pub mod ngt1 {
-        pub use crate::engine::codec::ngt1::{Config, KEEPALIVE_INTERVAL, Ngt1};
+        #[allow(deprecated)]
+        pub use crate::engine::codec::ngt1::KEEPALIVE_INTERVAL;
+        pub use crate::engine::codec::ngt1::{Config, Ngt1};
         pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
         pub use crate::engine::format::ngt1::OperatingMode;
         /// What an NGT-1 sends for a frame it received — to simulate one.

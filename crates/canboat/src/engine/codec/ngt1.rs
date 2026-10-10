@@ -4,11 +4,18 @@
 //!
 //! Wraps [`crate::engine::format::ngt1`]: received bytes go through
 //! `Ngt1Decoder`, frames for the bus go out as `N2K_MSG_SEND` (0x94)
-//! messages. On connect, and every 20 seconds while the link is quiet, the
-//! codec sets the gateway's operating mode (BEM Set Operating Mode,
-//! [`Config::operating_mode`]); the gateway answers with the mode in force,
-//! which is logged, and a mismatch is warned about. It also asks for the
-//! gateway's product information, and logs it.
+//! messages. On connect the codec asks for the gateway's product
+//! information, and logs it, then sets its operating mode (BEM Set
+//! Operating Mode, [`Config::operating_mode`]); the gateway answers with the
+//! mode in force, which is logged, and a mismatch is warned about.
+//!
+//! There is no keepalive. canboat C's `actisense-serial` sets the mode again
+//! every 20 s, added in 2020 against NGT-1 hangs; the Actisense SDK has no
+//! keepalive, and the gateway keeps the mode in non-volatile memory. An
+//! NGT-1 with firmware 2.690 (2026-10) ran 15 minutes without one, through
+//! 5 minutes of nothing written and stalls of up to 60 s in reading with
+//! commands written meanwhile, and never hung. Setting the mode is not
+//! free: the gateway then ignores commands for 50 to 200 ms.
 //!
 //! The gateway's own BEM messages come out as canboat's `Actisense: …`
 //! PGNs (`0x40000` + the BEM id), as canboat C's `actisense-serial` gives
@@ -40,8 +47,9 @@ use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
 use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
 use crate::engine::format_iso_ms;
 
-/// Set the operating mode again every 20 s — matches the C
-/// `actisense-serial` keepalive.
+/// The interval of the keepalive the codec no longer sends: the C
+/// `actisense-serial` sets the operating mode again every 20 s.
+#[deprecated(note = "the NGT-1 codec sends no keepalive; `Ngt1::keepalive` returns `None`")]
 pub const KEEPALIVE_INTERVAL: Duration = Duration::from_secs(20);
 
 /// `Actisense: System status` — `ACTISENSE_BEM + 0xf2`. The NGT-1 sends
@@ -420,8 +428,9 @@ impl Codec for Ngt1 {
         Ok(encode_n2k_send_frame(frame))
     }
 
+    /// None: the NGT-1 needs no keepalive (see the module documentation).
     fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
-        Some((KEEPALIVE_INTERVAL, encode_set_operating_mode(self.mode)))
+        None
     }
 }
 
@@ -658,7 +667,7 @@ mod operating_mode_tests {
     }
 
     #[test]
-    fn open_and_keepalive_set_the_configured_mode() {
+    fn open_sets_the_configured_mode_and_nothing_keeps_it_alive() {
         let mut d = Ngt1::default();
         let mut open = encode_get_product_info();
         open.extend(encode_set_operating_mode(OperatingMode::NgTransferRxAll));
@@ -671,7 +680,7 @@ mod operating_mode_tests {
         let mut wire = Vec::new();
         encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE, 1, 0], &mut wire);
         assert!(d.open().ends_with(&wire));
-        assert_eq!(d.keepalive().unwrap().1, wire);
+        assert_eq!(d.keepalive(), None);
     }
 
     #[test]

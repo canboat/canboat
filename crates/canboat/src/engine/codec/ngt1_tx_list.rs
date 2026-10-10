@@ -815,8 +815,8 @@ mod tests {
         assert!(s.is_done());
     }
 
-    /// The periodic Set Operating Mode keeps being answered; only the first
-    /// confirmation starts the sync.
+    /// Only the first Set Operating Mode answer starts the sync; a later
+    /// one changes nothing.
     #[test]
     fn later_startup_confirmations_are_ignored() {
         let mut s = started(vec![127508]);
