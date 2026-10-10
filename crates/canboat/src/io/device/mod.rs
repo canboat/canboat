@@ -32,6 +32,7 @@ pub mod bst_d0;
 pub mod canalyst;
 pub mod canboat_csv;
 pub mod ikonvert;
+mod iso11783_node;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
