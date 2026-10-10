@@ -29,11 +29,18 @@
 //! does. With [`Config::pgn_lists`] naming Transmit PGNs it also brings the
 //! gateway's Transmit PGN Enable list up to date after startup (see
 //! [`super::ngt1_tx_list`]).
+//!
+//! A gateway that answers no BEM command within [`PROBE_AFTER_MS`] is asked
+//! whether it is an Across Ocean Systems simulator ([`crate::engine::format::aos`]),
+//! which speaks this framing too. One that says so is logged, nothing more
+//! is waited for from it, and [`Ngt1::aos`] tells the application. One that
+//! answers neither is warned about.
 
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::engine::RawFrame;
+use crate::engine::format::aos::{self, Answers, AosInfo};
 use crate::engine::format::ikonvert::{NetworkStatus, build_network_status};
 use crate::engine::format::ngt1::{
     BEM_ERROR_REPORT, BEM_NEGATIVE_ACK, BEM_OPERATING_MODE, BEM_PRODUCT_INFO, BEM_STARTUP_STATUS,
@@ -63,6 +70,14 @@ const ACTISENSE_BEM_PGN: u32 = SYNTHETIC_PGN_START;
 
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
+
+/// How long after the start a gateway that has answered no BEM command is
+/// asked whether it is an AOS simulator. An NGT-1 answers Product Info
+/// within 20 ms.
+pub const PROBE_AFTER_MS: u64 = 2_000;
+
+/// How long the AOS simulator gets to answer; it takes about 1 ms.
+const PROBE_ANSWER_MS: u64 = 3_000;
 
 /// NGT-1 settings. `Config::default()` puts the gateway in NGT Transfer Rx
 /// All Mode and leaves its lists alone.
@@ -152,6 +167,21 @@ pub struct Ngt1 {
     reported_mode: Option<OperatingMode>,
     /// The gateway's product information as its parts arrive.
     product_info: ProductInfo,
+    /// Whether the gateway has sent any BEM message.
+    bem_seen: bool,
+    probe: Probe,
+    /// The AOS simulator's answers, out of the text between frames.
+    answers: Answers,
+    /// The AOS simulator this gateway turned out to be.
+    aos: Option<AosInfo>,
+}
+
+/// Asking a gateway that answers no BEM command what it is.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Probe {
+    NotYet,
+    Sent { at: u64 },
+    Done,
 }
 
 struct NetworkStatusState {
@@ -190,6 +220,71 @@ impl Ngt1 {
             mode: config.operating_mode,
             reported_mode: None,
             product_info: ProductInfo::default(),
+            bem_seen: false,
+            probe: Probe::NotYet,
+            answers: Answers::default(),
+            aos: None,
+        }
+    }
+
+    /// The AOS simulator this gateway is, once it has said so. It answers
+    /// no BEM command and transmits every PGN, from the source address of
+    /// an `N2K_MSG_RECEIVED` message (see
+    /// [`crate::engine::format::ngt1::encode_n2k_received_frame`]), or
+    /// from a fixed address it never claims.
+    pub fn aos(&self) -> Option<&AosInfo> {
+        self.aos.as_ref()
+    }
+
+    /// Ask a gateway that has answered no BEM command whether it is an AOS
+    /// simulator, and give up on one that does not answer that either.
+    fn probe(&mut self, now_ms: u64, events: &mut Vec<Event>) {
+        if self.bem_seen {
+            self.probe = Probe::Done;
+            return;
+        }
+        match self.probe {
+            Probe::NotYet if now_ms >= self.net.start_ms.unwrap_or(now_ms) + PROBE_AFTER_MS => {
+                self.inner.collect_text();
+                events.push(Event::Send(aos::GET_INFO.to_vec()));
+                self.probe = Probe::Sent { at: now_ms };
+            }
+            Probe::Sent { at } if now_ms >= at + PROBE_ANSWER_MS => {
+                log::warn!(
+                    "ngt1: the gateway answers no BEM command: no product information, operating mode or transmit list"
+                );
+                self.probe = Probe::Done;
+            }
+            _ => {}
+        }
+    }
+
+    /// Look for the AOS simulator's answer in the text between frames.
+    fn on_text(&mut self) {
+        let text = self.inner.take_text();
+        if text.is_empty() {
+            return;
+        }
+        for answer in self.answers.push(&text) {
+            let Some(info) = aos::parse_get_info(&answer) else {
+                continue;
+            };
+            if info.product_type != aos::SIMULATOR_TYPE {
+                log::info!(
+                    "ngt1: the gateway is an AOS product of type {}, not the simulator",
+                    info.product_type
+                );
+            }
+            log::info!(
+                "ngt1: gateway AOS NMEA 2000/0183 Simulator, serial {}, hardware {}, firmware {}; it takes no BEM command and transmits every PGN",
+                info.serial,
+                info.hardware_version,
+                info.firmware_version
+            );
+            self.tx_list.abandon();
+            self.gate = None;
+            self.aos = Some(info);
+            self.probe = Probe::Done;
         }
     }
 
@@ -379,6 +474,7 @@ impl Codec for Ngt1 {
         for ev in self.inner.push_bytes(bytes) {
             match ev {
                 NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
+                    self.bem_seen = true;
                     send_all(events, self.tx_list.on_message(&msg.payload, now_ms));
                     self.on_bem(&msg.payload, now_ms, events);
                 }
@@ -395,6 +491,9 @@ impl Codec for Ngt1 {
                 NgtEvent::Error(e) => events.push(Event::Error(e.to_string())),
             }
         }
+        if self.probe != Probe::Done {
+            self.on_text();
+        }
     }
 
     /// The codec's deadlines, run on every receive too, so they advance
@@ -405,6 +504,9 @@ impl Codec for Ngt1 {
         // so never sends a System Status to trigger on.
         if now_ms >= self.net.next_ms {
             self.emit_network_status(now_ms, events);
+        }
+        if self.probe != Probe::Done {
+            self.probe(now_ms, events);
         }
         if !self.tx_list.is_done() {
             send_all(events, self.tx_list.on_tick(now_ms));
@@ -506,11 +608,17 @@ mod network_status_tests {
     fn network_status_runs_on_the_callers_clock() {
         let mut d = Ngt1::default();
         let mut events = Vec::new();
+        // The question to a gateway that answers no BEM command aside.
+        let frames = |events: &mut Vec<Event>| {
+            events.retain(|e| matches!(e, Event::Frame(_)));
+            events.len()
+        };
         d.tick(NOW, &mut events);
-        assert!(events.is_empty(), "the first status is 5 s out");
+        assert_eq!(frames(&mut events), 0, "the first status is 5 s out");
         d.tick(NOW + 4_999, &mut events);
-        assert!(events.is_empty());
+        assert_eq!(frames(&mut events), 0);
         d.tick(NOW + 7_000, &mut events);
+        frames(&mut events);
         let [Event::Frame(f)] = &events[..] else {
             panic!("expected one status frame, got {events:?}")
         };
@@ -851,4 +959,105 @@ mod operating_mode_tests {
     }
 
     const NOW: u64 = 1_780_082_164_826;
+}
+
+#[cfg(test)]
+mod aos_probe_tests {
+    use super::*;
+    use crate::engine::format::ngt1::{
+        NGT_MSG_RECEIVED as BEM_RECEIVED, encode_n2k_received_frame, encode_ngt_message,
+    };
+
+    const NOW: u64 = 1_780_082_164_826;
+
+    /// The start of a real answer, with the fields the codec reads.
+    const ANSWER: &[u8] = b"{\r\n  \"cmdr\": \"GetInfo\",\r\n  \"Serial\": {\r\n    \"Type\": 24,\r\n    \"Sno\": 2154,\r\n    \"HwVersion\": \"2.0\",\r\n    \"FwVersion\": \"1.6.3.843\"\r\n  }\r\n}\r\n";
+
+    fn probes(events: &[Event]) -> usize {
+        events
+            .iter()
+            .filter(|e| matches!(e, Event::Send(b) if b == aos::GET_INFO))
+            .count()
+    }
+
+    fn named_tx() -> Ngt1 {
+        Ngt1::new(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            ..Config::default()
+        })
+    }
+
+    /// A gateway that answers no BEM command is asked once; the AOS
+    /// simulator answers between frames, and then nothing is waited for.
+    #[test]
+    fn a_silent_gateway_is_asked_and_the_simulator_recognised() {
+        let mut d = named_tx();
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        d.tick(NOW + PROBE_AFTER_MS - 1, &mut events);
+        assert_eq!(probes(&events), 0);
+        d.tick(NOW + PROBE_AFTER_MS, &mut events);
+        d.tick(NOW + PROBE_AFTER_MS + 10, &mut events);
+        assert_eq!(probes(&events), 1);
+        assert!(d.aos().is_none());
+
+        // A frame, the answer split in two, a frame.
+        let frame = RawFrame::new(None, 2, 129025, 21, 255, [1, 2, 3, 4, 5, 6, 7, 8]);
+        let wire = encode_n2k_received_frame(&frame, 1).unwrap();
+        let mut stream = wire.clone();
+        stream.extend_from_slice(ANSWER);
+        stream.extend_from_slice(&wire);
+        let (a, b) = stream.split_at(wire.len() + 30);
+        events.clear();
+        d.receive(a, NOW + PROBE_AFTER_MS + 20, &mut events);
+        d.receive(b, NOW + PROBE_AFTER_MS + 21, &mut events);
+        let info = d.aos().expect("recognised");
+        assert_eq!(info.serial, 2154);
+        assert_eq!(info.firmware_version, "1.6.3.843");
+        assert_eq!(
+            events
+                .iter()
+                .filter(|e| matches!(e, Event::Frame(f) if f.pgn == 129025))
+                .count(),
+            2
+        );
+        // It sends every PGN, so none is refused.
+        assert!(
+            d.send(&RawFrame::new(None, 6, 130306, 0, 255, [0; 8]))
+                .is_ok()
+        );
+        assert!(d.tx_list.is_done());
+    }
+
+    /// An NGT-1 answers Product Info at once, and is never asked.
+    #[test]
+    fn a_gateway_that_answers_bem_is_not_asked() {
+        let mut d = Ngt1::default();
+        let mut payload = vec![BEM_PRODUCT_INFO, 0, 0x0e, 0x00];
+        payload.extend_from_slice(&[0; 8]);
+        let mut wire = Vec::new();
+        encode_ngt_message(BEM_RECEIVED, &payload, &mut wire);
+        let mut events = Vec::new();
+        d.receive(&wire, NOW, &mut events);
+        d.tick(NOW + 10 * PROBE_AFTER_MS, &mut events);
+        assert_eq!(probes(&events), 0);
+        assert_eq!(d.probe, Probe::Done);
+    }
+
+    /// No answer to the question either: given up on, and asked once only.
+    #[test]
+    fn a_gateway_that_answers_nothing_is_given_up_on() {
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        d.tick(NOW + PROBE_AFTER_MS, &mut events);
+        d.tick(NOW + PROBE_AFTER_MS + PROBE_ANSWER_MS, &mut events);
+        d.tick(NOW + 100 * PROBE_AFTER_MS, &mut events);
+        assert_eq!(probes(&events), 1);
+        assert_eq!(d.probe, Probe::Done);
+        assert!(d.aos().is_none());
+    }
 }

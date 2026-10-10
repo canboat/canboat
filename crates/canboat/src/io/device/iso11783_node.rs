@@ -12,6 +12,9 @@
 //! They feed every received frame to [`handle_frame`], every
 //! application command to [`dispatch_cmd`], call [`NmeaDevice::tick`]
 //! for the timers, and write out what lands in [`TxBuffer::queue`].
+//! A gateway that passes whole messages and sends them from a source
+//! address it is given — the AOS simulator, see [`super::ngt1`] — feeds
+//! [`handle_message`] instead, and writes out [`TxBuffer::messages`].
 //!
 //! `src` convention on outbound frames sent via `DeviceHandle::send_frame`:
 //! `frame.src == 0` is treated as "use my claim address" and rewritten to
@@ -165,10 +168,8 @@ pub(super) trait LinkStats: Send {
 }
 
 /// A link that reports nothing about itself.
-#[cfg(test)]
-struct NoStats;
+pub(super) struct NoStats;
 
-#[cfg(test)]
 impl LinkStats for NoStats {}
 
 /// How often to emit the synthetic `NMEA 2000 gateway: network
@@ -313,6 +314,9 @@ pub(super) struct TxBuffer {
     protocol: BusProtocol,
     /// J1939 messages over 8 bytes, going out over ISO TP.
     pub(super) tp: TpSender,
+    /// Whole messages waiting to go out, for a gateway that frames them
+    /// itself ([`Self::whole_messages`]); `queue` then stays empty.
+    pub(super) messages: Option<VecDeque<RawFrame>>,
 }
 
 impl TxBuffer {
@@ -328,6 +332,16 @@ impl TxBuffer {
             fast_seq: HashMap::new(),
             protocol,
             tp: TpSender::new(),
+            messages: None,
+        }
+    }
+
+    /// A buffer of whole NMEA 2000 messages, for a gateway that does the
+    /// fast-packet framing itself.
+    pub(super) fn whole_messages() -> Self {
+        Self {
+            messages: Some(VecDeque::with_capacity(16)),
+            ..Self::with_protocol(BusProtocol::Nmea2000)
         }
     }
 
@@ -445,7 +459,28 @@ impl<'a> Bus<'a> {
         // out with the fast-packet wrapper because strict
         // receivers key on the PGN type, not the byte count.
         let is_fast = self.tx_buf.protocol.packet_type(pgn) == FramePacketType::Fast;
-        if !is_fast && data.len() > 8 {
+        if let Some(messages) = &mut self.tx_buf.messages {
+            // The gateway frames it.
+            if !is_fast && data.len() > 8 {
+                log::warn!(
+                    "CAN: not sending PGN {pgn}: {} bytes do not fit one frame",
+                    data.len()
+                );
+                return;
+            }
+            if messages.len() >= TX_BUFFER_CAPACITY {
+                log::error!("TX buffer full ({TX_BUFFER_CAPACITY} messages), dropping PGN {pgn}");
+                return;
+            }
+            messages.push_back(RawFrame::new(
+                None,
+                prio,
+                pgn,
+                src,
+                dst,
+                data.iter().copied(),
+            ));
+        } else if !is_fast && data.len() > 8 {
             if self.tx_buf.protocol == BusProtocol::Nmea2000 {
                 // A single-frame PGN cannot carry more; never
                 // truncate it.
@@ -967,6 +1002,31 @@ pub(super) fn handle_frame(
         }
     }
 
+    on_frame(bus, claimer, pgn, src, dst, data);
+
+    // Classify by the bus (and, on NMEA 2000, the build-time
+    // fastpacket table), push through the reassembler, and forward
+    // the coalesced result. A real single-frame PGN takes the
+    // `PassThrough` branch unchanged; a fast-packet PGN accumulates
+    // until `Complete`; ISO TP is reassembled on either bus.
+    let pt = claimer.protocol.packet_type(pgn);
+    match reasm.push(single_frame, pt) {
+        Reassembled::PassThrough(f) | Reassembled::Complete(f) => on_message(bus, claimer, f),
+        Reassembled::Partial => {}
+        Reassembled::Error(e) => log::debug!("reassembly: {e}"),
+    }
+}
+
+/// Feed one whole NMEA 2000 message from a gateway that reassembles
+/// itself: answer it as [`handle_frame`] does, and forward it.
+pub(super) fn handle_message(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, frame: RawFrame) {
+    on_frame(bus, claimer, frame.pgn, frame.src, frame.dst, &frame.data);
+    on_message(bus, claimer, frame);
+}
+
+/// What a frame needs, before reassembly: the address claim and ISO
+/// Request, single frames both, and the count of devices seen.
+fn on_frame(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, pgn: u32, src: u8, dst: u8, data: &[u8]) {
     if claimer.claim.state() != ClaimState::Disabled {
         if pgn == PGN_ISO_ADDRESS_CLAIM {
             claimer.on_claim(bus, src, data);
@@ -983,26 +1043,17 @@ pub(super) fn handle_frame(
     if src != ADDR_NULL && src != ADDR_GLOBAL {
         claimer.note_seen(src);
     }
+}
 
-    // Classify by the bus (and, on NMEA 2000, the build-time
-    // fastpacket table), push through the reassembler, and forward
-    // the coalesced result. A real single-frame PGN takes the
-    // `PassThrough` branch unchanged; a fast-packet PGN accumulates
-    // until `Complete`; ISO TP is reassembled on either bus.
-    let pt = claimer.protocol.packet_type(pgn);
-    match reasm.push(single_frame, pt) {
-        Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
-            if claimer.claim.state() != ClaimState::Disabled
-                && claimer.protocol == BusProtocol::Nmea2000
-                && f.pgn == PGN_GROUP_FUNCTION
-            {
-                claimer.handle_group_function(bus, src, &f.data);
-            }
-            let _ = bus.frames_tx.send(f);
-        }
-        Reassembled::Partial => {}
-        Reassembled::Error(e) => log::debug!("reassembly: {e}"),
+/// What a whole message needs: the Group Function, and passing it on.
+fn on_message(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, f: RawFrame) {
+    if claimer.claim.state() != ClaimState::Disabled
+        && claimer.protocol == BusProtocol::Nmea2000
+        && f.pgn == PGN_GROUP_FUNCTION
+    {
+        claimer.handle_group_function(bus, f.src, &f.data);
     }
+    let _ = bus.frames_tx.send(f);
 }
 
 /// Apply an outbound `WriterCmd` from the public `DeviceHandle` API.
@@ -1111,6 +1162,28 @@ mod tests {
             .skip(before)
             .map(|f| f.data.to_vec())
             .collect()
+    }
+
+    /// A gateway that frames messages itself is handed each one whole:
+    /// a fast-packet PGN unsplit, a single-frame one as it is, and one
+    /// too long for a single frame not at all.
+    #[test]
+    fn whole_messages_go_out_unsplit() {
+        let mut tx_buf = TxBuffer::whole_messages();
+        let (frames_tx, _frames_rx) = mpsc::channel();
+        let mut bus = Bus {
+            tx_buf: &mut tx_buf,
+            frames_tx: &frames_tx,
+        };
+        bus.send_pgn(6, PGN_PRODUCT_INFO, 42, ADDR_GLOBAL, &[7; 134], false);
+        bus.send_pgn(6, 127508, 42, ADDR_GLOBAL, &[1; 8], false);
+        bus.send_pgn(6, 127508, 42, ADDR_GLOBAL, &[1; 9], false);
+        assert!(tx_buf.queue.is_empty());
+        let messages: Vec<_> = tx_buf.messages.take().unwrap().into_iter().collect();
+        assert_eq!(messages.len(), 2);
+        assert_eq!((messages[0].pgn, messages[0].src), (PGN_PRODUCT_INFO, 42));
+        assert_eq!(messages[0].data.len(), 134);
+        assert_eq!((messages[1].pgn, messages[1].data.len()), (127508, 8));
     }
 
     /// Build a load sample; only the fields a test varies matter.

@@ -219,6 +219,12 @@ impl TxListSync {
         *self = Self::new(std::mem::take(&mut self.wanted), Arc::clone(&self.record));
     }
 
+    /// Stop: the gateway has no transmit list to set (an AOS simulator,
+    /// which sends every PGN).
+    pub fn abandon(&mut self) {
+        self.state = State::Done;
+    }
+
     /// Whether the sync has finished, successfully or not.
     pub fn is_done(&self) -> bool {
         self.state == State::Done

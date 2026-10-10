@@ -169,26 +169,29 @@ pub struct Args {
     #[arg(long, value_name = "PASSWORD")]
     password: Option<String>,
 
-    /// SocketCAN, CANalyst: preferred source address to claim.
+    /// SocketCAN, CANalyst, AOS simulator (on ngt1): preferred source address
+    /// to claim.
     #[arg(short = 'a', long, value_name = "ADDR", default_value_t = 0)]
     address: u8,
 
     /// SocketCAN, CANalyst: passive sniff — skip the ISO address-claim handshake.
+    /// AOS simulator (on ngt1): no node, so it sends from an address it never
+    /// claims.
     #[arg(short = 'n', long)]
     no_claim: bool,
 
-    /// SocketCAN, CANalyst: unique number for the ISO NAME (default derived from
+    /// SocketCAN, CANalyst, AOS simulator: unique number for the ISO NAME (default derived from
     /// the machine id, stable per-host across restarts; on a machine
     /// that can't be identified, a random one stored with the server's
     /// state files).
     #[arg(short = 'u', long, value_name = "N", default_value_t = 0)]
     unique: u32,
 
-    /// SocketCAN, CANalyst: manufacturer code for the ISO NAME (999 = Signal K).
+    /// SocketCAN, CANalyst, AOS simulator: manufacturer code for the ISO NAME (999 = Signal K).
     #[arg(short = 'm', long, value_name = "N", default_value_t = 999)]
     manufacturer: u16,
 
-    /// SocketCAN, CANalyst: Heartbeat (PGN 126993) interval in ms, up to 65532;
+    /// SocketCAN, CANalyst, AOS simulator: Heartbeat (PGN 126993) interval in ms, up to 65532;
     /// 0 disables.
     #[arg(
         long,
@@ -199,7 +202,7 @@ pub struct Args {
     )]
     heartbeat: u64,
 
-    /// SocketCAN, CANalyst: ISO NAME System Instance, 0..15. Default 15 (max) so
+    /// SocketCAN, CANalyst, AOS simulator: ISO NAME System Instance, 0..15. Default 15 (max) so
     /// our NAME yields to real hardware rather than stealing addresses.
     #[arg(long, alias = "si", value_name = "N", default_value_t = 15)]
     system_instance: u8,
@@ -398,7 +401,13 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 operating_mode: args.mode.into(),
                 ..Default::default()
             };
-            Ok(device::ngt1::run_with_config(r, w, config))
+            // An AOS simulator, which claims no address, gets a node.
+            let node = device::ngt1::NodeConfig {
+                model_version: Some("canboat-aos"),
+                ..node_config(args, protocol)
+            };
+            let claim = Arc::new(AtomicU8::new(device::socketcan::CLAIM_UNCLAIMED));
+            Ok(device::ngt1::run_with_node(r, w, config, node, claim))
         }
         Kind::Ikonvert => {
             let (r, w) = open_stream(args)?;
@@ -494,7 +503,8 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     }
 }
 
-/// The node configuration of a raw CAN gateway (socketcan, canalyst).
+/// The node configuration of a raw CAN gateway (socketcan, canalyst), or
+/// of an AOS simulator on `ngt1`.
 fn node_config(args: &Args, protocol: BusProtocol) -> device::socketcan::Config {
     device::socketcan::Config {
         address: args.address,

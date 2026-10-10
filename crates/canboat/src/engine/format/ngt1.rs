@@ -109,6 +109,9 @@ pub struct Ngt1Decoder {
     state: State,
     /// Accumulating frame payload (command + length + payload + checksum).
     buf: Vec<u8>,
+    /// The bytes seen outside any frame, kept only once
+    /// [`Self::collect_text`] asks for them.
+    text: Option<Vec<u8>>,
 }
 
 impl Default for Ngt1Decoder {
@@ -123,7 +126,23 @@ impl Ngt1Decoder {
             state: State::Idle,
             // Worst-case frame: 1 cmd + 1 len + 255 payload + 1 cksum.
             buf: Vec::with_capacity(258),
+            text: None,
         }
+    }
+
+    /// Keep the bytes that arrive outside any frame, for
+    /// [`Self::take_text`]: a gateway that also speaks a text protocol on
+    /// the same port (the AOS simulator's JSON) answers there. Off by
+    /// default, when they are dropped.
+    pub fn collect_text(&mut self) {
+        self.text.get_or_insert_with(Vec::new);
+    }
+
+    /// The bytes seen outside any frame since the last call, when
+    /// [`Self::collect_text`] is on. At most [`MAX_COLLECT`] are kept: the
+    /// oldest go first.
+    pub fn take_text(&mut self) -> Vec<u8> {
+        self.text.as_mut().map(std::mem::take).unwrap_or_default()
     }
 
     /// Feed one byte. Returns `Some(event)` when a frame completes or
@@ -133,6 +152,11 @@ impl Ngt1Decoder {
             State::Idle => {
                 if b == DLE {
                     self.state = State::Escape { in_frame: false };
+                } else if let Some(text) = &mut self.text {
+                    if text.len() >= MAX_COLLECT {
+                        text.remove(0);
+                    }
+                    text.push(b);
                 }
                 None
             }

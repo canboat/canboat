@@ -137,9 +137,9 @@ pub struct Args {
     #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
     canalyst_channel: u8,
 
-    /// Preferred ISO source address to claim with `--socketcan` or
-    /// `--canalyst`. Defaults to 0; the claim machine will pick a free
-    /// address if this one is taken.
+    /// Preferred ISO source address to claim with `--socketcan`,
+    /// `--canalyst`, or an AOS simulator on `--actisense`. Defaults to 0;
+    /// the claim machine will pick a free address if this one is taken.
     /// (`--socketcan-address` is the old spelling.)
     #[arg(
         long = "address",
@@ -428,7 +428,8 @@ pub struct BridgeConfig {
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
-    /// The address to claim with `socketcan` or `canalyst`.
+    /// The address to claim with `socketcan` or `canalyst`, or with
+    /// `actisense` when that is an AOS simulator.
     pub address: u8,
     /// When `true`, the SocketCAN driver brings the interface up itself (at
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
@@ -704,6 +705,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         // Shared by every session: a PGN written once this run is not
         // written again after a reconnect.
         let tx_list_record = Arc::default();
+        // An AOS simulator, which claims no address, gets a node, as a
+        // CANalyst-II does.
+        let node = device::ngt1::NodeConfig {
+            address: config.address,
+            model_version: Some("canboat-pipeline-rs"),
+            pgn_lists: effective.clone(),
+            learn_tx_pgns: config.learn_tx_pgns,
+            state_dir: config.config_dir.clone(),
+            ..device::ngt1::NodeConfig::default()
+        };
+        // Shared across reconnects, as for SocketCAN.
+        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
+            device::socketcan::CLAIM_UNCLAIMED,
+        ));
+        let claim_for_factory = Arc::clone(&claim_addr);
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ngt1::Config {
@@ -712,7 +728,13 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
                 tx_list_record: Arc::clone(&tx_list_record),
                 ..Default::default()
             };
-            Ok(device::ngt1::run_with_config(reader, writer, config))
+            Ok(device::ngt1::run_with_node(
+                reader,
+                writer,
+                config,
+                node.clone(),
+                Arc::clone(&claim_for_factory),
+            ))
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);
@@ -723,7 +745,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             frames_rx: rx,
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: None,
+            claim_addr: Some(claim_addr),
             pgn_list_status,
         });
     }
