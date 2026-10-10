@@ -403,7 +403,7 @@ fn bulk_endpoints(interface: &Interface) -> io::Result<(u8, u8)> {
 /// Maps a transfer failure onto the `io` error the device supervisor
 /// treats as "gone": an unplugged gateway must end the session so it can
 /// be reopened.
-fn transfer_error(e: TransferError) -> io::Error {
+pub(super) fn transfer_error(e: TransferError) -> io::Error {
     match e {
         TransferError::Disconnected => io::Error::new(io::ErrorKind::NotConnected, e),
         _ => io::Error::other(e),

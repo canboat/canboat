@@ -18,6 +18,8 @@
 pub mod address_claim;
 #[cfg(feature = "io")]
 pub mod analyze;
+#[cfg(feature = "usb")]
+pub mod canalyst;
 #[cfg(feature = "io")]
 pub mod container;
 #[cfg(feature = "io")]
