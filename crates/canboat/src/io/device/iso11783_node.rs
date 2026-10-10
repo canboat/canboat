@@ -20,9 +20,6 @@
 //! 11783-5 allows only address claims (and requests for them) from the
 //! null address (254), so an explicit `src == 254` is dropped otherwise.
 
-// Without a transport (no Linux, no `usb`) only `Config` is used.
-#![cfg_attr(not(any(target_os = "linux", feature = "usb")), allow(dead_code))]
-
 use std::collections::{HashMap, VecDeque};
 use std::sync::mpsc;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -83,6 +80,8 @@ pub struct Config {
     /// to configure at boot (notably the MCP2515's "didn't enter config
     /// mode"). `false` leaves the interface untouched, assuming it was
     /// configured externally (e.g. a systemd `ip link set … up` unit).
+    // Read by the SocketCAN driver, which is Linux-only.
+    #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
     pub configure_link: bool,
     /// PGNs the application sends and receives through this gateway,
     /// advertised in the PGN 126464 lists after the gateway's own
