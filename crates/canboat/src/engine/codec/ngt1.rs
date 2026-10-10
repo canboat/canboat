@@ -206,6 +206,9 @@ impl Ngt1 {
                         info.nmea2000_version / 1000,
                         info.nmea2000_version % 1000
                     );
+                    if let Some(firmware) = info.firmware() {
+                        self.tx_list.set_firmware(firmware);
+                    }
                 }
             }
             BEM_STARTUP_STATUS => {
@@ -219,8 +222,9 @@ impl Ngt1 {
                 self.reported_mode = None;
                 self.product_info = ProductInfo::default();
                 self.tx_list.restart();
-                events.push(Event::Send(encode_set_operating_mode(self.mode)));
+                // Product Info first, as in `open`.
                 events.push(Event::Send(encode_get_product_info()));
+                events.push(Event::Send(encode_set_operating_mode(self.mode)));
             }
             BEM_ERROR_REPORT => log::warn!(
                 "ngt1: the gateway reports error {}",
@@ -354,9 +358,11 @@ fn send_all(events: &mut Vec<Event>, commands: Vec<Vec<u8>>) {
 }
 
 impl Codec for Ngt1 {
+    /// Product Info goes first: an NGT-1 (firmware 2.690) ignores what
+    /// follows Set Operating Mode for 50 to 200 ms.
     fn open(&mut self) -> Vec<u8> {
-        let mut out = encode_set_operating_mode(self.mode);
-        out.extend(encode_get_product_info());
+        let mut out = encode_get_product_info();
+        out.extend(encode_set_operating_mode(self.mode));
         out
     }
 
@@ -654,8 +660,8 @@ mod operating_mode_tests {
     #[test]
     fn open_and_keepalive_set_the_configured_mode() {
         let mut d = Ngt1::default();
-        let mut open = encode_set_operating_mode(OperatingMode::NgTransferRxAll);
-        open.extend(encode_get_product_info());
+        let mut open = encode_get_product_info();
+        open.extend(encode_set_operating_mode(OperatingMode::NgTransferRxAll));
         assert_eq!(d.open(), open);
 
         let mut d = Ngt1::new(Config {
@@ -664,7 +670,7 @@ mod operating_mode_tests {
         });
         let mut wire = Vec::new();
         encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE, 1, 0], &mut wire);
-        assert!(d.open().starts_with(&wire));
+        assert!(d.open().ends_with(&wire));
         assert_eq!(d.keepalive().unwrap().1, wire);
     }
 
@@ -797,8 +803,8 @@ mod operating_mode_tests {
         assert_eq!(
             sent,
             [
-                &encode_set_operating_mode(OperatingMode::NgTransferRxAll),
-                &encode_get_product_info()
+                &encode_get_product_info(),
+                &encode_set_operating_mode(OperatingMode::NgTransferRxAll)
             ]
         );
         assert!(

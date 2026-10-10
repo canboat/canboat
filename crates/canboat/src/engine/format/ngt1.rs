@@ -435,6 +435,23 @@ impl ProductInfo {
         }
         self.parts == 0b11_1110
     }
+
+    /// The firmware version × 1000: the last `major.minor` number in the
+    /// software version, which an NGT-1 gives as `"1.100, 2.690"`.
+    pub fn firmware(&self) -> Option<u16> {
+        self.software_version
+            .split(|c: char| !c.is_ascii_digit() && c != '.')
+            .filter_map(|word| {
+                let (major, minor) = word.split_once('.')?;
+                let major: u16 = major.parse().ok()?;
+                if minor.is_empty() || minor.len() > 3 {
+                    return None;
+                }
+                let minor: u16 = format!("{minor:0<3}").parse().ok()?;
+                major.checked_mul(1000)?.checked_add(minor)
+            })
+            .next_back()
+    }
 }
 
 /// A Product Info string: ASCII, ended by a NUL or 0xFF padding.
@@ -628,6 +645,23 @@ impl NgtMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn firmware_is_the_last_version_in_the_software_version() {
+        let firmware = |software: &str| {
+            ProductInfo {
+                software_version: software.into(),
+                ..Default::default()
+            }
+            .firmware()
+        };
+        assert_eq!(firmware("1.100, 2.690"), Some(2_690));
+        assert_eq!(firmware("2.190"), Some(2_190));
+        assert_eq!(firmware("v2.500"), Some(2_500));
+        assert_eq!(firmware("2.5"), Some(2_500));
+        assert_eq!(firmware("Rev B"), None);
+        assert_eq!(firmware(""), None);
+    }
 
     /// A `DLE STX` never followed by `DLE ETX` gives up at the limit, once,
     /// and the decoder then reads the next message normally.
