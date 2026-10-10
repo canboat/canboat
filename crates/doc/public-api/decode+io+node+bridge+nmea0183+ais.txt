@@ -903,6 +903,7 @@ pub fn canboat::read::BstD0Reader<R>::read_frame(&mut self) -> core::io::error::
 pub struct canboat::read::BstReader<R: alloc::io::read::Read>
 impl<R: alloc::io::read::Read> canboat::read::BstReader<R>
 pub fn canboat::read::BstReader<R>::new(R) -> Self
+pub fn canboat::read::BstReader<R>::with_protocol(R, canboat::schema::BusProtocol) -> Self
 impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::BstReader<R>
 pub fn canboat::read::BstReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 pub struct canboat::read::Decoder<S>
@@ -915,6 +916,7 @@ pub fn canboat::read::Decoder<S>::next(&mut self) -> core::option::Option<Self::
 pub struct canboat::read::EblReader<R: alloc::io::read::Read>
 impl<R: alloc::io::read::Read> canboat::read::EblReader<R>
 pub fn canboat::read::EblReader<R>::new(R) -> Self
+pub fn canboat::read::EblReader<R>::with_protocol(R, canboat::schema::BusProtocol) -> Self
 impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::EblReader<R>
 pub fn canboat::read::EblReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
 pub struct canboat::read::PlainReader<R: alloc::io::buf_read::BufRead>

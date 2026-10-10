@@ -335,11 +335,16 @@ enum Binary {
 }
 
 impl Binary {
-    fn reader<R: io::Read + 'static>(self, source: R) -> Box<dyn FrameReader> {
+    /// A reader of `source`, a capture of a bus carrying `protocol`.
+    fn reader<R: io::Read + 'static>(
+        self,
+        source: R,
+        protocol: BusProtocol,
+    ) -> Box<dyn FrameReader> {
         match self {
-            Binary::Ebl => Box::new(EblReader::new(source)),
+            Binary::Ebl => Box::new(EblReader::with_protocol(source, protocol)),
             Binary::BstD0 => Box::new(BstD0Reader::new(source)),
-            Binary::Bst => Box::new(BstReader::new(source)),
+            Binary::Bst => Box::new(BstReader::with_protocol(source, protocol)),
         }
     }
 }
@@ -372,7 +377,7 @@ fn convert_raw<W: Write>(
 ) -> Result<()> {
     let source = open_source(args.input(), args.container_opts())?;
     let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
-        binary.reader(source)
+        binary.reader(source, protocol)
     } else if args.from == Some(FromFormat::Json) {
         // Bare physical values are read against whatever unit system the
         // input's banner declares; `--units` is only the assumption for
@@ -494,7 +499,7 @@ fn convert_decoded<W: Write>(
         // `"units":"std"` stream, emit SI (or the other way round).
         let db = cfg.protocol.database(cfg.units);
         let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
-            binary.reader(source)
+            binary.reader(source, cfg.protocol)
         } else {
             Box::new(crate::json_input::JsonFrameReader::new(source, db))
         };

@@ -206,7 +206,9 @@ pub struct Args {
     /// `--protocol j1939` frames the traffic as J1939 (single frames and ISO
     /// TP, no fast-packet) and, on SocketCAN, leaves out the NMEA 2000
     /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG and
-    /// BST-95 only: the other gateways do NMEA 2000 framing themselves.
+    /// BST-95 only: the other gateways do NMEA 2000 framing themselves. ISO TP
+    /// messages (longer than 8 bytes) are received on all three but sent on
+    /// SocketCAN only; YDWG and BST-95 refuse to send them.
     #[command(flatten)]
     protocol: crate::cli::protocol::ProtocolArgs,
 }

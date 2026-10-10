@@ -320,11 +320,18 @@ pub struct EblReader<R: Read> {
 }
 
 impl<R: Read> EblReader<R> {
+    /// A reader of an NMEA 2000 log.
     pub fn new(inner: R) -> Self {
+        Self::with_protocol(inner, BusProtocol::Nmea2000)
+    }
+
+    /// A reader of a log of a bus carrying `protocol`, which decides which
+    /// BST-95 frames are parts of a longer message.
+    pub fn with_protocol(inner: R, protocol: BusProtocol) -> Self {
         Self {
             inner,
             decoder: EblDecoder::new(),
-            messages: MessageAssembler::new(BusProtocol::Nmea2000),
+            messages: MessageAssembler::new(protocol),
             events: Vec::new(),
             queue: VecDeque::new(),
             time: None,
@@ -445,11 +452,18 @@ pub struct BstReader<R: Read> {
 }
 
 impl<R: Read> BstReader<R> {
+    /// A reader of an NMEA 2000 capture.
     pub fn new(inner: R) -> Self {
+        Self::with_protocol(inner, BusProtocol::Nmea2000)
+    }
+
+    /// A reader of a capture of a bus carrying `protocol`, which decides
+    /// which BST-95 frames are parts of a longer message.
+    pub fn with_protocol(inner: R, protocol: BusProtocol) -> Self {
         Self {
             inner,
             decoder: BdtpDecoder::default(),
-            messages: MessageAssembler::new(BusProtocol::Nmea2000),
+            messages: MessageAssembler::new(protocol),
             queue: VecDeque::new(),
             buf: Box::new([0u8; 8192]),
             eof: false,

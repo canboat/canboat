@@ -102,8 +102,8 @@ impl Codec for Bst95 {
         } else if frame.data.len() <= 8 {
             put(&frame.data);
         } else {
-            // One BST-95 message is one CAN frame; a longer single-frame
-            // PGN would need ISO transport, which this codec does not do.
+            // One BST-95 message is one CAN frame. A longer message needs
+            // ISO TP (J1939), which this codec receives but does not send.
             return Err(Refused::TooLarge);
         }
         Ok(out)
