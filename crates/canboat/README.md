@@ -18,7 +18,7 @@ scatter of CANboat utilities:
 | subcommand | |
 | --- | --- |
 | `convert` | decode any capture (PLAIN/FAST, Actisense, YDWG-02, iKonvert, `.pcap`, `.nif`, …) to PLAIN, JSON or text; the successor of `analyzer` |
-| `interface` | bridge a live gateway — Actisense NGT-1, Digital Yacht iKonvert, Maretron IPG, Linux SocketCAN — to and from stdout |
+| `interface` | bridge a live gateway — Actisense NGT-1, Digital Yacht iKonvert, Maretron IPG, Linux SocketCAN, a CANalyst-II USB adapter (Waveshare USB-CAN-B) — to and from stdout |
 | `server` | one process that reads a device, decodes, applies quirks and serves snapshot / analyzer-JSON / NMEA 0183 / AIS / raw ports over TCP |
 | `tui` | a `top`-like terminal browser for a live bus or a capture |
 | `format-message` | build one frame from `FIELD=VALUE` pairs, for any PGN |
