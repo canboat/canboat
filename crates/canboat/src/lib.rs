@@ -450,6 +450,8 @@ pub mod codec {
         pub use crate::engine::codec::ngt1::KEEPALIVE_INTERVAL;
         pub use crate::engine::codec::ngt1::{Config, Ngt1};
         pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
+        /// What an AOS simulator says about itself ([`Ngt1::aos`]).
+        pub use crate::engine::format::aos::AosInfo;
         pub use crate::engine::format::ngt1::OperatingMode;
         /// What an NGT-1 sends for a frame it received — to simulate one.
         /// `None` for more than 244 bytes of data.
