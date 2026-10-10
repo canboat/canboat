@@ -456,9 +456,13 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   i = 0;
   while ((token = strtok_r(NULL, " ", &nexttoken)) != 0)
   {
-    if (i >= FASTPACKET_MAX_SIZE)
+    if (i >= 8)
     {
-      return -1;
+      // A YDWG-02 RAW line carries one CAN frame. More than 8 bytes means
+      // two lines were glued together (a lost datagram or a reconnect);
+      // decoding it as a coalesced message would give a garbage message.
+      logError("Error reading message, more than 8 data bytes in YDWG-02 line for PGN %u\n", pgn);
+      return 2;
     }
     m->data[i] = strtoul(token, NULL, 16);
     i++;
