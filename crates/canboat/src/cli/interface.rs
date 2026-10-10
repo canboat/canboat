@@ -228,6 +228,10 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // On stderr, at the C gateway programs' default level; the device
+    // drivers' warnings went nowhere without it. `RUST_LOG` overrides.
+    let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
+        .try_init();
     let handle = open_device(&args)?;
     // Close the device on purpose — when we are stopped, and when the
     // stream ends — so a gateway is taken off the bus (iKonvert).
