@@ -1,0 +1,57 @@
+# candump as printed by the can-utils of the Angstrom distribution (BeagleBone),
+# taken from samples/candumpSample1.txt: a Garmin 17X GPS, a GMI-10 and an
+# Airmar DST800 powering up. The first line is candump's own banner, which
+# is not a frame. The lines carry no time, so the tests compare everything
+# after the timestamp column. Shared with the Rust candump reader (#998).
+interface = can0, family = 29, type = 3, proto = 1
+<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0 
+<0x18eeff23> [8] 9f b9 e3 10 00 82 78 c0 
+<0x15fd0723> [8] 00 ff ff ff ff 7f ff ff 
+<0x0ded2301> [8] 00 12 01 07 ff 00 f8 04 
+<0x0ded2301> [8] 01 01 87 98 04 01 05 01 
+<0x0ded2301> [8] 02 07 78 56 34 12 ff ff 
+<0x0ded0123> [8] 00 08 02 07 ff 00 00 04 
+<0x0ded2301> [8] 20 12 00 00 ef 01 ff ff 
+<0x0ded2301> [8] 21 ff ff ff ff 03 01 87 
+<0x0ded2301> [8] 22 98 04 2a 05 01 ff ff 
+<0x0ded0123> [8] 01 00 00 ff ff ff ff ff 
+<0x1def0123> [8] 00 06 87 98 2a fd 73 df 
+<0x0df50b23> [8] ff ff ff ff ff 00 00 ff 
+<0x09f50323> [8] 00 00 00 ff ff 00 ff ff 
+<0x15fd0723> [8] 01 ff ff ff ff 7f ff ff 
+<0x18eeff00> [8] f2 62 aa 1c 00 91 78 c0 
+<0x15fd0723> [8] 02 c0 16 6d ff 7f ff ff 
+<0x19f51323> [8] 00 0e ff ff ff ff ff ff 
+<0x09f50323> [8] 01 00 00 ff ff 00 ff ff 
+<0x15fd0723> [8] 03 c0 16 6d ff 7f ff ff 
+<0x0df50b23> [8] ff ff ff ff ff 00 00 ff 
+<0x19f51323> [8] 01 04 00 00 00 00 00 00 
+<0x19f51323> [8] 02 00 ff ff ff ff ff ff 
+<0x19f51323> [8] 20 0e ff ff ff ff ff ff 
+<0x19f51323> [8] 21 04 00 00 00 00 00 00 
+<0x19f51323> [8] 22 00 ff ff ff ff ff ff 
+<0x1cef0001> [6] e5 98 ed 04 04 04 
+<0x1defff00> [8] 00 0a e5 98 ee 04 04 04 
+<0x1defff00> [8] 01 82 00 00 00 ff ff ff 
+<0x15fd0723> [8] 04 c0 16 6d ff 7f ff ff 
+<0x1defff01> [8] 00 0b e5 98 de 05 05 05 
+<0x1defff01> [8] 01 01 00 02 00 00 ff ff 
+<0x0df01000> [8] 01 f0 95 3d 00 cd c7 29 
+<0x19fa0300> [8] 01 fb ff ff ff ff ff ff 
+<0x19fa0400> [8] 00 93 01 fd 0c 33 50 2c 
+<0x19fa0400> [8] 01 5b 3d 9c ff 45 00 00 
+<0x19fa0400> [8] 02 00 f0 01 d1 06 36 dc 
+<0x19fa0400> [8] 03 9c ff 00 00 00 00 f0 
+<0x19fa0400> [8] 04 0b 22 06 36 cd 9c ff 
+<0x19fa0400> [8] 05 00 00 00 00 f0 0c e8 
+<0x19fa0400> [8] 06 19 e7 37 9c ff af 3a 
+<0x19fa0400> [8] 07 5d e5 f0 0e 5c 2e e4 
+<0x19fa0400> [8] 08 dc 9c ff ff ff ff 7f 
+<0x19fa0400> [8] 09 f0 12 50 1d f2 66 9c 
+<0x19fa0400> [8] 0a ff 37 00 00 00 f0 16 
+<0x19fa0400> [8] 0b 73 32 f1 84 9c ff 00 
+<0x19fa0400> [8] 0c 00 00 00 f0 18 51 0e 
+<0x19fa0400> [8] 0d 16 22 9c ff 00 00 00 
+<0x19fa0400> [8] 0e 00 f0 19 96 1a f2 57 
+<0x19fa0400> [8] 0f 9c ff 00 00 00 00 f0 
+<0x19fa0400> [8] 10 1b 21 33 5c 1f 9c ff 

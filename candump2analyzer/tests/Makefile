@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 tests all
+.PHONY: test1 test2 tests all
 
 all:	tests
 
@@ -34,4 +34,14 @@ test1:
 	$(CANDUMP2ANALYZER) pcan-view.in > $(TEMPDIR)/pcan-view.out 2> $(TEMPDIR)/pcan-view.err
 	diff $(TEMPDIR)/pcan-view.out pcan-view.out
 
-tests:	test1
+tests:	test1 test2
+
+#
+# The Angstrom candump style ("<0x18eeff01> [8] 05 a0 ..."), FMT_1. Its lines
+# carry no time, so candump2analyzer stamps them with the wall clock; compare
+# everything after the timestamp column. The Rust candump reader is checked
+# against the same pair (crates/canboat/tests/convert_formats.rs, #998).
+#
+test2:
+	$(CANDUMP2ANALYZER) angstrom.in | cut -d, -f2- > $(TEMPDIR)/angstrom.out 2> $(TEMPDIR)/angstrom.err
+	diff $(TEMPDIR)/angstrom.out angstrom.out

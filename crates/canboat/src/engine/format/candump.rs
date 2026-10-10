@@ -3,17 +3,19 @@
 //! Linux SocketCAN `candump` text formats.
 //!
 //! The standard capture tool on a J1939 or NMEA 2000 CAN interface is
-//! `candump` from can-utils, and it prints two common shapes:
+//! `candump` from can-utils, and it prints these shapes:
 //!
 //! ```text
 //!   can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40      (pretty, default)
 //! (1436509053.762905) can0 18EEFF00#8EF2DDE800966440   (log, -l / -L)
+//! <0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0             (Angstrom, old can-utils)
 //! ```
 //!
-//! Both carry one raw CAN frame per line: a 29-bit ISO 11783 identifier
+//! All carry one raw CAN frame per line: a 29-bit ISO 11783 identifier
 //! and up to 8 data bytes. candump prints a 29-bit identifier with 8 hex
 //! digits and an 11-bit one (Quick PCS, other non-ISO devices) with 3, so
-//! the identifier's width says which kind a line holds. The pretty form has no timestamp at all
+//! the identifier's width says which kind a line holds. The pretty and
+//! Angstrom forms have no timestamp at all
 //! (`RawFrame.timestamp` stays `None` — the caller stamps receive
 //! time); the log form's epoch seconds are converted to the ISO shape
 //! downstream emitters expect, by pure arithmetic so wasm32 (no host
@@ -48,6 +50,37 @@ pub(crate) fn looks_like_pretty(line: &str) -> bool {
         && len[1..len.len() - 1].bytes().all(|b| b.is_ascii_digit())
 }
 
+/// True when `line` looks like a candump *Angstrom* line, as the
+/// can-utils of the Angstrom distribution print it:
+/// `<0x<hex-canid>> [<len>] <bytes…>`.
+pub(crate) fn looks_like_angstrom(line: &str) -> bool {
+    let mut toks = line.split_whitespace();
+    let Some(id) = toks.next().and_then(angstrom_id) else {
+        return false;
+    };
+    let Some(len) = toks.next() else { return false };
+    (3..=8).contains(&id.len())
+        && id.bytes().all(|b| b.is_ascii_hexdigit())
+        && len.len() >= 3
+        && len.starts_with('[')
+        && len.ends_with(']')
+        && len[1..len.len() - 1].bytes().all(|b| b.is_ascii_digit())
+}
+
+/// True for the banner the Angstrom candump prints before its first
+/// frame: `interface = can0, family = 29, type = 3, proto = 1`. It holds
+/// commas, so format detection would otherwise take it for PLAIN.
+pub(crate) fn is_banner(line: &str) -> bool {
+    line.starts_with("interface = ") && line.contains(", family = ")
+}
+
+/// The hex digits of an Angstrom `<0x…>` identifier token.
+fn angstrom_id(tok: &str) -> Option<&str> {
+    tok.strip_prefix("<0x")
+        .or_else(|| tok.strip_prefix("<0X"))?
+        .strip_suffix('>')
+}
+
 /// True when `line` looks like a candump *log* line:
 /// `(<epoch.frac>) <iface> <hex-canid>#<hexbytes>`.
 pub(crate) fn looks_like_log(line: &str) -> bool {
@@ -63,7 +96,7 @@ pub(crate) fn looks_like_log(line: &str) -> bool {
         && rest[close + 1..].trim_start().contains('#')
 }
 
-/// Parse either candump shape into a [`RawFrame`], for a 29-bit ISO 11783
+/// Parse any candump shape into a [`RawFrame`], for a 29-bit ISO 11783
 /// bus. A line with an 11-bit identifier is refused as a bad `canid`.
 #[cfg(test)]
 fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
@@ -74,7 +107,7 @@ fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
     })
 }
 
-/// Parse either candump shape, keeping only the frames of one kind:
+/// Parse any candump shape, keeping only the frames of one kind:
 /// 11-bit identifiers when `standard` is set (Quick PCS), 29-bit ISO 11783
 /// ones when not. `Ok(None)` for a frame of the other kind.
 ///
@@ -89,6 +122,10 @@ pub fn parse_line_for(line: &str, standard: bool) -> Result<Option<RawFrame>, Pa
     }
     if t.starts_with('(') {
         parse_log(t, standard)
+    } else if is_banner(t) {
+        Ok(None)
+    } else if t.starts_with('<') {
+        parse_angstrom(t, standard)
     } else {
         parse_pretty(t, standard)
     }
@@ -121,12 +158,37 @@ fn parse_pretty(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseErr
         expected: 3,
         found: 1,
     })?;
+    parse_len_and_bytes(id_tok, toks, 2, standard)
+}
+
+/// `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0`: the pretty shape with the
+/// identifier in `<0x…>` and no interface column.
+fn parse_angstrom(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseError> {
+    let mut toks = line.split_whitespace();
+    let tok = toks.next().ok_or(ParseError::Empty)?;
+    let id_tok = angstrom_id(tok).ok_or_else(|| ParseError::BadInteger {
+        field: "canid",
+        value: tok.to_string(),
+        offset: None,
+    })?;
+    parse_len_and_bytes(id_tok, toks, 1, standard)
+}
+
+/// The rest of a pretty or Angstrom line after the identifier: `[<len>]`
+/// and that many hex bytes. `header_tokens` is how many tokens came
+/// before the length, for the error when it is missing.
+fn parse_len_and_bytes<'a>(
+    id_tok: &str,
+    mut toks: impl Iterator<Item = &'a str>,
+    header_tokens: usize,
+    standard: bool,
+) -> Result<Option<RawFrame>, ParseError> {
     let Some((prio, pgn, src, dst)) = header(id_tok, standard)? else {
         return Ok(None);
     };
     let len_tok = toks.next().ok_or(ParseError::BadHeader {
-        expected: 3,
-        found: 2,
+        expected: header_tokens + 1,
+        found: header_tokens,
     })?;
     let declared: usize = len_tok
         .strip_prefix('[')
@@ -319,6 +381,52 @@ mod tests {
         ));
         // An interface name where the id should be is not hex.
         assert!(!looks_like_pretty("hello world [x] zz"));
+    }
+
+    #[test]
+    fn parses_angstrom_line() {
+        let f = parse_line("<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0").unwrap();
+        assert_eq!((f.prio, f.pgn, f.src, f.dst), (6, 60928, 1, 255));
+        assert_eq!(f.timestamp, None);
+        assert_eq!(
+            f.data.as_slice(),
+            &[0x05, 0xa0, 0xbe, 0x1c, 0x00, 0xa0, 0xa0, 0xc0]
+        );
+        // A trailing space, as the Angstrom candump prints one.
+        let f = parse_line("<0x15fd0723> [3] 00 ff ff ").unwrap();
+        assert_eq!((f.pgn, f.src), (130311, 0x23));
+        assert_eq!(f.data.as_slice(), &[0x00, 0xff, 0xff]);
+        // An 11-bit identifier, printed with 3 digits.
+        let f = parse_line_for("<0x6c1> [2] c1 18", true).unwrap().unwrap();
+        assert_eq!(f.pgn, 0x6c1);
+        assert_eq!(parse_line_for("<0x6c1> [2] c1 18", false).unwrap(), None);
+    }
+
+    #[test]
+    fn detects_angstrom_shape() {
+        assert!(looks_like_angstrom("<0x18eeff01> [8] 05 a0 be 1c"));
+        assert!(!looks_like_angstrom("<0x18eeff01 [8] 05"));
+        assert!(!looks_like_angstrom("<0xzz> [8] 05"));
+        assert!(!looks_like_angstrom("  can0  18EEFF00   [8]  8E F2"));
+        assert!(!looks_like_pretty("<0x18eeff01> [8] 05 a0 be 1c"));
+    }
+
+    #[test]
+    fn the_angstrom_banner_is_candump_but_no_frame() {
+        let banner = "interface = can0, family = 29, type = 3, proto = 1";
+        assert!(is_banner(banner));
+        assert_eq!(parse_line_for(banner, false).unwrap(), None);
+        assert_eq!(
+            crate::engine::format::detect(banner),
+            Some(crate::engine::format::InputFormat::Candump)
+        );
+    }
+
+    #[test]
+    fn rejects_bad_angstrom_lines() {
+        assert!(parse_line("<0x18eeff01> [12] 00 11 22 33 44 55 66 77 88 99 aa bb").is_err());
+        assert!(parse_line("<0x18eeff01>").is_err());
+        assert!(parse_line("<18eeff01> [1] 00").is_err());
     }
 
     #[test]

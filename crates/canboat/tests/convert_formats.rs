@@ -320,6 +320,26 @@ fn bst_95_decodes_as_pgn_test() {
     assert_eq!(got, want);
 }
 
+/// candump in the style of the Angstrom distribution's can-utils (#998),
+/// against the same golden file candump2analyzer is tested with. The
+/// lines carry no time, so both compare everything after the timestamp
+/// column. The capture starts with candump's `interface = …` banner,
+/// which must not make format detection pick PLAIN.
+#[test]
+fn candump_angstrom_matches_candump2analyzer() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../candump2analyzer/tests");
+    let input = std::fs::read(dir.join("angstrom.in")).expect("read angstrom.in");
+    let want = std::fs::read_to_string(dir.join("angstrom.out")).expect("read angstrom.out");
+    let out = run(&["convert", "--no-banner", "--to", "plain"], &input);
+    let got: String = String::from_utf8(out)
+        .expect("utf-8")
+        .lines()
+        .map(|l| format!("{}\n", l.split_once(',').map_or(l, |(_, rest)| rest)))
+        .collect();
+    assert_eq!(got.lines().count(), 51);
+    assert_eq!(got, want.replace("\r\n", "\n"));
+}
+
 /// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)
 /// with the identifier of `prio`, `pgn` (PDU2), `src`.
 fn bst95(prio: u8, pgn: u32, src: u8, data: &[u8]) -> Vec<u8> {
