@@ -464,6 +464,19 @@ impl core::fmt::Display for canboat::codec::ngt1::OperatingMode
 pub fn canboat::codec::ngt1::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::codec::ngt1::OperatingMode
 impl core::marker::StructuralPartialEq for canboat::codec::ngt1::OperatingMode
+pub struct canboat::codec::ngt1::AosInfo
+pub canboat::codec::ngt1::AosInfo::firmware_version: alloc::string::String
+pub canboat::codec::ngt1::AosInfo::hardware_version: alloc::string::String
+pub canboat::codec::ngt1::AosInfo::product_type: u32
+pub canboat::codec::ngt1::AosInfo::serial: u32
+impl core::clone::Clone for canboat::codec::ngt1::AosInfo
+pub fn canboat::codec::ngt1::AosInfo::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::ngt1::AosInfo
+impl core::cmp::PartialEq for canboat::codec::ngt1::AosInfo
+pub fn canboat::codec::ngt1::AosInfo::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::ngt1::AosInfo
+pub fn canboat::codec::ngt1::AosInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::ngt1::AosInfo
 pub struct canboat::codec::ngt1::Config
 pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
 pub canboat::codec::ngt1::Config::operating_mode: canboat::codec::ngt1::OperatingMode
@@ -477,6 +490,7 @@ impl core::fmt::Debug for canboat::codec::ngt1::Config
 pub fn canboat::codec::ngt1::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::codec::ngt1::Ngt1
 impl canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::aos(&self) -> core::option::Option<&canboat::codec::ngt1::AosInfo>
 pub fn canboat::codec::ngt1::Ngt1::new(canboat::codec::ngt1::Config) -> Self
 impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
