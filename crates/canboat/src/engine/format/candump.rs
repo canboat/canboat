@@ -211,7 +211,7 @@ fn parse_len_and_bytes<'a>(
     }
 
     let mut data: SmallVec<[u8; 8]> = SmallVec::new();
-    for (i, tok) in toks.take(declared).enumerate() {
+    for (i, tok) in toks.by_ref().take(declared).enumerate() {
         let b = u8::from_str_radix(tok, 16).map_err(|_| ParseError::BadHexByte {
             index: i,
             value: tok.to_string(),
@@ -225,6 +225,15 @@ fn parse_len_and_bytes<'a>(
         return Err(ParseError::BadPayloadCount {
             expected: declared,
             found: data.len(),
+        });
+    }
+    // More bytes than declared is as wrong as fewer. Only `candump -a`'s
+    // quoted ASCII column may follow the bytes.
+    let surplus = toks.take_while(|t| !t.starts_with('\'')).count();
+    if surplus > 0 {
+        return Err(ParseError::BadPayloadCount {
+            expected: declared,
+            found: declared + surplus,
         });
     }
     Ok(Some(RawFrame {
@@ -444,6 +453,18 @@ mod tests {
             })
         ));
         assert!(parse_line("  can0  18EEFF00   [8]  8E").is_err());
+        // More bytes than declared.
+        assert!(matches!(
+            parse_line("<0x18eeff01> [1] 01 02"),
+            Err(ParseError::BadPayloadCount {
+                expected: 1,
+                found: 2
+            })
+        ));
+        assert!(parse_line("  can0  18EEFF00   [1]  01 02").is_err());
+        // `candump -a` prints the bytes as ASCII after them.
+        let f = parse_line("  can0  18EEFF00   [2]  31 32   '12'").unwrap();
+        assert_eq!(f.data.as_slice(), b"12");
     }
 
     #[test]

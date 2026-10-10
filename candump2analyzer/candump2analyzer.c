@@ -56,9 +56,11 @@ limitations under the License.
 #define OLE_EPOCH_TO_UNIX_DAYS 25569.0
 
 // The Angstrom and Debian styles declare the frame length in [n] and then list
-// the bytes. A classic CAN frame has at most 8, and a line cut short must not
-// be padded from whatever the data loop below reads past its end. The Rust
-// candump reader applies the same rules.
+// the bytes. A classic CAN frame has at most 8, and the line must hold exactly
+// n bytes: one cut short must not be padded from whatever the data loop below
+// reads past its end, and surplus bytes must not be dropped. Only the quoted
+// ASCII column that `candump -a` prints may follow them. The Rust candump
+// reader applies the same rules.
 static bool bracketPayloadComplete(const char *line, int size)
 {
   const char *p = strchr(line, ']');
@@ -80,12 +82,15 @@ static bool bracketPayloadComplete(const char *line, int size)
     }
     if (!isxdigit((unsigned char) p[0]) || !isxdigit((unsigned char) p[1]) || !(p[2] == 0 || isspace((unsigned char) p[2])))
     {
-      break;
+      return n == size && *p == '\'';
     }
-    n++;
+    if (++n > size)
+    {
+      return false;
+    }
     p += 2;
   }
-  return n >= size;
+  return n == size;
 }
 
 void gettimeval(struct timeval *tv, double sec)
@@ -262,7 +267,7 @@ int main(int argc, char **argv)
     if ((format == FMT_1 || format == FMT_2) && !bracketPayloadComplete(p, size))
     {
       fprintf(stderr,
-              "Skipping candump line: [%d] is more than 8 or more than the bytes it holds: %.*s\n",
+              "Skipping candump line: its bytes do not match its [%d], or that is more than 8: %.*s\n",
               size,
               (int) strcspn(p, "\r\n"),
               p);
