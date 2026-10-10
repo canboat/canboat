@@ -6,6 +6,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [9.0.0](https://github.com/canboat/canboat/compare/v8.3.0...v9.0.0) (2026-10-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ngt1:** `canboat::codec::ngt1::Config` has a new public field, `operating_mode`; build it with `..Default::default()`.
+* **decode:** EncodeError is #[non_exhaustive] and has a new ProprietaryHeader variant; an exhaustive match on it needs a wildcard arm. PgnBuilder::build refuses a 126208 Read/Write Fields whose Manufacturer Code / Industry Code header does not match its commanded PGN.
+* **node:** canboat::device::heartbeat_frame returns Result<Frame, EncodeError> instead of Frame.
+* **encode:** `push(field, <integer>)` on a scaled field now means a value in the field's unit, not raw wire bits; use `Raw(n)` for those. `From<u64> for EncodeValue` is removed; use `Raw(n)` or a `Name`.
+* **encode:** EncodeError::ValueOutOfRange has a new field, range, and encoding a number outside its field's range is now an error.
+* JSON TIME and DURATION values are numbers of seconds instead of HH:MM:SS strings, and -nv's value is seconds instead of the wire count.
+* consumers of `-si` / `--units si` output receive these fields in SI units: engine speed in Hz rather than rpm, fuel volumes in m3 and fuel rates in m3/s, and so on.
+* consumers of `-si` / `--units si` output receive percentage fields as ratios, 1/100 of the previous value.
+
+### Added
+
+* --bus nmea2000|j1939, and a J1939 SocketCAN node ([#942](https://github.com/canboat/canboat/issues/942)) ([2353d83](https://github.com/canboat/canboat/commit/2353d83ce4d7176706996a61b28d2d03845a3c12))
+* **airmar:** add DST200 Master Reset and Reset EEPROM, decode all POST results ([#934](https://github.com/canboat/canboat/issues/934)) ([755e31e](https://github.com/canboat/canboat/commit/755e31e341ae544304b6a2d74e758ba8f83b86a5))
+* **codec:** add the ISO TP sender to the crate API ([#953](https://github.com/canboat/canboat/issues/953)) ([e8c9c9f](https://github.com/canboat/canboat/commit/e8c9c9f2c5a9519ca4897cfab00abe378d7b45cd))
+* **convert:** read candump's Angstrom style (&lt;0x…&gt; [8] …) ([#1031](https://github.com/canboat/canboat/issues/1031)) ([d664cf2](https://github.com/canboat/canboat/commit/d664cf278b5aba6c4b578298b8475247b1d56172))
+* **db:** drop day/night mode from the SimNet backlight lookup, and document its scale ([#971](https://github.com/canboat/canboat/issues/971)) ([842aecb](https://github.com/canboat/canboat/commit/842aecb99de7eb28f968dd97ae181e66b83295d6))
+* decode percentages as ratios in SI units ([#959](https://github.com/canboat/canboat/issues/959)) ([3993b54](https://github.com/canboat/canboat/commit/3993b54c7e7dad775c89de73a85bd3c1a1a03486))
+* decode Quick PCS as a third protocol (--protocol quick) ([#955](https://github.com/canboat/canboat/issues/955)) ([43ce93c](https://github.com/canboat/canboat/commit/43ce93c5d522dbf1d9bacfc42b909095cacf60bd))
+* **device:** never send application frames from the null address ([#979](https://github.com/canboat/canboat/issues/979)) ([85707d5](https://github.com/canboat/canboat/commit/85707d56ef6f28216143b2c1d6ab3353bc305f17))
+* **docs:** publish the J1939 database as canboat-j1939.{xml,json,html} ([#943](https://github.com/canboat/canboat/issues/943)) ([230fa10](https://github.com/canboat/canboat/commit/230fa10db4c7c08f80d34005801fb7aa9671265f))
+* **encode:** an integer is a value in the field's unit; Raw for wire bits ([#982](https://github.com/canboat/canboat/issues/982)) ([b0b004a](https://github.com/canboat/canboat/commit/b0b004acebe02a2d389258aada8adc4b7a7913e7)), closes [#981](https://github.com/canboat/canboat/issues/981)
+* give TIME and DURATION fields as seconds in JSON ([#967](https://github.com/canboat/canboat/issues/967)) ([0447361](https://github.com/canboat/canboat/commit/044736146b42b9ea2fcbd324ce995de99d677ffe))
+* **interface:** read and write a YDNU-02 over its serial port ([#1004](https://github.com/canboat/canboat/issues/1004)) ([6c39867](https://github.com/canboat/canboat/commit/6c3986713c292a8cf61925f26085c399b01dfbe8))
+* **j1939:** add SPN as a field attribute, and decode DM1 per J1939-73 ([#949](https://github.com/canboat/canboat/issues/949)) ([f014e1f](https://github.com/canboat/canboat/commit/f014e1fbb039a84b43e1830dd3921abd2a89d436))
+* **j1939:** correct percent torque and 16-bit temperature scaling ([#946](https://github.com/canboat/canboat/issues/946)) ([8838f6d](https://github.com/canboat/canboat/commit/8838f6dcb52873b5bca78fe3b04239e6b8d35b13))
+* **j1939:** decode the transmission gears as raw - 125, not as a signed byte ([#987](https://github.com/canboat/canboat/issues/987)) ([73aafed](https://github.com/canboat/canboat/commit/73aafed8724de4111543c94dfd12bbf5e3d9d0ec))
+* **j1939:** engine fluid pressures, fuel level, and catch-alls for every PGN range ([#947](https://github.com/canboat/canboat/issues/947)) ([460de58](https://github.com/canboat/canboat/commit/460de5828236bb9cc85afa73b3c688435238b4e0))
+* **j1939:** join a DTC's split SPN and name it from a generated SPN lookup ([#951](https://github.com/canboat/canboat/issues/951)) ([4a47380](https://github.com/canboat/canboat/commit/4a473802c89c86e9c0101b5a67afde365b4ff535))
+* **j1939:** send long messages over ISO TP from the SocketCAN gateway ([#948](https://github.com/canboat/canboat/issues/948)) ([851f557](https://github.com/canboat/canboat/commit/851f557f2934ce3c18afb569fd7fc174a46deed5))
+* **j1939:** use SI units and add the two missing offsets ([#950](https://github.com/canboat/canboat/issues/950)) ([18ef975](https://github.com/canboat/canboat/commit/18ef9754c8ed7f445084437d71d3833fdcb4e86b))
+* **keel:** edit J1939 definitions in the editor, and --protocol, --help, --version ([#954](https://github.com/canboat/canboat/issues/954)) ([4c7e152](https://github.com/canboat/canboat/commit/4c7e15280404ad612c11cdd6721049467c6dd8b2))
+* name the protocol in the analyzer JSON banner ([#945](https://github.com/canboat/canboat/issues/945)) ([124bd31](https://github.com/canboat/canboat/commit/124bd3102da7812694fc7991b5c2093ffa1d629a))
+* **ngt1:** handle the gateway's Startup status, Error report, Negative Ack and Product Info ([#1022](https://github.com/canboat/canboat/issues/1022)) ([a3acaab](https://github.com/canboat/canboat/commit/a3acaab6c834520d8e34a50e6e7223a7204fc478)), closes [#1012](https://github.com/canboat/canboat/issues/1012)
+* **ngt1:** read the transmit PGN list in Format 2, and drop the keepalive ([#1029](https://github.com/canboat/canboat/issues/1029)) ([3163036](https://github.com/canboat/canboat/commit/3163036a15d45003703e87b59efbb1c2923db6fc))
+* **ngt1:** the startup sequence is Set Operating Mode, NGT Transfer Rx All Mode ([#1021](https://github.com/canboat/canboat/issues/1021)) ([89e7934](https://github.com/canboat/canboat/commit/89e7934c2be4e6eae2963687daaa56200c29488d))
+* present volume, flow, rotation and other non-SI units in SI ([#960](https://github.com/canboat/canboat/issues/960)) ([08d8935](https://github.com/canboat/canboat/commit/08d8935c56ef51d75706b543e74b9c4842b7be11))
+* read and write Actisense BST-95 raw CAN frames (PRO-NDC-1E2K / W2K-1 CAN Actisense mode) ([#1027](https://github.com/canboat/canboat/issues/1027)) ([d7660eb](https://github.com/canboat/canboat/commit/d7660ebbb739680fb70f7700aa5101047fecb122))
+* read and write Actisense BST-D0 (W2K-1 / PRO-NDC-1E2K in Actisense mode) ([#999](https://github.com/canboat/canboat/issues/999)) ([6f6dc60](https://github.com/canboat/canboat/commit/6f6dc60987acf243241ba10a85d67ebb587b1783))
+* **server:** play a capture as a live bus (--replay) ([#968](https://github.com/canboat/canboat/issues/968)) ([cab2166](https://github.com/canboat/canboat/commit/cab2166bf094da78c15654c33eeed88cc8dfce24))
+
+
+### Fixed
+
+* **126993:** advertise the heartbeat interval in milliseconds ([#1003](https://github.com/canboat/canboat/issues/1003)) ([9485e5a](https://github.com/canboat/canboat/commit/9485e5aa1eed340074da8feb853287647cb55753))
+* **analyzer:** bound extractNumber() to 64 bits and define its outputs on every path ([#1025](https://github.com/canboat/canboat/issues/1025)) ([b5bed61](https://github.com/canboat/canboat/commit/b5bed61f1456428157b8636173432ce56397ac96))
+* **analyzer:** reject PLAIN lines with fewer data bytes than declared ([#1024](https://github.com/canboat/canboat/issues/1024)) ([b0a61ff](https://github.com/canboat/canboat/commit/b0a61ff1658d1077c44e03f0e643a37e4a051a3e))
+* **analyzer:** take a field's offset off rangeMax before counting its sentinels ([#985](https://github.com/canboat/canboat/issues/985)) ([1323d68](https://github.com/canboat/canboat/commit/1323d6888e6cf58d48402d3bb518c4bf8f3e922b))
+* **db:** a signed field's range reaches the full negative end of its bits ([#986](https://github.com/canboat/canboat/issues/986)) ([473aece](https://github.com/canboat/canboat/commit/473aecede22ad3b3db1a3c05e8bc5e2d91ecc800))
+* **decode:** a signed value below the field's RangeMin is out of range ([#988](https://github.com/canboat/canboat/issues/988)) ([fb41283](https://github.com/canboat/canboat/commit/fb41283ac943d3e3863c5b6a7fc640c32c882314)), closes [#983](https://github.com/canboat/canboat/issues/983)
+* **decode:** apply unit conversions to FLOAT fields, and treat NaN as not available ([#961](https://github.com/canboat/canboat/issues/961)) ([3162cde](https://github.com/canboat/canboat/commit/3162cde133a50f8f4b0fb5108aac349d93e18fb4))
+* **decode:** honour top-of-range sentinels in dynamic field values ([#966](https://github.com/canboat/canboat/issues/966)) ([a1ca661](https://github.com/canboat/canboat/commit/a1ca6618101009a2aeaece1a338ad5299b635c55)), closes [#964](https://github.com/canboat/canboat/issues/964)
+* **decode:** read the 126208 Read/Write Fields header only for a proprietary PGN ([#1006](https://github.com/canboat/canboat/issues/1006)) ([32e32f6](https://github.com/canboat/canboat/commit/32e32f6e97c666737aadcc42862db22b47b51987))
+* **decode:** treat a DECIMAL with a non-digit-pair byte or cut short as not available ([#974](https://github.com/canboat/canboat/issues/974)) ([d1e5b87](https://github.com/canboat/canboat/commit/d1e5b873a2f2d2258593e2ca079a9422e7b58b9f))
+* **decode:** treat MMSI 0 as not available ([#958](https://github.com/canboat/canboat/issues/958)) ([c775f1a](https://github.com/canboat/canboat/commit/c775f1afd4c5c8c456dba934abacf6b7fb5749b9))
+* **ebl:** read .ebl files as the Actisense SDK specifies them ([#1023](https://github.com/canboat/canboat/issues/1023)) ([eed68f0](https://github.com/canboat/canboat/commit/eed68f02896bf366d2ec4aaf2977bec9b88c9dc5)), closes [#1013](https://github.com/canboat/canboat/issues/1013)
+* **encode:** end a STRING_LZ with a NUL, and shorten too-long strings ([#956](https://github.com/canboat/canboat/issues/956)) ([6a022a6](https://github.com/canboat/canboat/commit/6a022a6c5d34bdde32cf9265aeca430eb3a7284a))
+* **encode:** pad fixed-width AIS text with @, not 0xff ([#980](https://github.com/canboat/canboat/issues/980)) ([083fbf8](https://github.com/canboat/canboat/commit/083fbf8262217dc0afeca095f1fb0155cd8d1023)), closes [#976](https://github.com/canboat/canboat/issues/976)
+* **encode:** refuse a number outside its field's range instead of wrapping it ([#975](https://github.com/canboat/canboat/issues/975)) ([7a0fa6c](https://github.com/canboat/canboat/commit/7a0fa6cc030b58d4b6cb8a1dc32d16f24ffba70c)), closes [#970](https://github.com/canboat/canboat/issues/970)
+* **j1939:** frame data page 1 PGNs as ISO TP, not fast-packet ([#941](https://github.com/canboat/canboat/issues/941)) ([f02cf7b](https://github.com/canboat/canboat/commit/f02cf7bb21594be405117d01283b571e02618b9a))
+* **j1939:** stop inventing a manufacturer header on catch-all PGNs ([#940](https://github.com/canboat/canboat/issues/940)) ([b09dd1e](https://github.com/canboat/canboat/commit/b09dd1e17b27fb07905052ba69ae08da7f9c0e28))
+* **json:** write a DECIMAL as a JSON string ([#957](https://github.com/canboat/canboat/issues/957)) ([819b143](https://github.com/canboat/canboat/commit/819b1430e545a2a0c05eff80d1286b16f43abc14))
+* **node:** refuse a heartbeat interval PGN 126993 cannot carry ([#1005](https://github.com/canboat/canboat/issues/1005)) ([a083237](https://github.com/canboat/canboat/commit/a083237707094703aeeeaca7bb4833280f992999))
+* print enough decimals for any resolution, worked out once per field ([#972](https://github.com/canboat/canboat/issues/972)) ([31cf45f](https://github.com/canboat/canboat/commit/31cf45f9d06af459d35c8e59838c1edab855c3e3)), closes [#969](https://github.com/canboat/canboat/issues/969)
+* reject YDWG-02 lines with more than 8 data bytes ([#1030](https://github.com/canboat/canboat/issues/1030)) ([02751e7](https://github.com/canboat/canboat/commit/02751e715cd0f2aadc7da2d6bad2f9d5cd124a95))
+* **rust:** apply the unit system to dynamic field values ([#936](https://github.com/canboat/canboat/issues/936)) ([c73e25f](https://github.com/canboat/canboat/commit/c73e25fb894b2739e3a1f03780c783ef8cc37f32))
+* **rust:** print as many decimals as the resolution needs, like canboat C ([#963](https://github.com/canboat/canboat/issues/963)) ([af6ff4c](https://github.com/canboat/canboat/commit/af6ff4c33f6d077d0b678bfa63cb9746bd9a522d))
+* **scripts:** make check-public-api.sh run again, and run it in CI and rust-precommit ([#939](https://github.com/canboat/canboat/issues/939)) ([6f169ee](https://github.com/canboat/canboat/commit/6f169eea32a6a7cab48a4355d2f4f70a90a0a74e))
+* **socketcan:** derive the NAME's unique number as canboatjs does ([#978](https://github.com/canboat/canboat/issues/978)) ([195ca85](https://github.com/canboat/canboat/commit/195ca8581d645b84705abf5f890c878df3dfeeb7))
+
+
+### Changed
+
+* **keel:** name PGN table entries instead of numbering them ([#937](https://github.com/canboat/canboat/issues/937)) ([d35431c](https://github.com/canboat/canboat/commit/d35431c1bcf4f1f5d59baa3254c875ae3099b81e))
+* rename --bus to --protocol before it is released ([#944](https://github.com/canboat/canboat/issues/944)) ([a2af20a](https://github.com/canboat/canboat/commit/a2af20ae8130b5d7d53197925bbc93771805b1ee))
+
 ## [8.3.0](https://github.com/canboat/canboat/compare/v8.2.1...v8.3.0) (2026-09-25)
 
 
