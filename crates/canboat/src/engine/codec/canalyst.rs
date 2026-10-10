@@ -15,7 +15,9 @@
 //! Every message is one CAN frame, so the codec joins fast-packets on the
 //! way in and splits a message into fast-packet frames on the way out,
 //! as [`super::bst95`] does. Frames are stamped with the time they are
-//! received. Standard (11-bit) and remote frames are skipped.
+//! received. Remote frames are skipped, and so are the frames of the
+//! other kind: a Quick bus carries 11-bit standard frames, NMEA 2000 and
+//! J1939 29-bit extended ones.
 
 use std::collections::HashMap;
 
@@ -170,7 +172,20 @@ impl Canalyst {
                 return;
             }
         };
-        for m in messages.iter().filter(|m| m.extended) {
+        // NMEA 2000 and J1939 are 29-bit, Quick 11-bit: skip the other
+        // kind rather than reinterpret its identifier.
+        for m in messages
+            .iter()
+            .filter(|m| m.extended != protocol.standard_frames())
+        {
+            if !m.extended {
+                // A Quick message type has no priority, source or
+                // destination, and is never more than one frame.
+                let mut frame = RawFrame::new(None, 0, m.id, 0, 255, m.data.iter().copied());
+                frame.timestamp = Some(format_iso_ms(now_ms));
+                events.push(Event::Frame(frame));
+                continue;
+            }
             let (prio, pgn, src, dst) = iso11783_decompose(m.id);
             let mut frame = RawFrame::new(None, prio, pgn, src, dst, m.data.iter().copied());
             frame.timestamp = Some(format_iso_ms(now_ms));
@@ -197,6 +212,23 @@ impl Codec for Canalyst {
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused> {
         if frame.pgn >= SYNTHETIC_PGN_START {
             return Err(Refused::Synthetic);
+        }
+        if self.protocol.standard_frames() {
+            // Quick: the message type is the 11-bit identifier, and a
+            // message is one frame.
+            if frame.pgn > 0x7ff || frame.data.len() > 8 {
+                return Err(Refused::TooLarge);
+            }
+            let mut out = Vec::new();
+            encode_packets(
+                &[Message {
+                    id: frame.pgn,
+                    extended: false,
+                    data: &frame.data,
+                }],
+                &mut out,
+            );
+            return Ok(out);
         }
         let id = iso11783_compose(frame.prio & 7, frame.pgn, frame.src, frame.dst);
         let mut out = Vec::new();
@@ -307,6 +339,35 @@ mod tests {
         wire[1 + 10] = 1;
         wire.extend(standard);
         assert!(receive(&mut Canalyst::default(), &wire).is_empty());
+    }
+
+    #[test]
+    fn a_quick_bus_carries_11_bit_frames_both_ways() {
+        let mut codec = Canalyst::new(BusProtocol::Quick);
+        let q = RawFrame::new(None, 0, 0x6c1, 0, 255, [0xc1, 0x18, 0x6a]);
+        let wire = codec.send(&q).unwrap();
+        // One standard data frame with the message type as its identifier.
+        let m = messages(wire[..PACKET_LEN].try_into().unwrap()).unwrap();
+        assert_eq!(m.len(), 1);
+        assert_eq!(
+            (m[0].id, m[0].extended, m[0].data),
+            (0x6c1, false, &[0xc1, 0x18, 0x6a][..])
+        );
+        let events = receive(&mut codec, &wire);
+        assert!(matches!(&events[..], [Event::Frame(f)]
+            if (f.prio, f.pgn, f.src, f.dst) == (0, 0x6c1, 0, 255)
+                && f.data.as_slice() == [0xc1, 0x18, 0x6a]));
+
+        // A 29-bit frame is not Quick traffic, and the other way round.
+        let n2k = Canalyst::default()
+            .send(&frame(127250, &[1, 2, 3, 4, 5, 6, 7, 8]))
+            .unwrap();
+        assert!(receive(&mut codec, &n2k).is_empty());
+        assert!(receive(&mut Canalyst::default(), &wire).is_empty());
+
+        // A message type that does not fit 11 bits cannot be sent.
+        let big = RawFrame::new(None, 0, 0x800, 0, 255, [0]);
+        assert_eq!(codec.send(&big), Err(Refused::TooLarge));
     }
 
     #[test]
