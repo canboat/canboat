@@ -55,6 +55,44 @@ limitations under the License.
 // epoch (1970-01-01).
 #define OLE_EPOCH_TO_UNIX_DAYS 25569.0
 
+// The Angstrom and Debian styles declare the frame length in [n] and then list
+// the bytes. A classic CAN frame has at most 8, and the line must hold exactly
+// n bytes: one cut short must not be padded from whatever the data loop below
+// reads past its end, and surplus bytes must not be dropped. Only the quoted
+// ASCII column that `candump -a` prints may follow them. The Rust candump
+// reader applies the same rules.
+static bool bracketPayloadComplete(const char *line, int size)
+{
+  const char *p = strchr(line, ']');
+  int         n = 0;
+
+  if (size < 0 || size > 8 || p == NULL)
+  {
+    return false;
+  }
+  for (p++; *p != 0;)
+  {
+    while (isspace((unsigned char) *p))
+    {
+      p++;
+    }
+    if (*p == 0)
+    {
+      break;
+    }
+    if (!isxdigit((unsigned char) p[0]) || !isxdigit((unsigned char) p[1]) || !(p[2] == 0 || isspace((unsigned char) p[2])))
+    {
+      return n == size && *p == '\'';
+    }
+    if (++n > size)
+    {
+      return false;
+    }
+    p += 2;
+  }
+  return n == size;
+}
+
 void gettimeval(struct timeval *tv, double sec)
 {
   tv->tv_sec  = sec;
@@ -226,6 +264,16 @@ int main(int argc, char **argv)
       pcanData    = p + pcanDataOff;
     }
 
+    if ((format == FMT_1 || format == FMT_2) && !bracketPayloadComplete(p, size))
+    {
+      fprintf(stderr,
+              "Skipping candump line: its bytes do not match its [%d], or that is more than 8: %.*s\n",
+              size,
+              (int) strcspn(p, "\r\n"),
+              p);
+      continue;
+    }
+
     // NMEA 2000 always uses 29-bit extended CAN identifiers. CAN 1.0 / 2.0A
     // standard frames use an 11-bit identifier (max 0x7ff) and cannot be NMEA
     // 2000, so the analyzer can't decode them -- skip them.
@@ -321,10 +369,27 @@ int main(int argc, char **argv)
         while (*(++p) == ' ')
           ;
       }
-      for (i = 0; i < size; i++, p += candump_data_inc)
+      if (format == FMT_1 || format == FMT_2)
       {
-        sscanf(p, "%2x", &data);
-        fprintf(outfile, ",%02x", data);
+        // Walk the bytes as bracketPayloadComplete() counted them: any
+        // whitespace between them, not a fixed stride.
+        for (i = 0; i < size; i++, p += 2)
+        {
+          while (isspace((unsigned char) *p))
+          {
+            p++;
+          }
+          sscanf(p, "%2x", &data);
+          fprintf(outfile, ",%02x", data);
+        }
+      }
+      else
+      {
+        for (i = 0; i < size; i++, p += candump_data_inc)
+        {
+          sscanf(p, "%2x", &data);
+          fprintf(outfile, ",%02x", data);
+        }
       }
     }
     fprintf(outfile, "\n");

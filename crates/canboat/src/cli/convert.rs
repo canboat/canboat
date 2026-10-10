@@ -91,8 +91,9 @@ enum FromFormat {
     /// Garmin CSV2 (absolute timestamps + `Processed PGN` column).
     #[value(name = "garmin-csv2")]
     GarminCsv2,
-    /// SocketCAN `candump` text (pretty `can0 <id> [len] <hex>…` or
-    /// `-l`/`-L` log `(<epoch>) can0 <id>#<hex>` lines).
+    /// SocketCAN `candump` text (pretty `can0 <id> [len] <hex>…`,
+    /// `-l`/`-L` log `(<epoch>) can0 <id>#<hex>` or Angstrom
+    /// `<0x<id>> [len] <hex>…` lines).
     #[value(name = "candump")]
     Candump,
     /// Actisense `.ebl` binary log. Not a line format — decoded via the
