@@ -280,6 +280,11 @@ pub mod read {
     /// W2K-1 or PRO-NDC-1E2K sends them in its Actisense data mode.
     #[cfg(feature = "io")]
     pub use crate::io::BstD0Reader;
+    /// A [`FrameSource`] over a stream of Actisense BST messages: BST-95 raw
+    /// CAN frames, as a PRO-NDC-1E2K or W2K-1 sends them in its "CAN
+    /// Actisense" mode, with their fast-packets joined.
+    #[cfg(feature = "io")]
+    pub use crate::io::BstReader;
     /// A [`FrameSource`] over an Actisense `.ebl` binary log.
     #[cfg(feature = "io")]
     pub use crate::io::EblReader;
@@ -464,6 +469,12 @@ pub mod codec {
     /// Actisense mode.
     pub mod bst_d0 {
         pub use crate::engine::codec::bst_d0::BstD0;
+    }
+
+    /// Actisense BST-95 raw CAN frames: a PRO-NDC-1E2K or W2K-1 in "CAN
+    /// Actisense" mode (TCP), an NGX in CAN Packet mode (serial).
+    pub mod bst95 {
+        pub use crate::engine::codec::bst95::Bst95;
     }
 
     /// The 29-bit ISO 11783 CAN identifier ⇄ priority, PGN, source and

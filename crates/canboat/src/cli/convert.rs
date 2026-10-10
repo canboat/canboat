@@ -22,8 +22,8 @@ use crate::engine::format::InputFormat;
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
-    BstD0Reader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter,
-    TextLineWriter, analyze, container, copy,
+    BstD0Reader, BstReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
+    PlainWriter, TextLineWriter, analyze, container, copy,
 };
 
 /// Output format for `convert --to`.
@@ -104,6 +104,11 @@ enum FromFormat {
     /// too, with its own frame reader.
     #[value(name = "bst-d0", alias = "actisense-n2k")]
     BstD0,
+    /// Actisense BST-95: raw CAN frames in BDTP framing, as a PRO-NDC-1E2K
+    /// or W2K-1 sends them in "CAN Actisense" mode. Binary too; the reader
+    /// takes any BST message that carries a frame.
+    #[value(name = "bst-95")]
+    Bst95,
 }
 
 impl FromFormat {
@@ -121,7 +126,9 @@ impl FromFormat {
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
-            FromFormat::ActisenseEbl | FromFormat::BstD0 | FromFormat::Json => return None,
+            FromFormat::ActisenseEbl | FromFormat::BstD0 | FromFormat::Bst95 | FromFormat::Json => {
+                return None;
+            }
         })
     }
 }
@@ -140,6 +147,7 @@ Input line formats (auto-detected from the first line, or forced with --from):
 Binary input formats (forced with --from; a .ebl file is recognised by name):
   actisense-ebl  Actisense .ebl binary log
   bst-d0         Actisense BST-D0 messages: a W2K-1 or PRO-NDC-1E2K in Actisense mode
+  bst-95         Actisense BST-95 raw CAN frames: a PRO-NDC-1E2K or W2K-1 in CAN Actisense mode
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)
@@ -322,13 +330,21 @@ enum Binary {
     Ebl,
     /// Actisense BST-D0 messages.
     BstD0,
+    /// Actisense BST messages; BST-95 raw CAN frames, say.
+    Bst,
 }
 
 impl Binary {
-    fn reader<R: io::Read + 'static>(self, source: R) -> Box<dyn FrameReader> {
+    /// A reader of `source`, a capture of a bus carrying `protocol`.
+    fn reader<R: io::Read + 'static>(
+        self,
+        source: R,
+        protocol: BusProtocol,
+    ) -> Box<dyn FrameReader> {
         match self {
-            Binary::Ebl => Box::new(EblReader::new(source)),
+            Binary::Ebl => Box::new(EblReader::with_protocol(source, protocol)),
             Binary::BstD0 => Box::new(BstD0Reader::new(source)),
+            Binary::Bst => Box::new(BstReader::with_protocol(source, protocol)),
         }
     }
 }
@@ -339,6 +355,7 @@ fn binary_input(args: &Args) -> Option<Binary> {
     match args.from {
         Some(FromFormat::ActisenseEbl) => Some(Binary::Ebl),
         Some(FromFormat::BstD0) => Some(Binary::BstD0),
+        Some(FromFormat::Bst95) => Some(Binary::Bst),
         Some(_) => None,
         None => args
             .input()
@@ -360,7 +377,7 @@ fn convert_raw<W: Write>(
 ) -> Result<()> {
     let source = open_source(args.input(), args.container_opts())?;
     let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
-        binary.reader(source)
+        binary.reader(source, protocol)
     } else if args.from == Some(FromFormat::Json) {
         // Bare physical values are read against whatever unit system the
         // input's banner declares; `--units` is only the assumption for
@@ -482,7 +499,7 @@ fn convert_decoded<W: Write>(
         // `"units":"std"` stream, emit SI (or the other way round).
         let db = cfg.protocol.database(cfg.units);
         let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
-            binary.reader(source)
+            binary.reader(source, cfg.protocol)
         } else {
             Box::new(crate::json_input::JsonFrameReader::new(source, db))
         };

@@ -302,3 +302,79 @@ fn bst_d0_decodes_as_pgn_test() {
     assert_eq!(got.lines().count(), 31);
     assert_eq!(got, want);
 }
+
+/// Actisense BST-95 raw CAN frames (#1011), as a PRO-NDC-1E2K or W2K-1
+/// sends them in its "CAN Actisense" mode. The fixture is pgn-test.in's 31
+/// messages as 115 CAN frames: the 26 fast-packets split into their frames,
+/// written from the Actisense SDK's description of BST-95 and BDTP (18 of
+/// its DLEs are doubled). Joined again, they decode exactly as pgn-test.in
+/// does.
+#[test]
+fn bst_95_decodes_as_pgn_test() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../analyzer/tests");
+    let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
+    let bst = std::fs::read(dir.join("pgn-test-bst-95.bin")).expect("read fixture");
+    let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
+    let got = without_timestamps(&run(&["convert", "--no-banner", "--from", "bst-95"], &bst));
+    assert_eq!(got.lines().count(), 31);
+    assert_eq!(got, want);
+}
+
+/// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)
+/// with the identifier of `prio`, `pgn` (PDU2), `src`.
+fn bst95(prio: u8, pgn: u32, src: u8, data: &[u8]) -> Vec<u8> {
+    let mut m = vec![
+        0x95,
+        6 + data.len() as u8,
+        0,
+        0,
+        src,
+        pgn as u8,
+        (pgn >> 8) as u8,
+        (prio << 2) | (pgn >> 16) as u8,
+    ];
+    m.extend_from_slice(data);
+    let sum = m.iter().fold(0u8, |s, &b| s.wrapping_add(b));
+    m.push(0u8.wrapping_sub(sum));
+    let mut out = vec![0x10, 0x02];
+    for b in m {
+        out.push(b);
+        if b == 0x10 {
+            out.push(0x10);
+        }
+    }
+    out.extend_from_slice(&[0x10, 0x03]);
+    out
+}
+
+/// PGN 130816 is a fast-packet on NMEA 2000 but a single frame on J1939, so
+/// a BST-95 capture read with `--protocol j1939` gives the frame as it is,
+/// where NMEA 2000 waits for the rest of a fast-packet that never comes.
+#[test]
+fn bst_95_follows_the_protocol() {
+    // Read as a fast-packet, its first two bytes say: sequence 1, frame 0,
+    // a message of 20 bytes.
+    let frame = bst95(6, 130816, 0x2a, &[0x20, 0x14, 2, 3, 4, 5, 6, 7]);
+    let j1939 = run(
+        &[
+            "convert",
+            "--from",
+            "bst-95",
+            "--protocol",
+            "j1939",
+            "--to",
+            "plain",
+        ],
+        &frame,
+    );
+    let j1939 = String::from_utf8(j1939).unwrap();
+    assert!(
+        j1939.contains(",6,130816,42,255,8,20,14,02,03,04,05,06,07"),
+        "{j1939}"
+    );
+    let n2k = run(&["convert", "--from", "bst-95", "--to", "plain"], &frame);
+    assert!(
+        !String::from_utf8(n2k).unwrap().contains("130816"),
+        "on NMEA 2000 it is the first frame of a fast-packet"
+    );
+}

@@ -1,5 +1,18 @@
 pub mod canboat
 pub mod canboat::codec
+pub mod canboat::codec::bst95
+pub struct canboat::codec::bst95::Bst95
+impl canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::new(canboat::schema::BusProtocol) -> Self
+impl canboat::codec::Codec for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::default() -> Self
 pub mod canboat::codec::bst_d0
 pub struct canboat::codec::bst_d0::BstD0
 impl canboat::codec::bst_d0::BstD0
@@ -258,6 +271,13 @@ pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::bst95::Bst95
+pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>

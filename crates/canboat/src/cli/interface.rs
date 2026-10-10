@@ -56,6 +56,12 @@ enum Kind {
     /// or PRO-NDC-1E2K in Actisense mode.
     #[value(name = "bst-d0", alias = "w2k-actisense")]
     BstD0,
+    /// Actisense BST-95 (binary, raw CAN frames): a PRO-NDC-1E2K or W2K-1
+    /// in "CAN Actisense" mode over TCP (`tcp://host[:port]`), or an NGX in
+    /// CAN Packet mode over a serial port. canboat joins and splits
+    /// fast-packets itself.
+    #[value(name = "bst-95")]
+    Bst95,
 }
 
 impl Kind {
@@ -68,7 +74,7 @@ impl Kind {
             Kind::Maretron => "maretron-ipg",
             Kind::Socketcan => "socketcan-serial",
             Kind::Ydwg => "ydwg-gateway",
-            Kind::W2kAscii | Kind::BstD0 => "w2k-gateway",
+            Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => "w2k-gateway",
         }
     }
 
@@ -78,6 +84,7 @@ impl Kind {
             Kind::Ngt1 => 115_200,
             Kind::Ikonvert => 230_400,
             Kind::Ydwg => 38_400,
+            Kind::Bst95 => 115_200,
             Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 => 0,
         }
     }
@@ -105,9 +112,9 @@ pub struct Args {
     #[arg(long, value_enum)]
     kind: Kind,
 
-    /// Endpoint: serial path (ngt1/ikonvert, and ydwg for a YDNU-02),
-    /// `tcp://host[:port]` (ydwg, w2k-*, and ngt1/ikonvert through a
-    /// network bridge), `udp://[bind:]port` (ydwg, receive only),
+    /// Endpoint: serial path (ngt1/ikonvert, ydwg for a YDNU-02, bst-95
+    /// for an NGX), `tcp://host[:port]` (ydwg, w2k-*, bst-d0, bst-95, and
+    /// ngt1/ikonvert through a network bridge), `udp://[bind:]port` (ydwg, receive only),
     /// `host:port` (maretron), or CAN interface name such as `can0`
     /// (socketcan). An FTDI-based
     /// gateway such as the NGT-1 can also be opened directly over USB as
@@ -116,8 +123,8 @@ pub struct Args {
     #[arg(value_name = "DEVICE")]
     device: String,
 
-    /// Serial baud rate. Defaults to 115200 (ngt1) / 230400 (ikonvert) /
-    /// 38400 (ydwg).
+    /// Serial baud rate. Defaults to 115200 (ngt1, bst-95) / 230400
+    /// (ikonvert) / 38400 (ydwg).
     /// `-s` is the C actisense-serial/ikonvert-serial spelling; the
     /// argv[0] shims must stay drop-in compatible with it.
     #[arg(short = 'b', long, short_alias = 's')]
@@ -198,8 +205,10 @@ pub struct Args {
 
     /// `--protocol j1939` frames the traffic as J1939 (single frames and ISO
     /// TP, no fast-packet) and, on SocketCAN, leaves out the NMEA 2000
-    /// Heartbeat, Product Information and PGN lists. SocketCAN and YDWG
-    /// only: the other gateways do NMEA 2000 framing themselves.
+    /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG and
+    /// BST-95 only: the other gateways do NMEA 2000 framing themselves. ISO TP
+    /// messages (longer than 8 bytes) are received on all three but sent on
+    /// SocketCAN only; YDWG and BST-95 refuse to send them.
     #[command(flatten)]
     protocol: crate::cli::protocol::ProtocolArgs,
 }
@@ -353,9 +362,11 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             "--protocol quick needs socketcan: the other gateways pass only 29-bit frames"
         );
     }
-    if protocol != BusProtocol::Nmea2000 && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg) {
+    if protocol != BusProtocol::Nmea2000
+        && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg | Kind::Bst95)
+    {
         anyhow::bail!(
-            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan or ydwg); \
+            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg or bst-95); \
              this one does NMEA 2000 framing itself"
         );
     }
@@ -438,6 +449,18 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         Kind::BstD0 => {
             let (reader, writer) = open_tcp(&args.device, 60002)?;
             Ok(device::bst_d0::run(reader, writer))
+        }
+        Kind::Bst95 => {
+            // A network endpoint is a PRO-NDC-1E2K / W2K-1; anything else is
+            // the serial port of an NGX.
+            let (reader, writer) = if args.device.starts_with("tcp://") {
+                open_tcp(&args.device, 60002)?
+            } else {
+                let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
+                open_serial_rw(&args.device, baud)
+                    .with_context(|| format!("opening serial port {}", args.device))?
+            };
+            Ok(device::bst95::run(reader, writer, protocol))
         }
         Kind::Socketcan => {
             let config = device::socketcan::Config {

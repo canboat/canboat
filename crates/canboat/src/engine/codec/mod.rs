@@ -20,6 +20,7 @@
 //! codec needs one, so the same code runs under the threaded `bus::open_*`
 //! runners, in an async task, or in a browser over WebSerial.
 
+pub mod bst95;
 pub mod bst_d0;
 pub mod ikonvert;
 pub mod maretron;
