@@ -1,11 +1,22 @@
 pub mod canboat
 pub mod canboat::bridge
+#[non_exhaustive] pub enum canboat::bridge::ActisenseFormat
+pub canboat::bridge::ActisenseFormat::N2kActisense
+pub canboat::bridge::ActisenseFormat::N2kAscii
+pub canboat::bridge::ActisenseFormat::RawActisense
+pub canboat::bridge::ActisenseFormat::RawAscii
+impl core::clone::Clone for canboat::bridge::ActisenseFormat
+pub fn canboat::bridge::ActisenseFormat::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bridge::ActisenseFormat
+impl core::cmp::PartialEq for canboat::bridge::ActisenseFormat
+pub fn canboat::bridge::ActisenseFormat::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bridge::ActisenseFormat
+pub fn canboat::bridge::ActisenseFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bridge::ActisenseFormat
+impl core::marker::StructuralPartialEq for canboat::bridge::ActisenseFormat
 #[non_exhaustive] pub enum canboat::bridge::GatewayKind
-pub canboat::bridge::GatewayKind::Bst95
-pub canboat::bridge::GatewayKind::BstD0
-pub canboat::bridge::GatewayKind::RawAscii
-pub canboat::bridge::GatewayKind::W2kAscii
-pub canboat::bridge::GatewayKind::Ydwg
+pub canboat::bridge::GatewayKind::Actisense(canboat::bridge::ActisenseFormat)
+pub canboat::bridge::GatewayKind::YachtDevices
 impl canboat::bridge::GatewayKind
 pub fn canboat::bridge::GatewayKind::default_baud(self) -> u32
 pub fn canboat::bridge::GatewayKind::name(self) -> &'static str

@@ -9,7 +9,7 @@ use anyhow::{Result, bail};
 
 use crate::engine::BusProtocol;
 use crate::engine::format::ngt1::OperatingMode;
-use crate::io::device::gateway::GatewayKind;
+use crate::io::device::gateway::{ActisenseFormat, GatewayKind};
 
 /// The gateway to talk to, as `--kind` and `--data-format` resolve it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -22,17 +22,10 @@ pub enum Kind {
     Ikonvert,
     Maretron,
     Socketcan,
-    /// Yacht Devices, in RAW ASCII.
-    Ydwg,
-    /// Actisense in N2K ASCII.
-    W2kAscii,
-    /// Actisense in N2K Actisense (BST-D0).
-    BstD0,
-    /// Actisense in RAW Actisense (BST-95).
-    Bst95,
-    /// Actisense in RAW ASCII.
-    ActisenseRawAscii,
     Canalyst,
+    /// Yacht Devices, or an Actisense in another data format: the gateways
+    /// both commands open the same way.
+    Gateway(GatewayKind),
 }
 
 impl Kind {
@@ -48,11 +41,7 @@ impl Kind {
     /// The line and network gateways, which both commands open the same way.
     pub fn gateway(self) -> Option<GatewayKind> {
         match self {
-            Kind::Ydwg => Some(GatewayKind::Ydwg),
-            Kind::W2kAscii => Some(GatewayKind::W2kAscii),
-            Kind::BstD0 => Some(GatewayKind::BstD0),
-            Kind::Bst95 => Some(GatewayKind::Bst95),
-            Kind::ActisenseRawAscii => Some(GatewayKind::RawAscii),
+            Kind::Gateway(kind) => Some(kind),
             _ => None,
         }
     }
@@ -77,11 +66,19 @@ impl Kind {
             Kind::Ikonvert => "ikonvert",
             Kind::Maretron => "maretron",
             Kind::Socketcan => "socketcan",
-            Kind::Ydwg => "yachtd",
-            Kind::W2kAscii => "actisense (n2k-ascii)",
-            Kind::BstD0 => "actisense (n2k-actisense)",
-            Kind::Bst95 => "actisense (raw-actisense)",
-            Kind::ActisenseRawAscii => "actisense (raw-ascii)",
+            Kind::Gateway(GatewayKind::YachtDevices) => "yachtd",
+            Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)) => {
+                "actisense (n2k-ascii)"
+            }
+            Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)) => {
+                "actisense (n2k-actisense)"
+            }
+            Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)) => {
+                "actisense (raw-actisense)"
+            }
+            Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawAscii)) => {
+                "actisense (raw-ascii)"
+            }
             Kind::Canalyst => "canalyst",
         }
     }
@@ -211,13 +208,21 @@ impl KindArg {
         match self.family {
             Family::Actisense => Ok(match format.unwrap_or(DataFormat::NgtActisense) {
                 DataFormat::NgtActisense => Kind::Ngt1,
-                DataFormat::N2kAscii => Kind::W2kAscii,
-                DataFormat::N2kActisense => Kind::BstD0,
-                DataFormat::RawAscii => Kind::ActisenseRawAscii,
-                DataFormat::RawActisense => Kind::Bst95,
+                DataFormat::N2kAscii => {
+                    Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii))
+                }
+                DataFormat::N2kActisense => {
+                    Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense))
+                }
+                DataFormat::RawAscii => {
+                    Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawAscii))
+                }
+                DataFormat::RawActisense => {
+                    Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense))
+                }
             }),
             Family::Yachtd => match format {
-                None | Some(DataFormat::RawAscii) => Ok(Kind::Ydwg),
+                None | Some(DataFormat::RawAscii) => Ok(Kind::Gateway(GatewayKind::YachtDevices)),
                 Some(f) => bail!(
                     "--data-format {}: canboat speaks only raw-ascii to Yacht Devices gateways",
                     f.name()
@@ -680,7 +685,7 @@ mod tests {
         assert!(parse(&["--mode", "normal"]).check(Some(Kind::Ngt1)).is_ok());
         assert!(
             parse(&["--mode", "normal"])
-                .check(Some(Kind::Ydwg))
+                .check(Some(Kind::Gateway(GatewayKind::YachtDevices)))
                 .is_err()
         );
         // The node options: the CAN controllers and the AOS simulator.
@@ -715,19 +720,51 @@ mod tests {
         for (name, format, want) in [
             ("actisense", None, Kind::Ngt1),
             ("actisense", Some(NgtActisense), Kind::Ngt1),
-            ("actisense", Some(N2kAscii), Kind::W2kAscii),
-            ("actisense", Some(N2kActisense), Kind::BstD0),
-            ("actisense", Some(RawAscii), Kind::ActisenseRawAscii),
-            ("actisense", Some(RawActisense), Kind::Bst95),
-            ("yachtd", None, Kind::Ydwg),
-            ("yachtd", Some(RawAscii), Kind::Ydwg),
+            (
+                "actisense",
+                Some(N2kAscii),
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)),
+            ),
+            (
+                "actisense",
+                Some(N2kActisense),
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)),
+            ),
+            (
+                "actisense",
+                Some(RawAscii),
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawAscii)),
+            ),
+            (
+                "actisense",
+                Some(RawActisense),
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)),
+            ),
+            ("yachtd", None, Kind::Gateway(GatewayKind::YachtDevices)),
+            (
+                "yachtd",
+                Some(RawAscii),
+                Kind::Gateway(GatewayKind::YachtDevices),
+            ),
             ("aos", None, Kind::Aos),
             // The old names imply their format.
             ("ngt1", None, Kind::Ngt1),
-            ("bst-d0", None, Kind::BstD0),
-            ("bst-95", Some(RawActisense), Kind::Bst95),
-            ("w2k-ascii", None, Kind::W2kAscii),
-            ("ydwg", None, Kind::Ydwg),
+            (
+                "bst-d0",
+                None,
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)),
+            ),
+            (
+                "bst-95",
+                Some(RawActisense),
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)),
+            ),
+            (
+                "w2k-ascii",
+                None,
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)),
+            ),
+            ("ydwg", None, Kind::Gateway(GatewayKind::YachtDevices)),
             ("usb-can-b", None, Kind::Canalyst),
         ] {
             assert_eq!(
@@ -763,10 +800,20 @@ mod tests {
     #[test]
     fn only_raw_frame_gateways_carry_j1939_and_quick() {
         let j1939 = parse(&["--protocol", "j1939"]);
-        assert!(j1939.check(Some(Kind::Ydwg)).is_ok());
+        assert!(
+            j1939
+                .check(Some(Kind::Gateway(GatewayKind::YachtDevices)))
+                .is_ok()
+        );
         assert!(j1939.check(Some(Kind::Ngt1)).is_err());
         let quick = parse(&["--protocol", "quick"]);
         assert!(quick.check(Some(Kind::Canalyst)).is_ok());
-        assert!(quick.check(Some(Kind::Bst95)).is_err());
+        assert!(
+            quick
+                .check(Some(Kind::Gateway(GatewayKind::Actisense(
+                    ActisenseFormat::RawActisense
+                ))))
+                .is_err()
+        );
     }
 }

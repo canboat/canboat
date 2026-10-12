@@ -76,7 +76,7 @@ use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
 use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
-pub use crate::io::device::gateway::{Gateway, GatewayKind};
+pub use crate::io::device::gateway::{ActisenseFormat, Gateway, GatewayKind};
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
 
@@ -537,10 +537,19 @@ impl Args {
             (Kind::Maretron, &self.maretron),
             (Kind::Socketcan, &self.socketcan),
             (Kind::Canalyst, &self.canalyst),
-            (Kind::Ydwg, &self.ydwg),
-            (Kind::W2kAscii, &self.w2k_ascii),
-            (Kind::BstD0, &self.bst_d0),
-            (Kind::Bst95, &self.bst_95),
+            (Kind::Gateway(GatewayKind::YachtDevices), &self.ydwg),
+            (
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)),
+                &self.w2k_ascii,
+            ),
+            (
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)),
+                &self.bst_d0,
+            ),
+            (
+                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)),
+                &self.bst_95,
+            ),
         ]
         .into_iter()
         .find_map(|(kind, device)| Some((kind, device.clone()?))))

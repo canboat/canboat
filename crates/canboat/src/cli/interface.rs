@@ -27,6 +27,7 @@ use anyhow::{Context, Result};
 use crate::cli::device::{self as gateway_args, DeviceArgs, Kind, KindArg};
 use crate::engine::pgn_list::RxFilter;
 use crate::engine::{BusProtocol, RawFrame};
+use crate::io::device::gateway::GatewayKind;
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
 
@@ -43,8 +44,8 @@ fn producer(kind: Kind) -> &'static str {
         Kind::Ikonvert => "ikonvert-serial",
         Kind::Maretron => "maretron-ipg",
         Kind::Socketcan => "socketcan-serial",
-        Kind::Ydwg => "ydwg-gateway",
-        Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 | Kind::ActisenseRawAscii => "w2k-gateway",
+        Kind::Gateway(GatewayKind::YachtDevices) => "ydwg-gateway",
+        Kind::Gateway(_) => "w2k-gateway",
         Kind::Canalyst => "canalyst",
     }
 }
@@ -394,10 +395,9 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             Ok(device::maretron::run(reader, writer, config))
         }
-        Kind::Ydwg | Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 | Kind::ActisenseRawAscii => {
+        Kind::Gateway(gateway_kind) => {
             unsupported("receive PGN", &lists.rx);
             unsupported("transmit PGN", &lists.tx);
-            let gateway_kind = args.kind.gateway().expect("a gateway kind");
             let target = device::gateway::Gateway {
                 kind: gateway_kind,
                 device: args.device.clone(),

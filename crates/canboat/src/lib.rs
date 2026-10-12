@@ -629,7 +629,8 @@ pub mod bridge {
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
     pub use crate::server::{
-        Bridge, BridgeConfig, Gateway, GatewayKind, QuirkKind as Quirk, Transmitter,
+        ActisenseFormat, Bridge, BridgeConfig, Gateway, GatewayKind, QuirkKind as Quirk,
+        Transmitter,
     };
 }
 
