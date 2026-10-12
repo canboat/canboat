@@ -112,12 +112,12 @@ pub enum canboat::codec::line::InputFormat
 pub canboat::codec::line::InputFormat::ActisenseAscii
 pub canboat::codec::line::InputFormat::Airmar
 pub canboat::codec::line::InputFormat::Candump
-pub canboat::codec::line::InputFormat::Chetco
 pub canboat::codec::line::InputFormat::GarminCsv
 pub canboat::codec::line::InputFormat::GarminCsv2
 pub canboat::codec::line::InputFormat::Ikonvert
 pub canboat::codec::line::InputFormat::Plain
 pub canboat::codec::line::InputFormat::PlainMixFast
+pub canboat::codec::line::InputFormat::SeaSmart
 pub canboat::codec::line::InputFormat::Ydwg02
 impl core::clone::Clone for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::clone(&self) -> Self
@@ -548,12 +548,12 @@ pub enum canboat::read::InputFormat
 pub canboat::read::InputFormat::ActisenseAscii
 pub canboat::read::InputFormat::Airmar
 pub canboat::read::InputFormat::Candump
-pub canboat::read::InputFormat::Chetco
 pub canboat::read::InputFormat::GarminCsv
 pub canboat::read::InputFormat::GarminCsv2
 pub canboat::read::InputFormat::Ikonvert
 pub canboat::read::InputFormat::Plain
 pub canboat::read::InputFormat::PlainMixFast
+pub canboat::read::InputFormat::SeaSmart
 pub canboat::read::InputFormat::Ydwg02
 impl core::clone::Clone for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::clone(&self) -> Self

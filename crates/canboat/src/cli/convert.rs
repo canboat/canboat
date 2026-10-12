@@ -83,8 +83,8 @@ enum FromFormat {
     #[value(name = "airmar")]
     Airmar,
     /// `$PCDIN,…` sentences (Chetco SeaSmart.Net, Quark-elec, Yacht Devices).
-    #[value(name = "chetco")]
-    Chetco,
+    #[value(name = "seasmart", alias = "chetco")]
+    SeaSmart,
     /// Garmin CSV (relative ms-since-boot timestamps).
     #[value(name = "garmin", alias = "garmin-csv")]
     Garmin,
@@ -123,7 +123,7 @@ impl FromFormat {
             FromFormat::Ydwg02 => InputFormat::Ydwg02,
             FromFormat::Ikonvert => InputFormat::Ikonvert,
             FromFormat::Airmar => InputFormat::Airmar,
-            FromFormat::Chetco => InputFormat::Chetco,
+            FromFormat::SeaSmart => InputFormat::SeaSmart,
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
@@ -142,7 +142,7 @@ pub const LONG_ABOUT: &str = "\
 Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 
 Input line formats (auto-detected from the first line, or forced with --from):
-  plain, plain-mix-fast, actisense, ydwg02, ikonvert, airmar, chetco,
+  plain, plain-mix-fast, actisense, ydwg02, ikonvert, airmar, seasmart,
   garmin, garmin-csv2, candump.
 
 Binary input formats (forced with --from; a .ebl file is recognised by name):

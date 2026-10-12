@@ -33,7 +33,7 @@ enum RawFormats
   RAWFORMAT_PLAIN_OR_FAST,
   RAWFORMAT_PLAIN_MIX_FAST,
   RAWFORMAT_AIRMAR,
-  RAWFORMAT_CHETCO,
+  RAWFORMAT_SEASMART,
   RAWFORMAT_GARMIN_CSV1,
   RAWFORMAT_GARMIN_CSV2,
   RAWFORMAT_YDWG02,
@@ -48,7 +48,7 @@ const char *RAW_FORMAT_STR[] = {"UNKNOWN",
                                 "PLAIN_OR_FAST",
                                 "PLAIN_MIX_FAST",
                                 "AIRMAR",
-                                "CHETCO",
+                                "SEASMART",
                                 "GARMIN_CSV1",
                                 "GARMIN_CSV2",
                                 "YDWG02",
@@ -365,9 +365,12 @@ int main(int argc, char **argv)
     }
     else if (ac > 2 && strcasecmp(av[1], "-format") == 0)
     {
+      // CHETCO is the old name of SEASMART.
+      const char *name = strcasecmp(av[2], "CHETCO") == 0 ? "SEASMART" : av[2];
+
       for (size_t i = 1; i < ARRAY_SIZE(RAW_FORMAT_STR); i++)
       {
-        if (strcasecmp(av[2], RAW_FORMAT_STR[i]) == 0)
+        if (strcasecmp(name, RAW_FORMAT_STR[i]) == 0)
         {
           format = (enum RawFormats) i;
           if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
@@ -453,6 +456,11 @@ int main(int argc, char **argv)
         else if (format == RAWFORMAT_UNKNOWN && strncmp(msg, CANBOAT_FORMAT_HEADER_PREFIX, STRSIZE(CANBOAT_FORMAT_HEADER_PREFIX)) == 0)
         {
           const char *fmt = msg + STRSIZE(CANBOAT_FORMAT_HEADER_PREFIX);
+
+          if (strncasecmp(fmt, "CHETCO", STRSIZE("CHETCO")) == 0)
+          {
+            fmt = "SEASMART"; // the old name
+          }
           for (size_t i = 1; i < ARRAY_SIZE(RAW_FORMAT_STR); i++)
           {
             if (strncasecmp(fmt, RAW_FORMAT_STR[i], strlen(RAW_FORMAT_STR[i])) == 0)
@@ -530,8 +538,8 @@ int main(int argc, char **argv)
         r = parseRawFormatAirmar(msg, &m, showJson);
         break;
 
-      case RAWFORMAT_CHETCO:
-        r = parseRawFormatChetco(msg, &m, showJson);
+      case RAWFORMAT_SEASMART:
+        r = parseRawFormatSeaSmart(msg, &m, showJson);
         break;
 
       case RAWFORMAT_GARMIN_CSV1:
@@ -594,9 +602,9 @@ static enum RawFormats detectFormat(const char *const msg)
 
   if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
   {
-    logInfo("Detected Chetco protocol with all data on one line\n");
+    logInfo("Detected SeaSmart ($PCDIN) protocol with all data on one line\n");
     multiPackets = MULTIPACKETS_COALESCED;
-    return RAWFORMAT_CHETCO;
+    return RAWFORMAT_SEASMART;
   }
 
   if (strcmp(msg, "Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet\n")

@@ -50,7 +50,7 @@ pub enum ParseError {
         value: String,
         /// Byte offset within the original line where the field
         /// started. `None` when the producing parser doesn't track
-        /// offsets (the non-PLAIN format parsers — airmar, chetco,
+        /// offsets (the non-PLAIN format parsers — airmar, seasmart,
         /// ydwg02, etc. — use `str::Split` and don't bother).
         offset: Option<usize>,
     },

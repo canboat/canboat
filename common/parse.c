@@ -255,7 +255,7 @@ int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
-int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
+int parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int pgn, src, i;
   unsigned int tstamp;
@@ -270,7 +270,7 @@ int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
 
   if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
   {
-    logError("Error reading Chetco message: %s", msg);
+    logError("Error reading SeaSmart ($PCDIN) message: %s", msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -688,7 +688,7 @@ bool parseTimestamp(const char *msg, uint64_t *when)
 /*
  * canboat's input formats carry timestamps in inconsistent shapes: ISO-8601 with a `T` and
  * trailing `Z`, the classic canboat log form `YYYY-MM-DD-HH:MM:SS.mmm` (a dash between date and
- * time), a comma as the millisecond separator (Actisense / Chetco), or bare time-of-day with no
+ * time), a comma as the millisecond separator (Actisense / SeaSmart), or bare time-of-day with no
  * date at all (Actisense ASCII, Airmar). normalizeTimestamp() rewrites these into a single
  * canonical form so downstream consumers -- and comma-delimited PLAIN lines in particular -- never
  * trip over a stray comma inside the timestamp field.
