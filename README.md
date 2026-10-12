@@ -23,9 +23,9 @@ The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a
 gateway: `--kind aos`. It speaks the NGT-1's framing but claims no address
 of its own, so canboat is the node, as on a CANalyst-II: `--address` and the
 other node options apply, and `--no-claim` leaves it sending from its fixed,
-unclaimed address 75. canboat gives up on a gateway that turns out to be a
-real NGT-1 (it answers Actisense BEM commands); `--kind ngt1` still works on
-the simulator, with the default node settings.
+unclaimed address 75. Each kind refuses the other: `--kind aos` gives up on a
+gateway that turns out to be a real NGT-1 (it answers Actisense BEM
+commands), and `--kind ngt1` on one that says it is the simulator.
 
 Network gateways work with both `canboat interface` and `canboat server`:
 

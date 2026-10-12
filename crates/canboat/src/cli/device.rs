@@ -17,7 +17,7 @@ pub enum Kind {
     /// Actisense NGT-1 (NGT binary, BST-93/94); serial, usb, or tcp (port 6001).
     #[value(alias = "actisense")]
     Ngt1,
-    /// AOS NMEA 2000/0183 Simulator, with canboat as the node; as ngt1. Not an NGT-1.
+    /// AOS NMEA 2000/0183 Simulator, with canboat as the node; opened as ngt1.
     Aos,
     /// Digital Yacht iKonvert; serial, or tcp (a NavLink2, port 6001).
     Ikonvert,
@@ -135,8 +135,8 @@ Gateways (--kind), where they are, and the options only they take:
   bst-95     tcp://…, /dev/tty…              --baud (an NGX)
 
   aos is the Across Ocean Systems simulator, which speaks the NGT-1's
-  framing but is no node: canboat claims an address for it. It gives up
-  on a gateway that turns out to be an NGT-1.
+  framing but is no node: canboat claims an address for it. ngt1 and aos
+  each give up on a gateway that turns out to be the other.
   The old names still work: --kind ydwg, w2k-ascii, actisense.
 
 What each gateway does with the PGN lists:

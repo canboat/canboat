@@ -327,6 +327,8 @@ const LOGGING: &str = "Logging";
 /// server` flags one-for-one.
 #[derive(Debug, Clone)]
 pub struct BridgeConfig {
+    /// An Actisense NGT-1 (`--kind ngt1`); a gateway that turns out to be
+    /// an AOS simulator is given up on (that is `aos`).
     pub actisense: Option<String>,
     /// An AOS NMEA 2000/0183 Simulator (`--kind aos`), opened as
     /// `actisense` is, with canboat's node on it; a gateway that turns out
@@ -727,8 +729,8 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         // written again after a reconnect.
         let tx_list_record = Arc::default();
         let operating_mode = config.ngt1_mode;
-        // An AOS simulator, which claims no address, gets a node, as a
-        // CANalyst-II does.
+        // With `aos`: the simulator claims no address, so it gets a node,
+        // as a CANalyst-II does.
         let node = device::ngt1::NodeConfig {
             model_version: Some("canboat-pipeline-rs"),
             pgn_lists: effective.clone(),
@@ -757,13 +759,8 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
                 extra_tx_pgns: extra_tx_pgns.clone(),
                 tx_list_record: Arc::clone(&tx_list_record),
             };
-            Ok(device::ngt1::run_with_node(
-                reader,
-                writer,
-                config,
-                node.clone(),
-                Arc::clone(&claim_for_factory),
-            ))
+            // A simulator is `aos`: this gives up on one.
+            Ok(device::ngt1::run_ngt1(reader, writer, config))
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);

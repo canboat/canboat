@@ -333,14 +333,8 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 },
                 ..Default::default()
             };
-            // An AOS simulator, which claims no address, still gets a
-            // node; --kind aos is the way to set it up.
-            let node = device::ngt1::NodeConfig {
-                model_version: Some("canboat-aos"),
-                ..node_config(args)
-            };
-            let claim = Arc::new(AtomicU8::new(device::socketcan::CLAIM_UNCLAIMED));
-            Ok(device::ngt1::run_with_node(r, w, config, node, claim))
+            // An AOS simulator is --kind aos: this one gives up on it.
+            Ok(device::ngt1::run_ngt1(r, w, config))
         }
         Kind::Aos => {
             let (r, w) = open_stream(args)?;
@@ -405,7 +399,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
 }
 
 /// The node configuration of a raw CAN gateway (socketcan, canalyst), or
-/// of an AOS simulator (`aos`, or found on `ngt1`).
+/// of an AOS simulator (`aos`).
 fn node_config(args: &Args) -> device::socketcan::Config {
     let node = args.gateway.node_config();
     device::socketcan::Config {
