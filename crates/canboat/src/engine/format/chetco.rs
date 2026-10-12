@@ -1,6 +1,11 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Chetco N2K-USB line format.
+//! `$PCDIN` line format: Chetco's SeaSmart.Net protocol.
+//!
+//! Chetco's own gateways write it, and so do others: the Quark-elec
+//! QK-A032, QK-A034 and QK-A036 output it over WiFi and USB (the A036
+//! also logs it to its SD card), and the Yacht Devices YDWG-02 and
+//! YDNG-03 read and write it in NMEA 0183 mode.
 //!
 //! Layout (one NMEA-style sentence per line):
 //!

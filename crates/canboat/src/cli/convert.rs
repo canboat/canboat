@@ -82,7 +82,7 @@ enum FromFormat {
     /// Airmar (`<ts> - <pgn> <canid> <hex>…`).
     #[value(name = "airmar")]
     Airmar,
-    /// Chetco sea-gauge (`$PCDIN,…`).
+    /// `$PCDIN,…` sentences (Chetco SeaSmart.Net, Quark-elec, Yacht Devices).
     #[value(name = "chetco")]
     Chetco,
     /// Garmin CSV (relative ms-since-boot timestamps).
