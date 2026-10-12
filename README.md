@@ -26,6 +26,20 @@ so canboat recognises it and is the node itself, as on a CANalyst-II: the
 `--address` and the other node options apply, and `canboat interface
 --no-claim` leaves it sending from its fixed, unclaimed address 75.
 
+Network gateways work with both `canboat interface` and `canboat server`:
+
+| Gateway | `canboat interface` | `canboat server` |
+| --- | --- | --- |
+| Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (RAW) | `--kind ydwg` | `--ydwg` |
+| Actisense W2K-1 in N2K ASCII mode | `--kind w2k-ascii` | `--w2k-ascii` |
+| Actisense W2K-1 / PRO-NDC-1E2K in Actisense mode | `--kind bst-d0` | `--bst-d0` |
+| Actisense W2K-1 / PRO-NDC-1E2K in CAN Actisense mode | `--kind bst-95` | `--bst-95` |
+
+Each is at `tcp://host[:port]`. The Yacht Devices and N2K ASCII gateways also
+work over UDP: `udp://gateway:port` sends and receives, while `udp://port` only
+receives. An NGT-1 or iKonvert behind a network bridge is `tcp://host[:port]`
+(`--kind ngt1` / `--kind ikonvert`, or `--actisense` / `--ikonvert`).
+
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
 ## The programs
@@ -53,7 +67,7 @@ no C equivalent is tier 1 as the only implementation.
 | | |
 | --- | --- |
 | `canboat convert` | decode a capture between any supported formats |
-| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN / CANalyst-II) |
+| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / Yacht Devices / W2K-1 / PRO-NDC / SocketCAN / CANalyst-II) |
 | `canboat n2kd` | multiplex an analyzer-JSON stream to TCP clients |
 | `canboat server` | the whole device → analyzer → n2kd pipeline in one process |
 | `canboat tui` | interactive terminal browser for a live stream or a capture |
