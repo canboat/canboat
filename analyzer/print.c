@@ -483,6 +483,18 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
   }
 }
 
+/* A repeat count as the analyzer keeps it. No fieldset can repeat more than UINT8_MAX times in a
+ * message of at most 223 bytes, and analyzer.c multiplies the count by the fieldset's size, so a
+ * wider value (a corrupt or misread count) is capped there rather than overflowing an int (#1037). */
+static int repeatCount(int64_t value)
+{
+  if (value < 0)
+  {
+    return 0;
+  }
+  return (value > UINT8_MAX) ? UINT8_MAX : (int) value;
+}
+
 static bool extractNumberNotEmpty(const Field   *field,
                                   const char    *fieldName,
                                   const uint8_t *data,
@@ -506,13 +518,13 @@ static bool extractNumberNotEmpty(const Field   *field,
   if (field->pgn != NULL && field->pgn->repeatingField1 == field->order)
   {
     logDebug("The first repeating fieldset repeats %" PRId64 " times\n", *value);
-    g_variableFieldRepeat[0] = *value;
+    g_variableFieldRepeat[0] = repeatCount(*value);
   }
 
   if (field->pgn != NULL && field->pgn->repeatingField2 == field->order)
   {
     logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
-    g_variableFieldRepeat[1] = *value;
+    g_variableFieldRepeat[1] = repeatCount(*value);
   }
 
   g_previousFieldValue = *value;
@@ -1296,8 +1308,10 @@ extern bool fieldPrintLatLon(const Field   *field,
       remainder = dd - degrees;
       minutes   = remainder * 60.;
 
-      mprintf((showJson ? "\"%02u&deg; %6.3f %c\"" : "%02ud %6.3f %c"),
-              (uint32_t) degrees,
+      // Print the degrees as a double: a key/value record can read a wide value as a
+      // latitude, and its degrees may not fit any integer type (#1037).
+      mprintf((showJson ? "\"%02.0f&deg; %6.3f %c\"" : "%02.0fd %6.3f %c"),
+              degrees,
               minutes,
               (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
     }
@@ -1321,9 +1335,9 @@ extern bool fieldPrintLatLon(const Field   *field,
         seconds = 0.0;
       }
 
-      mprintf((showJson ? "\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%02ud %02u' %06.3f\"%c"),
-              (int) degrees,
-              (int) minutes,
+      mprintf((showJson ? "\"%02.0f&deg;%02.0f&rsquo;%06.3f&rdquo;%c\"" : "%02.0fd %02.0f' %06.3f\"%c"),
+              degrees,
+              minutes,
               seconds,
               (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
     }
@@ -2070,7 +2084,7 @@ extern bool fieldPrintStringLAU(const Field   *field,
 
   if (control == 0)
   {
-    utf8_len = utf16_to_utf8((const utf16_t *) data, len / 2, NULL, 0);
+    utf8_len = utf16_to_utf8(data, len / 2, NULL, 0);
     utf8     = malloc(utf8_len + 1);
 
     if (utf8 == NULL)
@@ -2078,7 +2092,7 @@ extern bool fieldPrintStringLAU(const Field   *field,
       die("Out of memory");
     }
     logDebug("fieldprintStringLAU: UTF16 len %zu requires %zu utf8 bytes\n", len / 2, utf8_len);
-    len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    len  = utf16_to_utf8(data, len / 2, utf8, utf8_len + 1);
     data = utf8;
   }
   else if (control > 1 && control != 0xff)

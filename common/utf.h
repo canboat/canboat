@@ -33,7 +33,8 @@ typedef uint16_t utf16_t; // The type of a single UTF-16 character
  * Converts a UTF-16 string to a UTF-8 string.
  *
  * utf16:
- * The UTF-16 string, not null-terminated.
+ * The UTF-16 string as little-endian bytes, as NMEA 2000 sends it, at any
+ * alignment; not null-terminated.
  *
  * utf16_len:
  * The length of the UTF-16 string, in 16-bit characters.
@@ -52,7 +53,7 @@ typedef uint16_t utf16_t; // The type of a single UTF-16 character
  * Otherwise, the number of characters written to the utf8 buffer.
  *
  */
-size_t utf16_to_utf8(utf16_t const *utf16, size_t utf16_len, utf8_t *utf8, size_t utf8_len);
+size_t utf16_to_utf8(uint8_t const *utf16, size_t utf16_len, utf8_t *utf8, size_t utf8_len);
 
 /*
  * Converts a UTF-8 string to a UTF-16 string.
