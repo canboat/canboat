@@ -263,14 +263,14 @@ pub fn run(
     loop {
         let any_pending =
             raw_batch.has_pending() || nmea_batch.has_pending() || analyzer_batch.has_pending();
-        let frame = if let Some(synth) = pending_synth.pop_front() {
-            synth
+        let (frame, synthetic) = if let Some(synth) = pending_synth.pop_front() {
+            (synth, true)
         } else if any_pending {
             // Output is waiting on a batch deadline: don't block
             // indefinitely on a quiet bus. On timeout, flush what's
             // pending and go back to waiting.
             match frames_rx.recv_timeout(BATCH_MAX_AGE) {
-                Ok(f) => f,
+                Ok(f) => (f, false),
                 Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {
                     let now = Instant::now();
                     raw_batch.flush_due(now);
@@ -282,12 +282,13 @@ pub fn run(
             }
         } else {
             match frames_rx.recv() {
-                Ok(f) => f,
+                Ok(f) => (f, false),
                 Err(_) => break,
             }
         };
-        // `--rx-filter`: what the gateway did not filter itself.
-        if rx_filter.as_ref().is_some_and(|f| !f.passes(frame.pgn)) {
+        // `--rx-filter`: what the gateway did not filter itself. Frames
+        // canboat made itself from one that passed are not filtered again.
+        if !synthetic && rx_filter.as_ref().is_some_and(|f| !f.passes(frame.pgn)) {
             continue;
         }
         let now = Instant::now();
