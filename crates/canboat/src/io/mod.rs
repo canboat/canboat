@@ -25,6 +25,8 @@ pub mod container;
 #[cfg(feature = "io")]
 pub mod device;
 pub mod name;
+#[cfg(feature = "io")]
+pub(crate) mod net;
 pub mod nmea_responder;
 #[cfg(feature = "io")]
 pub mod stream;

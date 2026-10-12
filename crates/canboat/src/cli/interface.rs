@@ -18,7 +18,6 @@
 //! comparing like with like).
 
 use std::io::{self, BufRead, BufWriter, Read, Write};
-use std::net::TcpStream;
 use std::sync::Arc;
 use std::sync::atomic::AtomicU8;
 use std::thread;
@@ -27,6 +26,7 @@ use anyhow::{Context, Result};
 
 use crate::engine::format::ngt1::OperatingMode;
 use crate::engine::{BusProtocol, RawFrame};
+use crate::io::device::gateway::GatewayKind;
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
 
@@ -46,10 +46,11 @@ enum Kind {
     /// Linux SocketCAN interface (e.g. `can0`).
     Socketcan,
     /// Yacht Devices RAW gateway: YDWG-02 / YDEN / NavLink2 RAW port over
-    /// TCP (`tcp://host[:port]`) or receive-only UDP (`udp://[bind:]port`),
-    /// or the YDNU-02 USB gateway over its serial port (38400 baud).
+    /// TCP (`tcp://host[:port]`) or UDP (`udp://gateway:port` to send and
+    /// receive, `udp://[bind:]port` to receive only), or the YDNU-02 USB
+    /// gateway over its serial port (38400 baud).
     Ydwg,
-    /// Actisense W2K-1 in N2K ASCII mode, over TCP.
+    /// Actisense W2K-1 in N2K ASCII mode, over TCP or UDP, as ydwg.
     #[value(name = "w2k-ascii")]
     W2kAscii,
     /// Actisense BST-D0 (binary, reassembled NMEA 2000) over TCP: a W2K-1
@@ -84,14 +85,23 @@ impl Kind {
         }
     }
 
-    /// Default serial baud (0 for non-serial transports).
+    /// Default serial baud of the NGT-1 and the iKonvert.
     fn default_baud(self) -> u32 {
         match self {
             Kind::Ngt1 => 115_200,
             Kind::Ikonvert => 230_400,
-            Kind::Ydwg => 38_400,
-            Kind::Bst95 => 115_200,
-            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 | Kind::Canalyst => 0,
+            _ => self.gateway().map_or(0, GatewayKind::default_baud),
+        }
+    }
+
+    /// The gateways `canboat server` opens the same way.
+    fn gateway(self) -> Option<GatewayKind> {
+        match self {
+            Kind::Ydwg => Some(GatewayKind::Ydwg),
+            Kind::W2kAscii => Some(GatewayKind::W2kAscii),
+            Kind::BstD0 => Some(GatewayKind::BstD0),
+            Kind::Bst95 => Some(GatewayKind::Bst95),
+            _ => None,
         }
     }
 }
@@ -120,8 +130,8 @@ pub struct Args {
 
     /// Endpoint: serial path (ngt1/ikonvert, ydwg for a YDNU-02, bst-95
     /// for an NGX), `tcp://host[:port]` (ydwg, w2k-*, bst-d0, bst-95, and
-    /// ngt1/ikonvert through a network bridge), `udp://[bind:]port` (ydwg, receive only),
-    /// `host:port` (maretron), or CAN interface name such as `can0`
+    /// ngt1/ikonvert through a network bridge), `udp://gateway:port` (ydwg,
+    /// w2k-ascii; `udp://[bind:]port` only receives), `host:port` (maretron), or CAN interface name such as `can0`
     /// (socketcan), or `usb[:VVVV:PPPP]` (canalyst). An FTDI-based
     /// gateway such as the NGT-1 can also be opened directly over USB as
     /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
@@ -457,10 +467,11 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         );
     }
     if protocol != BusProtocol::Nmea2000
-        && !matches!(
-            args.kind,
-            Kind::Socketcan | Kind::Ydwg | Kind::Bst95 | Kind::Canalyst
-        )
+        && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst)
+        && !args
+            .kind
+            .gateway()
+            .is_some_and(GatewayKind::passes_raw_frames)
     {
         anyhow::bail!(
             "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg, bst-95 or canalyst); \
@@ -505,72 +516,19 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             // drop-in compatible with that syntax (signalk-server
             // spawns it exactly so), and the bare `host:port` form
             // keeps working.
-            let endpoint = args.device.strip_prefix("tcp://").unwrap_or(&args.device);
-            let endpoint = if endpoint.contains(':') {
-                endpoint.to_string()
-            } else {
-                format!("{endpoint}:6543")
-            };
-            let stream = TcpStream::connect(&endpoint)
-                .with_context(|| format!("connecting to {endpoint}"))?;
-            crate::io::set_tcp_keepalive(&stream).context("setting TCP keepalive")?;
-            let reader: Box<dyn Read + Send> =
-                Box::new(stream.try_clone().context("cloning TCP stream")?);
-            let writer: Box<dyn Write + Send> = Box::new(stream);
+            let (reader, writer) = crate::io::net::open_tcp(&args.device, 6543)?;
             let config = device::maretron::Config {
                 password: args.password.clone().unwrap_or_default(),
                 fixtime: None,
             };
             Ok(device::maretron::run(reader, writer, config))
         }
-        Kind::Ydwg => {
-            // A network endpoint is a YDWG-02 / YDEN; anything else is the
-            // serial port of a YDNU-02, which is first put in RAW mode.
-            let network = ["tcp://", "udp://"]
-                .iter()
-                .any(|p| args.device.starts_with(p));
-            let (reader, writer, init) = if network {
-                let (r, w) = open_line_endpoint(&args.device, 1457)?;
-                (r, w, &[][..])
-            } else {
-                let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
-                let (r, w) = open_serial_rw(&args.device, baud)
-                    .with_context(|| format!("opening serial port {}", args.device))?;
-                (r, w, device::line_gateway::YDNU_RAW_MODE)
+        Kind::Ydwg | Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => {
+            let gateway = device::gateway::Gateway {
+                kind: args.kind.gateway().expect("a gateway kind"),
+                device: args.device.clone(),
             };
-            Ok(device::line_gateway::run(
-                reader,
-                writer,
-                device::line_gateway::LineFormat::YdwgRaw,
-                protocol,
-                init,
-            ))
-        }
-        Kind::W2kAscii => {
-            let (reader, writer) = open_line_endpoint(&args.device, 60002)?;
-            Ok(device::line_gateway::run(
-                reader,
-                writer,
-                device::line_gateway::LineFormat::N2kAscii,
-                protocol,
-                &[],
-            ))
-        }
-        Kind::BstD0 => {
-            let (reader, writer) = open_tcp(&args.device, 60002)?;
-            Ok(device::bst_d0::run(reader, writer))
-        }
-        Kind::Bst95 => {
-            // A network endpoint is a PRO-NDC-1E2K / W2K-1; anything else is
-            // the serial port of an NGX.
-            let (reader, writer) = if args.device.starts_with("tcp://") {
-                open_tcp(&args.device, 60002)?
-            } else {
-                let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
-                open_serial_rw(&args.device, baud)
-                    .with_context(|| format!("opening serial port {}", args.device))?
-            };
-            Ok(device::bst95::run(reader, writer, protocol))
+            Ok(device::gateway::open(&gateway, args.baud, protocol)?)
         }
         Kind::Canalyst => open_canalyst(args, protocol),
         Kind::Socketcan => {
@@ -630,68 +588,11 @@ fn open_stream(args: &Args) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Sen
     // serves the iKonvert protocol on TCP 6001; ser2net setups do the
     // same for an NGT-1): same codec, different transport.
     if args.device.starts_with("tcp://") {
-        return open_tcp(&args.device, 6001);
+        return Ok(crate::io::net::open_tcp(&args.device, 6001)?);
     }
     let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
     open_serial_rw(&args.device, baud)
         .with_context(|| format!("opening serial port {}", args.device))
-}
-
-/// Open `tcp://host[:port]` as a cloned read/write stream pair.
-fn open_tcp(
-    device: &str,
-    default_port: u16,
-) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    let endpoint = device.strip_prefix("tcp://").unwrap_or(device);
-    let endpoint = if endpoint.contains(':') {
-        endpoint.to_string()
-    } else {
-        format!("{endpoint}:{default_port}")
-    };
-    let stream =
-        TcpStream::connect(&endpoint).with_context(|| format!("connecting to {endpoint}"))?;
-    // As a serial port's: a quiet connection still ticks the codec, so
-    // its deadlines (frames held after Set Operating Mode) advance.
-    stream
-        .set_read_timeout(Some(std::time::Duration::from_millis(250)))
-        .context("setting the TCP read timeout")?;
-    crate::io::set_tcp_keepalive(&stream).context("setting TCP keepalive")?;
-    let reader: Box<dyn Read + Send> = Box::new(stream.try_clone().context("cloning TCP stream")?);
-    let writer: Box<dyn Write + Send> = Box::new(stream);
-    Ok((reader, writer))
-}
-
-/// Open a line-gateway endpoint: `tcp://host[:port]` bidirectional, or
-/// `udp://[bind:]port` receive-only (the YDWG-02's UDP mode has no
-/// transmit path — sent frames are dropped with a warning).
-fn open_line_endpoint(
-    device: &str,
-    default_tcp_port: u16,
-) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    if let Some(rest) = device.strip_prefix("udp://") {
-        let bind = if rest.contains(':') {
-            rest.to_string()
-        } else {
-            format!("0.0.0.0:{rest}")
-        };
-        let sock =
-            std::net::UdpSocket::bind(&bind).with_context(|| format!("binding UDP {bind}"))?;
-        log::warn!("UDP gateway mode is receive-only; transmitted frames are dropped");
-        let reader: Box<dyn Read + Send> = Box::new(UdpRead(sock));
-        let writer: Box<dyn Write + Send> = Box::new(std::io::sink());
-        return Ok((reader, writer));
-    }
-    open_tcp(device, default_tcp_port)
-}
-
-/// [`Read`] over a bound UDP socket: each `read` yields one datagram.
-struct UdpRead(std::net::UdpSocket);
-
-impl Read for UdpRead {
-    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        let (n, _peer) = self.0.recv_from(buf)?;
-        Ok(n)
-    }
 }
 
 #[cfg(test)]
