@@ -148,6 +148,7 @@ pub canboat::bridge::BridgeConfig::quirk: alloc::vec::Vec<canboat::bridge::Quirk
 pub canboat::bridge::BridgeConfig::raw_port: u16
 pub canboat::bridge::BridgeConfig::replay: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::replay_sent: core::option::Option<std::path::PathBuf>
+pub canboat::bridge::BridgeConfig::rx_filter: alloc::vec::Vec<u32>
 pub canboat::bridge::BridgeConfig::snapshot_port: u16
 pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::socketcan_bitrate: u32

@@ -39,7 +39,7 @@ Network gateways work with both `canboat interface` and `canboat server`:
 Both commands take the same gateway options: `canboat interface --kind
 raw-ascii tcp://host` and `canboat server --kind raw-ascii --device
 tcp://host`. An option that only some gateways have (`--bitrate`,
-`--channel`, `--password`, `--mode`, `--rx-filter`, the ISO NAME options)
+`--channel`, `--password`, `--mode`, the ISO NAME options)
 says which in `--help`, and is refused for the others. The old names still
 work: `--kind ydwg` and `w2k-ascii`, and `canboat server --ydwg tcp://host`.
 
@@ -221,6 +221,13 @@ them depends on the gateway:
 > network-management PGNs, and the PGNs of the quirks you enabled (such as
 > `wmm`'s 127258), are allowed without being named. With no transmit PGN
 > named, nothing is refused and the gateway's own list decides.
+
+The PGN lists only advertise; they never filter what you receive. To receive
+only some PGNs, use `--rx-filter <pgn>[,…]` (or `BridgeConfig::rx_filter`):
+an iKonvert filters in the gateway, and for every other gateway canboat drops
+the rest as they arrive. The network-management PGNs (address claims,
+requests, product information, …) and canboat's own gateway status always
+come through.
 
 ## File formats
 

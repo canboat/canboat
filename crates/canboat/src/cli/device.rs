@@ -123,8 +123,7 @@ Gateways (--kind), where they are, and the options only they take:
 
   ngt1       /dev/ttyUSB0, usb[:…], tcp://…  --baud --mode
   aos        /dev/ttyUSB0, usb[:…], tcp://…  --baud, node options
-  ikonvert   /dev/ttyUSB0, tcp://…           --baud --rx-filter
-                                             --no-tx-rate-limit
+  ikonvert   /dev/ttyUSB0, tcp://…           --baud --no-tx-rate-limit
   maretron   host[:port]                     --password
   socketcan  can0                            --bitrate, node options
   canalyst   usb[:VVVV:PPPP]                 --bitrate --channel,
@@ -150,8 +149,9 @@ What each gateway does with the PGN lists:
   canalyst
   others           ignored              ignored
 
-  --rx-pgn never filters; --rx-filter (ikonvert) does. Network
-  management PGNs are always sent.";
+  --rx-pgn never filters; --rx-filter does, in the gateway on ikonvert
+  and in canboat elsewhere. Network management PGNs always pass, and are
+  always sent.";
 
 /// How to run the gateway. Options that have a default show it in their
 /// help but are `None` when not given, so one given for a gateway that
@@ -205,11 +205,13 @@ pub struct DeviceArgs {
     #[arg(long = "rx-pgn", value_name = "PGN", value_delimiter = ',', help_heading = LISTS)]
     pub rx_pgn: Vec<u32>,
 
-    /// ikonvert: pass on only these PGNs.
+    /// Pass on only these PGNs (and network management); drop the rest.
     ///
-    /// Repeatable, or comma-separated. The gateway runs in `NORMAL` mode and
-    /// drops every other PGN; the list is advertised as with --rx-pgn. (An
-    /// NGT-1 filters with --mode normal, on the list it already holds.)
+    /// Repeatable, or comma-separated. An iKonvert filters itself (it runs
+    /// in `NORMAL` mode, and the list is advertised as with --rx-pgn); for
+    /// every other gateway canboat drops the rest as they arrive. The
+    /// network-management PGNs (address claims, requests, product
+    /// information, …) and canboat's own gateway status always pass.
     #[arg(
         long = "rx-filter",
         alias = "rx",
@@ -315,7 +317,7 @@ impl DeviceArgs {
         let allowed: &[&str] = match kind {
             Kind::Ngt1 => &["mode"],
             Kind::Aos => &["node", "no-claim"],
-            Kind::Ikonvert => &["no-tx-rate-limit", "rx-filter"],
+            Kind::Ikonvert => &["no-tx-rate-limit"],
             Kind::Maretron => &["password"],
             Kind::Socketcan => &["bitrate", "node", "no-claim"],
             Kind::Canalyst => &["bitrate", "channel", "node", "no-claim"],
@@ -338,7 +340,6 @@ impl DeviceArgs {
             ("channel", "--channel", self.channel.is_some()),
             ("password", "--password", self.password.is_some()),
             ("mode", "--mode", self.mode.is_some()),
-            ("rx-filter", "--rx-filter", !self.rx_filter.is_empty()),
             (
                 "no-tx-rate-limit",
                 "--no-tx-rate-limit",
@@ -497,16 +498,10 @@ mod tests {
         }
         assert!(parse(&["-a", "9"]).check(Some(Kind::Ikonvert)).is_err());
         assert!(parse(&["-a", "9"]).check(None).is_err());
-        assert!(
-            parse(&["--rx", "129025"])
-                .check(Some(Kind::Ikonvert))
-                .is_ok()
-        );
-        assert!(
-            parse(&["--rx-filter", "129025"])
-                .check(Some(Kind::Socketcan))
-                .is_err()
-        );
+        for kind in [Kind::Ikonvert, Kind::Socketcan, Kind::Ngt1] {
+            assert!(parse(&["--rx", "129025"]).check(Some(kind)).is_ok());
+        }
+        assert!(parse(&["--rx-filter", "129025"]).check(None).is_ok());
         // The PGN lists apply everywhere; a gateway without them warns.
         assert!(
             parse(&["--tx-pgn", "127508"])

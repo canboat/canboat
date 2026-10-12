@@ -35,7 +35,7 @@ use std::thread;
 use anyhow::{Result, anyhow};
 
 use crate::engine::output::JsonOptions;
-use crate::engine::pgn_list::PgnListStatus;
+use crate::engine::pgn_list::{PgnListStatus, RxFilter};
 use crate::engine::{DecodedPgn, PgnDatabase, RawFrame};
 use crate::io::device::{FrameSender, Supervisor};
 
@@ -539,7 +539,16 @@ impl Bridge {
         let frames_rx = self.take_source()?;
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
-        pipeline::run(db, frames_rx, hubs, pre_coalesced, json_opts, nmea);
+        let rx_filter = RxFilter::new(&self.config.rx_filter);
+        pipeline::run(
+            db,
+            frames_rx,
+            hubs,
+            pre_coalesced,
+            json_opts,
+            nmea,
+            rx_filter,
+        );
         self.shutdown();
         match self.failure() {
             Some(why) => Err(anyhow!("{why}")),
@@ -563,9 +572,20 @@ impl Bridge {
         let frames_rx = self.take_source()?;
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
+        let rx_filter = RxFilter::new(&self.config.rx_filter);
         let join = thread::Builder::new()
             .name("bridge-pipeline".into())
-            .spawn(move || pipeline::run(db, frames_rx, hubs, pre_coalesced, json_opts, nmea))
+            .spawn(move || {
+                pipeline::run(
+                    db,
+                    frames_rx,
+                    hubs,
+                    pre_coalesced,
+                    json_opts,
+                    nmea,
+                    rx_filter,
+                )
+            })
             .map_err(|e| anyhow!("spawning the bridge pipeline thread: {e}"))?;
         self.pipeline_join = Some(join);
         Ok(())

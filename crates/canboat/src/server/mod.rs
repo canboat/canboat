@@ -386,6 +386,11 @@ pub struct BridgeConfig {
     pub ikonvert_rx: Option<String>,
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
+    /// Pass on only these PGNs (`--rx-filter`), and always the
+    /// network-management PGNs and canboat's own. An iKonvert also gets
+    /// them as its own filter (`ikonvert_rx`); for every other source
+    /// canboat drops the rest itself. Empty: nothing is filtered.
+    pub rx_filter: Vec<u32>,
     /// PGNs the application sends and receives, advertised in the
     /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
     /// transmits from the gateway's address (`wmm`: 127258) are added
@@ -478,6 +483,7 @@ impl Default for BridgeConfig {
             ikonvert_rx: None,
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
+            rx_filter: Vec::new(),
             pgn_lists: PgnLists::default(),
             learn_tx_pgns: true,
             no_request_claims: false,
@@ -606,6 +612,7 @@ impl From<Args> for BridgeConfig {
             },
             ikonvert_tx: None,
             ikonvert_rate_limit_off: g.no_tx_rate_limit,
+            rx_filter: g.rx_filter.clone(),
             pgn_lists,
             learn_tx_pgns: node.learn_tx_pgns,
             no_request_claims: a.no_request_claims,

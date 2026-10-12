@@ -25,6 +25,7 @@ use std::thread;
 use anyhow::{Context, Result};
 
 use crate::cli::device::{self as gateway_args, DeviceArgs, Kind};
+use crate::engine::pgn_list::RxFilter;
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
@@ -133,6 +134,9 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     let protocol = args.gateway.protocol();
     // Why the device was given up on, if its frames stop for that.
     let failure = handle.failure();
+    // `--rx-filter`, for what the gateway does not filter itself; an
+    // iKonvert has done it already, which this does not undo.
+    let filter = RxFilter::new(&args.gateway.rx_filter);
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
     write_prologue(&mut out, args).context("writing prologue")?;
@@ -141,7 +145,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
         // Read-only: device → PLAIN stdout, ignore stdin.
         (true, _) => {
             let mut writer = PlainWriter::new(&mut out);
-            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout);
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout).filtered(filter.clone());
             copy(&mut rx, &mut writer).context("reading from device")?;
         }
         // Write-only: stdin PLAIN → device on the main thread (so we
@@ -165,7 +169,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
             thread::Builder::new()
                 .name("frame-drain".into())
                 .spawn(move || {
-                    let mut rx = Idle::new(&mut rx, timeout);
+                    let mut rx = Idle::new(&mut rx, timeout).filtered(filter);
                     let result = copy(&mut rx, &mut DiscardWriter)
                         .map(drop)
                         .context("reading from device");
@@ -188,7 +192,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
                 })
                 .expect("spawn stdin pump");
             let mut writer = PlainWriter::new(&mut out);
-            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout);
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout).filtered(filter.clone());
             copy(&mut rx, &mut writer).context("reading from device")?;
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
@@ -202,11 +206,13 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
 /// The device's frames, ended with an error once none has come off the
 /// bus for `timeout_secs` (0: never). A frame canboat makes itself (a
 /// gateway status on a timer) does not count: it comes even from a
-/// gateway that has gone.
+/// gateway that has gone. With a filter (`--rx-filter`), the frames it
+/// does not pass are dropped, though they still show the bus is there.
 struct Idle<'a> {
     rx: &'a mut std::sync::mpsc::Receiver<RawFrame>,
     timeout: Option<std::time::Duration>,
     last: std::time::Instant,
+    filter: Option<RxFilter>,
 }
 
 impl<'a> Idle<'a> {
@@ -215,7 +221,17 @@ impl<'a> Idle<'a> {
             rx,
             timeout: (timeout_secs > 0).then(|| std::time::Duration::from_secs(timeout_secs)),
             last: std::time::Instant::now(),
+            filter: None,
         }
+    }
+
+    /// Pass on only what `filter` passes.
+    fn filtered(self, filter: Option<RxFilter>) -> Self {
+        Self { filter, ..self }
+    }
+
+    fn passes(&self, frame: &RawFrame) -> bool {
+        self.filter.as_ref().is_none_or(|f| f.passes(frame.pgn))
     }
 }
 
@@ -223,7 +239,7 @@ impl crate::io::FrameReader for Idle<'_> {
     fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
         use std::sync::mpsc::RecvTimeoutError;
         let Some(timeout) = self.timeout else {
-            return Ok(self.rx.recv().ok());
+            return Ok(self.rx.iter().find(|frame| self.passes(frame)));
         };
         loop {
             let left = timeout.saturating_sub(self.last.elapsed());
@@ -232,7 +248,9 @@ impl crate::io::FrameReader for Idle<'_> {
                     if frame.pgn < crate::engine::codec::SYNTHETIC_PGN_START {
                         self.last = std::time::Instant::now();
                     }
-                    return Ok(Some(frame));
+                    if self.passes(&frame) {
+                        return Ok(Some(frame));
+                    }
                 }
                 Err(RecvTimeoutError::Disconnected) => return Ok(None),
                 Err(RecvTimeoutError::Timeout) if self.last.elapsed() >= timeout => {
@@ -486,6 +504,26 @@ mod tests {
         let waited = start.elapsed();
         assert!(waited >= Duration::from_millis(900) && waited < Duration::from_millis(1500));
         sender.join().unwrap();
+    }
+
+    /// With --rx-filter, only the named PGNs, network management and
+    /// canboat's own come through; with a timeout too, a dropped frame still
+    /// shows the bus is there.
+    #[test]
+    fn the_rx_filter_drops_what_was_not_asked_for() {
+        for timeout in [0, 5] {
+            let (tx, mut rx) = mpsc::channel();
+            for pgn in [130306, 127250, 60928, 129029, 262400] {
+                tx.send(frame(pgn)).unwrap();
+            }
+            drop(tx);
+            let mut idle = Idle::new(&mut rx, timeout).filtered(RxFilter::new(&[127250]));
+            let mut pgns = Vec::new();
+            while let Some(f) = idle.read_frame().unwrap() {
+                pgns.push(f.pgn);
+            }
+            assert_eq!(pgns, [127250, 60928, 262400]);
+        }
     }
 
     /// Without a timeout, and when the device goes, reading just ends.

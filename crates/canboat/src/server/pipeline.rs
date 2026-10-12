@@ -30,6 +30,7 @@ use std::time::{Duration, Instant};
 
 use crate::engine::format::write_plain;
 use crate::engine::output::{JsonOptions, write_json};
+use crate::engine::pgn_list::RxFilter;
 use crate::engine::{FramePacketType, PgnDatabase, RawFrame, Reassembled, Reassembler};
 use crate::io::device::FrameSender;
 use crate::n2kd::request_engine::RequestEngine;
@@ -224,6 +225,7 @@ pub fn run(
     pre_coalesced: Arc<AtomicBool>,
     json_opts: JsonOptions,
     nmea: Nmea0183Options,
+    rx_filter: Option<RxFilter>,
 ) {
     let Nmea0183Options {
         emit_stdout: emit_nmea_stdout,
@@ -284,6 +286,10 @@ pub fn run(
                 Err(_) => break,
             }
         };
+        // `--rx-filter`: what the gateway did not filter itself.
+        if rx_filter.as_ref().is_some_and(|f| !f.passes(frame.pgn)) {
+            continue;
+        }
         let now = Instant::now();
 
         // The NMEA 0183 filter control channel (PGN 262657) no longer
@@ -590,6 +596,7 @@ mod tests {
                     rate_limit: true,
                     filter: None,
                 },
+                None,
             )
         });
 
