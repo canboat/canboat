@@ -657,6 +657,7 @@ mod tests {
                     rate_limit: true,
                     filter: None,
                 },
+                None,
             )
         });
 
