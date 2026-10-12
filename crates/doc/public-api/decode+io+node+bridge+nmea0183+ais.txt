@@ -1,5 +1,23 @@
 pub mod canboat
 pub mod canboat::bridge
+#[non_exhaustive] pub enum canboat::bridge::GatewayKind
+pub canboat::bridge::GatewayKind::Bst95
+pub canboat::bridge::GatewayKind::BstD0
+pub canboat::bridge::GatewayKind::W2kAscii
+pub canboat::bridge::GatewayKind::Ydwg
+impl canboat::bridge::GatewayKind
+pub fn canboat::bridge::GatewayKind::default_baud(self) -> u32
+pub fn canboat::bridge::GatewayKind::name(self) -> &'static str
+pub fn canboat::bridge::GatewayKind::passes_raw_frames(self) -> bool
+impl core::clone::Clone for canboat::bridge::GatewayKind
+pub fn canboat::bridge::GatewayKind::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bridge::GatewayKind
+impl core::cmp::PartialEq for canboat::bridge::GatewayKind
+pub fn canboat::bridge::GatewayKind::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bridge::GatewayKind
+pub fn canboat::bridge::GatewayKind::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bridge::GatewayKind
+impl core::marker::StructuralPartialEq for canboat::bridge::GatewayKind
 pub enum canboat::bridge::GpsRolloverDevice
 pub canboat::bridge::GpsRolloverDevice::Address(u8)
 pub canboat::bridge::GpsRolloverDevice::Name(u64)
@@ -101,6 +119,7 @@ pub canboat::bridge::BridgeConfig::canalyst_channel: u8
 pub canboat::bridge::BridgeConfig::canboat_csv: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
+pub canboat::bridge::BridgeConfig::gateway: core::option::Option<canboat::bridge::Gateway>
 pub canboat::bridge::BridgeConfig::ikonvert: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::ikonvert_rate_limit_off: bool
 pub canboat::bridge::BridgeConfig::ikonvert_rx: core::option::Option<alloc::string::String>
@@ -136,6 +155,17 @@ impl core::default::Default for canboat::bridge::BridgeConfig
 pub fn canboat::bridge::BridgeConfig::default() -> Self
 impl core::fmt::Debug for canboat::bridge::BridgeConfig
 pub fn canboat::bridge::BridgeConfig::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::bridge::Gateway
+pub canboat::bridge::Gateway::device: alloc::string::String
+pub canboat::bridge::Gateway::kind: canboat::bridge::GatewayKind
+impl core::clone::Clone for canboat::bridge::Gateway
+pub fn canboat::bridge::Gateway::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bridge::Gateway
+impl core::cmp::PartialEq for canboat::bridge::Gateway
+pub fn canboat::bridge::Gateway::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bridge::Gateway
+pub fn canboat::bridge::Gateway::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bridge::Gateway
 pub struct canboat::bridge::PgnListStatus
 pub canboat::bridge::PgnListStatus::dropped: alloc::vec::Vec<u32>
 pub canboat::bridge::PgnListStatus::rx: canboat::device::PgnListSupport

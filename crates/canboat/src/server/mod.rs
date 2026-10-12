@@ -74,6 +74,7 @@ use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
 use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
+pub use crate::io::device::gateway::{Gateway, GatewayKind};
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
 
@@ -83,55 +84,62 @@ use crate::io::open_serial_rw;
 #[cfg(feature = "cli")]
 #[derive(Debug, clap::Args)]
 #[command(after_help = crate::cli::help_footer())]
+#[command(group(clap::ArgGroup::new("source").multiple(false)))]
 pub struct Args {
-    /// Read frames from an Actisense NGT-1 / W2K-1 on this serial
-    /// device path (e.g. `/dev/ttyUSB0`).
-    #[arg(
-        long,
-        value_name = "DEVICE",
-        conflicts_with_all = ["ikonvert", "maretron", "canboat_csv", "socketcan", "replay", "canalyst"]
-    )]
+    /// Read frames from an Actisense NGT-1 on this serial device path
+    /// (e.g. `/dev/ttyUSB0`), or through a network bridge such as ser2net
+    /// at `tcp://host[:port]` (port 6001 if not given).
+    #[arg(long, value_name = "DEVICE", group = "source")]
     actisense: Option<String>,
 
     /// Read frames from a Digital Yacht iKonvert on this serial
-    /// device path.
-    #[arg(
-        long,
-        value_name = "DEVICE",
-        conflicts_with_all = ["actisense", "maretron", "canboat_csv", "socketcan", "replay", "canalyst"]
-    )]
+    /// device path, or at `tcp://host[:port]` (a NavLink2 serves its
+    /// protocol on port 6001, the default).
+    #[arg(long, value_name = "DEVICE", group = "source")]
     ikonvert: Option<String>,
 
     /// Read frames from a Maretron IPG100/200 over TCP. Accepts either
     /// `host:port` or `tcp://host[:port]`. Default port 6543 (bus 0).
-    #[arg(
-        long,
-        value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "canboat_csv", "socketcan", "replay", "canalyst"]
-    )]
+    #[arg(long, value_name = "URL", group = "source")]
     maretron: Option<String>,
 
     /// Read frames from a Linux SocketCAN interface (e.g. `can0`,
     /// `nmea2000`). The pipeline becomes a full NMEA 2000 bus
     /// participant: it claims an ISO address, answers ISO Requests and
     /// Group Functions, and sends Heartbeats. Linux-only.
-    #[arg(
-        long,
-        value_name = "IFACE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "canboat_csv", "replay", "canalyst"]
-    )]
+    #[arg(long, value_name = "IFACE", group = "source")]
     socketcan: Option<String>,
 
     /// Read frames from a CANalyst-II USB adapter (the Waveshare
     /// USB-CAN-B), named `usb` or `usb:VVVV:PPPP`. Like `--socketcan`,
     /// the pipeline becomes a full NMEA 2000 bus participant; works on
     /// every platform.
-    #[arg(
-        long,
-        value_name = "DEVICE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv", "replay"]
-    )]
+    #[arg(long, value_name = "DEVICE", group = "source")]
     canalyst: Option<String>,
+
+    /// Read frames from a Yacht Devices RAW gateway: a YDWG-02 / YDEN /
+    /// NavLink2 RAW port at `tcp://host[:port]` (port 1457 if not given)
+    /// or `udp://gateway:port` (`udp://[bind:]port` only receives), or a
+    /// YDNU-02 on its serial port.
+    #[arg(long, value_name = "DEVICE", group = "source")]
+    ydwg: Option<String>,
+
+    /// Read frames from an Actisense W2K-1 in N2K ASCII mode, at
+    /// `tcp://host[:port]` (port 60002 if not given) or `udp://…`, as
+    /// `--ydwg`.
+    #[arg(long, value_name = "URL", group = "source")]
+    w2k_ascii: Option<String>,
+
+    /// Read frames from an Actisense W2K-1 or PRO-NDC-1E2K in Actisense
+    /// (BST-D0) mode, at `tcp://host[:port]` (port 60002 if not given).
+    #[arg(long, value_name = "URL", group = "source")]
+    bst_d0: Option<String>,
+
+    /// Read raw CAN frames (BST-95) from a PRO-NDC-1E2K or W2K-1 in "CAN
+    /// Actisense" mode at `tcp://host[:port]` (port 60002 if not given),
+    /// or an NGX in CAN Packet mode on its serial port.
+    #[arg(long = "bst-95", value_name = "DEVICE", group = "source")]
+    bst_95: Option<String>,
 
     /// The CANalyst-II CAN channel, 0 or 1.
     #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
@@ -169,11 +177,7 @@ pub struct Args {
     /// peer's write-only input port (`--input-port`, default 2600).
     /// The read URL can equally be a one-way feed such as an
     /// iptee'd raw stream.
-    #[arg(
-        long,
-        value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "replay", "canalyst"]
-    )]
+    #[arg(long, value_name = "URL", group = "source")]
     canboat_csv: Option<String>,
 
     /// Play this capture as if it were a live bus, for testing a consumer
@@ -183,11 +187,7 @@ pub struct Args {
     ///
     /// The input port accepts writes as it does for a real gateway; they
     /// go to `--replay-sent`, or are dropped.
-    #[arg(
-        long,
-        value_name = "FILE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv", "canalyst"]
-    )]
+    #[arg(long, value_name = "FILE", group = "source")]
     replay: Option<PathBuf>,
 
     /// With `--replay`: append the frames written to the bus to this file,
@@ -213,8 +213,9 @@ pub struct Args {
     #[arg(long, value_name = "URL", requires = "canboat_csv")]
     canboat_csv_write: Option<String>,
 
-    /// Baud rate for serial devices. Defaults: 115200 for NGT-1,
-    /// 230400 for iKonvert. Ignored for Maretron.
+    /// Baud rate for serial devices. Defaults: 115200 for NGT-1 and NGX
+    /// (`--bst-95`), 230400 for iKonvert, 38400 for YDNU-02 (`--ydwg`).
+    /// Ignored for network gateways.
     #[arg(long, value_name = "BAUD")]
     baud: Option<u32>,
 
@@ -437,6 +438,9 @@ pub struct BridgeConfig {
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
+    /// A Yacht Devices RAW, Actisense N2K ASCII, BST-D0 or BST-95 gateway
+    /// (`--ydwg`, `--w2k-ascii`, `--bst-d0`, `--bst-95`).
+    pub gateway: Option<Gateway>,
     /// The address to claim with `socketcan` or `canalyst`, or with
     /// `actisense` when that is an AOS simulator.
     pub address: u8,
@@ -536,6 +540,7 @@ impl Default for BridgeConfig {
             socketcan: None,
             canalyst: None,
             canalyst_channel: 0,
+            gateway: None,
             address: 0,
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
@@ -609,6 +614,19 @@ impl From<Args> for BridgeConfig {
             socketcan: a.socketcan,
             canalyst: a.canalyst,
             canalyst_channel: a.canalyst_channel,
+            gateway: [
+                (GatewayKind::Ydwg, a.ydwg),
+                (GatewayKind::W2kAscii, a.w2k_ascii),
+                (GatewayKind::BstD0, a.bst_d0),
+                (GatewayKind::Bst95, a.bst_95),
+            ]
+            .into_iter()
+            .find_map(|(kind, device)| {
+                Some(Gateway {
+                    kind,
+                    device: device?,
+                })
+            }),
             address: a.address,
             // The CLI uses a SocketCAN interface as it was configured,
             // unless --bitrate asks canboat to configure it.
@@ -693,12 +711,19 @@ struct OpenedSource {
 // explicit `BridgeConfig.config_dir` (or `None` to disable persistence).
 
 fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
+    let frames_gateway = config
+        .gateway
+        .as_ref()
+        .is_some_and(|g| !g.kind.passes_raw_frames());
     if config.protocol != crate::engine::BusProtocol::Nmea2000
-        && (config.actisense.is_some() || config.ikonvert.is_some() || config.maretron.is_some())
+        && (config.actisense.is_some()
+            || config.ikonvert.is_some()
+            || config.maretron.is_some()
+            || frames_gateway)
     {
         anyhow::bail!(
-            "--protocol {}: the NGT-1, iKonvert and Maretron do NMEA 2000 framing themselves; \
-             use --socketcan, --canalyst, --canboat-csv or stdin",
+            "--protocol {}: the NGT-1, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
+             framing themselves; use --socketcan, --canalyst, --ydwg, --bst-95, --canboat-csv or stdin",
             config.protocol
         );
     }
@@ -737,7 +762,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         ));
         let claim_for_factory = Arc::clone(&claim_addr);
         let factory = NamedFactory::new("ngt1", move || {
-            let (reader, writer) = open_serial_rw(&path, baud)?;
+            let (reader, writer) = open_serial_or_tcp(&path, baud)?;
             let config = device::ngt1::Config {
                 pgn_lists: pgn_lists.clone(),
                 extra_tx_pgns: extra_tx_pgns.clone(),
@@ -779,7 +804,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             (!effective.is_empty()).then(|| device::ikonvert::pgn_list_status(&effective));
         let rate_limit_off = config.ikonvert_rate_limit_off;
         let factory = NamedFactory::new("ikonvert", move || {
-            let (reader, writer) = open_serial_rw(&path, baud)?;
+            let (reader, writer) = open_serial_or_tcp(&path, baud)?;
             let config = device::ikonvert::Config {
                 rx_list: rx_list.clone(),
                 tx_list: tx_list.clone(),
@@ -816,6 +841,22 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);
         // Maretron IPG ships full PGN payloads per 0xA5 frame.
+        return Ok(OpenedSource {
+            frames_rx: rx,
+            supervisor: Some(sup),
+            pre_coalesced: Arc::new(AtomicBool::new(true)),
+            claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
+        });
+    }
+    if let Some(gateway) = config.gateway.clone() {
+        let (baud, protocol) = (config.baud, config.protocol);
+        let factory = NamedFactory::new(gateway.kind.name(), move || {
+            device::gateway::open(&gateway, baud, protocol)
+        });
+        let sup = Supervisor::new(factory);
+        let (rx, sup) = split_supervisor(sup);
+        // Each codec joins fast-packets itself.
         return Ok(OpenedSource {
             frames_rx: rx,
             supervisor: Some(sup),
@@ -1066,6 +1107,18 @@ where
     fn name(&self) -> &str {
         self.name
     }
+}
+
+/// A serial port, or `tcp://host[:port]` (port 6001 if not given) for a
+/// serial gateway behind a network bridge.
+fn open_serial_or_tcp(
+    path: &str,
+    baud: u32,
+) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    if path.starts_with("tcp://") {
+        return crate::io::net::open_tcp(path, 6001);
+    }
+    open_serial_rw(path, baud)
 }
 
 fn open_maretron_pair(url: &str) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
