@@ -326,6 +326,26 @@ fn bst_95_decodes_as_pgn_test() {
     assert_eq!(got, want);
 }
 
+/// Waveshare USB-CAN-A frames (#1016), as the adapter sends them on its
+/// serial port. The fixture is pgn-test.in's 31 messages as 115 20-byte
+/// frames, the fast-packets split per canboat.json, written by a script
+/// apart from canboat's encoder, from Waveshare's description of the
+/// protocol. Joined again, they decode exactly as pgn-test.in does.
+#[test]
+fn usb_can_a_decodes_as_pgn_test() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../analyzer/tests");
+    let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
+    let capture = std::fs::read(dir.join("pgn-test-usb-can-a.bin")).expect("read fixture");
+    assert_eq!(capture.len(), 115 * 20);
+    let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
+    let got = without_timestamps(&run(
+        &["convert", "--no-banner", "--from", "usb-can-a"],
+        &capture,
+    ));
+    assert_eq!(got.lines().count(), 31);
+    assert_eq!(got, want);
+}
+
 /// `canboat convert --to plain` on `candump2analyzer/tests/<name>.in`, with
 /// the timestamp column taken off each line, against `<name>.out` there.
 /// The candump styles in these files carry no time and candump2analyzer

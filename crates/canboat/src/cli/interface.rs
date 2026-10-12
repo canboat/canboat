@@ -47,6 +47,7 @@ fn producer(kind: Kind) -> &'static str {
         Kind::Gateway(GatewayKind::YachtDevices) => "ydwg-gateway",
         Kind::Gateway(_) => "w2k-gateway",
         Kind::Canalyst => "canalyst",
+        Kind::UsbCanA => "usb-can-a",
     }
 }
 
@@ -332,7 +333,12 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 fn open_device(args: &Args) -> Result<DeviceHandle> {
     let gateway = &args.gateway;
     gateway.check(Some(args.kind))?;
-    if args.si.is_some() && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst | Kind::Aos) {
+    if args.si.is_some()
+        && !matches!(
+            args.kind,
+            Kind::Socketcan | Kind::Canalyst | Kind::UsbCanA | Kind::Aos
+        )
+    {
         anyhow::bail!("--si: --kind {} does not have it", args.kind.name());
     }
     let protocol = gateway.protocol();
@@ -405,6 +411,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             Ok(device::gateway::open(&target, gateway.baud, protocol)?)
         }
         Kind::Canalyst => open_canalyst(args),
+        Kind::UsbCanA => open_usb_can_a(args),
         Kind::Socketcan => {
             let config = device::socketcan::Config {
                 // Configure the link only when asked to; otherwise use the
@@ -421,7 +428,8 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     }
 }
 
-/// The node configuration of a raw CAN gateway (socketcan, canalyst), or
+/// The node configuration of a raw CAN gateway (socketcan, canalyst,
+/// usb-can-a), or
 /// of an AOS simulator (`aos`).
 fn node_config(args: &Args) -> device::socketcan::Config {
     let node = args.gateway.node_config();
@@ -448,6 +456,20 @@ fn open_canalyst(args: &Args) -> Result<DeviceHandle> {
         .with_context(|| format!("opening CANalyst-II {}", args.device))?;
     let claim = Arc::new(AtomicU8::new(config.address));
     Ok(device::canalyst::run(reader, writer, config, claim)?)
+}
+
+/// Open a Waveshare USB-CAN-A on its serial port and run a node on it, as
+/// for SocketCAN.
+fn open_usb_can_a(args: &Args) -> Result<DeviceHandle> {
+    let config = device::socketcan::Config {
+        model_version: Some("canboat-usb-can-a"),
+        bitrate: args.gateway.bitrate.unwrap_or(250_000),
+        ..node_config(args)
+    };
+    let (reader, writer) = device::usb_can_a::open_rw(&args.device, args.gateway.baud)
+        .with_context(|| format!("opening USB-CAN-A {}", args.device))?;
+    let claim = Arc::new(AtomicU8::new(config.address));
+    Ok(device::usb_can_a::run(reader, writer, config, claim)?)
 }
 
 /// Open the serial transport as an independent `(reader, writer)` pair.

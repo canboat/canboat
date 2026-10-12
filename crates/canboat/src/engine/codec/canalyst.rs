@@ -19,13 +19,11 @@
 //! other kind: a Quick bus carries 11-bit standard frames, NMEA 2000 and
 //! J1939 29-bit extended ones.
 
-use std::collections::HashMap;
+use crate::engine::reassembly::Reassembler;
+use crate::engine::{BusProtocol, RawFrame};
 
-use crate::engine::format::{iso11783_compose, iso11783_decompose};
-use crate::engine::reassembly::{Reassembled, Reassembler};
-use crate::engine::{BusProtocol, FramePacketType, RawFrame, fastpacket, format_iso_ms};
-
-use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
+use super::raw_can::{self, FastPacketSeq};
+use super::{Codec, Event, Refused};
 
 /// Bytes in one USB packet: a count and three messages.
 pub const PACKET_LEN: usize = 64;
@@ -113,23 +111,13 @@ impl Packets {
     }
 }
 
-/// An extended frame's message.
-fn extended(id: u32, data: &[u8]) -> Message<'_> {
-    Message {
-        id,
-        extended: true,
-        data,
-    }
-}
-
 /// CANalyst-II, raw CAN frames. See the [module docs](self).
 pub struct Canalyst {
     packets: Packets,
     /// Decides which frames are fast-packets.
     protocol: BusProtocol,
     reassembler: Reassembler,
-    /// Per-(pgn, src) fast-packet sequence counters, mod 8.
-    seq: HashMap<(u32, u8), u8>,
+    seq: FastPacketSeq,
 }
 
 impl Default for Canalyst {
@@ -145,58 +133,7 @@ impl Canalyst {
             packets: Packets::default(),
             protocol,
             reassembler: Reassembler::new(),
-            seq: HashMap::new(),
-        }
-    }
-
-    fn next_seq(&mut self, pgn: u32, src: u8) -> u8 {
-        let e = self.seq.entry((pgn, src)).or_insert(0);
-        let s = *e;
-        *e = (*e + 1) & 0x07;
-        s
-    }
-
-    fn packet(
-        protocol: BusProtocol,
-        reassembler: &mut Reassembler,
-        packet: &[u8; PACKET_LEN],
-        now_ms: u64,
-        events: &mut Vec<Event>,
-    ) {
-        let messages = match messages(packet) {
-            Ok(m) => m,
-            Err(count) => {
-                events.push(Event::Error(format!(
-                    "CANalyst packet claims {count} messages"
-                )));
-                return;
-            }
-        };
-        // NMEA 2000 and J1939 are 29-bit, Quick 11-bit: skip the other
-        // kind rather than reinterpret its identifier.
-        for m in messages
-            .iter()
-            .filter(|m| m.extended != protocol.standard_frames())
-        {
-            if !m.extended {
-                // A Quick message type has no priority, source or
-                // destination, and is never more than one frame.
-                let mut frame = RawFrame::new(None, 0, m.id, 0, 255, m.data.iter().copied());
-                frame.timestamp = Some(format_iso_ms(now_ms));
-                events.push(Event::Frame(frame));
-                continue;
-            }
-            let (prio, pgn, src, dst) = iso11783_decompose(m.id);
-            let mut frame = RawFrame::new(None, prio, pgn, src, dst, m.data.iter().copied());
-            frame.timestamp = Some(format_iso_ms(now_ms));
-            let pt = protocol.packet_type(frame.pgn);
-            match reassembler.push(frame, pt) {
-                Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
-                    events.push(Event::Frame(f))
-                }
-                Reassembled::Partial => {}
-                Reassembled::Error(e) => events.push(Event::Error(e.to_string())),
-            }
+            seq: FastPacketSeq::default(),
         }
     }
 }
@@ -204,46 +141,38 @@ impl Canalyst {
 impl Codec for Canalyst {
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
         let (protocol, reassembler) = (self.protocol, &mut self.reassembler);
-        self.packets.push(bytes, |packet| {
-            Self::packet(protocol, reassembler, packet, now_ms, events)
+        self.packets.push(bytes, |packet| match messages(packet) {
+            Ok(messages) => {
+                for m in messages {
+                    raw_can::receive(
+                        protocol,
+                        reassembler,
+                        m.id,
+                        m.extended,
+                        m.data,
+                        Some(now_ms),
+                        events,
+                    );
+                }
+            }
+            Err(count) => events.push(Event::Error(format!(
+                "CANalyst packet claims {count} messages"
+            ))),
         });
     }
 
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused> {
-        if frame.pgn >= SYNTHETIC_PGN_START {
-            return Err(Refused::Synthetic);
-        }
-        if self.protocol.standard_frames() {
-            // Quick: the message type is the 11-bit identifier, and a
-            // message is one frame.
-            if frame.pgn > 0x7ff || frame.data.len() > 8 {
-                return Err(Refused::TooLarge);
-            }
-            let mut out = Vec::new();
-            encode_packets(
-                &[Message {
-                    id: frame.pgn,
-                    extended: false,
-                    data: &frame.data,
-                }],
-                &mut out,
-            );
-            return Ok(out);
-        }
-        let id = iso11783_compose(frame.prio & 7, frame.pgn, frame.src, frame.dst);
+        let frames = raw_can::split(self.protocol, &mut self.seq, frame)?;
+        let messages: Vec<Message> = frames
+            .iter()
+            .map(|f| Message {
+                id: f.id,
+                extended: f.extended,
+                data: &f.data,
+            })
+            .collect();
         let mut out = Vec::new();
-        if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
-            let seq = self.next_seq(frame.pgn, frame.src);
-            let chunks = fastpacket::fragment(seq, &frame.data).ok_or(Refused::TooLarge)?;
-            let frames: Vec<Message> = chunks.iter().map(|c| extended(id, c)).collect();
-            encode_packets(&frames, &mut out);
-        } else if frame.data.len() <= 8 {
-            encode_packets(&[extended(id, &frame.data)], &mut out);
-        } else {
-            // One message is one CAN frame. A longer message needs ISO TP
-            // (J1939), which this codec receives but does not send.
-            return Err(Refused::TooLarge);
-        }
+        encode_packets(&messages, &mut out);
         Ok(out)
     }
 }
@@ -251,6 +180,7 @@ impl Codec for Canalyst {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::engine::format_iso_ms;
 
     const NOW: u64 = 1_780_082_164_826;
 

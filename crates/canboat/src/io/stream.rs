@@ -494,6 +494,82 @@ impl<R: Read> FrameReader for BstReader<R> {
     }
 }
 
+/// [`FrameReader`] over the bytes a Waveshare USB-CAN-A sends on its
+/// serial port (`cat /dev/ttyUSB0 > capture.bin` once canboat has set it up):
+/// 20-byte frames, with their fast-packets joined. A lost byte costs the
+/// frames it falls in, not the rest. The frames carry no time, so neither
+/// do these.
+pub struct UsbCanAReader<R: Read> {
+    inner: R,
+    frames: crate::engine::codec::usb_can_a::Frames,
+    protocol: BusProtocol,
+    reassembler: crate::engine::Reassembler,
+    queue: VecDeque<RawFrame>,
+    buf: Box<[u8; 8192]>,
+    eof: bool,
+}
+
+impl<R: Read> UsbCanAReader<R> {
+    /// A reader of an NMEA 2000 capture.
+    pub fn new(inner: R) -> Self {
+        Self::with_protocol(inner, BusProtocol::Nmea2000)
+    }
+
+    /// A reader of a capture of a bus carrying `protocol`, which decides
+    /// which frames are parts of a longer message, and whether the 11-bit
+    /// or the 29-bit frames are the bus's.
+    pub fn with_protocol(inner: R, protocol: BusProtocol) -> Self {
+        Self {
+            inner,
+            frames: Default::default(),
+            protocol,
+            reassembler: crate::engine::Reassembler::new(),
+            queue: VecDeque::new(),
+            buf: Box::new([0u8; 8192]),
+            eof: false,
+        }
+    }
+}
+
+impl<R: Read> FrameReader for UsbCanAReader<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        use crate::engine::codec::{Event, raw_can};
+        loop {
+            if let Some(frame) = self.queue.pop_front() {
+                return Ok(Some(frame));
+            }
+            if self.eof {
+                return Ok(None);
+            }
+            let n = self.inner.read(&mut self.buf[..])?;
+            if n == 0 {
+                self.eof = true;
+                continue;
+            }
+            let (protocol, reassembler) = (self.protocol, &mut self.reassembler);
+            let mut events = Vec::new();
+            self.frames.push(&self.buf[..n], |f| {
+                raw_can::receive(
+                    protocol,
+                    reassembler,
+                    f.id,
+                    f.extended,
+                    &f.data,
+                    None,
+                    &mut events,
+                )
+            });
+            for event in events {
+                match event {
+                    Event::Frame(f) => self.queue.push_back(f),
+                    Event::Error(e) => log::warn!("usb-can-a: {e}"),
+                    Event::Send(_) => {}
+                }
+            }
+        }
+    }
+}
+
 /// The receiving end of a device's frame channel is a blocking
 /// A device's [`FrameSender`](crate::io::device::FrameSender) is a
 /// [`FrameWriter`]: each frame is queued to the device's writer

@@ -257,6 +257,25 @@ impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
 pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
 pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> core::option::Option<alloc::vec::Vec<u8>>
+pub mod canboat::codec::usb_can_a
+pub struct canboat::codec::usb_can_a::UsbCanA
+impl canboat::codec::usb_can_a::UsbCanA
+pub fn canboat::codec::usb_can_a::UsbCanA::new(canboat::schema::BusProtocol) -> Self
+pub fn canboat::codec::usb_can_a::UsbCanA::with_bitrate(canboat::schema::BusProtocol, u32) -> core::option::Option<Self>
+impl canboat::codec::Codec for canboat::codec::usb_can_a::UsbCanA
+pub fn canboat::codec::usb_can_a::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::usb_can_a::UsbCanA::failure(&self) -> core::option::Option<&str>
+pub fn canboat::codec::usb_can_a::UsbCanA::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::usb_can_a::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::usb_can_a::UsbCanA::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::usb_can_a::UsbCanA::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::usb_can_a::UsbCanA::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::usb_can_a::UsbCanA
+pub fn canboat::codec::usb_can_a::UsbCanA::default() -> Self
+pub const canboat::codec::usb_can_a::BAUD: u32
+pub const canboat::codec::usb_can_a::FRAME_LEN: usize
+pub fn canboat::codec::usb_can_a::bitrates() -> impl core::iter::traits::iterator::Iterator<Item = u32>
+pub fn canboat::codec::usb_can_a::config_packet(u32, canboat::schema::BusProtocol) -> core::option::Option<[u8; 20]>
 pub enum canboat::codec::Event
 pub canboat::codec::Event::Error(alloc::string::String)
 pub canboat::codec::Event::Frame(canboat::Frame)
@@ -355,6 +374,14 @@ pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::usb_can_a::UsbCanA
+pub fn canboat::codec::usb_can_a::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::usb_can_a::UsbCanA::failure(&self) -> core::option::Option<&str>
+pub fn canboat::codec::usb_can_a::UsbCanA::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::usb_can_a::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::usb_can_a::UsbCanA::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::usb_can_a::UsbCanA::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::usb_can_a::UsbCanA::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::ids
 pub mod canboat::output
 pub enum canboat::output::CamelCase

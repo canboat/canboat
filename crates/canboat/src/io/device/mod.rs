@@ -29,6 +29,7 @@
 
 pub mod bst95;
 pub mod bst_d0;
+mod can_link;
 pub mod canalyst;
 pub mod canboat_csv;
 pub mod gateway;
@@ -40,6 +41,7 @@ pub mod ngt1;
 pub mod replay;
 pub mod socketcan;
 pub mod supervisor;
+pub mod usb_can_a;
 
 pub use supervisor::{DeviceFactory, Supervisor};
 

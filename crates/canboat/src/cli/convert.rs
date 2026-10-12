@@ -23,7 +23,7 @@ use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, wri
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
     BstD0Reader, BstReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
-    PlainWriter, TextLineWriter, analyze, container, copy,
+    PlainWriter, TextLineWriter, UsbCanAReader, analyze, container, copy,
 };
 
 /// Output format for `convert --to`.
@@ -116,6 +116,10 @@ enum FromFormat {
     /// too; the reader takes any BST message that carries a frame.
     #[value(name = "raw-actisense")]
     Bst95,
+    /// Waveshare USB-CAN-A: the 20-byte frames it sends on its serial port,
+    /// as `cat /dev/ttyUSB0 > capture.bin` saves them. Binary too.
+    #[value(name = "usb-can-a")]
+    UsbCanA,
 }
 
 impl FromFormat {
@@ -133,7 +137,11 @@ impl FromFormat {
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
-            FromFormat::ActisenseEbl | FromFormat::BstD0 | FromFormat::Bst95 | FromFormat::Json => {
+            FromFormat::ActisenseEbl
+            | FromFormat::BstD0
+            | FromFormat::Bst95
+            | FromFormat::UsbCanA
+            | FromFormat::Json => {
                 return None;
             }
         })
@@ -341,6 +349,8 @@ enum Binary {
     BstD0,
     /// Actisense BST messages; BST-95 raw CAN frames, say.
     Bst,
+    /// Waveshare USB-CAN-A frames.
+    UsbCanA,
 }
 
 impl Binary {
@@ -354,6 +364,7 @@ impl Binary {
             Binary::Ebl => Box::new(EblReader::with_protocol(source, protocol)),
             Binary::BstD0 => Box::new(BstD0Reader::new(source)),
             Binary::Bst => Box::new(BstReader::with_protocol(source, protocol)),
+            Binary::UsbCanA => Box::new(UsbCanAReader::with_protocol(source, protocol)),
         }
     }
 }
@@ -365,6 +376,7 @@ fn binary_input(args: &Args) -> Option<Binary> {
         Some(FromFormat::ActisenseEbl) => Some(Binary::Ebl),
         Some(FromFormat::BstD0) => Some(Binary::BstD0),
         Some(FromFormat::Bst95) => Some(Binary::Bst),
+        Some(FromFormat::UsbCanA) => Some(Binary::UsbCanA),
         Some(_) => None,
         None => args
             .input()
