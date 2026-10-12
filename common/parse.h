@@ -46,6 +46,7 @@ int  parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute);
 int  parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
+int  parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson);
 bool parseTimestamp(const char *msg, uint64_t *when);
 void normalizeTimestamp(const char *in, char *out, size_t outLen);

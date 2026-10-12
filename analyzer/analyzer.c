@@ -37,7 +37,8 @@ enum RawFormats
   RAWFORMAT_GARMIN_CSV1,
   RAWFORMAT_GARMIN_CSV2,
   RAWFORMAT_YDWG02,
-  RAWFORMAT_ACTISENSE_N2K_ASCII
+  RAWFORMAT_ACTISENSE_N2K_ASCII,
+  RAWFORMAT_MXPGN
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -52,7 +53,8 @@ const char *RAW_FORMAT_STR[] = {"UNKNOWN",
                                 "GARMIN_CSV1",
                                 "GARMIN_CSV2",
                                 "YDWG02",
-                                "ACTISENSE_N2K_ASCII"};
+                                "ACTISENSE_N2K_ASCII",
+                                "MXPGN"};
 
 enum MultiPackets
 {
@@ -141,6 +143,15 @@ static uint16_t currentDate = UINT16_MAX;
 static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
+
+/* How many leading NMEA 0183 lines that hold no frame leave the format open. */
+#define MAX_UNDECIDED 1000
+static unsigned int undecided;
+
+static bool isNmea0183(const char *msg)
+{
+  return msg[0] == '$' || msg[0] == '!' || msg[0] == '\\';
+}
 static bool            isMsgAllowed(const RawMessage *msg);
 static bool            isTargetPgnAllowed(uint32_t pgn);
 static void            printCanFormat(RawMessage *msg);
@@ -374,7 +385,7 @@ int main(int argc, char **argv)
         {
           format = (enum RawFormats) i;
           if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
-              && format != RAWFORMAT_YDWG02)
+              && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN)
           {
             multiPackets = MULTIPACKETS_COALESCED;
           }
@@ -467,7 +478,7 @@ int main(int argc, char **argv)
             {
               format = (enum RawFormats) i;
               if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
-                  && format != RAWFORMAT_YDWG02)
+                  && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN)
               {
                 multiPackets = MULTIPACKETS_COALESCED;
               }
@@ -484,6 +495,13 @@ int main(int argc, char **argv)
     if (format == RAWFORMAT_UNKNOWN)
     {
       format = detectFormat(msg);
+      if (format == RAWFORMAT_UNKNOWN && isNmea0183(msg) && undecided < MAX_UNDECIDED)
+      {
+        // An NMEA 0183 sentence that holds no frame leaves the format open, for a
+        // while: a MiniPlex stream may start with $GPRMC before its first $MXPGN.
+        undecided++;
+        continue;
+      }
       if (format == RAWFORMAT_GARMIN_CSV1 || format == RAWFORMAT_GARMIN_CSV2)
       {
         // Skip first line containing header line
@@ -555,6 +573,14 @@ int main(int argc, char **argv)
         r = parseRawFormatActisenseN2KAscii(msg, &m, showJson);
         break;
 
+      case RAWFORMAT_MXPGN:
+        r = parseRawFormatMxpgn(msg, &m, showJson);
+        if (r == 1)
+        {
+          continue; // another NMEA 0183 sentence, no frame
+        }
+        break;
+
       default:
         logError("Unknown message format\n");
         exit(1);
@@ -599,6 +625,19 @@ static enum RawFormats detectFormat(const char *const msg)
 {
   const char  *p;
   unsigned int len;
+
+  p = msg;
+  if (*p == '\\')
+  {
+    p = strchr(p + 1, '\\');
+    p = p ? p + 1 : msg;
+  }
+  if (p[0] == '$' && strlen(p) > 7 && strncmp(p + 3, "PGN,", 4) == 0)
+  {
+    logInfo("Detected ShipModul MiniPlex $MXPGN protocol with one line per frame\n");
+    multiPackets = MULTIPACKETS_SEPARATE;
+    return RAWFORMAT_MXPGN;
+  }
 
   if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
   {

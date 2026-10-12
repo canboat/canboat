@@ -529,7 +529,7 @@ pub mod codec {
 
     /// The text line dialects, one [`Frame`](crate::Frame) per line: canboat
     /// PLAIN / FAST, Actisense N2K ASCII, YDWG-02 RAW, candump, iKonvert
-    /// `!PDGY`, Airmar, SeaSmart `$PCDIN`, Garmin CSV. For a gateway that
+    /// `!PDGY`, Airmar, SeaSmart `$PCDIN`, ShipModul `$MXPGN`, Garmin CSV. For a gateway that
     /// speaks one of them over a socket, or a capture read without the `io` feature.
     pub mod line {
         /// Which dialect a line is in; the same type as `read::InputFormat`.

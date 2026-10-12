@@ -45,6 +45,7 @@ fn producer(kind: Kind) -> &'static str {
         Kind::Maretron => "maretron-ipg",
         Kind::Socketcan => "socketcan-serial",
         Kind::Gateway(GatewayKind::YachtDevices) => "ydwg-gateway",
+        Kind::Gateway(GatewayKind::Miniplex) => "miniplex",
         Kind::Gateway(_) => "w2k-gateway",
         Kind::Canalyst => "canalyst",
         Kind::UsbCanA => "usb-can-a",

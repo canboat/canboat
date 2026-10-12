@@ -214,6 +214,19 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     }
 }
 
+/// ShipModul MiniPlex `$MXPGN` (test40 in analyzer/tests/Makefile, #997):
+/// ShipModul's examples, received and to send, one behind a TAG block, a
+/// fast-packet in its frames, and other NMEA 0183 sentences, which hold
+/// no frame and leave the format undecided until the first `$MXPGN`.
+#[test]
+fn mxpgn_json() {
+    run_case(
+        "mxpgn.in",
+        "mxpgn.out",
+        &["--json", "--nv", "--fixtime", "mxpgn"],
+    );
+}
+
 /// `-si`: the database's non-SI units leave in SI (test28 in
 /// analyzer/tests/Makefile) — kWh/Ah/% as J/C/ratio (65005, 127505,
 /// 127506, 127513, 130576 signed), rpm as Hz (127488, 130825), L and L/h

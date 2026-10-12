@@ -698,7 +698,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     {
         anyhow::bail!(
             "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
-             framing themselves; use --kind socketcan, canalyst, usb-can-a, yachtd, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
+             framing themselves; use --kind socketcan, canalyst, usb-can-a, yachtd, miniplex, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
             config.protocol
         );
     }

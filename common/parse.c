@@ -388,6 +388,150 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
   return setParsedValues(m, prio, pgn, dst, src, i);
 }
 
+static int hexDigit(char c)
+{
+  if (c >= '0' && c <= '9')
+  {
+    return c - '0';
+  }
+  if (c >= 'A' && c <= 'F')
+  {
+    return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f')
+  {
+    return c - 'a' + 10;
+  }
+  return -1;
+}
+
+/*
+ * ShipModul MiniPlex $MXPGN sentences: an NMEA 2000 frame in NMEA 0183
+ * (ShipModul, "MiniPlex-3 NMEA and Proprietary Sentences", FW V3.40.0, p. 4).
+ *
+ *   $--PGN,pppppp,aaaa,d--d*hh
+ *
+ * pppppp is the PGN, with the destination in its low byte for a PDU1 PGN.
+ * aaaa holds the send bit (15), the priority (14-12), the data length (11-8; 9..15
+ * mean 8 bytes) and the source address (7-0; the destination when the send bit is
+ * set). An omitted aaaa means send, priority 7, the data's length, destination in
+ * the PGN. d--d is the data as one number, the last byte first. One sentence is
+ * one CAN frame; they carry no time. A leading TAG block (\s:MX01*hh\) is skipped.
+ *
+ * Returns 0 for a frame, 1 for another NMEA 0183 sentence (a MiniPlex mixes them
+ * in), 2 for a malformed $MXPGN sentence.
+ */
+int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
+{
+  char        *p = msg;
+  char        *data;
+  char        *star;
+  char        *end;
+  char         now[DATE_LENGTH];
+  unsigned int pgn, attr, dlc, want, address, len, i;
+  bool         send;
+  bool         omitted;
+
+  (void) showJson;
+
+  if (*p == '\\')
+  {
+    p = strchr(p + 1, '\\');
+    if (!p)
+    {
+      return 1;
+    }
+    p++;
+  }
+  if (p[0] != '$' || strlen(p) < 7 || strncmp(p + 3, "PGN,", 4) != 0)
+  {
+    return 1;
+  }
+
+  star = strchr(p, '*');
+  if (star)
+  {
+    unsigned int  sum;
+    unsigned char xor = 0;
+    char         *q;
+
+    for (q = p + 1; q < star; q++)
+    {
+      xor ^= (unsigned char) *q;
+    }
+    if (sscanf(star + 1, "%2x", &sum) != 1 || sum != xor)
+    {
+      logError("$MXPGN checksum does not match: %s", msg);
+      return 2;
+    }
+  }
+
+  pgn = (unsigned int) strtoul(p + 7, &end, 16);
+  if (end == p + 7 || *end != ',' || pgn > 0x3ffff)
+  {
+    logError("Error reading $MXPGN PGN: %s", msg);
+    return 2;
+  }
+  p       = end + 1;
+  omitted = *p == ',';
+  if (omitted)
+  {
+    attr = 0; // set below, once the data's length is known
+    data = p + 1;
+  }
+  else
+  {
+    attr = (unsigned int) strtoul(p, &end, 16);
+    if (end == p || *end != ',' || attr > 0xffff)
+    {
+      logError("Error reading $MXPGN attribute: %s", msg);
+      return 2;
+    }
+    data = end + 1;
+  }
+
+  for (len = 0; hexDigit(data[len]) >= 0; len++)
+    ;
+  if (len % 2 != 0 || len > 16)
+  {
+    logError("Error reading $MXPGN data: %s", msg);
+    return 2;
+  }
+  len /= 2;
+  if (omitted)
+  {
+    attr = 0x8000 | (7 << 12) | (len << 8);
+  }
+
+  send    = (attr & 0x8000) != 0;
+  dlc     = (attr >> 8) & 0xf;
+  address = attr & 0xff;
+  want    = dlc > 8 ? 8 : dlc;
+  if (len != want)
+  {
+    logError("$MXPGN data is %u bytes, its length says %u: %s", len, want, msg);
+    return 2;
+  }
+
+  // The last byte first.
+  for (i = 0; i < len; i++)
+  {
+    const char *pair = data + 2 * (len - 1 - i);
+
+    m->data[i] = (unsigned char) (hexDigit(pair[0]) << 4 | hexDigit(pair[1]));
+  }
+
+  snprintf(m->timestamp, sizeof(m->timestamp), "%s", fmtNow(now));
+
+  if (((pgn >> 8) & 0xff) < 240)
+  {
+    unsigned int dst = (send && address != 0) ? address : (pgn & 0xff);
+
+    return setParsedValues(m, (attr >> 12) & 7, pgn & ~0xffu, dst, send ? 0 : address, len);
+  }
+  return setParsedValues(m, (attr >> 12) & 7, pgn, 255, send ? 0 : address, len);
+}
+
 /* Yacht Digital, YDWG-02
 
    Example output: 00:17:55.475 R 0DF50B23 FF FF FF FF FF 00 00 FF
