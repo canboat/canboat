@@ -59,6 +59,8 @@ pub struct Bridge {
     /// pipeline starts, so `new`→`spawn` is a one-shot.
     frames_rx: Option<mpsc::Receiver<RawFrame>>,
     supervisor: Option<Supervisor>,
+    /// Why the supervisor gave up on the device, kept past `shutdown`.
+    failure: Option<crate::io::device::DeviceFailure>,
     pre_coalesced: Arc<AtomicBool>,
     device_sender: Option<FrameSender>,
     claim_addr: Option<Arc<AtomicU8>>,
@@ -302,6 +304,7 @@ impl Bridge {
             json_opts,
             banner,
             frames_rx: Some(frames_rx),
+            failure: supervisor.as_ref().map(Supervisor::failure),
             supervisor,
             pre_coalesced,
             device_sender,
@@ -538,7 +541,18 @@ impl Bridge {
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
         pipeline::run(db, frames_rx, hubs, pre_coalesced, json_opts, nmea);
         self.shutdown();
-        Ok(())
+        match self.failure() {
+            Some(why) => Err(anyhow!("{why}")),
+            None => Ok(()),
+        }
+    }
+
+    /// Why the bridge stopped, when it gave up on its device: it is not
+    /// the gateway it was told it is (an NGT-1 opened as an AOS simulator,
+    /// or the other way round). Reconnecting would not mend that, so the
+    /// frame source ends. `None` otherwise.
+    pub fn failure(&self) -> Option<String> {
+        self.failure.as_ref()?.get().map(str::to_owned)
     }
 
     /// Start the pipeline on a background thread, leaving this `Bridge`

@@ -93,6 +93,7 @@ pub fn canboat::bridge::Bridge::claimed_address(&self) -> core::option::Option<u
 pub fn canboat::bridge::Bridge::database(&self) -> &'static canboat::Database
 pub fn canboat::bridge::Bridge::decoded(&mut self) -> std::sync::mpsc::Receiver<alloc::sync::Arc<canboat::DecodedPgn>>
 pub fn canboat::bridge::Bridge::encode(&self, u32) -> anyhow::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::bridge::Bridge::failure(&self) -> core::option::Option<alloc::string::String>
 pub fn canboat::bridge::Bridge::frame_sender(&self) -> core::option::Option<canboat::bus::FrameSender>
 pub fn canboat::bridge::Bridge::is_running(&self) -> bool
 pub fn canboat::bridge::Bridge::new(canboat::bridge::BridgeConfig) -> anyhow::Result<Self>

@@ -141,7 +141,10 @@ fn run_server(config: server::BridgeConfig) -> anyhow::Result<()> {
     } else {
         bridge.wait();
     }
-    Ok(())
+    match bridge.failure() {
+        Some(why) => anyhow::bail!("{why}"),
+        None => Ok(()),
+    }
 }
 
 /// Print any error and translate to a process exit code.

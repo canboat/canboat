@@ -146,6 +146,11 @@ impl DeviceFailure {
     pub fn get(&self) -> Option<&str> {
         self.0.get().map(String::as_str)
     }
+
+    /// Record `why`, unless a reason is already there.
+    pub(crate) fn set(&self, why: &str) {
+        let _ = self.0.set(why.to_owned());
+    }
 }
 
 /// Returned by [`DeviceHandle::send_frame`] / [`FrameSender::send_frame`]
@@ -512,7 +517,7 @@ fn reader_thread<D: DeviceDecoder>(
                 }
                 DeviceEvent::Fatal(e) => {
                     log::error!("{e}");
-                    let _ = failure.0.set(e);
+                    failure.set(&e);
                     return false;
                 }
             }

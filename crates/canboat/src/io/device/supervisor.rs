@@ -28,7 +28,7 @@ use std::time::Duration;
 
 use crate::engine::RawFrame;
 
-use super::{DeviceHandle, FrameSender, WriterCmd};
+use super::{DeviceFailure, DeviceHandle, FrameSender, WriterCmd};
 
 /// Factory thunk handed to [`Supervisor::new`]. Each call to `open`
 /// must produce a *fresh* `DeviceHandle` — the supervisor never reuses
@@ -73,6 +73,7 @@ pub struct Supervisor {
     sender: FrameSender,
     stop: Arc<AtomicBool>,
     join: Option<JoinHandle<()>>,
+    failure: DeviceFailure,
 }
 
 impl Supervisor {
@@ -83,10 +84,20 @@ impl Supervisor {
         let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd>();
         let stop = Arc::new(AtomicBool::new(false));
         let stop_for_thread = stop.clone();
+        let failure = DeviceFailure::default();
+        let failure_for_thread = failure.clone();
 
         let join = thread::Builder::new()
             .name("device-supervisor".into())
-            .spawn(move || supervisor_loop(factory, frames_tx, cmd_rx, stop_for_thread))
+            .spawn(move || {
+                supervisor_loop(
+                    factory,
+                    frames_tx,
+                    cmd_rx,
+                    stop_for_thread,
+                    &failure_for_thread,
+                )
+            })
             .expect("spawn device supervisor");
 
         Self {
@@ -94,7 +105,15 @@ impl Supervisor {
             sender: FrameSender::from_cmd_tx(cmd_tx),
             stop,
             join: Some(join),
+            failure,
         }
+    }
+
+    /// Why the supervisor gave up: a session ended because the device is
+    /// the wrong one ([`DeviceHandle::failure`]), which reconnecting does
+    /// not mend. The frames end then.
+    pub fn failure(&self) -> DeviceFailure {
+        self.failure.clone()
     }
 
     /// Clone of the stable frame sender. Use this to queue outbound
@@ -127,6 +146,7 @@ fn supervisor_loop<F: DeviceFactory>(
     frames_tx: mpsc::Sender<RawFrame>,
     cmd_rx: mpsc::Receiver<WriterCmd>,
     stop: Arc<AtomicBool>,
+    failure: &DeviceFailure,
 ) {
     let mut backoff = INITIAL_BACKOFF;
     // Hold cmd_rx in an Option so we can move it into the per-session
@@ -155,6 +175,7 @@ fn supervisor_loop<F: DeviceFactory>(
         let cmd_rx = held_cmd_rx
             .take()
             .expect("held_cmd_rx is always Some at session start");
+        let session_failure = handle.failure();
         held_cmd_rx = Some(run_session(
             factory.name(),
             handle,
@@ -164,6 +185,12 @@ fn supervisor_loop<F: DeviceFactory>(
         ));
 
         if stop.load(Ordering::Relaxed) {
+            break;
+        }
+        // The wrong device stays the wrong device: stop, and say why.
+        if let Some(why) = session_failure.get() {
+            log::error!("{}: giving up: {why}", factory.name());
+            failure.set(why);
             break;
         }
         log::warn!("{}: session ended; will reconnect", factory.name());
@@ -369,6 +396,41 @@ mod tests {
         fn flush(&mut self) -> io::Result<()> {
             Ok(())
         }
+    }
+
+    /// A session that ends because the device is the wrong one is not
+    /// reopened: the supervisor stops, its frames end, and it says why.
+    #[test]
+    fn a_wrong_device_is_not_reopened() {
+        use crate::engine::codec::{Codec, Event, Refused};
+        struct Wrong;
+        impl Codec for Wrong {
+            fn receive(&mut self, _bytes: &[u8], _now_ms: u64, _events: &mut Vec<Event>) {}
+            fn send(&mut self, _frame: &RawFrame) -> Result<Vec<u8>, Refused> {
+                Ok(Vec::new())
+            }
+            fn failure(&self) -> Option<&str> {
+                Some("not the device")
+            }
+        }
+        let opened = Arc::new(AtomicU32::new(0));
+        let count = opened.clone();
+        let sup = Supervisor::new(move || {
+            count.fetch_add(1, Ordering::Relaxed);
+            Ok(super::super::run_codec(
+                Wrong,
+                None,
+                Box::new(OneShotReader(Some(vec![1]))),
+                Box::new(SinkWriter),
+            ))
+        });
+        let failure = sup.failure();
+        assert!(matches!(
+            sup.frames_rx.recv_timeout(Duration::from_secs(5)),
+            Err(mpsc::RecvTimeoutError::Disconnected)
+        ));
+        assert_eq!(failure.get(), Some("not the device"));
+        assert_eq!(opened.load(Ordering::Relaxed), 1);
     }
 
     /// Factory that opens a fresh `OneShotReader` for each call,
