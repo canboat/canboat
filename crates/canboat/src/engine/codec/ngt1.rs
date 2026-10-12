@@ -274,6 +274,7 @@ impl Ngt1 {
                     "ngt1: the gateway is an AOS product of type {}, not the simulator",
                     info.product_type
                 );
+                continue;
             }
             log::info!(
                 "ngt1: gateway AOS NMEA 2000/0183 Simulator, serial {}, hardware {}, firmware {}; it takes no BEM command and transmits every PGN",
@@ -1045,6 +1046,24 @@ mod aos_probe_tests {
         d.tick(NOW + 10 * PROBE_AFTER_MS, &mut events);
         assert_eq!(probes(&events), 0);
         assert_eq!(d.probe, Probe::Done);
+    }
+
+    /// Another AOS product answers too, but is not the simulator: nothing
+    /// changes, and it is given up on as a gateway that does not answer.
+    #[test]
+    fn another_aos_product_is_not_the_simulator() {
+        let mut d = named_tx();
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        d.tick(NOW + PROBE_AFTER_MS, &mut events);
+        let other = String::from_utf8_lossy(ANSWER).replace("\"Type\": 24", "\"Type\": 7");
+        d.receive(other.as_bytes(), NOW + PROBE_AFTER_MS + 20, &mut events);
+        assert!(d.aos().is_none());
+        assert!(d.gate.is_some());
+        assert!(!d.tx_list.is_done());
+        d.tick(NOW + PROBE_AFTER_MS + PROBE_ANSWER_MS, &mut events);
+        assert_eq!(d.probe, Probe::Done);
+        assert!(d.aos().is_none());
     }
 
     /// No answer to the question either: given up on, and asked once only.
