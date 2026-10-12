@@ -1,0 +1,8 @@
+# A YDWG-02 RAW line carries one CAN frame, so at most 8 data bytes. A lost
+# UDP datagram or a reconnect can glue the head of one line to the tail of the
+# next (the second line). It must be rejected, not decoded as a coalesced
+# 129029 with a nonsense date (canboat/canboatjs#497).
+17:31:22.990 R 0DF80514 40 2F FC 25 C0 8A 5C 84
+17:31:22.999 R 0DF80514 60 2F FC 25 C0 8A 5C 84 41 6A
+# Control line: a single-frame PGN that decodes normally.
+17:31:23.000 R 09F80114 2B 49 79 21 D0 34 AD 01

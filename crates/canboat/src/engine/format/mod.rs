@@ -59,8 +59,9 @@ pub enum InputFormat {
     /// `Processed PGN` column).
     GarminCsv2,
     /// Linux SocketCAN `candump` text — the pretty per-frame shape
-    /// (`  can0  18EEFF00   [8]  8E F2 …`) or the `-l`/`-L` log shape
-    /// (`(1436509053.762905) can0 18EEFF00#8EF2…`). One raw CAN frame
+    /// (`  can0  18EEFF00   [8]  8E F2 …`), the `-l`/`-L` log shape
+    /// (`(1436509053.762905) can0 18EEFF00#8EF2…`) or the older Angstrom
+    /// shape (`<0x18eeff01> [8] 05 a0 …`). One raw CAN frame
     /// per line; canboat C reads these via `candump2analyzer`.
     Candump,
 }
@@ -153,10 +154,14 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     if looks_like_airmar(t) {
         return Some(InputFormat::Airmar);
     }
-    // SocketCAN candump text, either shape. Comma-free, so this can
+    // SocketCAN candump text, any shape. Comma-free, so this can
     // never shadow PLAIN; checked after YDWG-02/Airmar, whose lines a
     // candump capture cannot resemble (no `[len]`, no `#`).
-    if candump::looks_like_pretty(t) || candump::looks_like_log(t) {
+    if candump::looks_like_pretty(t)
+        || candump::looks_like_log(t)
+        || candump::looks_like_angstrom(t)
+        || candump::is_banner(t)
+    {
         return Some(InputFormat::Candump);
     }
     // PLAIN/FAST: ISO-like timestamp + `,prio,pgn,…`.

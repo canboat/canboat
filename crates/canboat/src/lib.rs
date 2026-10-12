@@ -479,6 +479,12 @@ pub mod codec {
         pub use crate::engine::codec::bst95::Bst95;
     }
 
+    /// CANalyst-II raw CAN frames in 64-byte USB packets: the Waveshare
+    /// USB-CAN-B (`04d8:0053`). The caller opens the channel.
+    pub mod canalyst {
+        pub use crate::engine::codec::canalyst::{Canalyst, PACKET_LEN};
+    }
+
     /// The 29-bit ISO 11783 CAN identifier ⇄ priority, PGN, source and
     /// destination.
     pub mod can_id {

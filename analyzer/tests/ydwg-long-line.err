@@ -1,0 +1,4 @@
+INFO ydwg-long-line [analyzer] Timestamp fixed
+INFO ydwg-long-line [analyzer] Detected YDWG-02 protocol with one line per frame
+ERROR ydwg-long-line [analyzer] Error reading message, more than 8 data bytes in YDWG-02 line for PGN 129029
+ERROR ydwg-long-line [analyzer] Unknown message error 2: '17:31:22.999'
