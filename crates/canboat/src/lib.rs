@@ -362,7 +362,7 @@ pub mod bus {
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
     pub use crate::io::device::{
-        Closed, DeviceCloser, DeviceHandle, DeviceWriterGone, FrameSender,
+        Closed, DeviceCloser, DeviceFailure, DeviceHandle, DeviceWriterGone, FrameSender,
     };
 
     /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically
@@ -629,7 +629,8 @@ pub mod bridge {
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
     pub use crate::server::{
-        Bridge, BridgeConfig, Gateway, GatewayKind, QuirkKind as Quirk, Transmitter,
+        ActisenseFormat, Bridge, BridgeConfig, Gateway, GatewayKind, QuirkKind as Quirk,
+        Transmitter,
     };
 }
 

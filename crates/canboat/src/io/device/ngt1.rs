@@ -5,12 +5,13 @@
 //!
 //! The AOS simulator speaks the NGT-1's framing but is no NMEA 2000 node:
 //! what it is given in 0x94 messages it sends from an address it never
-//! claims. Run with a node [`NodeConfig`] ([`run_with_node`]), a gateway
-//! the codec finds to be the simulator gets canboat's own node, as a
-//! CANalyst-II does ([`super::iso11783_node`]): it claims an address,
+//! claims. [`run_aos`] gives the simulator canboat's own node, as a
+//! CANalyst-II has ([`super::iso11783_node`]): it claims an address,
 //! answers the network-management requests, and everything goes out from
-//! that address, in 0x93 messages. An NGT-1 is a node itself, and stays
-//! as it is.
+//! that address, in 0x93 messages; it gives up on a gateway that turns out
+//! to be an NGT-1. [`run_ngt1`] runs an NGT-1, which is a node itself, and
+//! gives up on a gateway that turns out to be the simulator. [`run`] and
+//! [`run_with_config`] take either, and run no node.
 
 use std::io::{Read, Write};
 use std::sync::atomic::{AtomicU8, Ordering};
@@ -44,23 +45,56 @@ pub fn run_with_config(
     super::run_codec(Ngt1::new(config), None, reader, writer)
 }
 
-/// [`run_with_config`], and a node on an AOS simulator, set up by `node`
-/// (its `no_claim` leaves the simulator as it is). `claim_addr` follows the
-/// address the node sends from, [`CLAIM_UNCLAIMED`] while it has none.
-pub fn run_with_node(
+/// Run an AOS simulator, with a node set up by `node` (its `no_claim`
+/// leaves the simulator as it is). `claim_addr` follows the address the
+/// node sends from, [`CLAIM_UNCLAIMED`] while it has none. A gateway that
+/// answers a BEM command is an Actisense NGT-1, and is given up on
+/// ([`DeviceHandle::failure`]) rather than run as one.
+pub fn run_aos(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,
-    config: Config,
     node: NodeConfig,
     claim_addr: Arc<AtomicU8>,
 ) -> DeviceHandle {
     let codec = Ngt1Node {
-        codec: Ngt1::new(config),
+        codec: Ngt1::new(Config::default()),
         config: (!node.no_claim).then_some(node),
         node: None,
         claim_addr,
+        only: Only::Aos,
     };
     super::run_codec(codec, None, reader, writer)
+}
+
+/// [`run_with_config`] for an Actisense NGT-1 only: a gateway that says it
+/// is an AOS simulator is given up on ([`DeviceHandle::failure`]).
+pub fn run_ngt1(
+    reader: Box<dyn Read + Send>,
+    writer: Box<dyn Write + Send>,
+    config: Config,
+) -> DeviceHandle {
+    let codec = Ngt1Node {
+        codec: Ngt1::new(config),
+        config: None,
+        node: None,
+        claim_addr: Arc::new(AtomicU8::new(CLAIM_UNCLAIMED)),
+        only: Only::Ngt1,
+    };
+    super::run_codec(codec, None, reader, writer)
+}
+
+/// Why an AOS-only link is given up on.
+const NOT_AOS: &str = "the gateway answers Actisense BEM commands: it is an NGT-1, \
+                       not an AOS simulator (use --kind actisense)";
+/// Why an NGT-1-only link is given up on.
+const NOT_NGT1: &str = "the gateway says it is an AOS NMEA 2000/0183 Simulator, \
+                        not an NGT-1 (use --kind aos)";
+
+/// Which gateway a link is for; the other is given up on.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Only {
+    Aos,
+    Ngt1,
 }
 
 /// The NGT-1 codec, and a node once the gateway turns out to be an AOS
@@ -71,6 +105,8 @@ struct Ngt1Node {
     config: Option<NodeConfig>,
     node: Option<Node>,
     claim_addr: Arc<AtomicU8>,
+    /// Give up on the other gateway ([`run_aos`], [`run_ngt1`]).
+    only: Only,
 }
 
 struct Node {
@@ -197,6 +233,14 @@ impl Codec for Ngt1Node {
     fn close(&mut self) -> Vec<u8> {
         self.codec.close()
     }
+
+    fn failure(&self) -> Option<&str> {
+        match self.only {
+            Only::Aos if self.codec.answers_bem() => Some(NOT_AOS),
+            Only::Ngt1 if self.codec.aos().is_some() => Some(NOT_NGT1),
+            _ => None,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -225,6 +269,7 @@ mod tests {
             }),
             node: None,
             claim_addr: Arc::new(AtomicU8::new(CLAIM_UNCLAIMED)),
+            only: Only::Aos,
         }
     }
 
@@ -292,6 +337,60 @@ mod tests {
             .send(&RawFrame::new(None, 6, 127508, 0, 255, [1; 8]))
             .unwrap();
         assert_eq!(sent(&bytes), vec![(N2K_MSG_RECEIVED, 127508, Some(35))]);
+    }
+
+    /// Product Information, as an NGT-1 answers BEM commands.
+    fn bem_answer() -> Vec<u8> {
+        let mut payload = vec![BEM_PRODUCT_INFO, 0, 0x0e, 0x00];
+        payload.extend_from_slice(&[0; 8]);
+        let mut wire = Vec::new();
+        encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
+        wire
+    }
+
+    /// For the AOS simulator only, an NGT-1 is a failure; the simulator is
+    /// not.
+    #[test]
+    fn aos_only_gives_up_on_an_ngt1() {
+        let t = now();
+        let mut events = Vec::new();
+        let mut d = gateway();
+        d.tick(t, &mut events);
+        assert_eq!(d.failure(), None);
+        d.receive(&bem_answer(), t, &mut events);
+        assert!(d.failure().is_some_and(|f| f.contains("NGT-1")));
+
+        let mut d = gateway();
+        d.tick(t, &mut events);
+        d.tick(t + PROBE_AFTER_MS, &mut events);
+        d.receive(ANSWER, t + PROBE_AFTER_MS + 1, &mut events);
+        assert!(d.node.is_some());
+        assert_eq!(d.failure(), None);
+    }
+
+    /// For an NGT-1 only, the simulator is a failure, and gets no node.
+    #[test]
+    fn ngt1_only_gives_up_on_the_simulator() {
+        let t = now();
+        let mut events = Vec::new();
+        let mut d = Ngt1Node {
+            only: Only::Ngt1,
+            config: None,
+            ..gateway()
+        };
+        d.receive(&bem_answer(), t, &mut events);
+        assert_eq!(d.failure(), None);
+
+        let mut d = Ngt1Node {
+            only: Only::Ngt1,
+            config: None,
+            ..gateway()
+        };
+        d.tick(t, &mut events);
+        d.tick(t + PROBE_AFTER_MS, &mut events);
+        d.receive(ANSWER, t + PROBE_AFTER_MS + 1, &mut events);
+        assert!(d.node.is_none());
+        assert!(d.failure().is_some_and(|f| f.contains("--kind aos")));
     }
 
     /// An NGT-1 answers BEM commands, is a node itself, and stays as it is.

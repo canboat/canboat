@@ -32,6 +32,32 @@ pub const NETWORK_MANAGEMENT_PGNS: [u32; 10] = [
     59392, 59904, 60160, 60416, 60928, 126208, 126464, 126993, 126996, 126998,
 ];
 
+/// What `--rx-filter` lets through, where canboat filters rather than the
+/// gateway: the PGNs named, and always the network-management PGNs
+/// ([`NETWORK_MANAGEMENT_PGNS`], which device discovery runs on) and
+/// canboat's own (the gateway status and such, at or above
+/// [`crate::engine::codec::SYNTHETIC_PGN_START`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct RxFilter(Vec<u32>);
+
+impl RxFilter {
+    /// A filter on `pgns`; `None` when there are none, which filters
+    /// nothing.
+    pub(crate) fn new(pgns: &[u32]) -> Option<Self> {
+        let mut pgns = pgns.to_vec();
+        pgns.sort_unstable();
+        pgns.dedup();
+        (!pgns.is_empty()).then_some(Self(pgns))
+    }
+
+    /// Whether a frame of `pgn` is passed on.
+    pub(crate) fn passes(&self, pgn: u32) -> bool {
+        pgn >= crate::engine::codec::SYNTHETIC_PGN_START
+            || NETWORK_MANAGEMENT_PGNS.contains(&pgn)
+            || self.0.binary_search(&pgn).is_ok()
+    }
+}
+
 /// The PGNs the application transmits and receives, to advertise on top of
 /// the gateway's own ISO housekeeping PGNs. Set before the device opens.
 ///
@@ -168,6 +194,18 @@ pub fn merge(builtin: &[u32], extra: &[u32]) -> (Vec<u32>, Vec<u32>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_rx_filter_passes_the_named_and_network_management() {
+        assert_eq!(RxFilter::new(&[]), None);
+        let f = RxFilter::new(&[129029, 127250, 129029]).unwrap();
+        assert!(f.passes(127250));
+        assert!(f.passes(129029));
+        assert!(!f.passes(130306));
+        assert!(f.passes(60928));
+        assert!(f.passes(126996));
+        assert!(f.passes(262400));
+    }
 
     #[test]
     fn a_gate_allows_what_is_named_and_refuses_the_rest() {

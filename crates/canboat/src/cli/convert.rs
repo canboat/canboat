@@ -35,12 +35,15 @@ enum OutFormat {
     Json,
     /// canboat human-readable text, one line per record.
     Text,
-    /// Yacht Devices YDWG-02 / YDEN received lines (raw frames).
+    /// RAW ASCII (Actisense's name; the Yacht Devices RAW format): one raw
+    /// CAN frame per line, `<time> R <canid> <hex>…`.
+    #[value(name = "raw-ascii", alias = "ydwg02")]
     Ydwg02,
-    /// Actisense N2K-ASCII lines (`A…`, raw frames).
+    /// Actisense N2K ASCII: one reassembled message per line, `A<time> …`.
+    #[value(name = "n2k-ascii", alias = "actisense")]
     Actisense,
     /// Actisense `.ebl` binary log (raw frames).
-    #[value(name = "actisense-ebl")]
+    #[value(name = "actisense-ebl", alias = "ebl")]
     ActisenseEbl,
 }
 
@@ -66,11 +69,14 @@ enum FromFormat {
     /// PLAIN with single frames interleaved among coalesced fast-packets.
     #[value(name = "plain-mix-fast")]
     PlainMixFast,
-    /// Actisense NGT-1 ASCII (`A<time> …`).
-    #[value(name = "actisense", alias = "actisense-ascii")]
+    /// Actisense N2K ASCII: one reassembled message per line (`A<time> …`),
+    /// from a W2K-1 or PRO-NDC-1E2K in N2K ASCII mode or Actisense's tools.
+    #[value(name = "n2k-ascii", alias = "actisense", alias = "actisense-ascii")]
     Actisense,
-    /// Yacht Devices YDWG-02 / YDEN (`<time> R/T <canid> <hex>…`).
-    #[value(name = "ydwg02", alias = "yden")]
+    /// RAW ASCII: one raw CAN frame per line (`<time> R/T <canid> <hex>…`),
+    /// from a Yacht Devices YDWG-02 / YDEN-02 / YDNU-02, or a W2K-1 or
+    /// PRO-NDC-1E2K in RAW ASCII mode.
+    #[value(name = "raw-ascii", alias = "ydwg02", alias = "yden")]
     Ydwg02,
     /// Digital Yacht iKonvert (`!PDGY,<pgn>,…`).
     #[value(name = "ikonvert")]
@@ -98,17 +104,17 @@ enum FromFormat {
     Candump,
     /// Actisense `.ebl` binary log. Not a line format — decoded via the
     /// EBL frame reader, so it has no [`InputFormat`] mapping.
-    #[value(name = "actisense-ebl")]
+    #[value(name = "actisense-ebl", alias = "ebl")]
     ActisenseEbl,
-    /// Actisense BST-D0: reassembled NMEA 2000 messages in BDTP framing,
-    /// as a W2K-1 or PRO-NDC-1E2K sends them in Actisense mode. Binary
-    /// too, with its own frame reader.
-    #[value(name = "bst-d0", alias = "actisense-n2k")]
+    /// Actisense N2K Actisense (BST-D0): reassembled NMEA 2000 messages in
+    /// BDTP framing, as a W2K-1 or PRO-NDC-1E2K sends them in Actisense
+    /// mode. Binary too, with its own frame reader.
+    #[value(name = "n2k-actisense")]
     BstD0,
-    /// Actisense BST-95: raw CAN frames in BDTP framing, as a PRO-NDC-1E2K
-    /// or W2K-1 sends them in "CAN Actisense" mode. Binary too; the reader
-    /// takes any BST message that carries a frame.
-    #[value(name = "bst-95")]
+    /// Actisense RAW Actisense (BST-95): raw CAN frames in BDTP framing, as
+    /// a PRO-NDC-1E2K or W2K-1 sends them in "CAN Actisense" mode. Binary
+    /// too; the reader takes any BST message that carries a frame.
+    #[value(name = "raw-actisense")]
     Bst95,
 }
 
@@ -142,13 +148,15 @@ pub const LONG_ABOUT: &str = "\
 Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 
 Input line formats (auto-detected from the first line, or forced with --from):
-  plain, plain-mix-fast, actisense, ydwg02, ikonvert, airmar, seasmart,
+  plain, plain-mix-fast, n2k-ascii, raw-ascii, ikonvert, airmar, seasmart,
   garmin, garmin-csv2, candump.
+  (n2k-ascii and raw-ascii are Actisense's names; actisense and ydwg02 still
+  work.)
 
 Binary input formats (forced with --from; a .ebl file is recognised by name):
   actisense-ebl  Actisense .ebl binary log
-  bst-d0         Actisense BST-D0 messages: a W2K-1 or PRO-NDC-1E2K in Actisense mode
-  bst-95         Actisense BST-95 raw CAN frames: a PRO-NDC-1E2K or W2K-1 in CAN Actisense mode
+  n2k-actisense  Actisense N2K Actisense (BST-D0): a W2K-1 or PRO-NDC-1E2K in Actisense mode
+  raw-actisense  Actisense RAW Actisense (BST-95): a PRO-NDC-1E2K or W2K-1 in CAN Actisense mode
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)
@@ -158,8 +166,8 @@ Output formats (--to, default json):
   plain          canboat PLAIN/FAST lines (raw frames, no decode)
   json           one decoded JSON object per record
   text           canboat human-readable text, one line per record
-  ydwg02         Yacht Devices YDWG-02 / YDEN received lines (raw frames)
-  actisense      Actisense N2K-ASCII lines (raw frames)
+  raw-ascii      RAW ASCII lines, as a YDWG-02 sends them (raw frames)
+  n2k-ascii      Actisense N2K ASCII lines (reassembled messages)
   actisense-ebl  Actisense .ebl binary log (raw frames)
 
 Decoded-output shape (json/text only):

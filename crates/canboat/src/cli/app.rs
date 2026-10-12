@@ -48,7 +48,7 @@ enum Command {
     /// Build one NMEA 2000 frame from field values (any PGN). See `--list` / `<PGN> --help`.
     FormatMessage(format_message::Args),
 
-    /// Bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN) to/from stdout.
+    /// Bridge a live gateway to and from stdin/stdout.
     Interface(interface::Args),
 
     /// Run the single-process device → analyzer → n2kd pipeline server.
@@ -141,7 +141,10 @@ fn run_server(config: server::BridgeConfig) -> anyhow::Result<()> {
     } else {
         bridge.wait();
     }
-    Ok(())
+    match bridge.failure() {
+        Some(why) => anyhow::bail!("{why}"),
+        None => Ok(()),
+    }
 }
 
 /// Print any error and translate to a process exit code.
@@ -215,4 +218,18 @@ fn run_tui(args: tui::Args) -> anyhow::Result<()> {
         .enable_all()
         .build()?;
     rt.block_on(tui::run(args))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every subcommand's flags parse together: no two share a name (the
+    /// options `interface` and `server` share come from one struct, next to
+    /// each command's own).
+    #[test]
+    fn the_command_line_is_consistent() {
+        use clap::CommandFactory;
+        Cli::command().debug_assert();
+    }
 }

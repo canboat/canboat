@@ -100,6 +100,31 @@ fn init_command(bitrate: u32) -> io::Result<Vec<u8>> {
     ]))
 }
 
+/// On Windows canboat can only open an adapter bound to Microsoft's WinUSB
+/// driver, which the CANalyst-II does not get by itself; say how to bind
+/// it rather than fail at the claim.
+#[cfg(target_os = "windows")]
+fn check_driver(info: &nusb::DeviceInfo) -> io::Result<()> {
+    match info.driver() {
+        Some(driver) if driver.eq_ignore_ascii_case("winusb") => Ok(()),
+        driver => Err(io::Error::new(
+            io::ErrorKind::Unsupported,
+            format!(
+                "the CANalyst-II uses the {} driver, and canboat needs WinUSB: \
+                 install it with Zadig (https://zadig.akeo.ie), choosing the \
+                 04D8 0053 device and WinUSB; the vendor's own tools then no \
+                 longer see the adapter until its driver is restored",
+                driver.map_or("unknown".to_string(), |d| format!("'{d}'"))
+            ),
+        )),
+    }
+}
+
+#[cfg(not(target_os = "windows"))]
+fn check_driver(_info: &nusb::DeviceInfo) -> io::Result<()> {
+    Ok(())
+}
+
 /// Open CAN `channel` (0 or 1) of the CANalyst-II `selector` names at
 /// `bitrate` and return an independent `(reader, writer)` pair carrying
 /// its 64-byte message packets. A plain `usb` takes the one adapter with
@@ -144,6 +169,7 @@ pub fn open_rw(
             ));
         }
     };
+    check_driver(&info)?;
     let device = info.open().wait().map_err(io::Error::other)?;
     if device
         .active_configuration()

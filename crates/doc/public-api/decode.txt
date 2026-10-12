@@ -6,6 +6,7 @@ impl canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::new(canboat::schema::BusProtocol) -> Self
 impl canboat::codec::Codec for canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -19,6 +20,7 @@ impl canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::new() -> Self
 impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst_d0::BstD0::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::bst_d0::BstD0::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -37,6 +39,7 @@ impl canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::new(canboat::schema::BusProtocol) -> Self
 impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -67,6 +70,7 @@ impl canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::new(canboat::codec::ikonvert::Config) -> Self
 impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -178,6 +182,7 @@ impl canboat::codec::maretron::Maretron
 pub fn canboat::codec::maretron::Maretron::new(canboat::codec::maretron::Config) -> Self
 impl canboat::codec::Codec for canboat::codec::maretron::Maretron
 pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -232,10 +237,12 @@ impl core::fmt::Debug for canboat::codec::ngt1::Config
 pub fn canboat::codec::ngt1::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::codec::ngt1::Ngt1
 impl canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::answers_bem(&self) -> bool
 pub fn canboat::codec::ngt1::Ngt1::aos(&self) -> core::option::Option<&canboat::codec::ngt1::AosInfo>
 pub fn canboat::codec::ngt1::Ngt1::new(canboat::codec::ngt1::Config) -> Self
 impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -294,6 +301,7 @@ pub fn canboat::codec::PgnLists::fmt(&self, &mut core::fmt::Formatter<'_>) -> co
 impl core::marker::StructuralPartialEq for canboat::codec::PgnLists
 pub trait canboat::codec::Codec
 pub fn canboat::codec::Codec::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::Codec::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::Codec::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -301,6 +309,7 @@ pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::
 pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst95::Bst95::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -308,6 +317,7 @@ pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::r
 pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::bst_d0::BstD0::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::bst_d0::BstD0::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -315,6 +325,7 @@ pub fn canboat::codec::bst_d0::BstD0::send(&mut self, &canboat::Frame) -> core::
 pub fn canboat::codec::bst_d0::BstD0::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::canalyst::Canalyst::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -322,6 +333,7 @@ pub fn canboat::codec::canalyst::Canalyst::send(&mut self, &canboat::Frame) -> c
 pub fn canboat::codec::canalyst::Canalyst::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -329,6 +341,7 @@ pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> c
 pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::maretron::Maretron
 pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
@@ -336,6 +349,7 @@ pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> c
 pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
 pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)

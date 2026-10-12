@@ -26,7 +26,7 @@ log        = "0.4"
 smallvec   = { version = "1", features = ["union"] }
 indexmap   = "2"
 
-clap       = { version = "4", features = ["derive"] }
+clap       = { version = "4", features = ["derive", "wrap_help"] }
 anyhow     = "1"
 env_logger = { version = "0.11", default-features = false, features = ["humantime", "auto-color"] }
 # default-features = false drops the libudev port-enumeration backend:

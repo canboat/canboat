@@ -25,6 +25,7 @@ pub mod quirk;
 pub mod shape;
 
 mod convert;
+pub mod device;
 mod format_message;
 mod interface;
 mod legacy;

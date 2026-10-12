@@ -12,7 +12,7 @@
 //!
 //! Input modes:
 //!
-//! * **stdin** (no `--actisense` / `--ikonvert` / `--maretron`): the
+//! * **stdin** (no `--kind` gateway, `--canboat-csv` or `--replay`): the
 //!   binary parses PLAIN/FAST lines off stdin. Compatible with
 //!   `analyzer < file.raw | canboat-pipeline` style pipelines that used
 //!   to exist with `n2kd-inproc`.
@@ -69,12 +69,14 @@ use std::thread;
 
 use anyhow::{Context, Result, bail};
 
+#[cfg(feature = "cli")]
+use crate::cli::device::{self as device_args, DeviceArgs, Kind, KindArg};
 use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
 use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
-pub use crate::io::device::gateway::{Gateway, GatewayKind};
+pub use crate::io::device::gateway::{ActisenseFormat, Gateway, GatewayKind};
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
 
@@ -84,343 +86,230 @@ use crate::io::open_serial_rw;
 #[cfg(feature = "cli")]
 #[derive(Debug, clap::Args)]
 #[command(after_help = crate::cli::help_footer())]
+#[command(after_long_help = format!(
+    "{}\n\n{}",
+    crate::cli::device::GATEWAY_HELP,
+    crate::cli::help_footer()
+))]
 #[command(group(clap::ArgGroup::new("source").multiple(false)))]
 pub struct Args {
-    /// Read frames from an Actisense NGT-1 on this serial device path
-    /// (e.g. `/dev/ttyUSB0`), or through a network bridge such as ser2net
-    /// at `tcp://host[:port]` (port 6001 if not given).
-    #[arg(long, value_name = "DEVICE", group = "source")]
+    /// The kind of gateway; without one, frames are read from stdin.
+    ///
+    /// With socketcan or canalyst canboat becomes a full NMEA 2000 bus
+    /// participant: it claims an address, answers ISO Requests and Group
+    /// Functions, and sends Heartbeats.
+    #[arg(long, value_enum, value_name = "KIND", requires = "device", help_heading = device_args::GATEWAY)]
+    kind: Option<KindArg>,
+
+    /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
+    /// `udp://host:port`, `host:port` or a CAN interface such as `can0`.
+    ///
+    /// Which one depends on the gateway; see the table at the end.
+    #[arg(
+        long,
+        value_name = "DEVICE",
+        group = "source",
+        requires = "kind",
+        help_heading = device_args::GATEWAY
+    )]
+    device: Option<String>,
+
+    // The old one-flag-per-gateway spellings, each `--kind <kind> --device
+    // <DEVICE>`.
+    #[arg(long, value_name = "DEVICE", group = "source", hide = true)]
     actisense: Option<String>,
-
-    /// Read frames from a Digital Yacht iKonvert on this serial
-    /// device path, or at `tcp://host[:port]` (a NavLink2 serves its
-    /// protocol on port 6001, the default).
-    #[arg(long, value_name = "DEVICE", group = "source")]
+    #[arg(long, value_name = "DEVICE", group = "source", hide = true)]
     ikonvert: Option<String>,
-
-    /// Read frames from a Maretron IPG100/200 over TCP. Accepts either
-    /// `host:port` or `tcp://host[:port]`. Default port 6543 (bus 0).
-    #[arg(long, value_name = "URL", group = "source")]
+    #[arg(long, value_name = "URL", group = "source", hide = true)]
     maretron: Option<String>,
-
-    /// Read frames from a Linux SocketCAN interface (e.g. `can0`,
-    /// `nmea2000`). The pipeline becomes a full NMEA 2000 bus
-    /// participant: it claims an ISO address, answers ISO Requests and
-    /// Group Functions, and sends Heartbeats. Linux-only.
-    #[arg(long, value_name = "IFACE", group = "source")]
+    #[arg(long, value_name = "IFACE", group = "source", hide = true)]
     socketcan: Option<String>,
 
-    /// Read frames from a CANalyst-II USB adapter (the Waveshare
-    /// USB-CAN-B), named `usb` or `usb:VVVV:PPPP`. Like `--socketcan`,
-    /// the pipeline becomes a full NMEA 2000 bus participant; works on
-    /// every platform.
-    #[arg(long, value_name = "DEVICE", group = "source")]
-    canalyst: Option<String>,
-
-    /// Read frames from a Yacht Devices RAW gateway: a YDWG-02 / YDEN /
-    /// NavLink2 RAW port at `tcp://host[:port]` (port 1457 if not given)
-    /// or `udp://gateway:port` (`udp://[bind:]port` only receives), or a
-    /// YDNU-02 on its serial port.
-    #[arg(long, value_name = "DEVICE", group = "source")]
-    ydwg: Option<String>,
-
-    /// Read frames from an Actisense W2K-1 in N2K ASCII mode, at
-    /// `tcp://host[:port]` (port 60002 if not given) or `udp://…`, as
-    /// `--ydwg`.
-    #[arg(long, value_name = "URL", group = "source")]
-    w2k_ascii: Option<String>,
-
-    /// Read frames from an Actisense W2K-1 or PRO-NDC-1E2K in Actisense
-    /// (BST-D0) mode, at `tcp://host[:port]` (port 60002 if not given).
-    #[arg(long, value_name = "URL", group = "source")]
-    bst_d0: Option<String>,
-
-    /// Read raw CAN frames (BST-95) from a PRO-NDC-1E2K or W2K-1 in "CAN
-    /// Actisense" mode at `tcp://host[:port]` (port 60002 if not given),
-    /// or an NGX in CAN Packet mode on its serial port.
-    #[arg(long = "bst-95", value_name = "DEVICE", group = "source")]
-    bst_95: Option<String>,
-
-    /// The CANalyst-II CAN channel, 0 or 1.
-    #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
-    canalyst_channel: u8,
-
-    /// The CAN bus bit rate, for `--canalyst` (250 000 if not given) and
-    /// `--socketcan`, where it brings the interface down, sets the rate and
-    /// brings it up again (needs root or CAP_NET_ADMIN). Without it a
-    /// SocketCAN interface is used as it was configured. 250 000 for NMEA
-    /// 2000, 500 000 for a J1939-14 bus. Not the serial speed to a gateway
-    /// such as the NGT-1: that is `--baud`.
-    #[arg(long, value_name = "BIT/S")]
-    bitrate: Option<u32>,
-
-    /// Preferred ISO source address to claim with `--socketcan`,
-    /// `--canalyst`, or an AOS simulator on `--actisense`. Defaults to 0;
-    /// the claim machine will pick a free address if this one is taken.
-    /// (`--socketcan-address` is the old spelling.)
-    #[arg(
-        long = "address",
-        alias = "socketcan-address",
-        value_name = "ADDR",
-        default_value_t = 0
-    )]
-    address: u8,
-
-    /// Chain into another `canboat server` instance over its raw
-    /// output port (`--raw-port`, default 2603). Accepts `host:port`
-    /// or `tcp://host[:port]`. The stream is canboat PLAIN/FAST CSV.
+    /// Read from another `canboat server`'s raw port (`host:port` or
+    /// `tcp://host[:port]`, 2603).
     ///
-    /// The raw output port is read-only, so on its own this only
-    /// receives frames; anything this instance wants to send is
-    /// written to the same socket and rejected by the peer. To also
-    /// inject onto the upstream bus, give `--canboat-csv-write` the
-    /// peer's write-only input port (`--input-port`, default 2600).
-    /// The read URL can equally be a one-way feed such as an
-    /// iptee'd raw stream.
-    #[arg(long, value_name = "URL", group = "source")]
+    /// The stream is canboat PLAIN/FAST CSV. The raw output port is
+    /// read-only, so on its own this only receives frames; anything this
+    /// instance sends is written to the same socket and rejected by the
+    /// peer. To also send onto the upstream bus, give --canboat-csv-write
+    /// the peer's input port. The URL can equally be a one-way feed such
+    /// as an iptee'd raw stream.
+    #[arg(long, value_name = "URL", group = "source", help_heading = OTHER_SOURCES)]
     canboat_csv: Option<String>,
 
-    /// Play this capture as if it were a live bus, for testing a consumer
-    /// without a boat. Any format canboat reads (PLAIN, FAST, candump,
-    /// Actisense ASCII, YDWG-02, …). Frames keep the capture's pacing but
-    /// carry the current time, and the capture starts over at its end.
+    /// With --canboat-csv: where to send frames, the peer's input port (2600).
     ///
-    /// The input port accepts writes as it does for a real gateway; they
-    /// go to `--replay-sent`, or are dropped.
-    #[arg(long, value_name = "FILE", group = "source")]
-    replay: Option<PathBuf>,
-
-    /// With `--replay`: append the frames written to the bus to this file,
-    /// as canboat PLAIN/FAST lines, so a test can check what a consumer
-    /// sent.
-    #[arg(long, value_name = "FILE", requires = "replay")]
-    replay_sent: Option<PathBuf>,
-
-    /// `--protocol j1939` decodes against the J1939 table and runs the
-    /// SocketCAN gateway as a J1939 node: single frames and ISO TP, no
-    /// fast-packet, and no NMEA 2000 Heartbeat, Product Information or
-    /// PGN lists. Needs a source that passes raw CAN frames
-    /// (`--socketcan`, `--canboat-csv` or stdin); the NGT-1, iKonvert
-    /// and Maretron do NMEA 2000 framing themselves.
-    #[command(flatten)]
-    protocol: crate::cli::protocol::ProtocolArgs,
-
-    /// Separate sink for outbound PLAIN/FAST frames when chaining
-    /// via `--canboat-csv`: the peer's write-only input port
-    /// (`--input-port`, default 2600, the same slot as n2kd's
-    /// `port+3`). Without this flag, writes go to the `--canboat-csv`
-    /// socket, which a `canboat server` raw port does not accept.
-    #[arg(long, value_name = "URL", requires = "canboat_csv")]
+    /// The same slot as n2kd's `port+3`. Without it, writes go to the
+    /// --canboat-csv socket, which a `canboat server` raw port does not
+    /// accept.
+    #[arg(long, value_name = "URL", requires = "canboat_csv", help_heading = OTHER_SOURCES)]
     canboat_csv_write: Option<String>,
 
-    /// Baud rate for serial devices. Defaults: 115200 for NGT-1 and NGX
-    /// (`--bst-95`), 230400 for iKonvert, 38400 for YDNU-02 (`--ydwg`).
-    /// Ignored for network gateways.
-    #[arg(long, value_name = "BAUD")]
-    baud: Option<u32>,
-
-    /// Maretron login password (default: empty).
-    #[arg(long, default_value = "")]
-    maretron_password: String,
-
-    /// iKonvert RX filter list (`<pgn>,<pgn>,...`). When set, init
-    /// brings the device online in `NORMAL` mode and runs the
-    /// `N2NET_RESET` + `RX_LIST` handshake steps.
-    #[arg(long, value_name = "PGN,PGN,...")]
-    ikonvert_rx: Option<String>,
-
-    /// iKonvert TX filter list (`<pgn>,<pgn>,...`). Triggers the
-    /// `N2NET_RESET` + `TX_LIST` handshake steps. WARNING — ONCE GIVEN,
-    /// EVERY PGN NOT ON IT (OR ON --tx-pgn) IS REFUSED (NOT SENT), apart
-    /// from network management.
-    #[arg(long, value_name = "PGN,PGN,...")]
-    ikonvert_tx: Option<String>,
-
-    /// Disable the iKonvert TX rate limit. Use at your own risk.
-    #[arg(long)]
-    ikonvert_rate_limit_off: bool,
-
-    /// A PGN the application transmits, to advertise in the gateway's
-    /// PGN 126464 Transmit list.
-    /// Repeatable, or comma-separated. Honoured by `--socketcan`,
-    /// `--ikonvert` and `--actisense` (which enables it in the NGT-1's
-    /// Transmit PGN Enable list); other backends warn and ignore it.
+    /// Play this capture as if it were a live bus, looped, at its own pace.
     ///
-    /// WARNING — WITH --ikonvert OR --actisense, THIS IS THE WHOLE TRANSMIT
-    /// LIST: ONCE ANY --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT
-    /// SENT), apart from network management. List every PGN you will send.
-    #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
-    tx_pgn: Vec<u32>,
+    /// Any format canboat reads (PLAIN, FAST, candump, N2K ASCII, RAW
+    /// ASCII, …). Frames carry the current time. The input port accepts
+    /// writes as for a real gateway; they go to --replay-sent, or are
+    /// dropped. For testing a consumer without a boat.
+    #[arg(long, value_name = "FILE", group = "source", help_heading = OTHER_SOURCES)]
+    replay: Option<PathBuf>,
 
-    /// A PGN the application receives, to advertise in the gateway's
-    /// PGN 126464 Receive list. Only advertised — it never filters what
-    /// the gateway passes on. Repeatable, or comma-separated.
-    #[arg(long = "rx-pgn", value_name = "PGN", value_delimiter = ',')]
-    rx_pgn: Vec<u32>,
-
-    /// Do not add the PGNs the gateway transmits to its advertised
-    /// Transmit list as they are first sent (`--socketcan`).
-    #[arg(long)]
-    no_learn_tx_pgns: bool,
-
-    /// Suppress the periodic ISO Address Claim / Product Info request
-    /// engine. By default it runs whenever a device writer is wired up
-    /// (matching canboat C `n2kd`'s default). Stdin-only mode always
-    /// skips the engine — there's nowhere to send the requests.
-    #[arg(long)]
-    no_request_claims: bool,
-
-    /// Apply a quirk / value-add on the bus (see the possible values).
-    /// Repeatable — pass `--quirk` once per quirk you want, e.g.
-    /// `--quirk scx20 --quirk wmm`.
+    /// With --replay: append the frames sent to the bus to this file.
     ///
-    /// `scx20` and `motion` impersonate/claim a device and need
-    /// `--socketcan`; `wmm` emits canboat's own PGN and works with any
-    /// writable backend (socketcan / NGT-1 / iKonvert);
-    /// `gps-rollover` only rewrites decoded dates and needs no backend
-    /// at all. `gps-rollover=<device>[,<device>...]` also corrects every
-    /// date the listed devices stamp from the broken clock; a device is
-    /// a source address (`4`), manufacturer code and unique number
-    /// (`1851:491603`), or a hex ISO NAME (`0x…`); `gps-rollover=all`
-    /// corrects every date on the bus. `gps-relay` then re-sends what
-    /// the listed devices broadcast — all their data PGNs, but not
-    /// network management (claims, product information, requests) nor
+    /// As canboat PLAIN/FAST lines, so a test can check what a consumer
+    /// sent.
+    #[arg(long, value_name = "FILE", requires = "replay", help_heading = OTHER_SOURCES)]
+    replay_sent: Option<PathBuf>,
+
+    #[command(flatten)]
+    gateway: DeviceArgs,
+
+    /// Apply a quirk to the bus; repeatable (see the possible values).
+    ///
+    /// `scx20` and `motion` impersonate or claim a device and need
+    /// `--kind socketcan` or `canalyst`; `wmm` emits canboat's own PGN and
+    /// works with any gateway that can send; `gps-rollover` only rewrites
+    /// decoded dates and needs no gateway at all.
+    /// `gps-rollover=<device>[,<device>...]` also corrects every date the
+    /// listed devices stamp from the broken clock; a device is a source
+    /// address (`4`), manufacturer code and unique number (`1851:491603`),
+    /// or a hex ISO NAME (`0x…`); `gps-rollover=all` corrects every date
+    /// on the bus. `gps-relay` then re-sends what the listed devices
+    /// broadcast — all their data PGNs, but not network management nor
     /// anything addressed — from canboat's own address, dates corrected,
     /// so other devices can select canboat as their GPS / time source;
-    /// needs a writable backend and a device list (not `all`).
-    #[arg(long, value_name = "NAME")]
+    /// it needs a gateway that can send and a device list (not `all`).
+    #[arg(long, value_name = "NAME", help_heading = ON_THE_BUS)]
     quirk: Vec<quirks::QuirkKind>,
 
-    /// Bind address for all TCP listeners. Defaults to `0.0.0.0` so
-    /// clients on the LAN (chartplotters, OpenCPN, etc.) can
-    /// connect. Pass `127.0.0.1` to restrict access to the local
-    /// host.
-    #[arg(long, default_value = "0.0.0.0")]
+    /// Do not request every device's Address Claim and Product Information.
+    ///
+    /// By default canboat asks periodically whenever it can send, as
+    /// canboat C `n2kd` does. On stdin it never asks: there is nowhere to
+    /// send the requests.
+    #[arg(long, help_heading = ON_THE_BUS)]
+    no_request_claims: bool,
+
+    /// The address every TCP port listens on; 127.0.0.1 for this host only.
+    #[arg(long, default_value = "0.0.0.0", help_heading = PORTS)]
     bind: Ipv4Addr,
 
-    /// Port for the snapshot server — on connect, dumps the latest
-    /// analyzer JSON line per `(pgn, src, secondary)` then closes.
-    /// Matches canboat C `n2kd`'s base port (`-p`). AIS-described
-    /// PGNs are filtered out; they go to `--ais-port` instead, except
-    /// PGN 129026 and 129029 which appear in both. Enabling this
-    /// forces JSON serialization for every decoded record so the
-    /// cache stays current; disable with `0` if you don't need it.
-    #[arg(long, default_value_t = 2597)]
+    /// Snapshot: on connect, the latest JSON record of every PGN, then close.
+    ///
+    /// One per `(pgn, src, secondary)`. canboat C `n2kd`'s base port
+    /// (`-p`). AIS PGNs go to --ais-port instead, apart from 129026 and
+    /// 129029, which are on both. It keeps every record decoded to JSON;
+    /// `0` turns it off when you don't need it.
+    #[arg(long, value_name = "PORT", default_value_t = 2597, help_heading = PORTS)]
     snapshot_port: u16,
 
-    /// Port for the analyzer JSON server — one decoded PGN per line.
-    /// Matches canboat C `n2kd`'s `port+1` stream port: read-only.
-    /// Injection goes through `--input-port` instead; this port is
-    /// kept free for a future "analyzed write" feature that would
-    /// accept JSON here. Lazy: formatting is skipped when no client is
-    /// subscribed. `0` disables.
-    #[arg(long, default_value_t = 2598)]
+    /// Decoded JSON, one record per line; read-only.
+    ///
+    /// n2kd's `port+1`. Formatting is skipped while no client is
+    /// connected. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2598, help_heading = PORTS)]
     analyzer_port: u16,
 
-    /// Port for the read-only NMEA 0183 server (includes AIVDM).
-    /// Matches canboat C `n2kd`'s `port+2` NMEA 0183 port. `0`
-    /// disables.
-    #[arg(long, default_value_t = 2599)]
+    /// NMEA 0183 sentences, AIVDM included; read-only.
+    ///
+    /// n2kd's `port+2`. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2599, help_heading = PORTS)]
     nmea0183_port: u16,
 
-    /// Write-only raw input port — the canonical `SERVER_INPUT_STREAM`
-    /// slot (canboat C `n2kd` `port+3`). Clients connect and write
-    /// canboat PLAIN/FAST lines that are injected onto the bus
-    /// (device mode only); nothing is streamed back, so it never
-    /// forces JSON/CSV serialization. This is the cheap write path for
-    /// a consumer that reads its data on another port. `0` disables.
-    #[arg(long, default_value_t = 2600)]
+    /// Input: PLAIN/FAST lines written here are sent onto the bus.
+    ///
+    /// Write-only: nothing is streamed back. n2kd's `port+3`. The cheap
+    /// way to send for a client that reads its data on another port. `0`
+    /// turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2600, help_heading = PORTS)]
     input_port: u16,
 
-    /// Read-only raw N2K output stream. Clients receive every frame as
-    /// a `# format=FAST` PLAIN line (already-coalesced fast-packet
-    /// payloads — never the per-CAN-frame PLAIN format). Reading is
-    /// lazy (skipped with no client). Injection is NOT accepted here —
-    /// use `--input-port`. `0` disables. (Previously this port was
-    /// bidirectional at 2600 under `--csv-port` / `--raw-input-port`;
-    /// the write side moved to `--input-port` and the read side moved
-    /// here to keep the input slot write-only.)
-    #[arg(long, default_value_t = 2603)]
-    raw_port: u16,
-
-    /// Port for the AIS snapshot server — on connect, dumps the
-    /// latest analyzer JSON line for every AIS-described PGN (plus
-    /// PGN 129026 and 129029) then closes. Matches canboat C
-    /// `n2kd`'s `port+4` AIS port. `0` disables.
-    #[arg(long, default_value_t = 2601)]
+    /// AIS snapshot: on connect, the latest record of every AIS PGN, then close.
+    ///
+    /// Plus PGN 129026 and 129029. n2kd's `port+4`. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2601, help_heading = PORTS)]
     ais_port: u16,
 
-    /// Also write NMEA 0183 sentences (including AIVDM) to stdout —
-    /// mirrors canboat C `n2kd`'s `--nmea0183` flag. Off by default,
-    /// matching n2kd's TCP-multiplex behaviour; subscribers should
-    /// connect to `--nmea0183-port` (2599) instead.
-    #[arg(long)]
-    nmea0183_stdout: bool,
+    /// Raw frames, as `# format=FAST` PLAIN lines; read-only.
+    ///
+    /// Fast-packets come already joined. Skipped while no client is
+    /// connected. Sending goes through --input-port. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2603, help_heading = PORTS)]
+    raw_port: u16,
 
-    /// Disable the 1 Hz NMEA 0183 rate limit. By default each
-    /// `(source, quantity)` is limited to one sentence per second on
-    /// the NMEA 0183 outputs (matching canboat C `n2kd`), so a bus
-    /// with several devices reporting the same measurement doesn't
-    /// flood downstream 0183 consumers. AIS (`!AI…`) is never rate-
-    /// limited. Pass this to emit every converted sentence unthrottled
-    /// (e.g. for byte-for-byte parity captures).
-    #[arg(long = "no-nmea0183-rate-limit")]
-    no_nmea0183_rate_limit: bool,
-
-    /// Override the per-device NMEA 0183 filter mute-rules file. The
-    /// filter is **always on**, reading `nmea0183-filter.json` from the
-    /// config dir (see `--config-dir`) by default; a rule-less file is a
-    /// no-op (every converted sentence is emitted). Once ≥1 mute rule
-    /// exists, the 0183 outputs only carry sentences from devices whose
-    /// NAME (PGN 60928) the pipeline has learned and that aren't muted.
-    /// The N2K bus is never affected. Use this to point at a specific
-    /// file instead of the config dir's.
-    #[arg(long = "nmea0183-filter", value_name = "PATH")]
-    nmea0183_filter: Option<PathBuf>,
-
-    /// Directory holding the server's persistent state files —
-    /// `overrides.json` (PGN-rate overrides) and `nmea0183-filter.json`
-    /// (0183 mute rules). Both features are on by default. When unset the
-    /// dir is resolved automatically: `/etc/default/canboat` if writable
-    /// (the systemd/root case), otherwise `$HOME/.local/canboat`.
-    #[arg(long = "config-dir", value_name = "DIR")]
-    config_dir: Option<PathBuf>,
-
-    /// Port for the bidirectional NMEA 0183 filter control channel (PGN
-    /// 262657). This is the one write-capable output port: the TUI
-    /// connects, is sent the current filter state, and thereafter writes
-    /// `Set` / `Request` frames and reads `Report` frames on the same
-    /// socket. Kept off the read-only analyzer stream so no other
-    /// consumer ever sees the control PGN. Only opened when
-    /// `--nmea0183-filter` is set (there's nothing to control otherwise);
-    /// `0` disables. Slot 2605.
-    #[arg(long, default_value_t = 2605)]
+    /// NMEA 0183 filter control (PGN 262657), for the TUI; read and write.
+    ///
+    /// The client is sent the filter state, then writes `Set` / `Request`
+    /// and reads `Report` frames on the same socket. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2605, help_heading = PORTS)]
     nmea0183_filter_port: u16,
 
-    /// Port for the bidirectional PGN-rate-override control channel (PGN
-    /// 262658). Like the filter port: the TUI connects, receives the
-    /// current override state, then writes `Set` / `Delete` / `Request`
-    /// frames and reads `Report` frames on the same socket. `0` disables.
-    /// Slot 2606, after the filter control port.
-    #[arg(long, default_value_t = 2606)]
+    /// PGN rate override control (PGN 262658), for the TUI; read and write.
+    ///
+    /// As the filter port: the client is sent the override state, then
+    /// writes `Set` / `Delete` / `Request` and reads `Report` frames. `0`
+    /// turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2606, help_heading = PORTS)]
     overrides_port: u16,
 
-    /// Shape of the records on the analyzer JSON / snapshot TCP ports:
-    /// identifier spelling (`--id`), unit system (`--units`) and record
-    /// wrapping (`--wrap`), plus their deprecated canboat C spellings.
-    /// Defaults to flat camelCase records in SI. NMEA 0183 / AIS output
-    /// is unaffected — those always emit their spec units.
-    #[command(flatten)]
+    /// Also write the NMEA 0183 sentences to stdout, as n2kd --nmea0183 does.
+    #[arg(long, help_heading = NMEA0183)]
+    nmea0183_stdout: bool,
+
+    /// Do not limit NMEA 0183 output to one sentence per source and quantity a second.
+    ///
+    /// The limit (canboat C `n2kd`'s) keeps a bus with several devices
+    /// reporting the same measurement from flooding 0183 clients. AIS is
+    /// never limited. Turn it off for byte-for-byte parity captures.
+    #[arg(long = "no-nmea0183-rate-limit", help_heading = NMEA0183)]
+    no_nmea0183_rate_limit: bool,
+
+    /// The NMEA 0183 filter's mute rules file [default: in --config-dir].
+    ///
+    /// The filter is always on; a file without rules lets everything
+    /// through. Once there is a mute rule, the 0183 outputs only carry
+    /// sentences from devices whose NAME (PGN 60928) canboat has learned
+    /// and that aren't muted. The NMEA 2000 bus is never affected.
+    #[arg(long = "nmea0183-filter", value_name = "PATH", help_heading = NMEA0183)]
+    nmea0183_filter: Option<PathBuf>,
+
+    /// Where the state files are kept [default: /etc/default/canboat or ~/.local/canboat].
+    ///
+    /// `overrides.json` (PGN rate overrides) and `nmea0183-filter.json`
+    /// (0183 mute rules). Without it, `/etc/default/canboat` if writable
+    /// (the systemd/root case), otherwise `$HOME/.local/canboat`.
+    #[arg(long = "config-dir", value_name = "DIR", help_heading = STATE)]
+    config_dir: Option<PathBuf>,
+
+    /// The JSON on the analyzer and snapshot ports: field names, units and
+    /// wrapping. NMEA 0183 and AIS always use their own units.
+    #[command(flatten, next_help_heading = JSON)]
     shape: crate::cli::ShapeArgs,
 
-    /// Verbose logging.
-    #[arg(short = 'v', long)]
+    /// Log more.
+    #[arg(short = 'v', long, help_heading = LOGGING)]
     verbose: bool,
 
-    /// Quiet — only errors.
-    #[arg(short = 'q', long)]
+    /// Log only errors.
+    #[arg(short = 'q', long, help_heading = LOGGING)]
     quiet: bool,
 }
+
+/// `canboat server`'s own help headings, after the gateway's.
+#[cfg(feature = "cli")]
+const OTHER_SOURCES: &str = "Other sources";
+#[cfg(feature = "cli")]
+const ON_THE_BUS: &str = "On the bus";
+#[cfg(feature = "cli")]
+const PORTS: &str = "TCP ports";
+#[cfg(feature = "cli")]
+const NMEA0183: &str = "NMEA 0183";
+#[cfg(feature = "cli")]
+const STATE: &str = "State";
+#[cfg(feature = "cli")]
+const JSON: &str = "JSON output";
+#[cfg(feature = "cli")]
+const LOGGING: &str = "Logging";
 
 /// Plain, clap-free configuration for a [`Bridge`]. Construct with
 /// [`BridgeConfig::default`] and set the fields you need — or, under the `cli`
@@ -428,7 +317,13 @@ pub struct Args {
 /// server` flags one-for-one.
 #[derive(Debug, Clone)]
 pub struct BridgeConfig {
+    /// An Actisense NGT-1 (`--kind ngt1`); a gateway that turns out to be
+    /// an AOS simulator is given up on (that is `aos`).
     pub actisense: Option<String>,
+    /// An AOS NMEA 2000/0183 Simulator (`--kind aos`), opened as
+    /// `actisense` is, with canboat's node on it; a gateway that turns out
+    /// to be an NGT-1 is given up on.
+    pub aos: Option<String>,
     pub ikonvert: Option<String>,
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
@@ -438,12 +333,25 @@ pub struct BridgeConfig {
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
-    /// A Yacht Devices RAW, Actisense N2K ASCII, BST-D0 or BST-95 gateway
-    /// (`--ydwg`, `--w2k-ascii`, `--bst-d0`, `--bst-95`).
+    /// A Yacht Devices gateway, or an Actisense in a data format other than
+    /// NGT Actisense (`--kind yachtd`, or `actisense` with `--data-format`
+    /// n2k-ascii, n2k-actisense, raw-ascii or raw-actisense).
     pub gateway: Option<Gateway>,
     /// The address to claim with `socketcan` or `canalyst`, or with
     /// `actisense` when that is an AOS simulator.
     pub address: u8,
+    /// The rest of that node's ISO NAME and behaviour: the unique number
+    /// (0: derived from the machine id), manufacturer code, System
+    /// Instance, Heartbeat interval in ms (0: none), and whether to skip
+    /// the address claim. Defaults 0, 999 (Signal K), 15, 60 000, `false`.
+    pub unique: u32,
+    pub manufacturer: u16,
+    pub system_instance: u8,
+    pub heartbeat_ms: u64,
+    pub no_claim: bool,
+    /// The operating mode `actisense` puts the NGT-1 in. Defaults to
+    /// [`OperatingMode::NgTransferRxAll`](crate::engine::format::ngt1::OperatingMode).
+    pub ngt1_mode: crate::engine::format::ngt1::OperatingMode,
     /// When `true`, the SocketCAN driver brings the interface up itself (at
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
@@ -469,6 +377,11 @@ pub struct BridgeConfig {
     pub ikonvert_rx: Option<String>,
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
+    /// Pass on only these PGNs (`--rx-filter`), and always the
+    /// network-management PGNs and canboat's own. An iKonvert also gets
+    /// them as its own filter (`ikonvert_rx`); for every other source
+    /// canboat drops the rest itself. Empty: nothing is filtered.
+    pub rx_filter: Vec<u32>,
     /// PGNs the application sends and receives, advertised in the
     /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
     /// transmits from the gateway's address (`wmm`: 127258) are added
@@ -535,6 +448,7 @@ impl Default for BridgeConfig {
     fn default() -> Self {
         Self {
             actisense: None,
+            aos: None,
             ikonvert: None,
             maretron: None,
             socketcan: None,
@@ -542,6 +456,12 @@ impl Default for BridgeConfig {
             canalyst_channel: 0,
             gateway: None,
             address: 0,
+            unique: 0,
+            manufacturer: 999,
+            system_instance: 15,
+            heartbeat_ms: 60_000,
+            no_claim: false,
+            ngt1_mode: crate::engine::format::ngt1::OperatingMode::NgTransferRxAll,
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
             protocol: crate::engine::BusProtocol::Nmea2000,
@@ -554,6 +474,7 @@ impl Default for BridgeConfig {
             ikonvert_rx: None,
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
+            rx_filter: Vec::new(),
             pgn_lists: PgnLists::default(),
             learn_tx_pgns: true,
             no_request_claims: false,
@@ -591,65 +512,98 @@ impl Args {
         self.shape.warn_deprecated();
     }
 
-    /// Reject what clap cannot: today, more than one `--protocol`. Call
-    /// before converting to a [`BridgeConfig`].
+    /// The gateway the flags name, `--kind` (with `--data-format`) and
+    /// `--device`, or one of the old one-flag-per-gateway spellings.
+    fn source(&self) -> anyhow::Result<Option<(Kind, String)>> {
+        if let (Some(kind), Some(device)) = (self.kind, &self.device) {
+            let kind = kind.resolve(self.gateway.data_format)?;
+            return Ok(Some((kind, device.clone())));
+        }
+        if let Some(format) = self.gateway.data_format {
+            anyhow::bail!("--data-format {} goes with --kind", format.name());
+        }
+        Ok([
+            (Kind::Ngt1, &self.actisense),
+            (Kind::Ikonvert, &self.ikonvert),
+            (Kind::Maretron, &self.maretron),
+            (Kind::Socketcan, &self.socketcan),
+        ]
+        .into_iter()
+        .find_map(|(kind, device)| Some((kind, device.clone()?))))
+    }
+
+    /// Reject what clap cannot: a gateway option the chosen gateway does
+    /// not have, a protocol it cannot carry, more than one `--protocol`.
+    /// Call before converting to a [`BridgeConfig`].
     pub fn check(&self) -> anyhow::Result<()> {
-        if self.bitrate.is_some() && self.socketcan.is_none() && self.canalyst.is_none() {
+        if self.kind.is_some() && self.device.is_none() {
             anyhow::bail!(
-                "--bitrate sets the CAN bus rate of --socketcan or --canalyst \
-                 (for the serial speed to a gateway, use --baud)"
+                "--kind needs --device, where the gateway is (not an old --<gateway> flag)"
             );
         }
-        self.protocol.resolve().map(|_| ())
+        self.gateway.check(self.source()?.map(|(kind, _)| kind))
     }
 }
 
 #[cfg(feature = "cli")]
 impl From<Args> for BridgeConfig {
     fn from(a: Args) -> Self {
+        let source = a
+            .source()
+            .expect("Args::check rejects a --kind this cannot resolve");
+        let device = |want: Kind| {
+            source
+                .as_ref()
+                .filter(|(kind, _)| *kind == want)
+                .map(|(_, device)| device.clone())
+        };
+        let g = &a.gateway;
+        let node = g.node_config();
+        let pgn_lists = g.pgn_lists();
+        // `--rx-filter`: Args::check allows it on the iKonvert only.
+        let is_ikonvert = matches!(source, Some((Kind::Ikonvert, _)));
         Self {
-            actisense: a.actisense,
-            ikonvert: a.ikonvert,
-            maretron: a.maretron,
-            socketcan: a.socketcan,
-            canalyst: a.canalyst,
-            canalyst_channel: a.canalyst_channel,
-            gateway: [
-                (GatewayKind::Ydwg, a.ydwg),
-                (GatewayKind::W2kAscii, a.w2k_ascii),
-                (GatewayKind::BstD0, a.bst_d0),
-                (GatewayKind::Bst95, a.bst_95),
-            ]
-            .into_iter()
-            .find_map(|(kind, device)| {
+            actisense: device(Kind::Ngt1),
+            aos: device(Kind::Aos),
+            ikonvert: device(Kind::Ikonvert),
+            maretron: device(Kind::Maretron),
+            socketcan: device(Kind::Socketcan),
+            canalyst: device(Kind::Canalyst),
+            canalyst_channel: g.channel.unwrap_or(0),
+            gateway: source.as_ref().and_then(|(kind, device)| {
                 Some(Gateway {
-                    kind,
-                    device: device?,
+                    kind: kind.gateway()?,
+                    device: device.clone(),
                 })
             }),
-            address: a.address,
+            address: node.address,
+            unique: node.unique,
+            manufacturer: node.manufacturer,
+            system_instance: node.system_instance,
+            heartbeat_ms: node.heartbeat_ms,
+            no_claim: node.no_claim,
+            ngt1_mode: g.operating_mode(),
             // The CLI uses a SocketCAN interface as it was configured,
             // unless --bitrate asks canboat to configure it.
-            socketcan_configure_link: a.bitrate.is_some(),
-            socketcan_bitrate: a.bitrate.unwrap_or(250_000),
-            protocol: a
-                .protocol
-                .resolve()
-                .expect("Args::check rejects a --protocol this cannot convert"),
+            socketcan_configure_link: g.bitrate.is_some(),
+            socketcan_bitrate: g.bitrate.unwrap_or(250_000),
+            protocol: g.protocol(),
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
             replay: a.replay,
             replay_sent: a.replay_sent,
-            baud: a.baud,
-            maretron_password: a.maretron_password,
-            ikonvert_rx: a.ikonvert_rx,
-            ikonvert_tx: a.ikonvert_tx,
-            ikonvert_rate_limit_off: a.ikonvert_rate_limit_off,
-            pgn_lists: PgnLists {
-                tx: a.tx_pgn,
-                rx: a.rx_pgn,
+            baud: g.baud,
+            maretron_password: g.password.clone().unwrap_or_default(),
+            ikonvert_rx: if is_ikonvert {
+                g.ikonvert_rx_list()
+            } else {
+                None
             },
-            learn_tx_pgns: !a.no_learn_tx_pgns,
+            ikonvert_tx: None,
+            ikonvert_rate_limit_off: g.no_tx_rate_limit,
+            rx_filter: g.rx_filter.clone(),
+            pgn_lists,
+            learn_tx_pgns: node.learn_tx_pgns,
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,
@@ -710,6 +664,20 @@ struct OpenedSource {
 // lives in the `canboat` bin's `server` handler. The library takes an
 // explicit `BridgeConfig.config_dir` (or `None` to disable persistence).
 
+/// The node `config` names (`socketcan`, `canalyst`, or an AOS simulator
+/// on `actisense`): its address and ISO NAME.
+fn node_identity(config: &BridgeConfig) -> device::socketcan::Config {
+    device::socketcan::Config {
+        address: config.address,
+        unique: config.unique,
+        manufacturer: config.manufacturer,
+        system_instance: config.system_instance,
+        heartbeat_ms: config.heartbeat_ms,
+        no_claim: config.no_claim,
+        ..device::socketcan::Config::default()
+    }
+}
+
 fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     let frames_gateway = config
         .gateway
@@ -717,17 +685,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         .is_some_and(|g| !g.kind.passes_raw_frames());
     if config.protocol != crate::engine::BusProtocol::Nmea2000
         && (config.actisense.is_some()
+            || config.aos.is_some()
             || config.ikonvert.is_some()
             || config.maretron.is_some()
             || frames_gateway)
     {
         anyhow::bail!(
-            "--protocol {}: the NGT-1, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
-             framing themselves; use --socketcan, --canalyst, --ydwg, --bst-95, --canboat-csv or stdin",
+            "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
+             framing themselves; use --kind socketcan, canalyst, yachtd, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
             config.protocol
         );
     }
-    if let Some(path) = config.actisense.as_deref() {
+    // An NGT-1, or an AOS simulator, which speaks its framing.
+    let actisense = (config.actisense.as_deref().map(|path| (path, false)))
+        .or_else(|| config.aos.as_deref().map(|path| (path, true)));
+    if let Some((path, aos)) = actisense {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
         // What the embedder named — which, once it names a transmit PGN,
@@ -735,47 +707,56 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_lists = config.pgn_lists.clone();
         let extra_tx_pgns = quirk_tx_pgns(config);
         let effective = effective_pgn_lists(config);
-        if !config.pgn_lists.rx.is_empty() {
+        if !aos && !config.pgn_lists.rx.is_empty() {
             log::warn!(
                 "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
                 config.pgn_lists.rx
             );
         }
-        let pgn_list_status = (!effective.is_empty())
-            .then(|| device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns));
+        // The simulator's lists are the node's.
+        let pgn_list_status = (!effective.is_empty()).then(|| {
+            if aos {
+                device::socketcan::pgn_list_status(&effective)
+            } else {
+                device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns)
+            }
+        });
         // Shared by every session: a PGN written once this run is not
         // written again after a reconnect.
         let tx_list_record = Arc::default();
-        // An AOS simulator, which claims no address, gets a node, as a
-        // CANalyst-II does.
+        let operating_mode = config.ngt1_mode;
+        // With `aos`: the simulator claims no address, so it gets a node,
+        // as a CANalyst-II does.
         let node = device::ngt1::NodeConfig {
-            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             pgn_lists: effective.clone(),
             learn_tx_pgns: config.learn_tx_pgns,
             state_dir: config.config_dir.clone(),
-            ..device::ngt1::NodeConfig::default()
+            ..node_identity(config)
         };
         // Shared across reconnects, as for SocketCAN.
         let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
             device::socketcan::CLAIM_UNCLAIMED,
         ));
         let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new("ngt1", move || {
+        let factory = NamedFactory::new(if aos { "aos" } else { "ngt1" }, move || {
             let (reader, writer) = open_serial_or_tcp(&path, baud)?;
+            if aos {
+                return Ok(device::ngt1::run_aos(
+                    reader,
+                    writer,
+                    node.clone(),
+                    Arc::clone(&claim_for_factory),
+                ));
+            }
             let config = device::ngt1::Config {
+                operating_mode,
                 pgn_lists: pgn_lists.clone(),
                 extra_tx_pgns: extra_tx_pgns.clone(),
                 tx_list_record: Arc::clone(&tx_list_record),
-                ..Default::default()
             };
-            Ok(device::ngt1::run_with_node(
-                reader,
-                writer,
-                config,
-                node.clone(),
-                Arc::clone(&claim_for_factory),
-            ))
+            // A simulator is `aos`: this gives up on one.
+            Ok(device::ngt1::run_ngt1(reader, writer, config))
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);
@@ -911,7 +892,6 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let iface = iface.to_string();
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
-            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
@@ -919,7 +899,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             protocol: config.protocol,
             bitrate: config.socketcan_bitrate,
             state_dir: config.config_dir.clone(),
-            ..device::socketcan::Config::default()
+            ..node_identity(config)
         };
         // Shared across factory reconnects so the live claim address
         // survives supervisor-driven device-session restarts.
@@ -949,24 +929,23 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     // library build with `bridge` alone) there is nothing to open it with.
     #[cfg(not(feature = "usb"))]
     if config.canalyst.is_some() {
-        anyhow::bail!("--canalyst needs canboat built with the `usb` feature");
+        anyhow::bail!("--kind canalyst needs canboat built with the `usb` feature");
     }
     #[cfg(feature = "usb")]
     if let Some(device) = config.canalyst.as_deref() {
         let selector = crate::io::usb::Selector::parse(device).ok_or_else(|| {
-            anyhow::anyhow!("--canalyst takes `usb` or `usb:VVVV:PPPP`, not {device}")
+            anyhow::anyhow!("--kind canalyst takes `usb` or `usb:VVVV:PPPP`, not {device}")
         })??;
         let channel = config.canalyst_channel;
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
-            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             pgn_lists: pgn_lists.clone(),
             learn_tx_pgns: config.learn_tx_pgns,
             protocol: config.protocol,
             bitrate: config.socketcan_bitrate,
             state_dir: config.config_dir.clone(),
-            ..device::socketcan::Config::default()
+            ..node_identity(config)
         };
         // Shared across factory reconnects so the live claim address
         // survives supervisor-driven device-session restarts.
