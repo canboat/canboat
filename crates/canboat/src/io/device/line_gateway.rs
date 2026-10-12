@@ -20,6 +20,7 @@ use std::time::{Duration, Instant};
 
 use crate::engine::format::{actisense_ascii, iso11783_compose, ydwg02};
 use crate::engine::reassembly::{Reassembled, Reassembler};
+use crate::engine::startup::format_iso_ms;
 use crate::engine::{BusProtocol, FramePacketType, RawFrame};
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
@@ -115,7 +116,11 @@ impl Decoder {
 }
 
 impl DeviceDecoder for Decoder {
+    /// Frames get the host's time, as from every other gateway: the
+    /// gateways' own is a time of day without a date, and a YDEN's runs
+    /// behind the host's, and now and then backwards (canboat#1039).
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
+        let now = format_iso_ms(super::now_ms());
         self.acc.push_str(&String::from_utf8_lossy(bytes));
         while let Some(pos) = self.acc.find('\n') {
             let line: String = self.acc[..pos].trim().to_string();
@@ -137,7 +142,8 @@ impl DeviceDecoder for Decoder {
                                     iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst),
                                     &frame.data,
                                 ) => {}
-                        Ok(frame) => {
+                        Ok(mut frame) => {
+                            frame.timestamp = Some(now.clone());
                             let pt = self.protocol.packet_type(frame.pgn);
                             match self.reassembler.push(frame, pt) {
                                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
@@ -153,7 +159,10 @@ impl DeviceDecoder for Decoder {
                     }
                 }
                 LineFormat::N2kAscii => match actisense_ascii::parse_line(&line) {
-                    Ok(frame) => events.push(DeviceEvent::Frame(frame)),
+                    Ok(mut frame) => {
+                        frame.timestamp = Some(now.clone());
+                        events.push(DeviceEvent::Frame(frame))
+                    }
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
             }
@@ -385,6 +394,19 @@ mod tests {
         let other = decode_all(&mut dec, echo);
         assert_eq!(other.len(), 1);
         assert_eq!((other[0].pgn, other[0].src), (59904, 0xe2));
+    }
+
+    /// Not the gateway's time of day, which can run backwards.
+    #[test]
+    fn frames_get_the_host_time() {
+        let before = format_iso_ms(super::super::now_ms());
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
+        let out = decode_all(
+            &mut dec,
+            "00:00:01.010 R 09F11223 01 02 03 04 05 06 07 08\r\n",
+        );
+        let ts = out[0].timestamp.clone().unwrap();
+        assert!(ts >= before && !ts.contains("T00:00:01.010"), "{ts}");
     }
 
     #[test]
