@@ -89,7 +89,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "DEVICE",
-        conflicts_with_all = ["ikonvert", "maretron", "canboat_csv", "socketcan", "replay"]
+        conflicts_with_all = ["ikonvert", "maretron", "canboat_csv", "socketcan", "replay", "canalyst"]
     )]
     actisense: Option<String>,
 
@@ -98,7 +98,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "DEVICE",
-        conflicts_with_all = ["actisense", "maretron", "canboat_csv", "socketcan", "replay"]
+        conflicts_with_all = ["actisense", "maretron", "canboat_csv", "socketcan", "replay", "canalyst"]
     )]
     ikonvert: Option<String>,
 
@@ -107,7 +107,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "canboat_csv", "socketcan", "replay"]
+        conflicts_with_all = ["actisense", "ikonvert", "canboat_csv", "socketcan", "replay", "canalyst"]
     )]
     maretron: Option<String>,
 
@@ -118,20 +118,45 @@ pub struct Args {
     #[arg(
         long,
         value_name = "IFACE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "canboat_csv", "replay"]
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "canboat_csv", "replay", "canalyst"]
     )]
     socketcan: Option<String>,
 
-    /// Preferred ISO source address to claim on the SocketCAN bus.
-    /// Defaults to 0; the claim machine will pick a free address if
-    /// this one is taken. Ignored without `--socketcan`.
+    /// Read frames from a CANalyst-II USB adapter (the Waveshare
+    /// USB-CAN-B), named `usb` or `usb:VVVV:PPPP`. Like `--socketcan`,
+    /// the pipeline becomes a full NMEA 2000 bus participant; works on
+    /// every platform.
     #[arg(
-        long = "socketcan-address",
-        value_name = "ADDR",
-        default_value_t = 0,
-        requires = "socketcan"
+        long,
+        value_name = "DEVICE",
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv", "replay"]
     )]
-    socketcan_address: u8,
+    canalyst: Option<String>,
+
+    /// The CANalyst-II CAN channel, 0 or 1.
+    #[arg(long, value_name = "N", default_value_t = 0, requires = "canalyst")]
+    canalyst_channel: u8,
+
+    /// The CAN bus bit rate, for `--canalyst` (250 000 if not given) and
+    /// `--socketcan`, where it brings the interface down, sets the rate and
+    /// brings it up again (needs root or CAP_NET_ADMIN). Without it a
+    /// SocketCAN interface is used as it was configured. 250 000 for NMEA
+    /// 2000, 500 000 for a J1939-14 bus. Not the serial speed to a gateway
+    /// such as the NGT-1: that is `--baud`.
+    #[arg(long, value_name = "BIT/S")]
+    bitrate: Option<u32>,
+
+    /// Preferred ISO source address to claim with `--socketcan` or
+    /// `--canalyst`. Defaults to 0; the claim machine will pick a free
+    /// address if this one is taken.
+    /// (`--socketcan-address` is the old spelling.)
+    #[arg(
+        long = "address",
+        alias = "socketcan-address",
+        value_name = "ADDR",
+        default_value_t = 0
+    )]
+    address: u8,
 
     /// Chain into another `canboat server` instance over its raw
     /// output port (`--raw-port`, default 2603). Accepts `host:port`
@@ -147,7 +172,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "replay"]
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "replay", "canalyst"]
     )]
     canboat_csv: Option<String>,
 
@@ -161,7 +186,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "FILE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv"]
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv", "canalyst"]
     )]
     replay: Option<PathBuf>,
 
@@ -406,13 +431,21 @@ pub struct BridgeConfig {
     pub ikonvert: Option<String>,
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
-    pub socketcan_address: u8,
+    /// A CANalyst-II USB adapter (`usb` or `usb:VVVV:PPPP`), run as a node
+    /// like `socketcan`, claiming `address` at
+    /// `socketcan_bitrate`.
+    pub canalyst: Option<String>,
+    /// The CANalyst-II CAN channel, 0 or 1.
+    pub canalyst_channel: u8,
+    /// The address to claim with `socketcan` or `canalyst`.
+    pub address: u8,
     /// When `true`, the SocketCAN driver brings the interface up itself (at
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
     pub socketcan_configure_link: bool,
-    /// Bit rate `socketcan_configure_link` sets: 250 000 (the default,
-    /// and always right for NMEA 2000) or 500 000 for a J1939-14 bus.
+    /// Bit rate `socketcan_configure_link` sets, and the bit rate the
+    /// `canalyst` adapter runs at: 250 000 (the default, and always right
+    /// for NMEA 2000) or 500 000 for a J1939-14 bus.
     pub socketcan_bitrate: u32,
     /// What the bus carries (`--protocol`): picks the decode table and, with
     /// `socketcan`, whether the gateway is an NMEA 2000 or a J1939 node.
@@ -484,6 +517,15 @@ pub struct BridgeConfig {
     pub quiet: bool,
 }
 
+impl BridgeConfig {
+    /// Whether the backend runs canboat's own node on a raw CAN link
+    /// (`socketcan` or `canalyst`): it claims an address and sends a
+    /// frame from the source it names.
+    pub(crate) fn is_node(&self) -> bool {
+        self.socketcan.is_some() || self.canalyst.is_some()
+    }
+}
+
 impl Default for BridgeConfig {
     fn default() -> Self {
         Self {
@@ -491,7 +533,9 @@ impl Default for BridgeConfig {
             ikonvert: None,
             maretron: None,
             socketcan: None,
-            socketcan_address: 0,
+            canalyst: None,
+            canalyst_channel: 0,
+            address: 0,
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
             protocol: crate::engine::BusProtocol::Nmea2000,
@@ -544,6 +588,12 @@ impl Args {
     /// Reject what clap cannot: today, more than one `--protocol`. Call
     /// before converting to a [`BridgeConfig`].
     pub fn check(&self) -> anyhow::Result<()> {
+        if self.bitrate.is_some() && self.socketcan.is_none() && self.canalyst.is_none() {
+            anyhow::bail!(
+                "--bitrate sets the CAN bus rate of --socketcan or --canalyst \
+                 (for the serial speed to a gateway, use --baud)"
+            );
+        }
         self.protocol.resolve().map(|_| ())
     }
 }
@@ -556,11 +606,13 @@ impl From<Args> for BridgeConfig {
             ikonvert: a.ikonvert,
             maretron: a.maretron,
             socketcan: a.socketcan,
-            socketcan_address: a.socketcan_address,
-            // The standalone `canboat` CLI keeps assuming an externally
-            // configured interface; only library embedders (merrimac) opt in.
-            socketcan_configure_link: false,
-            socketcan_bitrate: 250_000,
+            canalyst: a.canalyst,
+            canalyst_channel: a.canalyst_channel,
+            address: a.address,
+            // The CLI uses a SocketCAN interface as it was configured,
+            // unless --bitrate asks canboat to configure it.
+            socketcan_configure_link: a.bitrate.is_some(),
+            socketcan_bitrate: a.bitrate.unwrap_or(250_000),
             protocol: a
                 .protocol
                 .resolve()
@@ -625,8 +677,8 @@ struct OpenedSource {
     frames_rx: mpsc::Receiver<RawFrame>,
     supervisor: Option<Supervisor>,
     pre_coalesced: Arc<AtomicBool>,
-    /// Live claim address of the device backend, when known (today
-    /// only `--socketcan` exposes one). Read by the CSV-port
+    /// Live claim address of the device backend, when known
+    /// (`--socketcan` and `--canalyst` expose one). Read by the CSV-port
     /// injector to rewrite client-supplied default-`src` frames.
     claim_addr: Option<Arc<std::sync::atomic::AtomicU8>>,
     /// What the backend does with `BridgeConfig::pgn_lists`; `None` when
@@ -645,7 +697,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     {
         anyhow::bail!(
             "--protocol {}: the NGT-1, iKonvert and Maretron do NMEA 2000 framing themselves; \
-             use --socketcan, --canboat-csv or stdin",
+             use --socketcan, --canalyst, --canboat-csv or stdin",
             config.protocol
         );
     }
@@ -796,7 +848,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let iface = iface.to_string();
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
-            address: config.socketcan_address,
+            address: config.address,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
@@ -821,6 +873,57 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         // `io::fastpacket` table) and hands us coalesced
         // `RawFrame`s, matching the NGT-1 / iKonvert contract — skip
         // the pipeline's own reassembler.
+        return Ok(OpenedSource {
+            frames_rx: rx,
+            supervisor: Some(sup),
+            pre_coalesced: Arc::new(AtomicBool::new(true)),
+            claim_addr: Some(claim_addr),
+            pgn_list_status: (!pgn_lists.is_empty())
+                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
+        });
+    }
+    // The CANalyst-II is a USB device: without the `usb` feature (a
+    // library build with `bridge` alone) there is nothing to open it with.
+    #[cfg(not(feature = "usb"))]
+    if config.canalyst.is_some() {
+        anyhow::bail!("--canalyst needs canboat built with the `usb` feature");
+    }
+    #[cfg(feature = "usb")]
+    if let Some(device) = config.canalyst.as_deref() {
+        let selector = crate::io::usb::Selector::parse(device).ok_or_else(|| {
+            anyhow::anyhow!("--canalyst takes `usb` or `usb:VVVV:PPPP`, not {device}")
+        })??;
+        let channel = config.canalyst_channel;
+        let pgn_lists = effective_pgn_lists(config);
+        let config = device::socketcan::Config {
+            address: config.address,
+            model_version: Some("canboat-pipeline-rs"),
+            pgn_lists: pgn_lists.clone(),
+            learn_tx_pgns: config.learn_tx_pgns,
+            protocol: config.protocol,
+            bitrate: config.socketcan_bitrate,
+            state_dir: config.config_dir.clone(),
+            ..device::socketcan::Config::default()
+        };
+        // Shared across factory reconnects so the live claim address
+        // survives supervisor-driven device-session restarts.
+        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
+            device::socketcan::CLAIM_UNCLAIMED,
+        ));
+        let claim_for_factory = Arc::clone(&claim_addr);
+        let factory = NamedFactory::new("canalyst", move || {
+            let (reader, writer) =
+                crate::io::canalyst::open_rw(&selector, channel, config.bitrate)?;
+            device::canalyst::run(
+                reader,
+                writer,
+                config.clone(),
+                Arc::clone(&claim_for_factory),
+            )
+        });
+        let sup = Supervisor::new(factory);
+        let (rx, sup) = split_supervisor(sup);
+        // Coalesced by the node, as for SocketCAN.
         return Ok(OpenedSource {
             frames_rx: rx,
             supervisor: Some(sup),

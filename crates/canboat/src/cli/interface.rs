@@ -62,6 +62,11 @@ enum Kind {
     /// fast-packets itself.
     #[value(name = "bst-95")]
     Bst95,
+    /// CANalyst-II over USB (`usb`): the Waveshare USB-CAN-B. Like
+    /// socketcan, a full NMEA 2000 node — it claims an address — on every
+    /// platform.
+    #[value(name = "canalyst", alias = "usb-can-b")]
+    Canalyst,
 }
 
 impl Kind {
@@ -75,6 +80,7 @@ impl Kind {
             Kind::Socketcan => "socketcan-serial",
             Kind::Ydwg => "ydwg-gateway",
             Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => "w2k-gateway",
+            Kind::Canalyst => "canalyst",
         }
     }
 
@@ -85,7 +91,7 @@ impl Kind {
             Kind::Ikonvert => 230_400,
             Kind::Ydwg => 38_400,
             Kind::Bst95 => 115_200,
-            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 => 0,
+            Kind::Maretron | Kind::Socketcan | Kind::W2kAscii | Kind::BstD0 | Kind::Canalyst => 0,
         }
     }
 }
@@ -116,7 +122,7 @@ pub struct Args {
     /// for an NGX), `tcp://host[:port]` (ydwg, w2k-*, bst-d0, bst-95, and
     /// ngt1/ikonvert through a network bridge), `udp://[bind:]port` (ydwg, receive only),
     /// `host:port` (maretron), or CAN interface name such as `can0`
-    /// (socketcan). An FTDI-based
+    /// (socketcan), or `usb[:VVVV:PPPP]` (canalyst). An FTDI-based
     /// gateway such as the NGT-1 can also be opened directly over USB as
     /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
     /// serial driver does not recognise the NGT-1.
@@ -163,26 +169,26 @@ pub struct Args {
     #[arg(long, value_name = "PASSWORD")]
     password: Option<String>,
 
-    /// SocketCAN: preferred source address to claim.
+    /// SocketCAN, CANalyst: preferred source address to claim.
     #[arg(short = 'a', long, value_name = "ADDR", default_value_t = 0)]
     address: u8,
 
-    /// SocketCAN: passive sniff — skip the ISO address-claim handshake.
+    /// SocketCAN, CANalyst: passive sniff — skip the ISO address-claim handshake.
     #[arg(short = 'n', long)]
     no_claim: bool,
 
-    /// SocketCAN: unique number for the ISO NAME (default derived from
+    /// SocketCAN, CANalyst: unique number for the ISO NAME (default derived from
     /// the machine id, stable per-host across restarts; on a machine
     /// that can't be identified, a random one stored with the server's
     /// state files).
     #[arg(short = 'u', long, value_name = "N", default_value_t = 0)]
     unique: u32,
 
-    /// SocketCAN: manufacturer code for the ISO NAME (999 = Signal K).
+    /// SocketCAN, CANalyst: manufacturer code for the ISO NAME (999 = Signal K).
     #[arg(short = 'm', long, value_name = "N", default_value_t = 999)]
     manufacturer: u16,
 
-    /// SocketCAN: Heartbeat (PGN 126993) interval in ms, up to 65532;
+    /// SocketCAN, CANalyst: Heartbeat (PGN 126993) interval in ms, up to 65532;
     /// 0 disables.
     #[arg(
         long,
@@ -193,22 +199,36 @@ pub struct Args {
     )]
     heartbeat: u64,
 
-    /// SocketCAN: ISO NAME System Instance, 0..15. Default 15 (max) so
+    /// SocketCAN, CANalyst: ISO NAME System Instance, 0..15. Default 15 (max) so
     /// our NAME yields to real hardware rather than stealing addresses.
     #[arg(long, alias = "si", value_name = "N", default_value_t = 15)]
     system_instance: u8,
 
+    /// CANalyst-II: the CAN channel, 0 or 1.
+    #[arg(long, value_name = "N", default_value_t = 0)]
+    channel: u8,
+
+    /// The CAN bus bit rate, for the gateways canboat drives as the CAN
+    /// controller: the CANalyst-II (250 000 if not given) and SocketCAN,
+    /// where it brings the interface down, sets the rate and brings it up
+    /// again (needs root or CAP_NET_ADMIN). Without it a SocketCAN
+    /// interface is used as it was configured. 250 000 for NMEA 2000,
+    /// 500 000 for a J1939-14 bus. Not the serial speed to a gateway such
+    /// as the NGT-1: that is `--baud`.
+    #[arg(long, value_name = "BIT/S")]
+    bitrate: Option<u32>,
+
     /// Quit if no frame is received for this many seconds (0 disables).
-    /// SocketCAN only.
+    /// SocketCAN and CANalyst only.
     #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
     timeout: u64,
 
     /// `--protocol j1939` frames the traffic as J1939 (single frames and ISO
     /// TP, no fast-packet) and, on SocketCAN, leaves out the NMEA 2000
-    /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG and
-    /// BST-95 only: the other gateways do NMEA 2000 framing themselves. ISO TP
-    /// messages (longer than 8 bytes) are received on all three but sent on
-    /// SocketCAN only; YDWG and BST-95 refuse to send them.
+    /// Heartbeat, Product Information and PGN lists. SocketCAN, YDWG,
+    /// BST-95 and CANalyst only: the other gateways do NMEA 2000 framing
+    /// themselves. ISO TP messages (longer than 8 bytes) are received on all
+    /// four but sent on SocketCAN only; the others refuse to send them.
     #[command(flatten)]
     protocol: crate::cli::protocol::ProtocolArgs,
 }
@@ -356,18 +376,27 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 /// Open the selected transport and start its device codec.
 fn open_device(args: &Args) -> Result<DeviceHandle> {
     let protocol = args.protocol.resolve()?;
-    // Quick's 11-bit frames: only SocketCAN is known to pass them on.
-    if protocol == BusProtocol::Quick && !matches!(args.kind, Kind::Socketcan) {
+    // Quick's 11-bit frames: only SocketCAN and the CANalyst-II pass them on.
+    if protocol == BusProtocol::Quick && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst) {
         anyhow::bail!(
-            "--protocol quick needs socketcan: the other gateways pass only 29-bit frames"
+            "--protocol quick needs socketcan or canalyst: the other gateways pass only 29-bit frames"
         );
     }
     if protocol != BusProtocol::Nmea2000
-        && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg | Kind::Bst95)
+        && !matches!(
+            args.kind,
+            Kind::Socketcan | Kind::Ydwg | Kind::Bst95 | Kind::Canalyst
+        )
     {
         anyhow::bail!(
-            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg or bst-95); \
+            "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan, ydwg, bst-95 or canalyst); \
              this one does NMEA 2000 framing itself"
+        );
+    }
+    if args.bitrate.is_some() && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst) {
+        anyhow::bail!(
+            "--bitrate sets the CAN bus rate of socketcan or canalyst; this gateway runs its own CAN side \
+             (for the serial speed to it, use --baud)"
         );
     }
     match args.kind {
@@ -462,19 +491,14 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             Ok(device::bst95::run(reader, writer, protocol))
         }
+        Kind::Canalyst => open_canalyst(args, protocol),
         Kind::Socketcan => {
             let config = device::socketcan::Config {
-                address: args.address,
-                unique: args.unique,
-                manufacturer: args.manufacturer,
-                system_instance: args.system_instance,
-                heartbeat_ms: args.heartbeat,
-                no_claim: args.no_claim,
-                timeout_secs: args.timeout,
-                protocol,
-                // Probing creates the dir, so only when it may be needed.
-                state_dir: (args.unique == 0).then(super::app::resolve_config_dir),
-                ..device::socketcan::Config::default()
+                // Configure the link only when asked to; otherwise use the
+                // interface as it was set up.
+                configure_link: args.bitrate.is_some(),
+                bitrate: args.bitrate.unwrap_or(250_000),
+                ..node_config(args, protocol)
             };
             let claim = Arc::new(AtomicU8::new(config.address));
             // On non-Linux this returns ErrorKind::Unsupported.
@@ -482,6 +506,38 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 .with_context(|| format!("opening SocketCAN interface {}", args.device))
         }
     }
+}
+
+/// The node configuration of a raw CAN gateway (socketcan, canalyst).
+fn node_config(args: &Args, protocol: BusProtocol) -> device::socketcan::Config {
+    device::socketcan::Config {
+        address: args.address,
+        unique: args.unique,
+        manufacturer: args.manufacturer,
+        system_instance: args.system_instance,
+        heartbeat_ms: args.heartbeat,
+        no_claim: args.no_claim,
+        timeout_secs: args.timeout,
+        protocol,
+        // Probing creates the dir, so only when it may be needed.
+        state_dir: (args.unique == 0).then(super::app::resolve_config_dir),
+        ..device::socketcan::Config::default()
+    }
+}
+
+/// Open a CANalyst-II over USB and run a node on it, as for SocketCAN.
+fn open_canalyst(args: &Args, protocol: BusProtocol) -> Result<DeviceHandle> {
+    let selector = crate::io::usb::Selector::parse(&args.device)
+        .ok_or_else(|| anyhow::anyhow!("a CANalyst-II is named `usb` or `usb:VVVV:PPPP`"))??;
+    let config = device::socketcan::Config {
+        model_version: Some("canboat-canalyst"),
+        bitrate: args.bitrate.unwrap_or(250_000),
+        ..node_config(args, protocol)
+    };
+    let (reader, writer) = crate::io::canalyst::open_rw(&selector, args.channel, config.bitrate)
+        .with_context(|| format!("opening CANalyst-II {}", args.device))?;
+    let claim = Arc::new(AtomicU8::new(config.address));
+    Ok(device::canalyst::run(reader, writer, config, claim)?)
 }
 
 /// Open the serial transport as an independent `(reader, writer)` pair.

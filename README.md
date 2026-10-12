@@ -13,6 +13,12 @@ If you just want to know how the NMEA 2000 protocol works, with an explanation o
 
 To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
 
+A plain USB CAN adapter works too, on every platform: a Linux SocketCAN
+interface, or a CANalyst-II such as the Waveshare USB-CAN-B (`04d8:0053`),
+which `canboat` opens directly over USB — `canboat interface --kind canalyst usb`
+or `canboat server --canalyst usb`. On either, canboat is a full NMEA 2000
+node: it claims an address and answers ISO Requests.
+
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
 ## The programs
@@ -40,7 +46,7 @@ no C equivalent is tier 1 as the only implementation.
 | | |
 | --- | --- |
 | `canboat convert` | decode a capture between any supported formats |
-| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN) |
+| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN / CANalyst-II) |
 | `canboat n2kd` | multiplex an analyzer-JSON stream to TCP clients |
 | `canboat server` | the whole device → analyzer → n2kd pipeline in one process |
 | `canboat tui` | interactive terminal browser for a live stream or a capture |
@@ -67,9 +73,9 @@ or invent data, so you switch on the ones you need:
 | `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
 | `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
 | `gps-relay` | Re-sends the data PGNs the devices listed in `gps-rollover=…` broadcast (not their network management, and not anything addressed), from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display. Needs a real device list — `gps-rollover=all` is refused here | `canboat server --quirk gps-rollover=<device> --quirk gps-relay` (needs a writable backend) |
-| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan`) |
+| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan` or `--canalyst`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
-| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan`) |
+| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan` or `--canalyst`) |
 
 `gps-rollover` is the odd one out: it corrects a decoded value rather than
 putting a frame on the bus, which is why it is available when decoding a
@@ -165,7 +171,7 @@ them depends on the gateway:
 
 | Gateway | Transmit list | Receive list |
 |---|---|---|
-| SocketCAN | Advertised by canboat itself. Nothing is filtered. | Advertised |
+| SocketCAN, CANalyst-II | Advertised by canboat itself. Nothing is filtered. | Advertised |
 | iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway; filters only in `--ikonvert-rx` (`NORMAL`) mode |
 | NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
 | Others | Ignored, with a warning | Ignored, with a warning |
