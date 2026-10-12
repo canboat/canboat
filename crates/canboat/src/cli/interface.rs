@@ -24,7 +24,7 @@ use std::thread;
 
 use anyhow::{Context, Result};
 
-use crate::cli::device::{DeviceArgs, Kind};
+use crate::cli::device::{self as gateway_args, DeviceArgs, Kind};
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
@@ -48,38 +48,37 @@ fn producer(kind: Kind) -> &'static str {
 }
 
 #[derive(Debug, clap::Args)]
+#[command(after_long_help = gateway_args::GATEWAY_HELP)]
 pub struct Args {
-    /// Gateway type.
-    #[arg(long, value_enum)]
+    /// The kind of gateway.
+    #[arg(long, value_enum, help_heading = gateway_args::GATEWAY)]
     kind: Kind,
 
-    /// Endpoint: serial path (ngt1/ikonvert, raw-ascii for a YDNU-02,
-    /// bst-95 for an NGX), `tcp://host[:port]` (raw-ascii, n2k-ascii,
-    /// bst-d0, bst-95, and ngt1/ikonvert through a network bridge),
-    /// `udp://gateway:port` (raw-ascii, n2k-ascii; `udp://[bind:]port` only
-    /// receives), `host:port` (maretron), or CAN interface name such as
-    /// `can0` (socketcan), or `usb[:VVVV:PPPP]` (canalyst). An FTDI-based
-    /// gateway such as the NGT-1 can also be opened directly over USB as
-    /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
-    /// serial driver does not recognise the NGT-1.
+    /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
+    /// `udp://host:port`, `host:port` or a CAN interface such as `can0`.
+    ///
+    /// Which one depends on the gateway; see the table at the end. An
+    /// FTDI-based gateway such as the NGT-1 can also be opened directly
+    /// over USB as `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]`: on
+    /// macOS, whose serial driver does not recognise the NGT-1. `udp://[bind:]port` only receives.
     #[arg(value_name = "DEVICE")]
     device: String,
 
-    /// Read-only: emit received frames, ignore stdin.
-    #[arg(short = 'r', long = "read-only", conflicts_with = "write_only")]
+    /// Only read: write the bus to stdout, ignore stdin.
+    #[arg(short = 'r', long = "read-only", conflicts_with = "write_only", help_heading = STREAM)]
     read_only: bool,
 
-    /// Write-only: send stdin frames to the device, drop received ones.
-    #[arg(short = 'w', long = "write-only")]
+    /// Only write: send stdin to the bus, drop what is received.
+    #[arg(short = 'w', long = "write-only", help_heading = STREAM)]
     write_only: bool,
 
-    /// Quit, with an error, if no frame comes off the bus for this many
-    /// seconds (0 disables): a gateway that went away without closing the
-    /// connection is then noticed, and a supervisor can restart canboat.
-    #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
+    /// Quit with an error after this many seconds without a frame; 0: never.
+    ///
+    /// A gateway that went away without closing the connection is then
+    /// noticed, and a supervisor can restart canboat.
+    #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0, hide_default_value = true, help_heading = STREAM)]
     timeout: u64,
 
-    /// How to run the gateway: the options `canboat server` shares.
     #[command(flatten)]
     gateway: DeviceArgs,
 
@@ -88,6 +87,9 @@ pub struct Args {
     #[arg(long = "si", hide = true, value_name = "N", value_parser = clap::value_parser!(u8).range(0..=15))]
     si: Option<u8>,
 }
+
+/// The help heading of the stdin/stdout options.
+const STREAM: &str = "stdin and stdout";
 
 pub fn run(args: Args) -> Result<()> {
     // On stderr, at the C gateway programs' default level; the device

@@ -16,10 +16,11 @@ use crate::engine::BusProtocol;
 
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct ProtocolArgs {
-    /// What the CAN bus carries: `nmea2000` (default), `j1939` or `quick`.
-    /// Picks the PGN table and the framing — J1939 has no fast-packet, only
+    /// What the CAN bus carries [default: nmea2000].
+    ///
+    /// Picks the PGN table and the framing: J1939 has no fast-packet, only
     /// single frames and ISO TP; Quick PCS has 11-bit frames, read from
-    /// SocketCAN or a candump capture.
+    /// SocketCAN, a CANalyst-II or a candump capture.
     #[arg(
         long = "protocol",
         value_name = "PROTOCOL",

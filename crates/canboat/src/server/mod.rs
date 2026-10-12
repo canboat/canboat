@@ -70,7 +70,7 @@ use std::thread;
 use anyhow::{Context, Result, bail};
 
 #[cfg(feature = "cli")]
-use crate::cli::device::{DeviceArgs, Kind};
+use crate::cli::device::{self as device_args, DeviceArgs, Kind};
 use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
@@ -86,20 +86,32 @@ use crate::io::open_serial_rw;
 #[cfg(feature = "cli")]
 #[derive(Debug, clap::Args)]
 #[command(after_help = crate::cli::help_footer())]
+#[command(after_long_help = format!(
+    "{}\n\n{}",
+    crate::cli::device::GATEWAY_HELP,
+    crate::cli::help_footer()
+))]
 #[command(group(clap::ArgGroup::new("source").multiple(false)))]
 pub struct Args {
-    /// The gateway to read frames from, and send them to: what `--device`
-    /// names. With `socketcan` or `canalyst` canboat becomes a full NMEA
-    /// 2000 bus participant: it claims an ISO address, answers ISO Requests
-    /// and Group Functions, and sends Heartbeats. Without a gateway (or
-    /// `--canboat-csv` / `--replay`), frames are read from stdin.
-    #[arg(long, value_enum, requires = "device")]
+    /// The kind of gateway; without one, frames are read from stdin.
+    ///
+    /// With socketcan or canalyst canboat becomes a full NMEA 2000 bus
+    /// participant: it claims an address, answers ISO Requests and Group
+    /// Functions, and sends Heartbeats.
+    #[arg(long, value_enum, requires = "device", help_heading = device_args::GATEWAY)]
     kind: Option<Kind>,
 
-    /// Where the `--kind` gateway is: a serial device path, `tcp://…`,
-    /// `udp://…`, `host:port`, a CAN interface such as `can0`, or `usb…`,
-    /// as `canboat interface` takes it (see `--kind`).
-    #[arg(long, value_name = "DEVICE", group = "source", requires = "kind")]
+    /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
+    /// `udp://host:port`, `host:port` or a CAN interface such as `can0`.
+    ///
+    /// Which one depends on the gateway; see the table at the end.
+    #[arg(
+        long,
+        value_name = "DEVICE",
+        group = "source",
+        requires = "kind",
+        help_heading = device_args::GATEWAY
+    )]
     device: Option<String>,
 
     // The old one-flag-per-gateway spellings, each `--kind <kind> --device
@@ -123,207 +135,191 @@ pub struct Args {
     #[arg(long = "bst-95", value_name = "DEVICE", group = "source", hide = true)]
     bst_95: Option<String>,
 
-    /// Chain into another `canboat server` instance over its raw
-    /// output port (`--raw-port`, default 2603). Accepts `host:port`
-    /// or `tcp://host[:port]`. The stream is canboat PLAIN/FAST CSV.
+    /// Read from another `canboat server`'s raw port (`host:port` or
+    /// `tcp://host[:port]`, 2603).
     ///
-    /// The raw output port is read-only, so on its own this only
-    /// receives frames; anything this instance wants to send is
-    /// written to the same socket and rejected by the peer. To also
-    /// inject onto the upstream bus, give `--canboat-csv-write` the
-    /// peer's write-only input port (`--input-port`, default 2600).
-    /// The read URL can equally be a one-way feed such as an
-    /// iptee'd raw stream.
-    #[arg(long, value_name = "URL", group = "source")]
+    /// The stream is canboat PLAIN/FAST CSV. The raw output port is
+    /// read-only, so on its own this only receives frames; anything this
+    /// instance sends is written to the same socket and rejected by the
+    /// peer. To also send onto the upstream bus, give --canboat-csv-write
+    /// the peer's input port. The URL can equally be a one-way feed such
+    /// as an iptee'd raw stream.
+    #[arg(long, value_name = "URL", group = "source", help_heading = OTHER_SOURCES)]
     canboat_csv: Option<String>,
 
-    /// Play this capture as if it were a live bus, for testing a consumer
-    /// without a boat. Any format canboat reads (PLAIN, FAST, candump,
-    /// Actisense ASCII, YDWG-02, …). Frames keep the capture's pacing but
-    /// carry the current time, and the capture starts over at its end.
+    /// With --canboat-csv: where to send frames, the peer's input port (2600).
     ///
-    /// The input port accepts writes as it does for a real gateway; they
-    /// go to `--replay-sent`, or are dropped.
-    #[arg(long, value_name = "FILE", group = "source")]
-    replay: Option<PathBuf>,
-
-    /// With `--replay`: append the frames written to the bus to this file,
-    /// as canboat PLAIN/FAST lines, so a test can check what a consumer
-    /// sent.
-    #[arg(long, value_name = "FILE", requires = "replay")]
-    replay_sent: Option<PathBuf>,
-
-    /// Separate sink for outbound PLAIN/FAST frames when chaining
-    /// via `--canboat-csv`: the peer's write-only input port
-    /// (`--input-port`, default 2600, the same slot as n2kd's
-    /// `port+3`). Without this flag, writes go to the `--canboat-csv`
-    /// socket, which a `canboat server` raw port does not accept.
-    #[arg(long, value_name = "URL", requires = "canboat_csv")]
+    /// The same slot as n2kd's `port+3`. Without it, writes go to the
+    /// --canboat-csv socket, which a `canboat server` raw port does not
+    /// accept.
+    #[arg(long, value_name = "URL", requires = "canboat_csv", help_heading = OTHER_SOURCES)]
     canboat_csv_write: Option<String>,
 
-    /// How to run the gateway: the options `canboat interface` shares.
-    /// `--protocol` also picks the decode table.
+    /// Play this capture as if it were a live bus, looped, at its own pace.
+    ///
+    /// Any format canboat reads (PLAIN, FAST, candump, N2K ASCII, RAW
+    /// ASCII, …). Frames carry the current time. The input port accepts
+    /// writes as for a real gateway; they go to --replay-sent, or are
+    /// dropped. For testing a consumer without a boat.
+    #[arg(long, value_name = "FILE", group = "source", help_heading = OTHER_SOURCES)]
+    replay: Option<PathBuf>,
+
+    /// With --replay: append the frames sent to the bus to this file.
+    ///
+    /// As canboat PLAIN/FAST lines, so a test can check what a consumer
+    /// sent.
+    #[arg(long, value_name = "FILE", requires = "replay", help_heading = OTHER_SOURCES)]
+    replay_sent: Option<PathBuf>,
+
     #[command(flatten)]
     gateway: DeviceArgs,
 
-    /// Suppress the periodic ISO Address Claim / Product Info request
-    /// engine. By default it runs whenever a device writer is wired up
-    /// (matching canboat C `n2kd`'s default). Stdin-only mode always
-    /// skips the engine — there's nowhere to send the requests.
-    #[arg(long)]
-    no_request_claims: bool,
-
-    /// Apply a quirk / value-add on the bus (see the possible values).
-    /// Repeatable — pass `--quirk` once per quirk you want, e.g.
-    /// `--quirk scx20 --quirk wmm`.
+    /// Apply a quirk to the bus; repeatable (see the possible values).
     ///
-    /// `scx20` and `motion` impersonate/claim a device and need
-    /// `--kind socketcan`; `wmm` emits canboat's own PGN and works with any
-    /// writable backend (socketcan / NGT-1 / iKonvert);
-    /// `gps-rollover` only rewrites decoded dates and needs no backend
-    /// at all. `gps-rollover=<device>[,<device>...]` also corrects every
-    /// date the listed devices stamp from the broken clock; a device is
-    /// a source address (`4`), manufacturer code and unique number
-    /// (`1851:491603`), or a hex ISO NAME (`0x…`); `gps-rollover=all`
-    /// corrects every date on the bus. `gps-relay` then re-sends what
-    /// the listed devices broadcast — all their data PGNs, but not
-    /// network management (claims, product information, requests) nor
+    /// `scx20` and `motion` impersonate or claim a device and need
+    /// `--kind socketcan` or `canalyst`; `wmm` emits canboat's own PGN and
+    /// works with any gateway that can send; `gps-rollover` only rewrites
+    /// decoded dates and needs no gateway at all.
+    /// `gps-rollover=<device>[,<device>...]` also corrects every date the
+    /// listed devices stamp from the broken clock; a device is a source
+    /// address (`4`), manufacturer code and unique number (`1851:491603`),
+    /// or a hex ISO NAME (`0x…`); `gps-rollover=all` corrects every date
+    /// on the bus. `gps-relay` then re-sends what the listed devices
+    /// broadcast — all their data PGNs, but not network management nor
     /// anything addressed — from canboat's own address, dates corrected,
     /// so other devices can select canboat as their GPS / time source;
-    /// needs a writable backend and a device list (not `all`).
-    #[arg(long, value_name = "NAME")]
+    /// it needs a gateway that can send and a device list (not `all`).
+    #[arg(long, value_name = "NAME", help_heading = ON_THE_BUS)]
     quirk: Vec<quirks::QuirkKind>,
 
-    /// Bind address for all TCP listeners. Defaults to `0.0.0.0` so
-    /// clients on the LAN (chartplotters, OpenCPN, etc.) can
-    /// connect. Pass `127.0.0.1` to restrict access to the local
-    /// host.
-    #[arg(long, default_value = "0.0.0.0")]
+    /// Do not request every device's Address Claim and Product Information.
+    ///
+    /// By default canboat asks periodically whenever it can send, as
+    /// canboat C `n2kd` does. On stdin it never asks: there is nowhere to
+    /// send the requests.
+    #[arg(long, help_heading = ON_THE_BUS)]
+    no_request_claims: bool,
+
+    /// The address every TCP port listens on; 127.0.0.1 for this host only.
+    #[arg(long, default_value = "0.0.0.0", help_heading = PORTS)]
     bind: Ipv4Addr,
 
-    /// Port for the snapshot server — on connect, dumps the latest
-    /// analyzer JSON line per `(pgn, src, secondary)` then closes.
-    /// Matches canboat C `n2kd`'s base port (`-p`). AIS-described
-    /// PGNs are filtered out; they go to `--ais-port` instead, except
-    /// PGN 129026 and 129029 which appear in both. Enabling this
-    /// forces JSON serialization for every decoded record so the
-    /// cache stays current; disable with `0` if you don't need it.
-    #[arg(long, default_value_t = 2597)]
+    /// Snapshot: on connect, the latest JSON record of every PGN, then close.
+    ///
+    /// One per `(pgn, src, secondary)`. canboat C `n2kd`'s base port
+    /// (`-p`). AIS PGNs go to --ais-port instead, apart from 129026 and
+    /// 129029, which are on both. It keeps every record decoded to JSON;
+    /// `0` turns it off when you don't need it.
+    #[arg(long, value_name = "PORT", default_value_t = 2597, help_heading = PORTS)]
     snapshot_port: u16,
 
-    /// Port for the analyzer JSON server — one decoded PGN per line.
-    /// Matches canboat C `n2kd`'s `port+1` stream port: read-only.
-    /// Injection goes through `--input-port` instead; this port is
-    /// kept free for a future "analyzed write" feature that would
-    /// accept JSON here. Lazy: formatting is skipped when no client is
-    /// subscribed. `0` disables.
-    #[arg(long, default_value_t = 2598)]
+    /// Decoded JSON, one record per line; read-only.
+    ///
+    /// n2kd's `port+1`. Formatting is skipped while no client is
+    /// connected. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2598, help_heading = PORTS)]
     analyzer_port: u16,
 
-    /// Port for the read-only NMEA 0183 server (includes AIVDM).
-    /// Matches canboat C `n2kd`'s `port+2` NMEA 0183 port. `0`
-    /// disables.
-    #[arg(long, default_value_t = 2599)]
+    /// NMEA 0183 sentences, AIVDM included; read-only.
+    ///
+    /// n2kd's `port+2`. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2599, help_heading = PORTS)]
     nmea0183_port: u16,
 
-    /// Write-only raw input port — the canonical `SERVER_INPUT_STREAM`
-    /// slot (canboat C `n2kd` `port+3`). Clients connect and write
-    /// canboat PLAIN/FAST lines that are injected onto the bus
-    /// (device mode only); nothing is streamed back, so it never
-    /// forces JSON/CSV serialization. This is the cheap write path for
-    /// a consumer that reads its data on another port. `0` disables.
-    #[arg(long, default_value_t = 2600)]
+    /// Input: PLAIN/FAST lines written here are sent onto the bus.
+    ///
+    /// Write-only: nothing is streamed back. n2kd's `port+3`. The cheap
+    /// way to send for a client that reads its data on another port. `0`
+    /// turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2600, help_heading = PORTS)]
     input_port: u16,
 
-    /// Read-only raw N2K output stream. Clients receive every frame as
-    /// a `# format=FAST` PLAIN line (already-coalesced fast-packet
-    /// payloads — never the per-CAN-frame PLAIN format). Reading is
-    /// lazy (skipped with no client). Injection is NOT accepted here —
-    /// use `--input-port`. `0` disables. (Previously this port was
-    /// bidirectional at 2600 under `--csv-port` / `--raw-input-port`;
-    /// the write side moved to `--input-port` and the read side moved
-    /// here to keep the input slot write-only.)
-    #[arg(long, default_value_t = 2603)]
-    raw_port: u16,
-
-    /// Port for the AIS snapshot server — on connect, dumps the
-    /// latest analyzer JSON line for every AIS-described PGN (plus
-    /// PGN 129026 and 129029) then closes. Matches canboat C
-    /// `n2kd`'s `port+4` AIS port. `0` disables.
-    #[arg(long, default_value_t = 2601)]
+    /// AIS snapshot: on connect, the latest record of every AIS PGN, then close.
+    ///
+    /// Plus PGN 129026 and 129029. n2kd's `port+4`. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2601, help_heading = PORTS)]
     ais_port: u16,
 
-    /// Also write NMEA 0183 sentences (including AIVDM) to stdout —
-    /// mirrors canboat C `n2kd`'s `--nmea0183` flag. Off by default,
-    /// matching n2kd's TCP-multiplex behaviour; subscribers should
-    /// connect to `--nmea0183-port` (2599) instead.
-    #[arg(long)]
-    nmea0183_stdout: bool,
+    /// Raw frames, as `# format=FAST` PLAIN lines; read-only.
+    ///
+    /// Fast-packets come already joined. Skipped while no client is
+    /// connected. Sending goes through --input-port. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2603, help_heading = PORTS)]
+    raw_port: u16,
 
-    /// Disable the 1 Hz NMEA 0183 rate limit. By default each
-    /// `(source, quantity)` is limited to one sentence per second on
-    /// the NMEA 0183 outputs (matching canboat C `n2kd`), so a bus
-    /// with several devices reporting the same measurement doesn't
-    /// flood downstream 0183 consumers. AIS (`!AI…`) is never rate-
-    /// limited. Pass this to emit every converted sentence unthrottled
-    /// (e.g. for byte-for-byte parity captures).
-    #[arg(long = "no-nmea0183-rate-limit")]
-    no_nmea0183_rate_limit: bool,
-
-    /// Override the per-device NMEA 0183 filter mute-rules file. The
-    /// filter is **always on**, reading `nmea0183-filter.json` from the
-    /// config dir (see `--config-dir`) by default; a rule-less file is a
-    /// no-op (every converted sentence is emitted). Once ≥1 mute rule
-    /// exists, the 0183 outputs only carry sentences from devices whose
-    /// NAME (PGN 60928) the pipeline has learned and that aren't muted.
-    /// The N2K bus is never affected. Use this to point at a specific
-    /// file instead of the config dir's.
-    #[arg(long = "nmea0183-filter", value_name = "PATH")]
-    nmea0183_filter: Option<PathBuf>,
-
-    /// Directory holding the server's persistent state files —
-    /// `overrides.json` (PGN-rate overrides) and `nmea0183-filter.json`
-    /// (0183 mute rules). Both features are on by default. When unset the
-    /// dir is resolved automatically: `/etc/default/canboat` if writable
-    /// (the systemd/root case), otherwise `$HOME/.local/canboat`.
-    #[arg(long = "config-dir", value_name = "DIR")]
-    config_dir: Option<PathBuf>,
-
-    /// Port for the bidirectional NMEA 0183 filter control channel (PGN
-    /// 262657). This is the one write-capable output port: the TUI
-    /// connects, is sent the current filter state, and thereafter writes
-    /// `Set` / `Request` frames and reads `Report` frames on the same
-    /// socket. Kept off the read-only analyzer stream so no other
-    /// consumer ever sees the control PGN. Only opened when
-    /// `--nmea0183-filter` is set (there's nothing to control otherwise);
-    /// `0` disables. Slot 2605.
-    #[arg(long, default_value_t = 2605)]
+    /// NMEA 0183 filter control (PGN 262657), for the TUI; read and write.
+    ///
+    /// The client is sent the filter state, then writes `Set` / `Request`
+    /// and reads `Report` frames on the same socket. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2605, help_heading = PORTS)]
     nmea0183_filter_port: u16,
 
-    /// Port for the bidirectional PGN-rate-override control channel (PGN
-    /// 262658). Like the filter port: the TUI connects, receives the
-    /// current override state, then writes `Set` / `Delete` / `Request`
-    /// frames and reads `Report` frames on the same socket. `0` disables.
-    /// Slot 2606, after the filter control port.
-    #[arg(long, default_value_t = 2606)]
+    /// PGN rate override control (PGN 262658), for the TUI; read and write.
+    ///
+    /// As the filter port: the client is sent the override state, then
+    /// writes `Set` / `Delete` / `Request` and reads `Report` frames. `0`
+    /// turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2606, help_heading = PORTS)]
     overrides_port: u16,
 
-    /// Shape of the records on the analyzer JSON / snapshot TCP ports:
-    /// identifier spelling (`--id`), unit system (`--units`) and record
-    /// wrapping (`--wrap`), plus their deprecated canboat C spellings.
-    /// Defaults to flat camelCase records in SI. NMEA 0183 / AIS output
-    /// is unaffected — those always emit their spec units.
-    #[command(flatten)]
+    /// Also write the NMEA 0183 sentences to stdout, as n2kd --nmea0183 does.
+    #[arg(long, help_heading = NMEA0183)]
+    nmea0183_stdout: bool,
+
+    /// Do not limit NMEA 0183 output to one sentence per source and quantity a second.
+    ///
+    /// The limit (canboat C `n2kd`'s) keeps a bus with several devices
+    /// reporting the same measurement from flooding 0183 clients. AIS is
+    /// never limited. Turn it off for byte-for-byte parity captures.
+    #[arg(long = "no-nmea0183-rate-limit", help_heading = NMEA0183)]
+    no_nmea0183_rate_limit: bool,
+
+    /// The NMEA 0183 filter's mute rules file [default: in --config-dir].
+    ///
+    /// The filter is always on; a file without rules lets everything
+    /// through. Once there is a mute rule, the 0183 outputs only carry
+    /// sentences from devices whose NAME (PGN 60928) canboat has learned
+    /// and that aren't muted. The NMEA 2000 bus is never affected.
+    #[arg(long = "nmea0183-filter", value_name = "PATH", help_heading = NMEA0183)]
+    nmea0183_filter: Option<PathBuf>,
+
+    /// Where the state files are kept [default: /etc/default/canboat or ~/.local/canboat].
+    ///
+    /// `overrides.json` (PGN rate overrides) and `nmea0183-filter.json`
+    /// (0183 mute rules). Without it, `/etc/default/canboat` if writable
+    /// (the systemd/root case), otherwise `$HOME/.local/canboat`.
+    #[arg(long = "config-dir", value_name = "DIR", help_heading = STATE)]
+    config_dir: Option<PathBuf>,
+
+    /// The JSON on the analyzer and snapshot ports: field names, units and
+    /// wrapping. NMEA 0183 and AIS always use their own units.
+    #[command(flatten, next_help_heading = JSON)]
     shape: crate::cli::ShapeArgs,
 
-    /// Verbose logging.
-    #[arg(short = 'v', long)]
+    /// Log more.
+    #[arg(short = 'v', long, help_heading = LOGGING)]
     verbose: bool,
 
-    /// Quiet — only errors.
-    #[arg(short = 'q', long)]
+    /// Log only errors.
+    #[arg(short = 'q', long, help_heading = LOGGING)]
     quiet: bool,
 }
+
+/// `canboat server`'s own help headings, after the gateway's.
+#[cfg(feature = "cli")]
+const OTHER_SOURCES: &str = "Other sources";
+#[cfg(feature = "cli")]
+const ON_THE_BUS: &str = "On the bus";
+#[cfg(feature = "cli")]
+const PORTS: &str = "TCP ports";
+#[cfg(feature = "cli")]
+const NMEA0183: &str = "NMEA 0183";
+#[cfg(feature = "cli")]
+const STATE: &str = "State";
+#[cfg(feature = "cli")]
+const JSON: &str = "JSON output";
+#[cfg(feature = "cli")]
+const LOGGING: &str = "Logging";
 
 /// Plain, clap-free configuration for a [`Bridge`]. Construct with
 /// [`BridgeConfig::default`] and set the fields you need — or, under the `cli`
