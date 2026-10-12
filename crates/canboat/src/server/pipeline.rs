@@ -423,6 +423,7 @@ pub fn run(
         // override the bus rejected so it isn't replayed forever. Both
         // resolve the device by src → NAME inside the engine.
         if let Some(ov) = hubs.overrides.as_ref() {
+            use crate::engine::field::nmea_acknowledge_group_function as ack;
             if let Some(name) = decoded.iso_name() {
                 let replay = ov.lock().unwrap().note_address_claim(decoded.src, name);
                 if let Some(sender) = hubs.device_sender.as_ref() {
@@ -430,18 +431,16 @@ pub fn run(
                         let _ = sender.send_frame(frame);
                     }
                 }
-            } else if decoded.pgn == 126208 {
-                use crate::engine::field::nmea_acknowledge_group_function as ack;
+            } else if decoded.id == ack::PGN.pgn.id {
+                // Only the Acknowledge variant of PGN 126208: the `ack`
+                // fields don't belong to a Request, Command, ….
                 let field_int = |f| decoded.field(f).and_then(|d| d.value.as_i64());
-                if field_int(ack::FUNCTION_CODE) == Some(2) {
-                    let pgn_err = field_int(ack::PGN_ERROR_CODE).unwrap_or(0);
-                    let iv_err =
-                        field_int(ack::TRANSMISSION_INTERVAL_PRIORITY_ERROR_CODE).unwrap_or(0);
-                    if (pgn_err != 0 || iv_err != 0)
-                        && let Some(acked) = field_int(ack::PGN)
-                    {
-                        ov.lock().unwrap().note_nak(decoded.src, acked as u32);
-                    }
+                let pgn_err = field_int(ack::PGN_ERROR_CODE).unwrap_or(0);
+                let iv_err = field_int(ack::TRANSMISSION_INTERVAL_PRIORITY_ERROR_CODE).unwrap_or(0);
+                if (pgn_err != 0 || iv_err != 0)
+                    && let Some(acked) = field_int(ack::PGN)
+                {
+                    ov.lock().unwrap().note_nak(decoded.src, acked as u32);
                 }
             }
         }
@@ -601,5 +600,60 @@ mod tests {
         // Exactly one record, then end-of-stream when the pipeline drains.
         assert!(tap_rx.recv().is_err(), "tap should see only the one record");
         handle.join().unwrap();
+    }
+
+    /// With overrides on, a PGN 126208 that is not an Acknowledge (here a
+    /// Command Group Function) goes through without the Acknowledge
+    /// fields being read from it (#1045: a debug build panicked).
+    #[test]
+    fn a_group_function_command_passes_the_override_code() {
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric);
+        let (frames_tx, frames_rx) = mpsc::channel();
+        let (tap_tx, tap_rx) = mpsc::channel();
+        let mut hubs = tapped_hubs(tap_tx);
+        let missing = std::env::temp_dir().join("canboat-1045-no-such-overrides.json");
+        hubs.overrides = Some(Arc::new(Mutex::new(
+            crate::n2kd::overrides::OverrideEngine::load(&missing).unwrap(),
+        )));
+
+        // Command Group Function: command PGN 126992, priority unchanged,
+        // no parameters.
+        let command = crate::engine::RawFrame::new(
+            None,
+            3,
+            126208,
+            0x21,
+            0xFF,
+            [0x01, 0x10, 0xF0, 0x01, 0xF8, 0x00],
+        );
+        frames_tx.send(command).unwrap();
+        drop(frames_tx);
+
+        let pre_coalesced = Arc::new(AtomicBool::new(true));
+        let handle = std::thread::spawn(move || {
+            run(
+                db,
+                frames_rx,
+                hubs,
+                pre_coalesced,
+                JsonOptions {
+                    include_empty: false,
+                    name_value: true,
+                    debug: false,
+                    camel_case: crate::engine::output::CamelCase::Off,
+                    wrap: false,
+                    protocol: crate::engine::BusProtocol::Nmea2000,
+                },
+                Nmea0183Options {
+                    emit_stdout: false,
+                    rate_limit: true,
+                    filter: None,
+                },
+            )
+        });
+
+        let decoded = tap_rx.recv().expect("the command is decoded");
+        assert_eq!(decoded.id, "nmeaCommandGroupFunction");
+        handle.join().expect("the pipeline does not panic");
     }
 }
