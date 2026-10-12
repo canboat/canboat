@@ -35,7 +35,7 @@ use std::thread;
 use anyhow::{Result, anyhow};
 
 use crate::engine::output::JsonOptions;
-use crate::engine::pgn_list::PgnListStatus;
+use crate::engine::pgn_list::{PgnListStatus, RxFilter};
 use crate::engine::{DecodedPgn, PgnDatabase, RawFrame};
 use crate::io::device::{FrameSender, Supervisor};
 
@@ -59,6 +59,8 @@ pub struct Bridge {
     /// pipeline starts, so `new`→`spawn` is a one-shot.
     frames_rx: Option<mpsc::Receiver<RawFrame>>,
     supervisor: Option<Supervisor>,
+    /// Why the supervisor gave up on the device, kept past `shutdown`.
+    failure: Option<crate::io::device::DeviceFailure>,
     pre_coalesced: Arc<AtomicBool>,
     device_sender: Option<FrameSender>,
     claim_addr: Option<Arc<AtomicU8>>,
@@ -127,7 +129,7 @@ impl Bridge {
             );
         }
         // The scx20 and motion quirks impersonate a device (motion claims a
-        // whole new virtual node), so they need --socketcan or --canalyst —
+        // whole new virtual node), so they need --kind socketcan or canalyst —
         // the backends that preserve a frame's src on outbound. The wmm quirk emits
         // canboat's own PGN 127258, so it only needs *some* writable backend
         // — that check happens below once one is known.
@@ -135,7 +137,7 @@ impl Bridge {
             if config.quirk.contains(&kind) && !config.is_node() {
                 let name = kind.name();
                 anyhow::bail!(
-                    "--quirk {name} only works with --socketcan or --canalyst; it claims/impersonates \
+                    "--quirk {name} only works with --kind socketcan or canalyst; it claims/impersonates \
                      a device, and other backends rewrite src on outbound writes so the \
                      frame cannot reach the bus with the claimed source address"
                 );
@@ -209,7 +211,7 @@ impl Bridge {
             }
             if device_sender.is_none() {
                 anyhow::bail!(
-                    "--quirk gps-relay needs a writable device backend (e.g. --socketcan or an \
+                    "--quirk gps-relay needs a writable device backend (e.g. --kind socketcan or an \
                      NGT-1/iKonvert gateway) to re-send frames; there is no bus to write to \
                      in stdin/log-only mode"
                 );
@@ -221,12 +223,12 @@ impl Bridge {
         // Refuse it in stdin- or log-only mode where there is no bus.
         if config.quirk.contains(&quirks::QuirkKind::Wmm) && device_sender.is_none() {
             anyhow::bail!(
-                "--quirk wmm needs a writable device backend (e.g. --socketcan or an \
+                "--quirk wmm needs a writable device backend (e.g. --kind socketcan or an \
                  NGT-1/iKonvert gateway) to emit PGN 127258; there is no bus to write \
                  to in stdin/log-only mode"
             );
         }
-        // (motion is already gated to --socketcan above, which guarantees a
+        // (motion is already gated to socketcan/canalyst above, which guarantees a
         // writable backend, so it needs no separate device_sender check.)
 
         // In device mode treat stdin like `actisense-serial -p`: parse
@@ -302,6 +304,7 @@ impl Bridge {
             json_opts,
             banner,
             frames_rx: Some(frames_rx),
+            failure: supervisor.as_ref().map(Supervisor::failure),
             supervisor,
             pre_coalesced,
             device_sender,
@@ -385,7 +388,7 @@ impl Bridge {
     }
 
     /// The live claimed ISO source address, if the backend exposes one
-    /// (`--socketcan` or `--canalyst`) and it currently holds a valid unicast
+    /// (`socketcan` or `canalyst`) and it currently holds a valid unicast
     /// address. `None` otherwise.
     pub fn claimed_address(&self) -> Option<u8> {
         self.claim_addr
@@ -536,9 +539,29 @@ impl Bridge {
         let frames_rx = self.take_source()?;
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
-        pipeline::run(db, frames_rx, hubs, pre_coalesced, json_opts, nmea);
+        let rx_filter = RxFilter::new(&self.config.rx_filter);
+        pipeline::run(
+            db,
+            frames_rx,
+            hubs,
+            pre_coalesced,
+            json_opts,
+            nmea,
+            rx_filter,
+        );
         self.shutdown();
-        Ok(())
+        match self.failure() {
+            Some(why) => Err(anyhow!("{why}")),
+            None => Ok(()),
+        }
+    }
+
+    /// Why the bridge stopped, when it gave up on its device: it is not
+    /// the gateway it was told it is (an NGT-1 opened as an AOS simulator,
+    /// or the other way round). Reconnecting would not mend that, so the
+    /// frame source ends. `None` otherwise.
+    pub fn failure(&self) -> Option<String> {
+        self.failure.as_ref()?.get().map(str::to_owned)
     }
 
     /// Start the pipeline on a background thread, leaving this `Bridge`
@@ -549,9 +572,20 @@ impl Bridge {
         let frames_rx = self.take_source()?;
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
+        let rx_filter = RxFilter::new(&self.config.rx_filter);
         let join = thread::Builder::new()
             .name("bridge-pipeline".into())
-            .spawn(move || pipeline::run(db, frames_rx, hubs, pre_coalesced, json_opts, nmea))
+            .spawn(move || {
+                pipeline::run(
+                    db,
+                    frames_rx,
+                    hubs,
+                    pre_coalesced,
+                    json_opts,
+                    nmea,
+                    rx_filter,
+                )
+            })
             .map_err(|e| anyhow!("spawning the bridge pipeline thread: {e}"))?;
         self.pipeline_join = Some(join);
         Ok(())

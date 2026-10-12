@@ -30,6 +30,7 @@ use std::time::{Duration, Instant};
 
 use crate::engine::format::write_plain;
 use crate::engine::output::{JsonOptions, write_json};
+use crate::engine::pgn_list::RxFilter;
 use crate::engine::{FramePacketType, PgnDatabase, RawFrame, Reassembled, Reassembler};
 use crate::io::device::FrameSender;
 use crate::n2kd::request_engine::RequestEngine;
@@ -224,6 +225,7 @@ pub fn run(
     pre_coalesced: Arc<AtomicBool>,
     json_opts: JsonOptions,
     nmea: Nmea0183Options,
+    rx_filter: Option<RxFilter>,
 ) {
     let Nmea0183Options {
         emit_stdout: emit_nmea_stdout,
@@ -261,14 +263,14 @@ pub fn run(
     loop {
         let any_pending =
             raw_batch.has_pending() || nmea_batch.has_pending() || analyzer_batch.has_pending();
-        let frame = if let Some(synth) = pending_synth.pop_front() {
-            synth
+        let (frame, synthetic) = if let Some(synth) = pending_synth.pop_front() {
+            (synth, true)
         } else if any_pending {
             // Output is waiting on a batch deadline: don't block
             // indefinitely on a quiet bus. On timeout, flush what's
             // pending and go back to waiting.
             match frames_rx.recv_timeout(BATCH_MAX_AGE) {
-                Ok(f) => f,
+                Ok(f) => (f, false),
                 Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {
                     let now = Instant::now();
                     raw_batch.flush_due(now);
@@ -280,10 +282,15 @@ pub fn run(
             }
         } else {
             match frames_rx.recv() {
-                Ok(f) => f,
+                Ok(f) => (f, false),
                 Err(_) => break,
             }
         };
+        // `--rx-filter`: what the gateway did not filter itself. Frames
+        // canboat made itself from one that passed are not filtered again.
+        if !synthetic && rx_filter.as_ref().is_some_and(|f| !f.passes(frame.pgn)) {
+            continue;
+        }
         let now = Instant::now();
 
         // The NMEA 0183 filter control channel (PGN 262657) no longer
@@ -589,6 +596,7 @@ mod tests {
                     rate_limit: true,
                     filter: None,
                 },
+                None,
             )
         });
 

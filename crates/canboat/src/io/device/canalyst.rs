@@ -531,4 +531,61 @@ mod tests {
         assert!(sent.iter().all(|f| f.0 == 3 && f.2 == 77));
         assert_eq!(&sent[0].4[2..], &data[..6]);
     }
+
+    /// On a J1939 bus a message over 8 bytes goes out over ISO TP, as on
+    /// SocketCAN: to global, a BAM announcement and then its packets.
+    #[test]
+    fn a_long_j1939_message_goes_out_over_iso_tp() {
+        use crate::engine::BusProtocol;
+        use crate::engine::iso_tp::{PGN_TP_CM, PGN_TP_DT};
+        let adapter = Adapter::default();
+        let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+        let config = Config {
+            address: 77,
+            unique: 1234,
+            heartbeat_ms: 0,
+            protocol: BusProtocol::J1939,
+            ..Config::default()
+        };
+        let handle = run(
+            Box::new(Feed(Default::default())),
+            Box::new(adapter.clone()),
+            config,
+            claim.clone(),
+        )
+        .unwrap();
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while claim.load(Ordering::Relaxed) != 77 {
+            assert!(std::time::Instant::now() < deadline, "never claimed");
+            thread::sleep(Duration::from_millis(20));
+        }
+
+        // DM1, 20 bytes: three 7-byte TP.DT packets.
+        let data: Vec<u8> = (0..20).collect();
+        handle
+            .send_frame(RawFrame::new(None, 6, 65226, 0, 255, data.iter().copied()))
+            .unwrap();
+        let tp = || -> Vec<_> {
+            adapter
+                .frames()
+                .into_iter()
+                .filter(|f| f.1 == PGN_TP_CM || f.1 == PGN_TP_DT)
+                .collect()
+        };
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while tp().iter().filter(|f| f.1 == PGN_TP_DT).count() < 3 {
+            assert!(std::time::Instant::now() < deadline, "{:?}", tp());
+            thread::sleep(Duration::from_millis(20));
+        }
+        let tp = tp();
+        // The BAM (control byte 32) names the length, packets and PGN.
+        let bam = &tp[0];
+        assert_eq!((bam.1, bam.2, bam.3), (PGN_TP_CM, 77, 255));
+        assert_eq!(bam.4[..4], [32, 20, 0, 3]);
+        assert_eq!(u32::from_le_bytes([bam.4[5], bam.4[6], bam.4[7], 0]), 65226);
+        let packets: Vec<_> = tp.iter().filter(|f| f.1 == PGN_TP_DT).collect();
+        assert_eq!(packets[0].4[..], [1, 0, 1, 2, 3, 4, 5, 6]);
+        assert_eq!(packets[2].4[..], [3, 14, 15, 16, 17, 18, 19, 255]);
+        assert_eq!(handle.close(), super::super::Closed::Confirmed);
+    }
 }

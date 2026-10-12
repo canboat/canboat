@@ -171,6 +171,7 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
         joins: vec![reader_join],
         writer: Some(writer_join),
         progress,
+        failure: Default::default(),
     })
 }
 

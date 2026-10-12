@@ -74,36 +74,40 @@ impl From<UnitSystem> for Units {
 /// Flattened into both `convert` and the `analyzer` shim.
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct ShapeArgs {
-    /// Spelling of field keys and PGN descriptions: `spaces`
-    /// ("Unique Number"), `camel` ("uniqueNumber", the default) or
-    /// `uppercamel` ("UniqueNumber").
+    /// Spelling of field keys and PGN descriptions [default: camel].
+    ///
+    /// `spaces` ("Unique Number"), `camel` ("uniqueNumber") or `uppercamel`
+    /// ("UniqueNumber").
     #[arg(long, value_enum, value_name = "STYLE",
           conflicts_with_all = ["camel", "upper_camel"])]
     id: Option<IdStyle>,
 
-    /// Unit system for numeric fields: `si` (rad/K/Pa, Hz for rpm, m3 for
-    /// litres, ratios for percentages; the default) or `metric` (canboat's
-    /// humanized deg/°C/bar, and the database's own rpm/L/%).
+    /// Unit system for numeric fields [default: si].
+    ///
+    /// `si`: rad, K, Pa, Hz for rpm, m3 for litres, ratios for percentages.
+    /// `metric`: canboat's humanized deg, °C and bar, and the database's own
+    /// rpm, L and %.
     #[arg(long, value_enum, value_name = "SYSTEM", conflicts_with = "si")]
     units: Option<UnitSystem>,
 
-    /// JSON: nest each record in `{"<pgnId>":{…}}` instead of emitting
-    /// it flat. Off by default; implied by the deprecated `--camel` /
-    /// `--upper-camel`, which is how canboat C spells it.
+    /// Nest each JSON record in `{"<pgnId>":{…}}`.
+    ///
+    /// Off by default; implied by the deprecated --camel and --upper-camel,
+    /// as in canboat C.
     #[arg(long)]
     wrap: bool,
 
     /// Deprecated: camelCase is now the default. Same as
     /// `--id camel --wrap`.
-    #[arg(long, conflicts_with = "upper_camel")]
+    #[arg(long, conflicts_with = "upper_camel", hide_short_help = true)]
     camel: bool,
 
     /// Deprecated: use `--id uppercamel --wrap`.
-    #[arg(long = "upper-camel")]
+    #[arg(long = "upper-camel", hide_short_help = true)]
     upper_camel: bool,
 
     /// Deprecated: SI is now the default. Same as `--units si`.
-    #[arg(long)]
+    #[arg(long, hide_short_help = true)]
     si: bool,
 }
 

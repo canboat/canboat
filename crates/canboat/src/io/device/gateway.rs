@@ -2,7 +2,8 @@
 
 //! The network gateways — and their serial cousins — that `canboat
 //! interface --kind` and `canboat server` open the same way: Yacht
-//! Devices RAW, Actisense N2K ASCII, BST-D0 and BST-95.
+//! Devices RAW, and an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII, N2K
+//! ASCII, N2K Actisense (BST-D0) or RAW Actisense (BST-95) mode.
 
 use std::io;
 
@@ -16,50 +17,77 @@ use super::{DeviceHandle, line_gateway};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum GatewayKind {
-    /// Yacht Devices RAW: a YDWG-02 / YDEN / NavLink2 RAW port over
-    /// `tcp://host[:port]` (port 1457 if not given) or `udp://…`, or a
-    /// YDNU-02 on its serial port (38 400 baud).
-    Ydwg,
-    /// Actisense W2K-1 in N2K ASCII mode, over `tcp://host[:port]` (port
-    /// 60002) or `udp://…`.
-    W2kAscii,
-    /// Actisense BST-D0 (reassembled NMEA 2000): a W2K-1 or PRO-NDC-1E2K in
-    /// Actisense mode, over `tcp://host[:port]` (port 60002).
-    BstD0,
-    /// Actisense BST-95 (raw CAN frames): a PRO-NDC-1E2K or W2K-1 in "CAN
-    /// Actisense" mode over `tcp://host[:port]` (port 60002), or an NGX in
-    /// CAN Packet mode on its serial port (115 200 baud).
-    Bst95,
+    /// Yacht Devices, in RAW ASCII: a YDWG-02 / YDEN-02 / YDNR-02 /
+    /// NavLink2 RAW port over `tcp://host[:port]` (port 1457 if not given)
+    /// or `udp://…`, or a YDNU-02 on its serial port (38 400 baud).
+    YachtDevices,
+    /// An Actisense W2K-1, PRO-NDC-1E2K or NGX, set to `format`. (An NGT-1,
+    /// in NGT Actisense, is opened with its own driver: see
+    /// [`crate::bus::open_ngt1`].)
+    Actisense(ActisenseFormat),
+}
+
+/// The data formats of an Actisense W2K-1, PRO-NDC-1E2K or NGX, by
+/// Actisense's names, apart from NGT Actisense.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum ActisenseFormat {
+    /// N2K ASCII, reassembled NMEA 2000 messages as text, over
+    /// `tcp://host[:port]` (port 60002) or `udp://…`.
+    N2kAscii,
+    /// N2K Actisense (BST-D0), reassembled NMEA 2000 messages, binary,
+    /// over `tcp://host[:port]` (port 60002).
+    N2kActisense,
+    /// RAW ASCII, CAN frames as the Yacht Devices RAW lines, over
+    /// `tcp://host[:port]` (port 60002) or `udp://…`.
+    RawAscii,
+    /// RAW Actisense (BST-95), CAN frames, binary: a PRO-NDC-1E2K or W2K-1
+    /// over `tcp://host[:port]` (port 60002), or an NGX in CAN Packet mode
+    /// on its serial port (115 200 baud).
+    RawActisense,
 }
 
 impl GatewayKind {
     /// The serial speed when none is given, for a gateway on a serial port.
     pub fn default_baud(self) -> u32 {
         match self {
-            GatewayKind::Ydwg => 38_400,
-            GatewayKind::Bst95 => 115_200,
-            GatewayKind::W2kAscii | GatewayKind::BstD0 => 0,
+            GatewayKind::YachtDevices => 38_400,
+            GatewayKind::Actisense(ActisenseFormat::RawActisense) => 115_200,
+            GatewayKind::Actisense(ActisenseFormat::N2kAscii)
+            | GatewayKind::Actisense(ActisenseFormat::N2kActisense)
+            | GatewayKind::Actisense(ActisenseFormat::RawAscii) => 0,
         }
     }
 
     /// Whether it passes raw CAN frames, and so any [`BusProtocol`]; the
     /// others do NMEA 2000 framing themselves.
     pub fn passes_raw_frames(self) -> bool {
-        matches!(self, GatewayKind::Ydwg | GatewayKind::Bst95)
+        matches!(
+            self,
+            GatewayKind::YachtDevices
+                | GatewayKind::Actisense(ActisenseFormat::RawActisense)
+                | GatewayKind::Actisense(ActisenseFormat::RawAscii)
+        )
     }
 
     /// Whether it sends lines of text, and so also works over UDP.
     fn is_line_gateway(self) -> bool {
-        matches!(self, GatewayKind::Ydwg | GatewayKind::W2kAscii)
+        matches!(
+            self,
+            GatewayKind::YachtDevices
+                | GatewayKind::Actisense(ActisenseFormat::N2kAscii)
+                | GatewayKind::Actisense(ActisenseFormat::RawAscii)
+        )
     }
 
     /// A short name for log lines.
     pub fn name(self) -> &'static str {
         match self {
-            GatewayKind::Ydwg => "ydwg",
-            GatewayKind::W2kAscii => "w2k-ascii",
-            GatewayKind::BstD0 => "bst-d0",
-            GatewayKind::Bst95 => "bst-95",
+            GatewayKind::YachtDevices => "yachtd",
+            GatewayKind::Actisense(ActisenseFormat::N2kAscii) => "actisense-n2k-ascii",
+            GatewayKind::Actisense(ActisenseFormat::RawAscii) => "actisense-raw-ascii",
+            GatewayKind::Actisense(ActisenseFormat::N2kActisense) => "actisense-n2k-actisense",
+            GatewayKind::Actisense(ActisenseFormat::RawActisense) => "actisense-raw-actisense",
         }
     }
 }
@@ -69,7 +97,7 @@ impl GatewayKind {
 pub struct Gateway {
     pub kind: GatewayKind,
     /// `tcp://host[:port]`, `udp://…` (the line gateways), or a serial
-    /// port (ydwg, bst-95).
+    /// port (a YDNU-02, or an NGX in RAW Actisense).
     pub device: String,
 }
 
@@ -97,7 +125,7 @@ pub(crate) fn open(
         ));
     }
     Ok(match gateway.kind {
-        GatewayKind::Ydwg => {
+        GatewayKind::YachtDevices => {
             // A network endpoint is a YDWG-02 / YDEN; anything else is the
             // serial port of a YDNU-02, which is first put in RAW mode.
             let (reader, writer, init) = if network {
@@ -115,7 +143,17 @@ pub(crate) fn open(
                 init,
             )
         }
-        GatewayKind::W2kAscii => {
+        GatewayKind::Actisense(ActisenseFormat::RawAscii) => {
+            let (reader, writer) = open_line_endpoint(device, 60002)?;
+            line_gateway::run(
+                reader,
+                writer,
+                line_gateway::LineFormat::YdwgRaw,
+                protocol,
+                &[],
+            )
+        }
+        GatewayKind::Actisense(ActisenseFormat::N2kAscii) => {
             let (reader, writer) = open_line_endpoint(device, 60002)?;
             line_gateway::run(
                 reader,
@@ -125,11 +163,11 @@ pub(crate) fn open(
                 &[],
             )
         }
-        GatewayKind::BstD0 => {
+        GatewayKind::Actisense(ActisenseFormat::N2kActisense) => {
             let (reader, writer) = open_tcp(device, 60002)?;
             super::bst_d0::run(reader, writer)
         }
-        GatewayKind::Bst95 => {
+        GatewayKind::Actisense(ActisenseFormat::RawActisense) => {
             // A network endpoint is a PRO-NDC-1E2K / W2K-1; anything else is
             // the serial port of an NGX.
             let (reader, writer) = if device.starts_with("tcp://") {
@@ -148,7 +186,10 @@ mod tests {
 
     #[test]
     fn a_binary_gateway_is_not_opened_over_udp() {
-        for kind in [GatewayKind::BstD0, GatewayKind::Bst95] {
+        for kind in [
+            GatewayKind::Actisense(ActisenseFormat::N2kActisense),
+            GatewayKind::Actisense(ActisenseFormat::RawActisense),
+        ] {
             let gateway = Gateway {
                 kind,
                 device: "udp://192.0.2.1:60002".into(),
