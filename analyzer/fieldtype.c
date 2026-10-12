@@ -534,9 +534,9 @@ extern void fillFieldType(bool doUnitFixup)
       // and the fraction of an offset such as J1939's 233.15 K), so both come off: the offset's whole
       // steps, and the unit offset. This makes it
       // follow a rangeMax that was pulled up: a field spanning its full UNSIGNED width reserves
-      // none (the "all values valid" idiom), and a LOOKUP whose enumeration names values in the
-      // sentinel region (getMaxRange raised its rangeMax for them) reserves only the sentinels left
-      // above the named values. The threshold is the full UNSIGNED width (2^size - 1) so it is
+      // none (the "all values valid" idiom). (keel also raises rangeMax to the greatest key of a
+      // LOOKUP that names values in the sentinel region; getMaxRange does not, but a named value is
+      // printed by name all the same.) The threshold is the full UNSIGNED width (2^size - 1) so it is
       // independent of sign and of display-unit fixups: a signed field, or a field whose rangeMax
       // was clamped to a rounder display value (e.g. an angle to 360 deg), never reaches it and so
       // keeps its full count -- matching the value the decoder strips. 64-bit fields can't be
