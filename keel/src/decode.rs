@@ -392,12 +392,12 @@ fn decode_bits(
                         }
                     } else if vroot == "NUMBER" {
                         let signed = vft.and_then(|t| t.has_sign) == Some(true);
-                        let off = vft.map(|t| t.offset as i64).unwrap_or(0);
+                        let off = vft.map(|t| t.offset).unwrap_or(0.0);
                         let res = vft.map(|t| t.resolution).unwrap_or(0.0);
-                        match extract_bits(data, ctx.bit, vbits, signed, off) {
+                        match extract_bits(data, ctx.bit, vbits, signed, off.trunc() as i64) {
                             Some(e) if res != 0.0 => Value::Number {
-                                value: e.value as f64 * res,
-                                decimals: decimals_for(res),
+                                value: (e.value as f64 + off.fract()) * res,
+                                decimals: number_decimals(res, off),
                             },
                             Some(e) => Value::Number {
                                 value: e.value as f64,
@@ -567,7 +567,7 @@ fn decode_bits(
         _ => {
             // numeric family (NUMBER, TIME, DURATION, DATE, PGN, MMSI, ...)
             let signed = ft.has_sign == Some(true);
-            let e = extract_bits(data, ctx.bit, bits, signed, f.res_offset as i64);
+            let e = extract_bits(data, ctx.bit, bits, signed, f.res_offset.trunc() as i64);
             ctx.bit += bits;
             match e {
                 None => Value::Unavailable,
@@ -580,8 +580,8 @@ fn decode_bits(
                     match sentinel(f, ft.has_sign, e.raw, bits) {
                         Some(s) => s,
                         None if f.res_resolution != 0.0 => Value::Number {
-                            value: e.value as f64 * f.res_resolution,
-                            decimals: decimals_for(f.res_resolution),
+                            value: (e.value as f64 + f.res_offset.fract()) * f.res_resolution,
+                            decimals: number_decimals(f.res_resolution, f.res_offset),
                         },
                         None => Value::Number {
                             value: e.value as f64,
@@ -634,11 +634,22 @@ fn decimals_for(resolution: f64) -> u8 {
     }
 }
 
+/// [`decimals_for`] the resolution, or more when the offset of `offset`
+/// raw steps has a fraction that needs them.
+fn number_decimals(resolution: f64, offset: f64) -> u8 {
+    let d = decimals_for(resolution);
+    if offset.fract() == 0.0 {
+        d
+    } else {
+        d.max(crate::derive::decimals_in(offset * resolution))
+    }
+}
+
 fn sentinel(f: &Field, has_sign: Option<bool>, raw: u64, bits: usize) -> Option<Value> {
     if f.reserved_count == 0 || bits == 0 || bits >= 64 || f.match_.is_some() {
         return None;
     }
-    let highbit = if has_sign == Some(true) && f.res_offset == 0 {
+    let highbit = if has_sign == Some(true) && f.res_offset == 0.0 {
         bits - 1
     } else {
         bits

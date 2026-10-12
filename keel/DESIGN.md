@@ -207,7 +207,10 @@ are addresses. keel resolves the inheritance and emits the per-field
 `.reservedOverride`, so the C runtime needs no fieldtype-level knowledge.
 Excess-K offsets live on the *fieldtype*, never on a field: the C runtime
 aborts on any field-level offset differing from its type (fieldtype.c:384),
-so a new offset means a new (derived) fieldtype.
+so a new offset means a new (derived) fieldtype. An offset is a number of
+raw steps (`offset: 500` at resolution 0.002 is 1.0) and may have a fraction
+on an unsigned type: J1939's -40 C is `offset: 233.15` at 1 K. The decoders
+add the whole steps to the raw value and the fraction after scaling it.
 Remaining keys:
 `lookupIndirect: {name: ..., order: N}`, `lookupBits`, `lookupFieldtype`,
 `description`, `condition`. PGN-level: `fallback: true`, `url`,
