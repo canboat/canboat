@@ -221,8 +221,9 @@ pub struct Args {
     #[arg(long, value_name = "BIT/S")]
     bitrate: Option<u32>,
 
-    /// Quit if no frame is received for this many seconds (0 disables).
-    /// SocketCAN and CANalyst only.
+    /// Quit, with an error, if no frame comes off the bus for this many
+    /// seconds (0 disables): a gateway that went away without closing the
+    /// connection is then noticed, and a supervisor can restart canboat.
     #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
     timeout: u64,
 
@@ -283,7 +284,8 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
         // Read-only: device → PLAIN stdout, ignore stdin.
         (true, _) => {
             let mut writer = PlainWriter::new(&mut out);
-            copy(&mut handle.frames_rx, &mut writer).context("reading from device")?;
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout);
+            copy(&mut rx, &mut writer).context("reading from device")?;
         }
         // Write-only: stdin PLAIN → device on the main thread (so we
         // exit when stdin ends); received frames are drained and
@@ -313,11 +315,60 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
                 })
                 .expect("spawn stdin pump");
             let mut writer = PlainWriter::new(&mut out);
-            copy(&mut handle.frames_rx, &mut writer).context("reading from device")?;
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout);
+            copy(&mut rx, &mut writer).context("reading from device")?;
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
     }
     Ok(())
+}
+
+/// The device's frames, ended with an error once none has come off the
+/// bus for `timeout_secs` (0: never). A frame canboat makes itself (a
+/// gateway status on a timer) does not count: it comes even from a
+/// gateway that has gone.
+struct Idle<'a> {
+    rx: &'a mut std::sync::mpsc::Receiver<RawFrame>,
+    timeout: Option<std::time::Duration>,
+    last: std::time::Instant,
+}
+
+impl<'a> Idle<'a> {
+    fn new(rx: &'a mut std::sync::mpsc::Receiver<RawFrame>, timeout_secs: u64) -> Self {
+        Self {
+            rx,
+            timeout: (timeout_secs > 0).then(|| std::time::Duration::from_secs(timeout_secs)),
+            last: std::time::Instant::now(),
+        }
+    }
+}
+
+impl crate::io::FrameReader for Idle<'_> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        use std::sync::mpsc::RecvTimeoutError;
+        let Some(timeout) = self.timeout else {
+            return Ok(self.rx.recv().ok());
+        };
+        loop {
+            let left = timeout.saturating_sub(self.last.elapsed());
+            match self.rx.recv_timeout(left) {
+                Ok(frame) => {
+                    if frame.pgn < crate::engine::codec::SYNTHETIC_PGN_START {
+                        self.last = std::time::Instant::now();
+                    }
+                    return Ok(Some(frame));
+                }
+                Err(RecvTimeoutError::Disconnected) => return Ok(None),
+                Err(RecvTimeoutError::Timeout) if self.last.elapsed() >= timeout => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::TimedOut,
+                        format!("no data received for {} seconds", timeout.as_secs()),
+                    ));
+                }
+                Err(RecvTimeoutError::Timeout) => {}
+            }
+        }
+    }
 }
 
 /// Pump PLAIN frames from stdin into `sender` until stdin ends.
@@ -446,6 +497,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             let stream = TcpStream::connect(&endpoint)
                 .with_context(|| format!("connecting to {endpoint}"))?;
+            crate::io::set_tcp_keepalive(&stream).context("setting TCP keepalive")?;
             let reader: Box<dyn Read + Send> =
                 Box::new(stream.try_clone().context("cloning TCP stream")?);
             let writer: Box<dyn Write + Send> = Box::new(stream);
@@ -587,6 +639,7 @@ fn open_tcp(
     stream
         .set_read_timeout(Some(std::time::Duration::from_millis(250)))
         .context("setting the TCP read timeout")?;
+    crate::io::set_tcp_keepalive(&stream).context("setting TCP keepalive")?;
     let reader: Box<dyn Read + Send> = Box::new(stream.try_clone().context("cloning TCP stream")?);
     let writer: Box<dyn Write + Send> = Box::new(stream);
     Ok((reader, writer))
@@ -622,5 +675,58 @@ impl Read for UdpRead {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         let (n, _peer) = self.0.recv_from(buf)?;
         Ok(n)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::io::FrameReader;
+    use std::sync::mpsc;
+    use std::time::{Duration, Instant};
+
+    fn frame(pgn: u32) -> RawFrame {
+        RawFrame::new(None, 6, pgn, 1, 255, [0u8; 8])
+    }
+
+    /// A bus frame resets the clock; a frame canboat made does not, and
+    /// once the time is up reading ends with an error.
+    #[test]
+    fn a_silent_bus_times_out() {
+        let (tx, mut rx) = mpsc::channel();
+        let mut idle = Idle::new(&mut rx, 1);
+        tx.send(frame(127508)).unwrap();
+        assert_eq!(idle.read_frame().unwrap().unwrap().pgn, 127508);
+        let start = Instant::now();
+        let sender = thread::spawn(move || {
+            for _ in 0..3 {
+                thread::sleep(Duration::from_millis(200));
+                let _ = tx.send(frame(262400));
+            }
+            thread::sleep(Duration::from_secs(2));
+            drop(tx);
+        });
+        let mut synthetic = 0;
+        let err = loop {
+            match idle.read_frame() {
+                Ok(Some(_)) => synthetic += 1,
+                Ok(None) => panic!("ended without a timeout"),
+                Err(e) => break e,
+            }
+        };
+        assert_eq!(synthetic, 3);
+        assert_eq!(err.kind(), io::ErrorKind::TimedOut);
+        let waited = start.elapsed();
+        assert!(waited >= Duration::from_millis(900) && waited < Duration::from_millis(1500));
+        sender.join().unwrap();
+    }
+
+    /// Without a timeout, and when the device goes, reading just ends.
+    #[test]
+    fn a_closed_device_ends_the_stream() {
+        let (tx, mut rx) = mpsc::channel::<RawFrame>();
+        drop(tx);
+        assert!(Idle::new(&mut rx, 0).read_frame().unwrap().is_none());
+        assert!(Idle::new(&mut rx, 5).read_frame().unwrap().is_none());
     }
 }

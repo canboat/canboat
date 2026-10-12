@@ -105,6 +105,35 @@ pub fn open_serial(path: &str, baud: u32) -> io::Result<Box<dyn serialport::Seri
         .map_err(|e| io::Error::other(e.to_string()))
 }
 
+/// Have the OS probe an idle TCP connection to a gateway, so one that
+/// went away without closing it (rebooted, or lost power) ends the read
+/// with an error instead of blocking it for good (canboat#1039): about
+/// 25 s after the last byte where the OS lets the probes be tuned.
+#[cfg(feature = "io")]
+pub(crate) fn set_tcp_keepalive(stream: &std::net::TcpStream) -> io::Result<()> {
+    let keepalive = socket2::TcpKeepalive::new().with_time(Duration::from_secs(10));
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "android",
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "freebsd",
+        target_os = "netbsd",
+        target_os = "windows",
+    ))]
+    let keepalive = keepalive.with_interval(Duration::from_secs(5));
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "android",
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "freebsd",
+        target_os = "netbsd",
+    ))]
+    let keepalive = keepalive.with_retries(3);
+    socket2::SockRef::from(stream).set_tcp_keepalive(&keepalive)
+}
+
 /// Open a serial port and return an independent `(reader, writer)`
 /// pair as `Read`/`Write` trait objects. Mirrors what the
 /// `actisense-serial` / `ikonvert-serial` binaries do: open the port

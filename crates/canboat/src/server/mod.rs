@@ -1120,6 +1120,7 @@ fn open_tcp_pair(
         .ok_or_else(|| io::Error::other(format!("no addresses for {with_port}")))?;
     log::info!("{log_label}: connecting to {resolved}");
     let stream = TcpStream::connect_timeout(&resolved, Duration::from_secs(10))?;
+    crate::io::set_tcp_keepalive(&stream)?;
     let read_clone = stream.try_clone()?;
     Ok((Box::new(read_clone), Box::new(stream)))
 }
