@@ -475,7 +475,14 @@ fn reader_thread<D: DeviceDecoder>(
                     return;
                 }
             }
-            Err(e) if e.kind() == io::ErrorKind::TimedOut => {
+            // A serial port's timeout is TimedOut; a TCP socket's read
+            // timeout is WouldBlock on Unix.
+            Err(e)
+                if matches!(
+                    e.kind(),
+                    io::ErrorKind::TimedOut | io::ErrorKind::WouldBlock
+                ) =>
+            {
                 decoder.tick(&mut events);
                 if !deliver(&mut events) {
                     return;
@@ -581,7 +588,13 @@ mod tests {
                 return Ok(0);
             }
             self.0 -= 1;
-            Err(io::ErrorKind::TimedOut.into())
+            // Both kinds of read timeout: a serial port's, and a TCP
+            // socket's on Unix.
+            if self.0.is_multiple_of(2) {
+                Err(io::ErrorKind::WouldBlock.into())
+            } else {
+                Err(io::ErrorKind::TimedOut.into())
+            }
         }
     }
 

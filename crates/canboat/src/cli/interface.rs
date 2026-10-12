@@ -582,6 +582,11 @@ fn open_tcp(
     };
     let stream =
         TcpStream::connect(&endpoint).with_context(|| format!("connecting to {endpoint}"))?;
+    // As a serial port's: a quiet connection still ticks the codec, so
+    // its deadlines (frames held after Set Operating Mode) advance.
+    stream
+        .set_read_timeout(Some(std::time::Duration::from_millis(250)))
+        .context("setting the TCP read timeout")?;
     let reader: Box<dyn Read + Send> = Box::new(stream.try_clone().context("cloning TCP stream")?);
     let writer: Box<dyn Write + Send> = Box::new(stream);
     Ok((reader, writer))
