@@ -106,15 +106,15 @@ enum FromFormat {
     /// EBL frame reader, so it has no [`InputFormat`] mapping.
     #[value(name = "actisense-ebl", alias = "ebl")]
     ActisenseEbl,
-    /// Actisense BST-D0: reassembled NMEA 2000 messages in BDTP framing,
-    /// as a W2K-1 or PRO-NDC-1E2K sends them in Actisense mode. Binary
-    /// too, with its own frame reader.
-    #[value(name = "bst-d0", alias = "actisense-n2k")]
+    /// Actisense N2K Actisense (BST-D0): reassembled NMEA 2000 messages in
+    /// BDTP framing, as a W2K-1 or PRO-NDC-1E2K sends them in Actisense
+    /// mode. Binary too, with its own frame reader.
+    #[value(name = "n2k-actisense")]
     BstD0,
-    /// Actisense BST-95: raw CAN frames in BDTP framing, as a PRO-NDC-1E2K
-    /// or W2K-1 sends them in "CAN Actisense" mode. Binary too; the reader
-    /// takes any BST message that carries a frame.
-    #[value(name = "bst-95")]
+    /// Actisense RAW Actisense (BST-95): raw CAN frames in BDTP framing, as
+    /// a PRO-NDC-1E2K or W2K-1 sends them in "CAN Actisense" mode. Binary
+    /// too; the reader takes any BST message that carries a frame.
+    #[value(name = "raw-actisense")]
     Bst95,
 }
 
@@ -155,8 +155,8 @@ Input line formats (auto-detected from the first line, or forced with --from):
 
 Binary input formats (forced with --from; a .ebl file is recognised by name):
   actisense-ebl  Actisense .ebl binary log
-  bst-d0         Actisense BST-D0 messages: a W2K-1 or PRO-NDC-1E2K in Actisense mode
-  bst-95         Actisense BST-95 raw CAN frames: a PRO-NDC-1E2K or W2K-1 in CAN Actisense mode
+  n2k-actisense  Actisense N2K Actisense (BST-D0): a W2K-1 or PRO-NDC-1E2K in Actisense mode
+  raw-actisense  Actisense RAW Actisense (BST-95): a PRO-NDC-1E2K or W2K-1 in CAN Actisense mode
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)

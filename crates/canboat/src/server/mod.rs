@@ -124,16 +124,6 @@ pub struct Args {
     maretron: Option<String>,
     #[arg(long, value_name = "IFACE", group = "source", hide = true)]
     socketcan: Option<String>,
-    #[arg(long, value_name = "DEVICE", group = "source", hide = true)]
-    canalyst: Option<String>,
-    #[arg(long, value_name = "DEVICE", group = "source", hide = true)]
-    ydwg: Option<String>,
-    #[arg(long, value_name = "URL", group = "source", hide = true)]
-    w2k_ascii: Option<String>,
-    #[arg(long, value_name = "URL", group = "source", hide = true)]
-    bst_d0: Option<String>,
-    #[arg(long = "bst-95", value_name = "DEVICE", group = "source", hide = true)]
-    bst_95: Option<String>,
 
     /// Read from another `canboat server`'s raw port (`host:port` or
     /// `tcp://host[:port]`, 2603).
@@ -343,8 +333,9 @@ pub struct BridgeConfig {
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
-    /// A Yacht Devices RAW, Actisense N2K ASCII, BST-D0 or BST-95 gateway
-    /// (`--kind raw-ascii`, `n2k-ascii`, `bst-d0`, `bst-95`).
+    /// A Yacht Devices gateway, or an Actisense in a data format other than
+    /// NGT Actisense (`--kind yachtd`, or `actisense` with `--data-format`
+    /// n2k-ascii, n2k-actisense, raw-ascii or raw-actisense).
     pub gateway: Option<Gateway>,
     /// The address to claim with `socketcan` or `canalyst`, or with
     /// `actisense` when that is an AOS simulator.
@@ -536,20 +527,6 @@ impl Args {
             (Kind::Ikonvert, &self.ikonvert),
             (Kind::Maretron, &self.maretron),
             (Kind::Socketcan, &self.socketcan),
-            (Kind::Canalyst, &self.canalyst),
-            (Kind::Gateway(GatewayKind::YachtDevices), &self.ydwg),
-            (
-                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)),
-                &self.w2k_ascii,
-            ),
-            (
-                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)),
-                &self.bst_d0,
-            ),
-            (
-                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)),
-                &self.bst_95,
-            ),
         ]
         .into_iter()
         .find_map(|(kind, device)| Some((kind, device.clone()?))))

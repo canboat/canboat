@@ -298,7 +298,10 @@ fn bst_d0_decodes_as_pgn_test() {
     let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
     let bst = std::fs::read(dir.join("pgn-test-bst-d0.bin")).expect("read fixture");
     let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
-    let got = without_timestamps(&run(&["convert", "--no-banner", "--from", "bst-d0"], &bst));
+    let got = without_timestamps(&run(
+        &["convert", "--no-banner", "--from", "n2k-actisense"],
+        &bst,
+    ));
     assert_eq!(got.lines().count(), 31);
     assert_eq!(got, want);
 }
@@ -315,7 +318,10 @@ fn bst_95_decodes_as_pgn_test() {
     let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
     let bst = std::fs::read(dir.join("pgn-test-bst-95.bin")).expect("read fixture");
     let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
-    let got = without_timestamps(&run(&["convert", "--no-banner", "--from", "bst-95"], &bst));
+    let got = without_timestamps(&run(
+        &["convert", "--no-banner", "--from", "raw-actisense"],
+        &bst,
+    ));
     assert_eq!(got.lines().count(), 31);
     assert_eq!(got, want);
 }
@@ -395,7 +401,7 @@ fn bst_95_follows_the_protocol() {
         &[
             "convert",
             "--from",
-            "bst-95",
+            "raw-actisense",
             "--protocol",
             "j1939",
             "--to",
@@ -408,7 +414,10 @@ fn bst_95_follows_the_protocol() {
         j1939.contains(",6,130816,42,255,8,20,14,02,03,04,05,06,07"),
         "{j1939}"
     );
-    let n2k = run(&["convert", "--from", "bst-95", "--to", "plain"], &frame);
+    let n2k = run(
+        &["convert", "--from", "raw-actisense", "--to", "plain"],
+        &frame,
+    );
     assert!(
         !String::from_utf8(n2k).unwrap().contains("130816"),
         "on NMEA 2000 it is the first frame of a fast-packet"

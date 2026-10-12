@@ -97,7 +97,7 @@ impl GatewayKind {
 pub struct Gateway {
     pub kind: GatewayKind,
     /// `tcp://host[:port]`, `udp://…` (the line gateways), or a serial
-    /// port (ydwg, bst-95).
+    /// port (a YDNU-02, or an NGX in RAW Actisense).
     pub device: String,
 }
 

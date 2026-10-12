@@ -54,8 +54,9 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 - An option only some gateways have (`--bitrate`, `--channel`, `--password`,
   `--mode`, the ISO NAME options) says which in `--help`, and is refused for
   the others.
-- The old names still work: `--kind ngt1`, `bst-d0`, `bst-95`, `w2k-ascii`,
-  `ydwg`, and `canboat server --actisense …`, `--ydwg …` and the like.
+- The names of canboat 8.3.0 still work: `--kind ngt1`, `w2k-ascii` and
+  `ydwg`, and `canboat server --actisense …`, `--ikonvert …`, `--maretron …`
+  and `--socketcan …`.
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 

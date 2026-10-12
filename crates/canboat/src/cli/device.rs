@@ -155,19 +155,10 @@ const KINDS: &[KindArg] = &[
         Family::Aos,
         "AOS NMEA 2000/0183 Simulator, in NGT Actisense; canboat is the node",
     ),
+    // The names canboat 8.3.0 took.
     old_kind("ngt1", Family::Actisense, Some(DataFormat::NgtActisense)),
     old_kind("w2k-ascii", Family::Actisense, Some(DataFormat::N2kAscii)),
-    old_kind("n2k-ascii", Family::Actisense, Some(DataFormat::N2kAscii)),
-    old_kind("bst-d0", Family::Actisense, Some(DataFormat::N2kActisense)),
-    old_kind(
-        "w2k-actisense",
-        Family::Actisense,
-        Some(DataFormat::N2kActisense),
-    ),
-    old_kind("bst-95", Family::Actisense, Some(DataFormat::RawActisense)),
     old_kind("ydwg", Family::Yachtd, Some(DataFormat::RawAscii)),
-    old_kind("raw-ascii", Family::Yachtd, Some(DataFormat::RawAscii)),
-    old_kind("usb-can-b", Family::Canalyst, None),
 ];
 
 impl clap::ValueEnum for KindArg {
@@ -319,7 +310,7 @@ Gateways (--kind) and their data formats (--data-format):
   aos is the Across Ocean Systems simulator, which speaks the NGT-1's
   format but is no node: canboat claims an address for it. actisense
   (ngt-actisense) and aos each give up on a gateway that turns out to be
-  the other. The old names still work: --kind ngt1, bst-d0, bst-95,
+  the other. The names of canboat 8.3.0 still work: --kind ngt1,
   w2k-ascii, ydwg.
 
 Options only some gateways take:
@@ -375,7 +366,7 @@ pub struct DeviceArgs {
     pub bitrate: Option<u32>,
 
     /// canalyst: the CAN channel, 0 or 1 [default: 0].
-    #[arg(long, alias = "canalyst-channel", value_name = "N", help_heading = CAN)]
+    #[arg(long, value_name = "N", help_heading = CAN)]
     pub channel: Option<u8>,
 
     /// maretron: the IPG login password [default: empty].
@@ -639,8 +630,6 @@ mod tests {
     #[test]
     fn the_old_spellings_still_parse() {
         let d = parse(&[
-            "--canalyst-channel",
-            "1",
             "--maretron-password",
             "pw",
             "--ikonvert-rx",
@@ -651,7 +640,6 @@ mod tests {
             "--socketcan-address",
             "7",
         ]);
-        assert_eq!(d.channel, Some(1));
         assert_eq!(d.password.as_deref(), Some("pw"));
         assert_eq!(d.rx_filter, [129025, 129026]);
         assert!(d.rx_pgn.is_empty());
@@ -750,22 +738,11 @@ mod tests {
             // The old names imply their format.
             ("ngt1", None, Kind::Ngt1),
             (
-                "bst-d0",
-                None,
-                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kActisense)),
-            ),
-            (
-                "bst-95",
-                Some(RawActisense),
-                Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense)),
-            ),
-            (
                 "w2k-ascii",
-                None,
+                Some(N2kAscii),
                 Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)),
             ),
             ("ydwg", None, Kind::Gateway(GatewayKind::YachtDevices)),
-            ("usb-can-b", None, Kind::Canalyst),
         ] {
             assert_eq!(
                 kind(name).resolve(format).unwrap(),
@@ -773,7 +750,7 @@ mod tests {
                 "{name} {format:?}"
             );
         }
-        assert!(kind("bst-95").resolve(Some(N2kAscii)).is_err());
+        assert!(kind("w2k-ascii").resolve(Some(RawAscii)).is_err());
         assert!(kind("yachtd").resolve(Some(N2kAscii)).is_err());
         assert!(kind("socketcan").resolve(Some(RawAscii)).is_err());
         // Only the new names are listed.
