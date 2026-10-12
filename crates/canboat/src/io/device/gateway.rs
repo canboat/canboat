@@ -48,6 +48,11 @@ impl GatewayKind {
         matches!(self, GatewayKind::Ydwg | GatewayKind::Bst95)
     }
 
+    /// Whether it sends lines of text, and so also works over UDP.
+    fn is_line_gateway(self) -> bool {
+        matches!(self, GatewayKind::Ydwg | GatewayKind::W2kAscii)
+    }
+
     /// A short name for log lines.
     pub fn name(self) -> &'static str {
         match self {
@@ -82,6 +87,15 @@ pub(crate) fn open(
         open_serial_rw(device, baud)
             .map_err(|e| io::Error::new(e.kind(), format!("opening serial port {device}: {e}")))
     };
+    if device.starts_with("udp://") && !gateway.kind.is_line_gateway() {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!(
+                "{} takes tcp://host[:port], not udp://",
+                gateway.kind.name()
+            ),
+        ));
+    }
     Ok(match gateway.kind {
         GatewayKind::Ydwg => {
             // A network endpoint is a YDWG-02 / YDEN; anything else is the
@@ -126,4 +140,23 @@ pub(crate) fn open(
             super::bst95::run(reader, writer, protocol)
         }
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_binary_gateway_is_not_opened_over_udp() {
+        for kind in [GatewayKind::BstD0, GatewayKind::Bst95] {
+            let gateway = Gateway {
+                kind,
+                device: "udp://192.0.2.1:60002".into(),
+            };
+            let Err(e) = open(&gateway, None, BusProtocol::Nmea2000) else {
+                panic!("{kind:?} opened over UDP");
+            };
+            assert_eq!(e.kind(), io::ErrorKind::InvalidInput, "{e}");
+        }
+    }
 }

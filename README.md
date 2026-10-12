@@ -26,13 +26,19 @@ so canboat recognises it and is the node itself, as on a CANalyst-II: the
 `--address` and the other node options apply, and `canboat interface
 --no-claim` leaves it sending from its fixed, unclaimed address 75.
 
-Network gateways work with both `canboat interface --kind …` and `canboat
-server`: a Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (`--ydwg`), an Actisense
-W2K-1 in N2K ASCII mode (`--w2k-ascii`) or a W2K-1 / PRO-NDC-1E2K in Actisense
-(`--bst-d0`) or CAN Actisense mode (`--bst-95`), each at `tcp://host[:port]`.
-The Yacht Devices and N2K ASCII gateways also work over UDP:
-`udp://gateway:port` sends and receives, while `udp://port` only receives. An
-NGT-1 or iKonvert behind a network bridge is `tcp://host[:port]`.
+Network gateways work with both `canboat interface` and `canboat server`:
+
+| Gateway | `canboat interface` | `canboat server` |
+| --- | --- | --- |
+| Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (RAW) | `--kind ydwg` | `--ydwg` |
+| Actisense W2K-1 in N2K ASCII mode | `--kind w2k-ascii` | `--w2k-ascii` |
+| Actisense W2K-1 / PRO-NDC-1E2K in Actisense mode | `--kind bst-d0` | `--bst-d0` |
+| Actisense W2K-1 / PRO-NDC-1E2K in CAN Actisense mode | `--kind bst-95` | `--bst-95` |
+
+Each is at `tcp://host[:port]`. The Yacht Devices and N2K ASCII gateways also
+work over UDP: `udp://gateway:port` sends and receives, while `udp://port` only
+receives. An NGT-1 or iKonvert behind a network bridge is `tcp://host[:port]`
+(`--kind ngt1` / `--kind ikonvert`, or `--actisense` / `--ikonvert`).
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
