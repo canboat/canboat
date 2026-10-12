@@ -38,6 +38,7 @@ const FORMAT_FAST_HEADER: &[u8] = b"# format=FAST\n";
 fn producer(kind: Kind) -> &'static str {
     match kind {
         Kind::Ngt1 => "actisense-serial",
+        Kind::Aos => "aos",
         Kind::Ikonvert => "ikonvert-serial",
         Kind::Maretron => "maretron-ipg",
         Kind::Socketcan => "socketcan-serial",
@@ -130,6 +131,8 @@ pub fn run(args: Args) -> Result<()> {
 /// Move frames between the device and stdin/stdout until a stream ends.
 fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     let protocol = args.gateway.protocol();
+    // Why the device was given up on, if its frames stop for that.
+    let failure = handle.failure();
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
     write_prologue(&mut out, args).context("writing prologue")?;
@@ -190,7 +193,10 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
     }
-    Ok(())
+    match failure.get() {
+        Some(why) => anyhow::bail!("{why}"),
+        None => Ok(()),
+    }
 }
 
 /// The device's frames, ended with an error once none has come off the
@@ -302,7 +308,7 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 fn open_device(args: &Args) -> Result<DeviceHandle> {
     let gateway = &args.gateway;
     gateway.check(Some(args.kind))?;
-    if args.si.is_some() && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst | Kind::Ngt1) {
+    if args.si.is_some() && !matches!(args.kind, Kind::Socketcan | Kind::Canalyst | Kind::Aos) {
         anyhow::bail!("--si: --kind {} does not have it", args.kind.name());
     }
     let protocol = gateway.protocol();
@@ -327,13 +333,23 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 },
                 ..Default::default()
             };
-            // An AOS simulator, which claims no address, gets a node.
+            // An AOS simulator, which claims no address, still gets a
+            // node; --kind aos is the way to set it up.
             let node = device::ngt1::NodeConfig {
                 model_version: Some("canboat-aos"),
                 ..node_config(args)
             };
             let claim = Arc::new(AtomicU8::new(device::socketcan::CLAIM_UNCLAIMED));
             Ok(device::ngt1::run_with_node(r, w, config, node, claim))
+        }
+        Kind::Aos => {
+            let (r, w) = open_stream(args)?;
+            let node = device::ngt1::NodeConfig {
+                model_version: Some("canboat-aos"),
+                ..node_config(args)
+            };
+            let claim = Arc::new(AtomicU8::new(device::socketcan::CLAIM_UNCLAIMED));
+            Ok(device::ngt1::run_aos(r, w, node, claim))
         }
         Kind::Ikonvert => {
             let (r, w) = open_stream(args)?;
@@ -389,7 +405,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
 }
 
 /// The node configuration of a raw CAN gateway (socketcan, canalyst), or
-/// of an AOS simulator on `ngt1`.
+/// of an AOS simulator (`aos`, or found on `ngt1`).
 fn node_config(args: &Args) -> device::socketcan::Config {
     let node = args.gateway.node_config();
     device::socketcan::Config {

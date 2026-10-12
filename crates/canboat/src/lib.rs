@@ -362,7 +362,7 @@ pub mod bus {
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
     pub use crate::io::device::{
-        Closed, DeviceCloser, DeviceHandle, DeviceWriterGone, FrameSender,
+        Closed, DeviceCloser, DeviceFailure, DeviceHandle, DeviceWriterGone, FrameSender,
     };
 
     /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically

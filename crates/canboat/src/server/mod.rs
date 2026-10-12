@@ -328,6 +328,10 @@ const LOGGING: &str = "Logging";
 #[derive(Debug, Clone)]
 pub struct BridgeConfig {
     pub actisense: Option<String>,
+    /// An AOS NMEA 2000/0183 Simulator (`--kind aos`), opened as
+    /// `actisense` is, with canboat's node on it; a gateway that turns out
+    /// to be an NGT-1 is given up on.
+    pub aos: Option<String>,
     pub ikonvert: Option<String>,
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
@@ -446,6 +450,7 @@ impl Default for BridgeConfig {
     fn default() -> Self {
         Self {
             actisense: None,
+            aos: None,
             ikonvert: None,
             maretron: None,
             socketcan: None,
@@ -562,6 +567,7 @@ impl From<Args> for BridgeConfig {
         let is_ikonvert = matches!(source, Some((Kind::Ikonvert, _)));
         Self {
             actisense: device(Kind::Ngt1),
+            aos: device(Kind::Aos),
             ikonvert: device(Kind::Ikonvert),
             maretron: device(Kind::Maretron),
             socketcan: device(Kind::Socketcan),
@@ -681,17 +687,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         .is_some_and(|g| !g.kind.passes_raw_frames());
     if config.protocol != crate::engine::BusProtocol::Nmea2000
         && (config.actisense.is_some()
+            || config.aos.is_some()
             || config.ikonvert.is_some()
             || config.maretron.is_some()
             || frames_gateway)
     {
         anyhow::bail!(
-            "--protocol {}: the NGT-1, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
+            "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
              framing themselves; use --kind socketcan, canalyst, raw-ascii or bst-95, --canboat-csv or stdin",
             config.protocol
         );
     }
-    if let Some(path) = config.actisense.as_deref() {
+    // An NGT-1, or an AOS simulator, which speaks its framing.
+    let actisense = (config.actisense.as_deref().map(|path| (path, false)))
+        .or_else(|| config.aos.as_deref().map(|path| (path, true)));
+    if let Some((path, aos)) = actisense {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
         // What the embedder named — which, once it names a transmit PGN,
@@ -699,14 +709,20 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_lists = config.pgn_lists.clone();
         let extra_tx_pgns = quirk_tx_pgns(config);
         let effective = effective_pgn_lists(config);
-        if !config.pgn_lists.rx.is_empty() {
+        if !aos && !config.pgn_lists.rx.is_empty() {
             log::warn!(
                 "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
                 config.pgn_lists.rx
             );
         }
-        let pgn_list_status = (!effective.is_empty())
-            .then(|| device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns));
+        // The simulator's lists are the node's.
+        let pgn_list_status = (!effective.is_empty()).then(|| {
+            if aos {
+                device::socketcan::pgn_list_status(&effective)
+            } else {
+                device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns)
+            }
+        });
         // Shared by every session: a PGN written once this run is not
         // written again after a reconnect.
         let tx_list_record = Arc::default();
@@ -725,8 +741,16 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             device::socketcan::CLAIM_UNCLAIMED,
         ));
         let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new("ngt1", move || {
+        let factory = NamedFactory::new(if aos { "aos" } else { "ngt1" }, move || {
             let (reader, writer) = open_serial_or_tcp(&path, baud)?;
+            if aos {
+                return Ok(device::ngt1::run_aos(
+                    reader,
+                    writer,
+                    node.clone(),
+                    Arc::clone(&claim_for_factory),
+                ));
+            }
             let config = device::ngt1::Config {
                 operating_mode,
                 pgn_lists: pgn_lists.clone(),

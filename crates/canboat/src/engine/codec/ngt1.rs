@@ -264,6 +264,12 @@ impl Ngt1 {
         self.aos.as_ref()
     }
 
+    /// Whether the gateway has answered a BEM command, as an Actisense
+    /// NGT-1 does and the AOS simulator does not.
+    pub fn answers_bem(&self) -> bool {
+        self.bem_seen
+    }
+
     /// Ask a gateway that has answered no BEM command whether it is an AOS
     /// simulator, and give up on one that does not answer that either.
     fn probe(&mut self, now_ms: u64, events: &mut Vec<Event>) {

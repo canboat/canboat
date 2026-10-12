@@ -17,6 +17,8 @@ pub enum Kind {
     /// Actisense NGT-1 (NGT binary, BST-93/94); serial, usb, or tcp (port 6001).
     #[value(alias = "actisense")]
     Ngt1,
+    /// AOS NMEA 2000/0183 Simulator, with canboat as the node; as ngt1. Not an NGT-1.
+    Aos,
     /// Digital Yacht iKonvert; serial, or tcp (a NavLink2, port 6001).
     Ikonvert,
     /// Maretron IPG100/200; tcp (port 6543).
@@ -44,7 +46,7 @@ impl Kind {
     /// Default serial baud of the NGT-1 and the iKonvert.
     pub fn default_baud(self) -> u32 {
         match self {
-            Kind::Ngt1 => 115_200,
+            Kind::Ngt1 | Kind::Aos => 115_200,
             Kind::Ikonvert => 230_400,
             _ => self.gateway().map_or(0, GatewayKind::default_baud),
         }
@@ -77,6 +79,7 @@ impl Kind {
     pub fn name(self) -> &'static str {
         match self {
             Kind::Ngt1 => "ngt1",
+            Kind::Aos => "aos",
             Kind::Ikonvert => "ikonvert",
             Kind::Maretron => "maretron",
             Kind::Socketcan => "socketcan",
@@ -110,7 +113,7 @@ pub const GATEWAY: &str = "Gateway";
 pub const CAN: &str = "CAN controller (socketcan, canalyst)";
 pub const SPECIFIC: &str = "Gateway-specific";
 pub const LISTS: &str = "PGN lists";
-pub const NODE: &str = "canboat's node (socketcan, canalyst, AOS simulator)";
+pub const NODE: &str = "canboat's node (socketcan, canalyst, aos)";
 pub const BUS: &str = "Bus";
 
 /// The end of `--help` for both commands: which options each gateway
@@ -118,7 +121,8 @@ pub const BUS: &str = "Bus";
 pub const GATEWAY_HELP: &str = "\
 Gateways (--kind), where they are, and the options only they take:
 
-  ngt1       /dev/ttyUSB0, usb[:…], tcp://…  --baud --mode, node options*
+  ngt1       /dev/ttyUSB0, usb[:…], tcp://…  --baud --mode
+  aos        /dev/ttyUSB0, usb[:…], tcp://…  --baud, node options
   ikonvert   /dev/ttyUSB0, tcp://…           --baud --rx-filter
                                              --no-tx-rate-limit
   maretron   host[:port]                     --password
@@ -130,7 +134,9 @@ Gateways (--kind), where they are, and the options only they take:
   bst-d0     tcp://…
   bst-95     tcp://…, /dev/tty…              --baud (an NGX)
 
-  * on an AOS simulator, which canboat recognises and runs a node for.
+  aos is the Across Ocean Systems simulator, which speaks the NGT-1's
+  framing but is no node: canboat claims an address for it. It gives up
+  on a gateway that turns out to be an NGT-1.
   The old names still work: --kind ydwg, w2k-ascii, actisense.
 
 What each gateway does with the PGN lists:
@@ -140,8 +146,7 @@ What each gateway does with the PGN lists:
                                         are sent
   ngt1             ignored              Transmit PGN Enable list; only
                                         these are sent
-  AOS simulator,   advertised           advertised
-  socketcan,
+  aos, socketcan,  advertised           advertised
   canalyst
   others           ignored              ignored
 
@@ -219,7 +224,7 @@ pub struct DeviceArgs {
     ///
     /// Repeatable, or comma-separated. See the table at the end.
     ///
-    /// WARNING — WITH ikonvert OR A REAL NGT-1, THIS IS THE WHOLE TRANSMIT
+    /// WARNING — WITH ikonvert OR ngt1, THIS IS THE WHOLE TRANSMIT
     /// LIST: ONCE ANY --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT
     /// SENT), apart from network management. List every PGN you will send.
     #[arg(
@@ -236,10 +241,11 @@ pub struct DeviceArgs {
     #[arg(short = 'a', long, alias = "socketcan-address", value_name = "ADDR", help_heading = NODE)]
     pub address: Option<u8>,
 
-    /// Claim no address: listen only, or on an AOS simulator send from its own.
+    /// Claim no address: listen only, or on aos send from the simulator's own.
     ///
-    /// On socketcan and canalyst a passive sniff. An AOS simulator then gets
-    /// no node, and sends from the address it has without claiming it.
+    /// On socketcan and canalyst a passive sniff. On aos canboat runs no
+    /// node, and the simulator sends from its fixed address without
+    /// claiming it.
     #[arg(short = 'n', long, help_heading = NODE)]
     pub no_claim: bool,
 
@@ -307,19 +313,21 @@ impl DeviceArgs {
             );
         }
         let allowed: &[&str] = match kind {
-            Kind::Ngt1 => &["mode", "node"],
+            Kind::Ngt1 => &["mode"],
+            Kind::Aos => &["node", "no-claim"],
             Kind::Ikonvert => &["no-tx-rate-limit", "rx-filter"],
             Kind::Maretron => &["password"],
             Kind::Socketcan => &["bitrate", "node", "no-claim"],
             Kind::Canalyst => &["bitrate", "channel", "node", "no-claim"],
             _ => &[],
         };
-        let mut allowed = allowed.to_vec();
-        if kind == Kind::Ngt1 {
-            // The AOS simulator's node can go without a claim too.
-            allowed.push("no-claim");
-        }
-        self.refuse_all_but(&allowed, &format!("--kind {name} does not have it"))
+        let why = if kind == Kind::Ngt1 {
+            // The node options were the AOS simulator's, on ngt1.
+            "--kind ngt1 does not have it (an AOS simulator is --kind aos)".to_string()
+        } else {
+            format!("--kind {name} does not have it")
+        };
+        self.refuse_all_but(allowed, &why)
     }
 
     /// Bail on the first option given that is not in `allowed`; `node`
@@ -478,7 +486,9 @@ mod tests {
                 .is_err()
         );
         // The node options: the CAN controllers and the AOS simulator.
-        for kind in [Kind::Socketcan, Kind::Canalyst, Kind::Ngt1] {
+        let err = parse(&["-a", "9"]).check(Some(Kind::Ngt1)).unwrap_err();
+        assert!(err.to_string().contains("--kind aos"), "{err}");
+        for kind in [Kind::Socketcan, Kind::Canalyst, Kind::Aos] {
             assert!(
                 parse(&["-a", "9", "-u", "1", "-n"])
                     .check(Some(kind))

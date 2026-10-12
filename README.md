@@ -20,9 +20,12 @@ or `canboat server --kind canalyst --device usb`. On either, canboat is a full N
 node: it claims an address and answers ISO Requests.
 
 The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a
-gateway, as an NGT-1 (`--kind ngt1`). It speaks the NGT-1's framing but claims no address of its own,
-so canboat recognises it and is the node itself, as on a CANalyst-II: the
-`--address` and the other node options apply, and `--no-claim` leaves it sending from its fixed, unclaimed address 75.
+gateway: `--kind aos`. It speaks the NGT-1's framing but claims no address
+of its own, so canboat is the node, as on a CANalyst-II: `--address` and the
+other node options apply, and `--no-claim` leaves it sending from its fixed,
+unclaimed address 75. canboat gives up on a gateway that turns out to be a
+real NGT-1 (it answers Actisense BEM commands); `--kind ngt1` still works on
+the simulator, with the default node settings.
 
 Network gateways work with both `canboat interface` and `canboat server`:
 
@@ -201,7 +204,7 @@ them depends on the gateway:
 | SocketCAN, CANalyst-II | Advertised by canboat itself. Nothing is filtered. | Advertised |
 | iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway, which answers PGN 126464 from it; a filter only with `--rx-filter` (`NORMAL` mode) |
 | NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
-| AOS simulator (as `ngt1`) | Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered. | Advertised |
+| AOS simulator (`aos`) | Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered. | Advertised |
 | Others | Ignored, with a warning | Ignored, with a warning |
 
 > [!WARNING]

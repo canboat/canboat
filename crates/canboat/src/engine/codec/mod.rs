@@ -101,6 +101,13 @@ pub trait Codec {
     fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
         None
     }
+
+    /// Why the link is no use, once the codec has found that out (the
+    /// device is not the one it is for): the caller should stop. `None`
+    /// while all is well, and always for most codecs.
+    fn failure(&self) -> Option<&str> {
+        None
+    }
 }
 
 /// Synthetic-PGN marker: frames at or above it are canboat-internal and

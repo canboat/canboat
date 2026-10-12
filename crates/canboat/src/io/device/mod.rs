@@ -64,6 +64,9 @@ pub enum DeviceEvent {
     SendBytes(Vec<u8>),
     /// Decoded a framing or protocol error. The runner logs it.
     Error(String),
+    /// The device is no use (see [`Codec::failure`]): the runner stops
+    /// reading, and [`DeviceHandle::failure`] tells why.
+    Fatal(String),
 }
 
 /// Decoder half of a device codec: pushes received bytes and emits
@@ -128,6 +131,21 @@ pub struct DeviceHandle {
     /// Writes the writer thread has completed, so a close can tell a
     /// writer still draining a backlog from a stuck one.
     progress: Arc<AtomicU64>,
+    /// Why the device was given up on, when it was.
+    failure: DeviceFailure,
+}
+
+/// Why a device was given up on: set when its codec finds it is not the
+/// device it is for. Clone it out of a [`DeviceHandle`] to ask once the
+/// frames have stopped.
+#[derive(Debug, Clone, Default)]
+pub struct DeviceFailure(Arc<std::sync::OnceLock<String>>);
+
+impl DeviceFailure {
+    /// The reason, once there is one.
+    pub fn get(&self) -> Option<&str> {
+        self.0.get().map(String::as_str)
+    }
 }
 
 /// Returned by [`DeviceHandle::send_frame`] / [`FrameSender::send_frame`]
@@ -145,6 +163,12 @@ impl std::fmt::Display for DeviceWriterGone {
 impl std::error::Error for DeviceWriterGone {}
 
 impl DeviceHandle {
+    /// Why the device was given up on, if it is: its frames stop then.
+    /// Clone it to ask once they have.
+    pub fn failure(&self) -> DeviceFailure {
+        self.failure.clone()
+    }
+
     /// Queue a frame to be encoded and written to the device.
     pub fn send_frame(&self, frame: RawFrame) -> Result<(), DeviceWriterGone> {
         self.cmd_tx
@@ -299,6 +323,7 @@ pub(crate) fn from_parts(
         joins,
         writer: None,
         progress,
+        failure: DeviceFailure::default(),
     }
 }
 
@@ -333,9 +358,19 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
         })
         .expect("spawn device writer");
 
+    let failure = DeviceFailure::default();
+    let reader_failure = failure.clone();
     let reader_join = thread::Builder::new()
         .name("device-reader".into())
-        .spawn(move || reader_thread(&mut *reader, decoder, frames_tx, cmd_tx_for_reader))
+        .spawn(move || {
+            reader_thread(
+                &mut *reader,
+                decoder,
+                frames_tx,
+                cmd_tx_for_reader,
+                &reader_failure,
+            )
+        })
         .expect("spawn device reader");
 
     DeviceHandle {
@@ -344,6 +379,7 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
         joins: vec![reader_join],
         writer: Some(writer_join),
         progress,
+        failure,
     }
 }
 
@@ -405,13 +441,23 @@ impl<C> CodecDecoder<C> {
 
 impl<C: Codec + Send + 'static> DeviceDecoder for CodecDecoder<C> {
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
-        lock(&self.codec).receive(bytes, now_ms(), &mut self.events);
+        let failure = {
+            let mut codec = lock(&self.codec);
+            codec.receive(bytes, now_ms(), &mut self.events);
+            codec.failure().map(str::to_owned)
+        };
         self.deliver(events);
+        events.extend(failure.map(DeviceEvent::Fatal));
     }
 
     fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
-        lock(&self.codec).tick(now_ms(), &mut self.events);
+        let failure = {
+            let mut codec = lock(&self.codec);
+            codec.tick(now_ms(), &mut self.events);
+            codec.failure().map(str::to_owned)
+        };
         self.deliver(events);
+        events.extend(failure.map(DeviceEvent::Fatal));
     }
 }
 
@@ -443,6 +489,7 @@ fn reader_thread<D: DeviceDecoder>(
     mut decoder: D,
     frames_tx: mpsc::Sender<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
+    failure: &DeviceFailure,
 ) {
     let mut buf = [0u8; 4096];
     let mut events: Vec<DeviceEvent> = Vec::with_capacity(8);
@@ -462,6 +509,11 @@ fn reader_thread<D: DeviceDecoder>(
                 }
                 DeviceEvent::Error(e) => {
                     log::warn!("device decode error: {e}");
+                }
+                DeviceEvent::Fatal(e) => {
+                    log::error!("{e}");
+                    let _ = failure.0.set(e);
+                    return false;
                 }
             }
         }
@@ -678,6 +730,44 @@ mod tests {
         expected.extend(build_set_mode_binary());
         expected.extend(build_frame(out.pgn, out.prio, out.dst, &out.data).unwrap());
         assert_eq!(*sink.0.lock().unwrap(), expected);
+    }
+
+    /// A codec that finds the device is the wrong one stops the reader:
+    /// the frames end, and the handle says why. The bytes after the one
+    /// that told it are not read.
+    #[test]
+    fn a_codec_failure_ends_the_device() {
+        struct Picky(bool);
+        impl Codec for Picky {
+            fn receive(&mut self, bytes: &[u8], _now_ms: u64, events: &mut Vec<Event>) {
+                for &b in bytes {
+                    if b == b'!' {
+                        self.0 = true;
+                    } else if !self.0 {
+                        events.push(Event::Frame(RawFrame::new(None, 6, 127508, 1, 255, [b])));
+                    }
+                }
+            }
+            fn send(
+                &mut self,
+                _frame: &RawFrame,
+            ) -> Result<Vec<u8>, crate::engine::codec::Refused> {
+                Ok(Vec::new())
+            }
+            fn failure(&self) -> Option<&str> {
+                self.0.then_some("not the device")
+            }
+        }
+        let handle = run_codec(
+            Picky(false),
+            None,
+            Box::new(io::Cursor::new(b"a!".to_vec())),
+            Box::new(Sink::default()),
+        );
+        let failure = handle.failure();
+        let frames: Vec<RawFrame> = handle.frames_rx.iter().collect();
+        assert_eq!(frames.len(), 1);
+        assert_eq!(failure.get(), Some("not the device"));
     }
 
     /// A decoder's deadlines advance on a quiet line: each read timeout
