@@ -216,3 +216,17 @@ fn run_tui(args: tui::Args) -> anyhow::Result<()> {
         .build()?;
     rt.block_on(tui::run(args))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every subcommand's flags parse together: no two share a name (the
+    /// options `interface` and `server` share come from one struct, next to
+    /// each command's own).
+    #[test]
+    fn the_command_line_is_consistent() {
+        use clap::CommandFactory;
+        Cli::command().debug_assert();
+    }
+}

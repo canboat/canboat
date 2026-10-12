@@ -16,29 +16,34 @@ To use the programs included in this project you may need a supported CAN interf
 A plain USB CAN adapter works too, on every platform: a Linux SocketCAN
 interface, or a CANalyst-II such as the Waveshare USB-CAN-B (`04d8:0053`),
 which `canboat` opens directly over USB — `canboat interface --kind canalyst usb`
-or `canboat server --canalyst usb`. On either, canboat is a full NMEA 2000
+or `canboat server --kind canalyst --device usb`. On either, canboat is a full NMEA 2000
 node: it claims an address and answers ISO Requests.
 
 The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a
-gateway, as an NGT-1 (`canboat interface --kind ngt1`, `canboat server
---actisense`). It speaks the NGT-1's framing but claims no address of its own,
+gateway, as an NGT-1 (`--kind ngt1`). It speaks the NGT-1's framing but claims no address of its own,
 so canboat recognises it and is the node itself, as on a CANalyst-II: the
-`--address` and the other node options apply, and `canboat interface
---no-claim` leaves it sending from its fixed, unclaimed address 75.
+`--address` and the other node options apply, and `--no-claim` leaves it sending from its fixed, unclaimed address 75.
 
 Network gateways work with both `canboat interface` and `canboat server`:
 
-| Gateway | `canboat interface` | `canboat server` |
+| Gateway | Format (Actisense's name) | `--kind` |
 | --- | --- | --- |
-| Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (RAW) | `--kind ydwg` | `--ydwg` |
-| Actisense W2K-1 in N2K ASCII mode | `--kind w2k-ascii` | `--w2k-ascii` |
-| Actisense W2K-1 / PRO-NDC-1E2K in Actisense mode | `--kind bst-d0` | `--bst-d0` |
-| Actisense W2K-1 / PRO-NDC-1E2K in CAN Actisense mode | `--kind bst-95` | `--bst-95` |
+| Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (RAW) | RAW ASCII | `raw-ascii` |
+| Actisense W2K-1 / PRO-NDC-1E2K in N2K ASCII mode | N2K ASCII | `n2k-ascii` |
+| Actisense W2K-1 / PRO-NDC-1E2K in Actisense mode | BST-D0 | `bst-d0` |
+| Actisense W2K-1 / PRO-NDC-1E2K in CAN Actisense mode | BST-95 | `bst-95` |
+
+Both commands take the same gateway options: `canboat interface --kind
+raw-ascii tcp://host` and `canboat server --kind raw-ascii --device
+tcp://host`. An option that only some gateways have (`--bitrate`,
+`--channel`, `--password`, `--mode`, `--rx-filter`, the ISO NAME options)
+says which in `--help`, and is refused for the others. The old names still
+work: `--kind ydwg` and `w2k-ascii`, and `canboat server --ydwg tcp://host`.
 
 Each is at `tcp://host[:port]`. The Yacht Devices and N2K ASCII gateways also
 work over UDP: `udp://gateway:port` sends and receives, while `udp://port` only
 receives. An NGT-1 or iKonvert behind a network bridge is `tcp://host[:port]`
-(`--kind ngt1` / `--kind ikonvert`, or `--actisense` / `--ikonvert`).
+(`--kind ngt1` / `--kind ikonvert`).
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
@@ -94,9 +99,9 @@ or invent data, so you switch on the ones you need:
 | `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
 | `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
 | `gps-relay` | Re-sends the data PGNs the devices listed in `gps-rollover=…` broadcast (not their network management, and not anything addressed), from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display. Needs a real device list — `gps-rollover=all` is refused here | `canboat server --quirk gps-rollover=<device> --quirk gps-relay` (needs a writable backend) |
-| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan` or `--canalyst`) |
+| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--kind socketcan` or `canalyst`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
-| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan` or `--canalyst`) |
+| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--kind socketcan` or `canalyst`) |
 
 `gps-rollover` is the odd one out: it corrects a decoded value rather than
 putting a frame on the bus, which is why it is available when decoding a
@@ -185,7 +190,8 @@ canboat server --replay samples/dirona-actisense-serial.raw --replay-sent sent.r
 ## Transmit and receive PGN lists (`--tx-pgn`, `--rx-pgn`)
 
 Other devices ask a node which PGNs it sends and reads (PGN 126464).
-`canboat server --tx-pgn <pgn>[,…] --rx-pgn <pgn>[,…]` (or
+`--tx-pgn <pgn>[,…] --rx-pgn <pgn>[,…]` (on `canboat server` and `canboat
+interface` alike, or
 `BridgeConfig::pgn_lists` in the library) names the PGNs your application
 sends and reads, so the gateway can answer truthfully. What happens with
 them depends on the gateway:
@@ -193,7 +199,7 @@ them depends on the gateway:
 | Gateway | Transmit list | Receive list |
 |---|---|---|
 | SocketCAN, CANalyst-II | Advertised by canboat itself. Nothing is filtered. | Advertised |
-| iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway; filters only in `--ikonvert-rx` (`NORMAL`) mode |
+| iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway, which answers PGN 126464 from it; a filter only with `--rx-filter` (`NORMAL` mode) |
 | NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
 | AOS simulator (as `ngt1`) | Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered. | Advertised |
 | Others | Ignored, with a warning | Ignored, with a warning |
@@ -201,7 +207,7 @@ them depends on the gateway:
 > [!WARNING]
 > ## ON AN iKONVERT OR NGT-1, THE TRANSMIT LIST IS FINAL
 >
-> **Once you name any transmit PGN (`--tx-pgn`, `--ikonvert-tx`, or
+> **Once you name any transmit PGN (`--tx-pgn`, or
 > `pgn_lists.tx`), canboat REFUSES TO SEND EVERY PGN THAT IS NOT ON THE
 > LIST.** The gateway only transmits the PGNs in its list, and canboat
 > sets that list once, when it starts, so canboat drops the rest up front,
@@ -238,8 +244,8 @@ The full list of understood formats:
 | `AIRMAR` | Airmar weather/depth devices | `0123 -8 09F80 …` | `analyzer` (auto) |
 | `SEASMART` (or `CHETCO`) | `$PCDIN` sentences: Chetco SeaSmart.Net, Quark-elec (QK-A032, QK-A034, QK-A036), Yacht Devices in NMEA 0183 mode (YDWG-02, YDNG-03) | `$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*21` | `analyzer` (auto) |
 | `GARMIN_CSV1` / `GARMIN_CSV2` | Garmin CSV export | `0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF` | `analyzer` (auto) |
-| `YDWG02` | Yacht Devices RAW (YDWG-02 / YDNU-02) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
-| `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
+| `YDWG02` | RAW ASCII: Yacht Devices RAW (YDWG-02 / YDNU-02), an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode (`canboat convert --from raw-ascii`) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
+| `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII (`canboat convert --from n2k-ascii`) | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
 | Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |
 | Actisense EBL | Actisense `.ebl` log files | _(binary)_ | `actisense-serial -r <file.ebl> \| analyzer` |
 | Actisense W2K-1 | W2K-1 gateway capture | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |

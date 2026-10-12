@@ -127,7 +127,7 @@ impl Bridge {
             );
         }
         // The scx20 and motion quirks impersonate a device (motion claims a
-        // whole new virtual node), so they need --socketcan or --canalyst —
+        // whole new virtual node), so they need --kind socketcan or canalyst —
         // the backends that preserve a frame's src on outbound. The wmm quirk emits
         // canboat's own PGN 127258, so it only needs *some* writable backend
         // — that check happens below once one is known.
@@ -135,7 +135,7 @@ impl Bridge {
             if config.quirk.contains(&kind) && !config.is_node() {
                 let name = kind.name();
                 anyhow::bail!(
-                    "--quirk {name} only works with --socketcan or --canalyst; it claims/impersonates \
+                    "--quirk {name} only works with --kind socketcan or canalyst; it claims/impersonates \
                      a device, and other backends rewrite src on outbound writes so the \
                      frame cannot reach the bus with the claimed source address"
                 );
@@ -209,7 +209,7 @@ impl Bridge {
             }
             if device_sender.is_none() {
                 anyhow::bail!(
-                    "--quirk gps-relay needs a writable device backend (e.g. --socketcan or an \
+                    "--quirk gps-relay needs a writable device backend (e.g. --kind socketcan or an \
                      NGT-1/iKonvert gateway) to re-send frames; there is no bus to write to \
                      in stdin/log-only mode"
                 );
@@ -221,12 +221,12 @@ impl Bridge {
         // Refuse it in stdin- or log-only mode where there is no bus.
         if config.quirk.contains(&quirks::QuirkKind::Wmm) && device_sender.is_none() {
             anyhow::bail!(
-                "--quirk wmm needs a writable device backend (e.g. --socketcan or an \
+                "--quirk wmm needs a writable device backend (e.g. --kind socketcan or an \
                  NGT-1/iKonvert gateway) to emit PGN 127258; there is no bus to write \
                  to in stdin/log-only mode"
             );
         }
-        // (motion is already gated to --socketcan above, which guarantees a
+        // (motion is already gated to socketcan/canalyst above, which guarantees a
         // writable backend, so it needs no separate device_sender check.)
 
         // In device mode treat stdin like `actisense-serial -p`: parse
@@ -385,7 +385,7 @@ impl Bridge {
     }
 
     /// The live claimed ISO source address, if the backend exposes one
-    /// (`--socketcan` or `--canalyst`) and it currently holds a valid unicast
+    /// (`socketcan` or `canalyst`) and it currently holds a valid unicast
     /// address. `None` otherwise.
     pub fn claimed_address(&self) -> Option<u8> {
         self.claim_addr
