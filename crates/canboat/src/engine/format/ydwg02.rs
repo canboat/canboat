@@ -137,7 +137,7 @@ fn date_for_time_of_day(time: &str, now_ms: i64) -> i64 {
 #[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 fn time_of_day_ms(time: &str) -> Option<i64> {
     let (hms, frac) = time.split_once('.').unwrap_or((time, ""));
-    let mut parts = hms.split(':').map(|p| p.parse::<i64>().ok());
+    let mut parts = hms.split(':').map(|p| p.parse::<u32>().ok().map(i64::from));
     let (h, m, s) = (parts.next()??, parts.next()??, parts.next()??);
     if parts.next().is_some() || h > 23 || m > 59 || s > 60 {
         return None;
@@ -186,6 +186,7 @@ mod tests {
         assert_eq!(date_at("13:30:00.5", noon), (2026, 10, 12));
         // Unparseable: today.
         assert_eq!(date_at("garbage", MIDNIGHT_MS + 100), (2026, 10, 12));
+        assert_eq!(date_at("-1:00:00", MIDNIGHT_MS - 1_800_000), (2026, 10, 11));
     }
 
     #[test]

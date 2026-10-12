@@ -290,17 +290,33 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
         // Write-only: stdin PLAIN → device on the main thread (so we
         // exit when stdin ends); received frames are drained and
         // discarded so the channel can't back up.
+        // The end of stdin ends the stream, and so do a device that went
+        // away and a bus quiet for `--timeout`.
         (false, true) => {
+            let (done_tx, done_rx) = std::sync::mpsc::channel::<Result<()>>();
             let mut sender = handle.frame_sender();
+            let pump_done = done_tx.clone();
+            thread::Builder::new()
+                .name("stdin-pump".into())
+                .spawn(move || {
+                    let result = pump_stdin(&mut sender, protocol).context("sending stdin frames");
+                    let _ = pump_done.send(result);
+                })
+                .expect("spawn stdin pump");
             let mut rx = handle.frames_rx;
-            let drain = thread::Builder::new()
+            let timeout = args.timeout;
+            thread::Builder::new()
                 .name("frame-drain".into())
                 .spawn(move || {
-                    let _ = copy(&mut rx, &mut DiscardWriter);
+                    let mut rx = Idle::new(&mut rx, timeout);
+                    let result = copy(&mut rx, &mut DiscardWriter)
+                        .map(drop)
+                        .context("reading from device");
+                    let _ = done_tx.send(result);
                 })
                 .expect("spawn frame drain");
-            pump_stdin(&mut sender, protocol).context("sending stdin frames")?;
-            drop(drain);
+            // Don't wait on a blocked stdin read.
+            done_rx.recv().expect("a stream thread reports")?;
         }
         // Bidirectional (default): stdin → device on a background
         // thread, device → PLAIN stdout on the main thread.

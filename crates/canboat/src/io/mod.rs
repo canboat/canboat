@@ -121,16 +121,9 @@ pub(crate) fn set_tcp_keepalive(stream: &std::net::TcpStream) -> io::Result<()> 
         target_os = "netbsd",
         target_os = "windows",
     ))]
-    let keepalive = keepalive.with_interval(Duration::from_secs(5));
-    #[cfg(any(
-        target_os = "linux",
-        target_os = "android",
-        target_os = "macos",
-        target_os = "ios",
-        target_os = "freebsd",
-        target_os = "netbsd",
-    ))]
-    let keepalive = keepalive.with_retries(3);
+    let keepalive = keepalive
+        .with_interval(Duration::from_secs(5))
+        .with_retries(3);
     socket2::SockRef::from(stream).set_tcp_keepalive(&keepalive)
 }
 
