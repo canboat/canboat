@@ -24,7 +24,7 @@ use std::thread;
 
 use anyhow::{Context, Result};
 
-use crate::cli::device::{self as gateway_args, DeviceArgs, Kind};
+use crate::cli::device::{self as gateway_args, DeviceArgs, Kind, KindArg};
 use crate::engine::pgn_list::RxFilter;
 use crate::engine::{BusProtocol, RawFrame};
 use crate::io::device::{self, DeviceHandle};
@@ -44,7 +44,7 @@ fn producer(kind: Kind) -> &'static str {
         Kind::Maretron => "maretron-ipg",
         Kind::Socketcan => "socketcan-serial",
         Kind::Ydwg => "ydwg-gateway",
-        Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => "w2k-gateway",
+        Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 | Kind::ActisenseRawAscii => "w2k-gateway",
         Kind::Canalyst => "canalyst",
     }
 }
@@ -53,7 +53,11 @@ fn producer(kind: Kind) -> &'static str {
 #[command(after_long_help = gateway_args::GATEWAY_HELP)]
 pub struct Args {
     /// The kind of gateway.
-    #[arg(long, value_enum, help_heading = gateway_args::GATEWAY)]
+    #[arg(long = "kind", value_enum, value_name = "KIND", help_heading = gateway_args::GATEWAY)]
+    kind_arg: KindArg,
+
+    /// The gateway `--kind` and `--data-format` name, resolved by `run`.
+    #[arg(skip = Kind::Ngt1)]
     kind: Kind,
 
     /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
@@ -93,7 +97,8 @@ pub struct Args {
 /// The help heading of the stdin/stdout options.
 const STREAM: &str = "stdin and stdout";
 
-pub fn run(args: Args) -> Result<()> {
+pub fn run(mut args: Args) -> Result<()> {
+    args.kind = args.kind_arg.resolve(args.gateway.data_format)?;
     // On stderr, at the C gateway programs' default level; the device
     // drivers' warnings went nowhere without it. `RUST_LOG` overrides.
     let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
@@ -389,7 +394,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             Ok(device::maretron::run(reader, writer, config))
         }
-        Kind::Ydwg | Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 => {
+        Kind::Ydwg | Kind::W2kAscii | Kind::BstD0 | Kind::Bst95 | Kind::ActisenseRawAscii => {
             unsupported("receive PGN", &lists.rx);
             unsupported("transmit PGN", &lists.tx);
             let gateway_kind = args.kind.gateway().expect("a gateway kind");

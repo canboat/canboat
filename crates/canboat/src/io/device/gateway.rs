@@ -2,7 +2,8 @@
 
 //! The network gateways — and their serial cousins — that `canboat
 //! interface --kind` and `canboat server` open the same way: Yacht
-//! Devices RAW, Actisense N2K ASCII, BST-D0 and BST-95.
+//! Devices RAW, and an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII, N2K
+//! ASCII, N2K Actisense (BST-D0) or RAW Actisense (BST-95) mode.
 
 use std::io;
 
@@ -23,6 +24,10 @@ pub enum GatewayKind {
     /// Actisense W2K-1 in N2K ASCII mode, over `tcp://host[:port]` (port
     /// 60002) or `udp://…`.
     W2kAscii,
+    /// Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode: the Yacht
+    /// Devices RAW lines, over `tcp://host[:port]` (port 60002) or
+    /// `udp://…`.
+    RawAscii,
     /// Actisense BST-D0 (reassembled NMEA 2000): a W2K-1 or PRO-NDC-1E2K in
     /// Actisense mode, over `tcp://host[:port]` (port 60002).
     BstD0,
@@ -38,19 +43,25 @@ impl GatewayKind {
         match self {
             GatewayKind::Ydwg => 38_400,
             GatewayKind::Bst95 => 115_200,
-            GatewayKind::W2kAscii | GatewayKind::BstD0 => 0,
+            GatewayKind::W2kAscii | GatewayKind::BstD0 | GatewayKind::RawAscii => 0,
         }
     }
 
     /// Whether it passes raw CAN frames, and so any [`BusProtocol`]; the
     /// others do NMEA 2000 framing themselves.
     pub fn passes_raw_frames(self) -> bool {
-        matches!(self, GatewayKind::Ydwg | GatewayKind::Bst95)
+        matches!(
+            self,
+            GatewayKind::Ydwg | GatewayKind::Bst95 | GatewayKind::RawAscii
+        )
     }
 
     /// Whether it sends lines of text, and so also works over UDP.
     fn is_line_gateway(self) -> bool {
-        matches!(self, GatewayKind::Ydwg | GatewayKind::W2kAscii)
+        matches!(
+            self,
+            GatewayKind::Ydwg | GatewayKind::W2kAscii | GatewayKind::RawAscii
+        )
     }
 
     /// A short name for log lines.
@@ -58,6 +69,7 @@ impl GatewayKind {
         match self {
             GatewayKind::Ydwg => "ydwg",
             GatewayKind::W2kAscii => "w2k-ascii",
+            GatewayKind::RawAscii => "actisense-raw-ascii",
             GatewayKind::BstD0 => "bst-d0",
             GatewayKind::Bst95 => "bst-95",
         }
@@ -113,6 +125,16 @@ pub(crate) fn open(
                 line_gateway::LineFormat::YdwgRaw,
                 protocol,
                 init,
+            )
+        }
+        GatewayKind::RawAscii => {
+            let (reader, writer) = open_line_endpoint(device, 60002)?;
+            line_gateway::run(
+                reader,
+                writer,
+                line_gateway::LineFormat::YdwgRaw,
+                protocol,
+                &[],
             )
         }
         GatewayKind::W2kAscii => {

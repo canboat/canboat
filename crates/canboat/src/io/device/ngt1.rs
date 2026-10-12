@@ -85,7 +85,7 @@ pub fn run_ngt1(
 
 /// Why an AOS-only link is given up on.
 const NOT_AOS: &str = "the gateway answers Actisense BEM commands: it is an NGT-1, \
-                       not an AOS simulator (use --kind ngt1)";
+                       not an AOS simulator (use --kind actisense)";
 /// Why an NGT-1-only link is given up on.
 const NOT_NGT1: &str = "the gateway says it is an AOS NMEA 2000/0183 Simulator, \
                         not an NGT-1 (use --kind aos)";

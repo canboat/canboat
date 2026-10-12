@@ -25,28 +25,37 @@ of its own, so canboat is the node, as on a CANalyst-II: `--address` and the
 other node options apply, and `--no-claim` leaves it sending from its fixed,
 unclaimed address 75. Each kind refuses the other: `--kind aos` gives up on a
 gateway that turns out to be a real NGT-1 (it answers Actisense BEM
-commands), and `--kind ngt1` on one that says it is the simulator.
+commands), and `--kind actisense` on one that says it is the simulator.
 
-Network gateways work with both `canboat interface` and `canboat server`:
+`canboat interface` and `canboat server` take the same gateways and options:
+`canboat interface --kind yachtd tcp://host` and `canboat server --kind yachtd
+--device tcp://host`. An Actisense gateway also takes the data format it is
+set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 
-| Gateway | Format (Actisense's name) | `--kind` |
-| --- | --- | --- |
-| Yacht Devices YDWG-02 / YDEN-02 / YDNU-02 (RAW) | RAW ASCII | `raw-ascii` |
-| Actisense W2K-1 / PRO-NDC-1E2K in N2K ASCII mode | N2K ASCII | `n2k-ascii` |
-| Actisense W2K-1 / PRO-NDC-1E2K in Actisense mode | BST-D0 | `bst-d0` |
-| Actisense W2K-1 / PRO-NDC-1E2K in CAN Actisense mode | BST-95 | `bst-95` |
+| `--kind` | `--data-format` | Gateways | Device | Read/write | J1939 | 11-bit |
+| --- | --- | --- | --- | --- | --- | --- |
+| `actisense` | `ngt-actisense` | NGT-1 | serial, `usb`, `tcp://` (6001) | rw | – | – |
+| | `n2k-ascii` | W2K-1, PRO-NDC-1E2K | `tcp://` (60002), `udp://` | rw | – | – |
+| | `n2k-actisense` (BST-D0) | W2K-1, PRO-NDC-1E2K | `tcp://` (60002) | rw | – | – |
+| | `raw-ascii` | W2K-1, PRO-NDC-1E2K | `tcp://` (60002), `udp://` | rw | yes | – |
+| | `raw-actisense` (BST-95) | W2K-1, PRO-NDC-1E2K, NGX | `tcp://` (60002), NGX serial | rw | yes | – |
+| `yachtd` | `raw-ascii` | YDWG-02, YDEN-02, YDNR-02, YDNU-02 | `tcp://` (1457), `udp://`, YDNU-02 serial | rw | yes | – |
+| `ikonvert` | | iKonvert, NavLink2 | serial, `tcp://` (6001) | rw | – | – |
+| `maretron` | | IPG100/200 | `host[:6543]` | rw | – | – |
+| `aos` | | AOS simulator | serial, `usb`, `tcp://` (6001) | rw | – | – |
+| `socketcan` | | Linux CAN interface | `can0` | rw | yes | yes |
+| `canalyst` | | CANalyst-II, Waveshare USB-CAN-B | `usb` | rw | yes | yes |
 
-Both commands take the same gateway options: `canboat interface --kind
-raw-ascii tcp://host` and `canboat server --kind raw-ascii --device
-tcp://host`. An option that only some gateways have (`--bitrate`,
-`--channel`, `--password`, `--mode`, the ISO NAME options)
-says which in `--help`, and is refused for the others. The old names still
-work: `--kind ydwg` and `w2k-ascii`, and `canboat server --ydwg tcp://host`.
-
-Each is at `tcp://host[:port]`. The Yacht Devices and N2K ASCII gateways also
-work over UDP: `udp://gateway:port` sends and receives, while `udp://port` only
-receives. An NGT-1 or iKonvert behind a network bridge is `tcp://host[:port]`
-(`--kind ngt1` / `--kind ikonvert`).
+- **Read/write:** `udp://[bind:]port` only receives. A W2K-1 sends
+  `ngt-actisense` but does not take it; canboat does not handle that yet.
+- **J1939** (`--protocol j1939`): ISO TP messages are received wherever it says
+  yes, but sent only on SocketCAN. **11-bit** frames are Quick PCS (`--protocol
+  quick`). The rest carry NMEA 2000 only.
+- An option only some gateways have (`--bitrate`, `--channel`, `--password`,
+  `--mode`, the ISO NAME options) says which in `--help`, and is refused for
+  the others.
+- The old names still work: `--kind ngt1`, `bst-d0`, `bst-95`, `w2k-ascii`,
+  `ydwg`, and `canboat server --actisense …`, `--ydwg …` and the like.
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 

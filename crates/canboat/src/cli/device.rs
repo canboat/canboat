@@ -11,34 +11,27 @@ use crate::engine::BusProtocol;
 use crate::engine::format::ngt1::OperatingMode;
 use crate::io::device::gateway::GatewayKind;
 
-/// Which gateway to talk to.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+/// The gateway to talk to, as `--kind` and `--data-format` resolve it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Kind {
-    /// Actisense NGT-1 (NGT binary, BST-93/94); serial, usb, or tcp (port 6001).
-    #[value(alias = "actisense")]
+    /// Actisense NGT-1, in NGT Actisense (BST-93/94).
     Ngt1,
-    /// AOS NMEA 2000/0183 Simulator, with canboat as the node; opened as ngt1.
+    /// The AOS NMEA 2000/0183 Simulator, in NGT Actisense, with canboat's
+    /// node.
     Aos,
-    /// Digital Yacht iKonvert; serial, or tcp (a NavLink2, port 6001).
     Ikonvert,
-    /// Maretron IPG100/200; tcp (port 6543).
     Maretron,
-    /// Linux SocketCAN interface; canboat is a full NMEA 2000 node on it.
     Socketcan,
-    /// RAW ASCII: Yacht Devices YDWG-02/YDEN-02/YDNU-02; tcp (port 1457), udp, serial.
-    #[value(name = "raw-ascii", alias = "ydwg")]
+    /// Yacht Devices, in RAW ASCII.
     Ydwg,
-    /// Actisense N2K ASCII: W2K-1, PRO-NDC-1E2K; tcp (port 60002), udp.
-    #[value(name = "n2k-ascii", alias = "w2k-ascii")]
+    /// Actisense in N2K ASCII.
     W2kAscii,
-    /// Actisense BST-D0: W2K-1, PRO-NDC-1E2K in Actisense mode; tcp (port 60002).
-    #[value(name = "bst-d0", alias = "w2k-actisense")]
+    /// Actisense in N2K Actisense (BST-D0).
     BstD0,
-    /// Actisense BST-95 raw CAN frames: W2K-1, PRO-NDC-1E2K; tcp (60002); NGX serial.
-    #[value(name = "bst-95")]
+    /// Actisense in RAW Actisense (BST-95).
     Bst95,
-    /// CANalyst-II (Waveshare USB-CAN-B) over usb; a full node, on every platform.
-    #[value(name = "canalyst", alias = "usb-can-b")]
+    /// Actisense in RAW ASCII.
+    ActisenseRawAscii,
     Canalyst,
 }
 
@@ -59,6 +52,7 @@ impl Kind {
             Kind::W2kAscii => Some(GatewayKind::W2kAscii),
             Kind::BstD0 => Some(GatewayKind::BstD0),
             Kind::Bst95 => Some(GatewayKind::Bst95),
+            Kind::ActisenseRawAscii => Some(GatewayKind::RawAscii),
             _ => None,
         }
     }
@@ -75,19 +69,194 @@ impl Kind {
         self.is_can_controller() || self.gateway().is_some_and(GatewayKind::passes_raw_frames)
     }
 
-    /// The name `--kind` takes.
+    /// How the command line names it, for messages.
     pub fn name(self) -> &'static str {
         match self {
-            Kind::Ngt1 => "ngt1",
+            Kind::Ngt1 => "actisense (ngt-actisense)",
             Kind::Aos => "aos",
             Kind::Ikonvert => "ikonvert",
             Kind::Maretron => "maretron",
             Kind::Socketcan => "socketcan",
-            Kind::Ydwg => "raw-ascii",
-            Kind::W2kAscii => "n2k-ascii",
-            Kind::BstD0 => "bst-d0",
-            Kind::Bst95 => "bst-95",
+            Kind::Ydwg => "yachtd",
+            Kind::W2kAscii => "actisense (n2k-ascii)",
+            Kind::BstD0 => "actisense (n2k-actisense)",
+            Kind::Bst95 => "actisense (raw-actisense)",
+            Kind::ActisenseRawAscii => "actisense (raw-ascii)",
             Kind::Canalyst => "canalyst",
+        }
+    }
+}
+
+/// What `--kind` takes: a family of gateways, or one of the old names,
+/// which also implies a data format.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct KindArg {
+    name: &'static str,
+    family: Family,
+    format: Option<DataFormat>,
+    /// One of the old names: parsed, but not listed.
+    old: bool,
+    help: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Family {
+    Actisense,
+    Yachtd,
+    Ikonvert,
+    Maretron,
+    Socketcan,
+    Canalyst,
+    Aos,
+}
+
+const fn kind_arg(name: &'static str, family: Family, help: &'static str) -> KindArg {
+    KindArg {
+        name,
+        family,
+        format: None,
+        old: false,
+        help,
+    }
+}
+
+const fn old_kind(name: &'static str, family: Family, format: Option<DataFormat>) -> KindArg {
+    KindArg {
+        name,
+        family,
+        format,
+        old: true,
+        help: "",
+    }
+}
+
+const KINDS: &[KindArg] = &[
+    kind_arg(
+        "actisense",
+        Family::Actisense,
+        "Actisense NGT-1, W2K-1, PRO-NDC-1E2K, NGX; see --data-format",
+    ),
+    kind_arg(
+        "yachtd",
+        Family::Yachtd,
+        "Yacht Devices YDWG-02, YDEN-02, YDNR-02, YDNU-02, in RAW ASCII",
+    ),
+    kind_arg("ikonvert", Family::Ikonvert, "Digital Yacht iKonvert"),
+    kind_arg("maretron", Family::Maretron, "Maretron IPG100/200"),
+    kind_arg(
+        "socketcan",
+        Family::Socketcan,
+        "Linux SocketCAN interface; canboat is a full NMEA 2000 node on it",
+    ),
+    kind_arg(
+        "canalyst",
+        Family::Canalyst,
+        "CANalyst-II (Waveshare USB-CAN-B) over usb; canboat is the node",
+    ),
+    kind_arg(
+        "aos",
+        Family::Aos,
+        "AOS NMEA 2000/0183 Simulator, in NGT Actisense; canboat is the node",
+    ),
+    old_kind("ngt1", Family::Actisense, Some(DataFormat::NgtActisense)),
+    old_kind("w2k-ascii", Family::Actisense, Some(DataFormat::N2kAscii)),
+    old_kind("n2k-ascii", Family::Actisense, Some(DataFormat::N2kAscii)),
+    old_kind("bst-d0", Family::Actisense, Some(DataFormat::N2kActisense)),
+    old_kind(
+        "w2k-actisense",
+        Family::Actisense,
+        Some(DataFormat::N2kActisense),
+    ),
+    old_kind("bst-95", Family::Actisense, Some(DataFormat::RawActisense)),
+    old_kind("ydwg", Family::Yachtd, Some(DataFormat::RawAscii)),
+    old_kind("raw-ascii", Family::Yachtd, Some(DataFormat::RawAscii)),
+    old_kind("usb-can-b", Family::Canalyst, None),
+];
+
+impl clap::ValueEnum for KindArg {
+    fn value_variants<'a>() -> &'a [Self] {
+        KINDS
+    }
+
+    fn to_possible_value(&self) -> Option<clap::builder::PossibleValue> {
+        let value = clap::builder::PossibleValue::new(self.name).hide(self.old);
+        Some(if self.help.is_empty() {
+            value
+        } else {
+            value.help(self.help)
+        })
+    }
+}
+
+impl KindArg {
+    /// The gateway this and `--data-format` name.
+    pub fn resolve(self, data_format: Option<DataFormat>) -> Result<Kind> {
+        let format = match (self.format, data_format) {
+            (Some(implied), Some(given)) if implied != given => bail!(
+                "--kind {} is --data-format {}, not {}",
+                self.name,
+                implied.name(),
+                given.name()
+            ),
+            (implied, given) => implied.or(given),
+        };
+        let plain = |kind: Kind| match format {
+            Some(f) => bail!(
+                "--data-format {}: --kind {} has no data formats",
+                f.name(),
+                self.name
+            ),
+            None => Ok(kind),
+        };
+        match self.family {
+            Family::Actisense => Ok(match format.unwrap_or(DataFormat::NgtActisense) {
+                DataFormat::NgtActisense => Kind::Ngt1,
+                DataFormat::N2kAscii => Kind::W2kAscii,
+                DataFormat::N2kActisense => Kind::BstD0,
+                DataFormat::RawAscii => Kind::ActisenseRawAscii,
+                DataFormat::RawActisense => Kind::Bst95,
+            }),
+            Family::Yachtd => match format {
+                None | Some(DataFormat::RawAscii) => Ok(Kind::Ydwg),
+                Some(f) => bail!(
+                    "--data-format {}: canboat speaks only raw-ascii to Yacht Devices gateways",
+                    f.name()
+                ),
+            },
+            Family::Ikonvert => plain(Kind::Ikonvert),
+            Family::Maretron => plain(Kind::Maretron),
+            Family::Socketcan => plain(Kind::Socketcan),
+            Family::Canalyst => plain(Kind::Canalyst),
+            Family::Aos => plain(Kind::Aos),
+        }
+    }
+}
+
+/// The data formats an Actisense gateway sends and takes, by Actisense's
+/// names. A Yacht Devices gateway speaks raw-ascii.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum DataFormat {
+    /// NGT Actisense: the NGT-1's binary format (BST-93/94). The default.
+    NgtActisense,
+    /// N2K ASCII: one reassembled NMEA 2000 message per line.
+    N2kAscii,
+    /// N2K Actisense (BST-D0): reassembled NMEA 2000 messages, binary.
+    N2kActisense,
+    /// RAW ASCII: one CAN frame per line, as Yacht Devices sends it.
+    RawAscii,
+    /// RAW Actisense (BST-95): CAN frames, binary.
+    RawActisense,
+}
+
+impl DataFormat {
+    /// The name `--data-format` takes.
+    pub fn name(self) -> &'static str {
+        match self {
+            DataFormat::NgtActisense => "ngt-actisense",
+            DataFormat::N2kAscii => "n2k-ascii",
+            DataFormat::N2kActisense => "n2k-actisense",
+            DataFormat::RawAscii => "raw-ascii",
+            DataFormat::RawActisense => "raw-actisense",
         }
     }
 }
@@ -116,35 +285,55 @@ pub const LISTS: &str = "PGN lists";
 pub const NODE: &str = "canboat's node (socketcan, canalyst, aos)";
 pub const BUS: &str = "Bus";
 
-/// The end of `--help` for both commands: which options each gateway
-/// takes, and what it does with the PGN lists. Kept under 80 columns.
+/// The end of `--help` for both commands: the gateways and their data
+/// formats, what canboat does with each, which options only some take,
+/// and what each does with the PGN lists. Kept under 80 columns.
 pub const GATEWAY_HELP: &str = "\
-Gateways (--kind), where they are, and the options only they take:
+Gateways (--kind) and their data formats (--data-format):
 
-  ngt1       /dev/ttyUSB0, usb[:…], tcp://…  --baud --mode
-  aos        /dev/ttyUSB0, usb[:…], tcp://…  --baud, node options
-  ikonvert   /dev/ttyUSB0, tcp://…           --baud --no-tx-rate-limit
-  maretron   host[:port]                     --password
-  socketcan  can0                            --bitrate, node options
-  canalyst   usb[:VVVV:PPPP]                 --bitrate --channel,
-                                             node options
-  raw-ascii  tcp://…, udp://…, /dev/tty…     --baud (a YDNU-02)
-  n2k-ascii  tcp://…, udp://…
-  bst-d0     tcp://…
-  bst-95     tcp://…, /dev/tty…              --baud (an NGX)
+  KIND       --data-format   DEVICE                       R/W  J1939  11-bit
+  actisense  ngt-actisense*  /dev/ttyUSB0, usb, tcp:6001  rw   -      -
+             n2k-ascii       tcp:60002, udp               rw   -      -
+             n2k-actisense   tcp:60002                    rw   -      -
+             raw-ascii       tcp:60002, udp               rw   yes    -
+             raw-actisense   tcp:60002, /dev/tty… (NGX)   rw   yes    -
+  yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
+  ikonvert                   /dev/ttyUSB0, tcp:6001       rw   -      -
+  maretron                   host[:6543]                  rw   -      -
+  aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
+  socketcan                  can0                         rw   yes    yes
+  canalyst                   usb[:VVVV:PPPP]              rw   yes    yes
+
+  * the default. rw: canboat reads from and writes to the bus; a
+  udp://[bind:]port only reads. J1939 (--protocol j1939): where it says
+  yes; ISO TP messages are received there, but sent only on socketcan.
+  11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 only.
+  A W2K-1 sends ngt-actisense but does not take it; canboat does not
+  know that yet.
 
   aos is the Across Ocean Systems simulator, which speaks the NGT-1's
-  framing but is no node: canboat claims an address for it. ngt1 and aos
-  each give up on a gateway that turns out to be the other.
-  The old names still work: --kind ydwg, w2k-ascii, actisense.
+  format but is no node: canboat claims an address for it. actisense
+  (ngt-actisense) and aos each give up on a gateway that turns out to be
+  the other. The old names still work: --kind ngt1, bst-d0, bst-95,
+  w2k-ascii, ydwg.
+
+Options only some gateways take:
+
+  --baud              a gateway on a serial port
+  --mode              actisense (ngt-actisense)
+  --password          maretron
+  --no-tx-rate-limit  ikonvert
+  --bitrate           socketcan, canalyst
+  --channel           canalyst
+  node options        socketcan, canalyst, aos
 
 What each gateway does with the PGN lists:
 
                    --rx-pgn             --tx-pgn
   ikonvert         stored, advertised   stored, advertised; only these
                                         are sent
-  ngt1             ignored              Transmit PGN Enable list; only
-                                        these are sent
+  actisense        ignored              Transmit PGN Enable list; only
+  (ngt-actisense)                       these are sent
   aos, socketcan,  advertised           advertised
   canalyst
   others           ignored              ignored
@@ -158,6 +347,13 @@ What each gateway does with the PGN lists:
 /// does not have it can be refused.
 #[derive(Debug, Clone, clap::Args)]
 pub struct DeviceArgs {
+    /// actisense: the data format it is set to [default: ngt-actisense].
+    ///
+    /// By Actisense's names; see the table at the end. A Yacht Devices
+    /// gateway speaks raw-ascii.
+    #[arg(long, value_enum, value_name = "FORMAT", help_heading = GATEWAY)]
+    pub data_format: Option<DataFormat>,
+
     /// Serial baud rate [default: 115200, ikonvert 230400, YDNU-02 38400].
     // `-s` is the C actisense-serial/ikonvert-serial spelling; the argv[0]
     // shims must stay drop-in compatible with it.
@@ -311,7 +507,8 @@ impl DeviceArgs {
         if protocol != BusProtocol::Nmea2000 && !kind.passes_raw_frames() {
             bail!(
                 "--protocol {protocol} needs a gateway that passes raw CAN frames \
-                 (socketcan, canalyst, raw-ascii or bst-95); {name} does NMEA 2000 framing itself"
+                 (socketcan, canalyst, yachtd, or actisense in raw-ascii or raw-actisense); \
+                 {name} does NMEA 2000 framing itself"
             );
         }
         let allowed: &[&str] = match kind {
@@ -325,7 +522,7 @@ impl DeviceArgs {
         };
         let why = if kind == Kind::Ngt1 {
             // The node options were the AOS simulator's, on ngt1.
-            "--kind ngt1 does not have it (an AOS simulator is --kind aos)".to_string()
+            format!("--kind {name} does not have it (an AOS simulator is --kind aos)")
         } else {
             format!("--kind {name} does not have it")
         };
@@ -511,11 +708,56 @@ mod tests {
     }
 
     #[test]
-    fn names_match_what_kind_takes() {
+    fn kind_and_data_format_resolve() {
         use clap::ValueEnum;
-        for kind in Kind::value_variants() {
-            assert_eq!(kind.to_possible_value().unwrap().get_name(), kind.name());
+        let kind = |name: &str| KindArg::from_str(name, false).unwrap();
+        use DataFormat::*;
+        for (name, format, want) in [
+            ("actisense", None, Kind::Ngt1),
+            ("actisense", Some(NgtActisense), Kind::Ngt1),
+            ("actisense", Some(N2kAscii), Kind::W2kAscii),
+            ("actisense", Some(N2kActisense), Kind::BstD0),
+            ("actisense", Some(RawAscii), Kind::ActisenseRawAscii),
+            ("actisense", Some(RawActisense), Kind::Bst95),
+            ("yachtd", None, Kind::Ydwg),
+            ("yachtd", Some(RawAscii), Kind::Ydwg),
+            ("aos", None, Kind::Aos),
+            // The old names imply their format.
+            ("ngt1", None, Kind::Ngt1),
+            ("bst-d0", None, Kind::BstD0),
+            ("bst-95", Some(RawActisense), Kind::Bst95),
+            ("w2k-ascii", None, Kind::W2kAscii),
+            ("ydwg", None, Kind::Ydwg),
+            ("usb-can-b", None, Kind::Canalyst),
+        ] {
+            assert_eq!(
+                kind(name).resolve(format).unwrap(),
+                want,
+                "{name} {format:?}"
+            );
         }
+        assert!(kind("bst-95").resolve(Some(N2kAscii)).is_err());
+        assert!(kind("yachtd").resolve(Some(N2kAscii)).is_err());
+        assert!(kind("socketcan").resolve(Some(RawAscii)).is_err());
+        // Only the new names are listed.
+        let listed: Vec<_> = KindArg::value_variants()
+            .iter()
+            .filter_map(|k| k.to_possible_value())
+            .filter(|v| !v.is_hide_set())
+            .map(|v| v.get_name().to_owned())
+            .collect();
+        assert_eq!(
+            listed,
+            [
+                "actisense",
+                "yachtd",
+                "ikonvert",
+                "maretron",
+                "socketcan",
+                "canalyst",
+                "aos"
+            ]
+        );
     }
 
     #[test]

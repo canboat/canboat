@@ -70,7 +70,7 @@ use std::thread;
 use anyhow::{Context, Result, bail};
 
 #[cfg(feature = "cli")]
-use crate::cli::device::{self as device_args, DeviceArgs, Kind};
+use crate::cli::device::{self as device_args, DeviceArgs, Kind, KindArg};
 use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
@@ -98,8 +98,8 @@ pub struct Args {
     /// With socketcan or canalyst canboat becomes a full NMEA 2000 bus
     /// participant: it claims an address, answers ISO Requests and Group
     /// Functions, and sends Heartbeats.
-    #[arg(long, value_enum, requires = "device", help_heading = device_args::GATEWAY)]
-    kind: Option<Kind>,
+    #[arg(long, value_enum, value_name = "KIND", requires = "device", help_heading = device_args::GATEWAY)]
+    kind: Option<KindArg>,
 
     /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
     /// `udp://host:port`, `host:port` or a CAN interface such as `can0`.
@@ -521,13 +521,17 @@ impl Args {
         self.shape.warn_deprecated();
     }
 
-    /// The gateway the flags name, `--kind` with `--device` or one of the
-    /// old one-flag-per-gateway spellings.
-    fn source(&self) -> Option<(Kind, String)> {
+    /// The gateway the flags name, `--kind` (with `--data-format`) and
+    /// `--device`, or one of the old one-flag-per-gateway spellings.
+    fn source(&self) -> anyhow::Result<Option<(Kind, String)>> {
         if let (Some(kind), Some(device)) = (self.kind, &self.device) {
-            return Some((kind, device.clone()));
+            let kind = kind.resolve(self.gateway.data_format)?;
+            return Ok(Some((kind, device.clone())));
         }
-        [
+        if let Some(format) = self.gateway.data_format {
+            anyhow::bail!("--data-format {} goes with --kind", format.name());
+        }
+        Ok([
             (Kind::Ngt1, &self.actisense),
             (Kind::Ikonvert, &self.ikonvert),
             (Kind::Maretron, &self.maretron),
@@ -539,29 +543,28 @@ impl Args {
             (Kind::Bst95, &self.bst_95),
         ]
         .into_iter()
-        .find_map(|(kind, device)| Some((kind, device.clone()?)))
+        .find_map(|(kind, device)| Some((kind, device.clone()?))))
     }
 
     /// Reject what clap cannot: a gateway option the chosen gateway does
     /// not have, a protocol it cannot carry, more than one `--protocol`.
     /// Call before converting to a [`BridgeConfig`].
     pub fn check(&self) -> anyhow::Result<()> {
-        if let Some(kind) = self.kind
-            && self.device.is_none()
-        {
+        if self.kind.is_some() && self.device.is_none() {
             anyhow::bail!(
-                "--kind {} needs --device, where the gateway is (not an old --<gateway> flag)",
-                kind.name()
+                "--kind needs --device, where the gateway is (not an old --<gateway> flag)"
             );
         }
-        self.gateway.check(self.source().map(|(kind, _)| kind))
+        self.gateway.check(self.source()?.map(|(kind, _)| kind))
     }
 }
 
 #[cfg(feature = "cli")]
 impl From<Args> for BridgeConfig {
     fn from(a: Args) -> Self {
-        let source = a.source();
+        let source = a
+            .source()
+            .expect("Args::check rejects a --kind this cannot resolve");
         let device = |want: Kind| {
             source
                 .as_ref()
@@ -703,7 +706,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     {
         anyhow::bail!(
             "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
-             framing themselves; use --kind socketcan, canalyst, raw-ascii or bst-95, --canboat-csv or stdin",
+             framing themselves; use --kind socketcan, canalyst, yachtd, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
             config.protocol
         );
     }
