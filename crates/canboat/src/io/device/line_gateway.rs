@@ -12,13 +12,15 @@
 //! `A…` lines for N2K ASCII, bare `<CANID> <bytes…>` lines for RAW
 //! with fast-packet payloads fragmented per ISO 11783-3.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::fmt::Write as _;
 use std::io::{Read, Write};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 use crate::engine::format::{actisense_ascii, iso11783_compose, ydwg02};
 use crate::engine::reassembly::{Reassembled, Reassembler};
+use crate::engine::startup::format_iso_ms;
 use crate::engine::{BusProtocol, FramePacketType, RawFrame};
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
@@ -35,12 +37,59 @@ pub enum LineFormat {
     N2kAscii,
 }
 
+/// The CAN frames written to a RAW gateway, to know their `T` echoes
+/// from another client's transmits: the gateway echoes every transmit on
+/// every connection, with its own source address in place of ours.
+#[derive(Clone, Default)]
+pub struct Sent(Arc<Mutex<VecDeque<SentFrame>>>);
+
+/// A CAN id without its source address, the data, and when it was sent.
+type SentFrame = (u32, Vec<u8>, Instant);
+
+/// How long an echo of a frame written is waited for.
+const ECHO_WAIT: Duration = Duration::from_secs(2);
+
+impl Sent {
+    /// The CAN id without its source address.
+    fn key(canid: u32) -> u32 {
+        canid & !0xff
+    }
+
+    fn note(&self, canid: u32, data: &[u8]) {
+        let mut sent = self.0.lock().expect("sent mutex");
+        let now = Instant::now();
+        while sent.front().is_some_and(|(_, _, at)| now - *at > ECHO_WAIT) {
+            sent.pop_front();
+        }
+        sent.push_back((Self::key(canid), data.to_vec(), now));
+    }
+
+    /// Whether `canid` and `data` echo a frame written, which is then
+    /// forgotten.
+    fn is_echo(&self, canid: u32, data: &[u8]) -> bool {
+        let mut sent = self.0.lock().expect("sent mutex");
+        let now = Instant::now();
+        let key = Self::key(canid);
+        match sent
+            .iter()
+            .position(|(k, d, at)| *k == key && d == data && now - *at <= ECHO_WAIT)
+        {
+            Some(i) => {
+                sent.remove(i);
+                true
+            }
+            None => false,
+        }
+    }
+}
+
 pub struct Decoder {
     format: LineFormat,
     /// Decides which RAW frames are fast-packet fragments.
     protocol: BusProtocol,
     acc: String,
     reassembler: Reassembler,
+    sent: Sent,
 }
 
 impl Decoder {
@@ -55,12 +104,23 @@ impl Decoder {
             protocol,
             acc: String::with_capacity(256),
             reassembler: Reassembler::new(),
+            sent: Sent::default(),
         }
+    }
+
+    /// Know the echoes of what `sent` records.
+    pub fn with_sent(mut self, sent: Sent) -> Self {
+        self.sent = sent;
+        self
     }
 }
 
 impl DeviceDecoder for Decoder {
+    /// Frames get the host's time, as from every other gateway: the
+    /// gateways' own is a time of day without a date, and a YDEN's runs
+    /// behind the host's, and now and then backwards (canboat#1039).
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
+        let now = format_iso_ms(super::now_ms());
         self.acc.push_str(&String::from_utf8_lossy(bytes));
         while let Some(pos) = self.acc.find('\n') {
             let line: String = self.acc[..pos].trim().to_string();
@@ -70,14 +130,20 @@ impl DeviceDecoder for Decoder {
             }
             match self.format {
                 LineFormat::YdwgRaw => {
-                    // The gateway echoes our own transmissions with a
-                    // `T` direction marker — skip them, we already
-                    // emitted the coalesced frame on send.
-                    if line.split_whitespace().nth(1) == Some("T") {
-                        continue;
-                    }
+                    // A transmit, marked `T`, is echoed on every
+                    // connection: ours is skipped, as no gateway reports
+                    // what canboat sent, but another client's is bus
+                    // traffic like any other.
+                    let transmit = line.split_whitespace().nth(1) == Some("T");
                     match ydwg02::parse_line(&line) {
-                        Ok(frame) => {
+                        Ok(frame)
+                            if transmit
+                                && self.sent.is_echo(
+                                    iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst),
+                                    &frame.data,
+                                ) => {}
+                        Ok(mut frame) => {
+                            frame.timestamp = Some(now.clone());
                             let pt = self.protocol.packet_type(frame.pgn);
                             match self.reassembler.push(frame, pt) {
                                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
@@ -93,7 +159,10 @@ impl DeviceDecoder for Decoder {
                     }
                 }
                 LineFormat::N2kAscii => match actisense_ascii::parse_line(&line) {
-                    Ok(frame) => events.push(DeviceEvent::Frame(frame)),
+                    Ok(mut frame) => {
+                        frame.timestamp = Some(now.clone());
+                        events.push(DeviceEvent::Frame(frame))
+                    }
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
             }
@@ -109,6 +178,7 @@ pub struct Encoder {
     seq: Mutex<HashMap<(u32, u8), u8>>,
     /// Bytes to write as soon as the link opens.
     init: Vec<u8>,
+    sent: Sent,
 }
 
 impl Encoder {
@@ -123,7 +193,14 @@ impl Encoder {
             protocol,
             seq: Mutex::new(HashMap::new()),
             init: Vec::new(),
+            sent: Sent::default(),
         }
+    }
+
+    /// Record in `sent` the RAW frames written.
+    pub fn with_sent(mut self, sent: Sent) -> Self {
+        self.sent = sent;
+        self
     }
 
     /// Write `init` as soon as the link opens.
@@ -160,6 +237,7 @@ impl DeviceEncoder for Encoder {
             LineFormat::YdwgRaw => {
                 let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
                 let write_one = |out: &mut String, data: &[u8]| {
+                    self.sent.note(canid, data);
                     let _ = write!(out, "{canid:08X}");
                     for b in data {
                         let _ = write!(out, " {b:02X}");
@@ -211,9 +289,12 @@ pub fn run(
     protocol: BusProtocol,
     init: &[u8],
 ) -> DeviceHandle {
+    let sent = Sent::default();
     super::run(
-        Decoder::with_protocol(format, protocol),
-        Encoder::with_protocol(format, protocol).with_init(init),
+        Decoder::with_protocol(format, protocol).with_sent(sent.clone()),
+        Encoder::with_protocol(format, protocol)
+            .with_init(init)
+            .with_sent(sent),
         reader,
         writer,
     )
@@ -295,15 +376,45 @@ mod tests {
         assert_eq!(out[0].data.as_slice(), payload.as_slice());
     }
 
+    /// canboat#1039: the echo of a frame canboat wrote is skipped, with
+    /// the gateway's source address in place of ours; another client's
+    /// transmit is passed on.
     #[test]
-    fn raw_skips_transmit_echoes_and_partial_lines() {
+    fn raw_skips_only_the_echoes_of_our_own_transmits() {
+        let sent = Sent::default();
+        let enc = Encoder::new(LineFormat::YdwgRaw).with_sent(sent.clone());
+        let mut dec = Decoder::new(LineFormat::YdwgRaw).with_sent(sent);
+        let ours = RawFrame::new(None, 6, 59904, 0, 0x0a, [0x14, 0xf0, 0x01]);
+        let tx = String::from_utf8(enc.encode_frame(&ours).unwrap()).unwrap();
+        assert_eq!(tx, "18EA0A00 14 F0 01\r\n");
+        // Echoed from the gateway's address, 0xE2, twice: the second is
+        // another client sending the same.
+        let echo = "00:00:01.000 T 18EA0AE2 14 F0 01\r\n";
+        assert!(decode_all(&mut dec, echo).is_empty());
+        let other = decode_all(&mut dec, echo);
+        assert_eq!(other.len(), 1);
+        assert_eq!((other[0].pgn, other[0].src), (59904, 0xe2));
+    }
+
+    /// Not the gateway's time of day, which can run backwards.
+    #[test]
+    fn frames_get_the_host_time() {
+        let before = format_iso_ms(super::super::now_ms());
         let mut dec = Decoder::new(LineFormat::YdwgRaw);
-        // A transmit echo is skipped; a split line is buffered across
-        // reads and completes on the second push.
         let out = decode_all(
             &mut dec,
-            "00:00:01.000 T 0DF80523 01 02 03 04 05 06 07 08\r\n00:00:01.010 R 09F1",
+            "00:00:01.010 R 09F11223 01 02 03 04 05 06 07 08\r\n",
         );
+        let ts = out[0].timestamp.clone().unwrap();
+        assert!(ts >= before && !ts.contains("T00:00:01.010"), "{ts}");
+    }
+
+    #[test]
+    fn raw_buffers_partial_lines() {
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
+        // A split line is buffered across reads and completes on the
+        // second push.
+        let out = decode_all(&mut dec, "00:00:01.010 R 09F1");
         assert!(out.is_empty());
         let out = decode_all(&mut dec, "1223 01 02 03 04 05 06 07 08\r\n");
         assert_eq!(out.len(), 1);

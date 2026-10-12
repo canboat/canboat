@@ -101,25 +101,54 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
     })
 }
 
-/// Synthesize `<YYYY-MM-DD>T<time>` from the host clock. Falls back
-/// to just `time` if the system clock isn't readable (e.g. the test
-/// environment freezes time). Mirrors canboat's `parseRawFormatYDWG02`
-/// which does `localtime_r + strftime("%Y-%m-%dT")` then appends the
-/// parsed time-of-day verbatim.
+/// Synthesize `<YYYY-MM-DD>T<time>` from the host clock: the gateway
+/// sends only the time of day. See [`date_for_time_of_day`].
 #[cfg(not(target_arch = "wasm32"))]
 fn synth_iso_timestamp(time: &str) -> String {
     use std::time::{SystemTime, UNIX_EPOCH};
-    let secs = SystemTime::now()
+    let now_ms = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .ok()
-        .map(|d| d.as_secs() as i64)
+        .map(|d| d.as_millis() as i64)
         .unwrap_or(0);
-    // Compute the civil date from the shared Howard-Hinnant helper
-    // rather than pulling in chrono. Mirrors canboat's `localtime_r +
-    // strftime("%Y-%m-%dT")` prefix.
-    let days = secs.div_euclid(86_400);
-    let (y, m, d) = days_to_ymd(days);
+    let (y, m, d) = days_to_ymd(date_for_time_of_day(time, now_ms));
     format!("{y:04}-{m:02}-{d:02}T{time}")
+}
+
+/// The day (since 1970-01-01, UTC) a gateway's `HH:MM:SS[.fff]` time of
+/// day falls on, seen from the host clock `now_ms`: yesterday, today or
+/// tomorrow, whichever puts it closest to `now_ms`. Near midnight a
+/// gateway clock a little behind the host's is still on yesterday, and
+/// one a little ahead already on tomorrow (canboat#1039). A time that
+/// does not parse is taken as today.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+fn date_for_time_of_day(time: &str, now_ms: i64) -> i64 {
+    const DAY_MS: i64 = 86_400_000;
+    let today = now_ms.div_euclid(DAY_MS);
+    let Some(tod_ms) = time_of_day_ms(time) else {
+        return today;
+    };
+    (today - 1..=today + 1)
+        .min_by_key(|day| (day * DAY_MS + tod_ms - now_ms).abs())
+        .unwrap_or(today)
+}
+
+/// Milliseconds since midnight of `HH:MM:SS[.fff]`.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+fn time_of_day_ms(time: &str) -> Option<i64> {
+    let (hms, frac) = time.split_once('.').unwrap_or((time, ""));
+    let mut parts = hms.split(':').map(|p| p.parse::<u32>().ok().map(i64::from));
+    let (h, m, s) = (parts.next()??, parts.next()??, parts.next()??);
+    if parts.next().is_some() || h > 23 || m > 59 || s > 60 {
+        return None;
+    }
+    let ms = if frac.is_empty() {
+        0
+    } else {
+        let digits: String = frac.chars().chain("000".chars()).take(3).collect();
+        digits.parse::<i64>().ok()?
+    };
+    Some(((h * 60 + m) * 60 + s) * 1000 + ms)
 }
 
 /// wasm32-unknown-unknown has no host clock — `SystemTime::now()`
@@ -134,6 +163,31 @@ fn synth_iso_timestamp(time: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// 2026-10-12T00:00:00.000Z, in ms since the epoch.
+    const MIDNIGHT_MS: i64 = 1_791_763_200_000;
+
+    fn date_at(time: &str, now_ms: i64) -> (i32, u32, u32) {
+        days_to_ymd(date_for_time_of_day(time, now_ms))
+    }
+
+    /// canboat#1039: a gateway clock behind the host's stays on
+    /// yesterday after the host's midnight, rather than jumping a day
+    /// ahead; one ahead of it is on tomorrow before the host's midnight.
+    #[test]
+    fn the_date_follows_the_gateway_across_midnight() {
+        assert_eq!(date_at("23:59:59.161", MIDNIGHT_MS + 100), (2026, 10, 11));
+        assert_eq!(date_at("00:00:00.068", MIDNIGHT_MS + 900), (2026, 10, 12));
+        assert_eq!(date_at("00:00:00.300", MIDNIGHT_MS - 200), (2026, 10, 12));
+        assert_eq!(date_at("23:59:59.800", MIDNIGHT_MS - 200), (2026, 10, 11));
+        // Midday: today, however far apart the clocks are.
+        let noon = MIDNIGHT_MS + 12 * 3_600_000;
+        assert_eq!(date_at("11:00:00", noon), (2026, 10, 12));
+        assert_eq!(date_at("13:30:00.5", noon), (2026, 10, 12));
+        // Unparseable: today.
+        assert_eq!(date_at("garbage", MIDNIGHT_MS + 100), (2026, 10, 12));
+        assert_eq!(date_at("-1:00:00", MIDNIGHT_MS - 1_800_000), (2026, 10, 11));
+    }
 
     #[test]
     fn parses_ydwg02_pdu2_frame() {

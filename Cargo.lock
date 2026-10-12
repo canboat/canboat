@@ -298,6 +298,7 @@ dependencies = [
  "serde_json",
  "serialport",
  "smallvec",
+ "socket2",
  "socketcan",
  "tar",
  "thiserror 2.0.21",

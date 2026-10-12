@@ -45,7 +45,7 @@ default = ["cli"]
 # sans-I/O engine: schema, decode, encode, formatters
 decode   = ["dep:thiserror", "dep:smallvec", "dep:indexmap", "dep:itoa"]
 # byte-source readers (read::*Reader) and the bus::open_* gateway drivers
-io       = ["decode", "dep:serialport", "dep:flate2", "dep:tar", "dep:socketcan", "dep:libc"]
+io       = ["decode", "dep:serialport", "dep:flate2", "dep:tar", "dep:socketcan", "dep:libc", "dep:socket2"]
 # FTDI-based gateways (Actisense NGT-1, ...) opened straight over USB as
 # `usb:[serial]`, for hosts whose serial driver does not bind them (macOS)
 usb      = ["io", "dep:nusb"]
@@ -90,6 +90,8 @@ serialport = { workspace = true, optional = true }
 # for the static musl release builds.
 flate2     = { workspace = true, optional = true }
 tar        = { workspace = true, optional = true }
+# TCP keepalive on gateway connections, which std cannot set.
+socket2    = { version = "0.6", optional = true, features = ["all"] }
 
 # bridge
 anyhow     = { workspace = true, optional = true }

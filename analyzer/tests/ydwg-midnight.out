@@ -1,0 +1,2 @@
+{"timestamp":"2022-12-31T22:59:59.900Z","prio":2,"src":20,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":56.1596715,"Longitude": 2.8128464}}
+{"timestamp":"2023-01-01T00:10:00.000Z","prio":2,"src":20,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":56.1596715,"Longitude": 2.8128464}}
