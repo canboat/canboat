@@ -533,3 +533,18 @@ test39:
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/ydwg-midnight.out
 	diff $(TEMPDIR)/ydwg-midnight.out ydwg-midnight.out
 	diff $(TEMPDIR)/ydwg-midnight.err ydwg-midnight.err
+
+#
+# Inputs that made a UBSan build of the analyzer report undefined behaviour
+# (#1037): a key/value latitude too wide for its degrees to fit an integer, a
+# repeat count of 32 bits, and a UTF-16 string at an odd offset.
+#
+.PHONY: test40
+tests: test40
+test40:
+	$(ANALYZER) -q -geo dm -format FAST < ubsan-latlon.in > $(TEMPDIR)/ubsan.out -fixtime ubsan 2> $(TEMPDIR)/ubsan.err
+	$(ANALYZER) -q -geo dms -format FAST < ubsan-latlon.in >> $(TEMPDIR)/ubsan.out -fixtime ubsan 2>> $(TEMPDIR)/ubsan.err
+	$(ANALYZER) -q -format PLAIN_MIX_FAST < ubsan-repeat.in >> $(TEMPDIR)/ubsan.out -fixtime ubsan 2>> $(TEMPDIR)/ubsan.err
+	$(ANALYZER) -q < ubsan-utf16.in >> $(TEMPDIR)/ubsan.out -fixtime ubsan 2>> $(TEMPDIR)/ubsan.err
+	diff $(TEMPDIR)/ubsan.out ubsan.out
+	diff $(TEMPDIR)/ubsan.err ubsan.err

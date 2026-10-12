@@ -101,9 +101,16 @@ static const utf8_pattern utf8_leading_bytes[] = {
 // When the function returns, this will be left at the index of the last character
 // that composes the returned codepoint.
 // For surrogate pairs, this means the index will be left at the low surrogate.
-static codepoint_t decode_utf16(utf16_t const *utf16, size_t len, size_t *index)
+// The UTF-16 character at index, read byte by byte: the string is little-endian
+// and may sit at an odd address in the message (#1037).
+static utf16_t utf16_at(uint8_t const *utf16, size_t index)
 {
-  utf16_t high = utf16[*index];
+  return (utf16_t) (utf16[2 * index] | (utf16[2 * index + 1] << 8));
+}
+
+static codepoint_t decode_utf16(uint8_t const *utf16, size_t len, size_t *index)
+{
+  utf16_t high = utf16_at(utf16, *index);
 
   // BMP character
   if ((high & GENERIC_SURROGATE_MASK) != GENERIC_SURROGATE_VALUE)
@@ -117,7 +124,7 @@ static codepoint_t decode_utf16(utf16_t const *utf16, size_t len, size_t *index)
   if (*index == len - 1)
     return INVALID_CODEPOINT;
 
-  utf16_t low = utf16[*index + 1];
+  utf16_t low = utf16_at(utf16, *index + 1);
 
   // Unmatched high surrogate, invalid
   if ((low & SURROGATE_MASK) != LOW_SURROGATE_VALUE)
@@ -195,7 +202,7 @@ static size_t encode_utf8(codepoint_t codepoint, utf8_t *utf8, size_t len, size_
   return size;
 }
 
-size_t utf16_to_utf8(utf16_t const *utf16, size_t utf16_len, utf8_t *utf8, size_t utf8_len)
+size_t utf16_to_utf8(uint8_t const *utf16, size_t utf16_len, utf8_t *utf8, size_t utf8_len)
 {
   // The next codepoint that will be written in the UTF-8 string
   // or the size of the required buffer if utf8 is NULL
