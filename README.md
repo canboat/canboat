@@ -49,7 +49,8 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 - **Read/write:** `udp://[bind:]port` only receives. A W2K-1 sends
   `ngt-actisense` but does not take it; canboat does not handle that yet.
 - **J1939** (`--protocol j1939`): ISO TP messages are received wherever it says
-  yes, but sent only on SocketCAN. **11-bit** frames are Quick PCS (`--protocol
+  yes, but sent only on SocketCAN and the CANalyst-II, where canboat is the
+  node. **11-bit** frames are Quick PCS (`--protocol
   quick`). The rest carry NMEA 2000 only.
 - An option only some gateways have (`--bitrate`, `--channel`, `--password`,
   `--mode`, the ISO NAME options) says which in `--help`, and is refused for

@@ -302,7 +302,8 @@ Gateways (--kind) and their data formats (--data-format):
 
   * the default. rw: canboat reads from and writes to the bus; a
   udp://[bind:]port only reads. J1939 (--protocol j1939): where it says
-  yes; ISO TP messages are received there, but sent only on socketcan.
+  yes; ISO TP messages are received there, but sent only on socketcan and
+  canalyst, where canboat is the node.
   11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 only.
   A W2K-1 sends ngt-actisense but does not take it; canboat does not
   know that yet.
