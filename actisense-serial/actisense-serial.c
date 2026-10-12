@@ -40,12 +40,22 @@ limitations under the License.
 #include "license.h"
 #include "parse.h"
 
-/* BEM Set Operating Mode, sent at startup and every 20 seconds. By default
+/* BEM Set Operating Mode, sent once at startup. By default
  * "NGT Transfer Rx All Mode": the NGT-1 forwards every PGN it receives,
  * whatever its Receive PGN Enable list says; --mode normal selects "NGT
  * Transfer Normal Mode", where that list applies. Once reverse engineered
  * from Actisense NMEA Reader; see the Actisense SDK,
  * docs/DataFormats/Binary/bem-detail/operating-mode.md.
+ *
+ * It used to be sent again every 20 seconds as a keepalive, added in 2020
+ * against NGT-1 hangs. That cost frames: an NGT-1 (firmware 2.690) drops
+ * every message written in the 400-450 ms after Set Operating Mode, so
+ * about one in fifty frames from stdin was silently lost. The Actisense
+ * SDK has no keepalive, the gateway keeps the mode in non-volatile memory,
+ * and that NGT-1 ran for 15 minutes without one, also with its output left
+ * unread for up to 60 s while writing, and never hung. The 2 s sleep after
+ * setting the mode at startup keeps stdin's first frames clear of that
+ * window.
  */
 #define BEM_OPERATING_MODE (0x11)
 #define NGT_TRANSFER_NORMAL_MODE (1)
@@ -118,7 +128,6 @@ int main(int argc, char **argv)
   struct stat    statbuf;
   int            speed = 115200;
   int            i;
-  time_t         lastPing     = time(0);
 
   naStartTime  = time(0);
   naLastStatus = time(0);
@@ -303,9 +312,8 @@ int main(int argc, char **argv)
       {
         // Replaying an existing regular file: always read-only, in
         // both -r and default mode. A replay handle must never be
-        // written to, otherwise the periodic NGT keep-alive ping (and
-        // any stdin-sourced commands) get written back into the log
-        // being read, corrupting it. See issue #660.
+        // written to, otherwise stdin-sourced commands get written
+        // back into the log being read, corrupting it. See issue #660.
         oflag |= O_RDONLY;
         isRegularFile = true;
       }
@@ -313,9 +321,9 @@ int main(int argc, char **argv)
     else
     {
       // Serial / character device. Always R/W:
-      //  -r mode still needs to write NGT_SET_OPERATING_MODE and the
-      //   20s ping so the NGT-1 stays in "emit all PGNs". Under
-      //   the old O_RDONLY those writes failed silently and we
+      //  -r mode still needs to write NGT_SET_OPERATING_MODE so
+      //   the NGT-1 is in "emit all PGNs". Under the old
+      //   O_RDONLY that write failed silently and we
       //   only got away with it because the TX-list config is
       //   persistent across power cycles.
       //  -w mode without reading lets the device's output pile
@@ -461,11 +469,6 @@ int main(int argc, char **argv)
         fprintf(stdout, "%s", msg);
         fflush(stdout);
       }
-    }
-    if (!isRegularFile && time(0) - lastPing > 20)
-    {
-      writeMessage(handle, NGT_MSG_SEND, NGT_SET_OPERATING_MODE, sizeof(NGT_SET_OPERATING_MODE), UINT64_C(0));
-      lastPing = time(0);
     }
     /* Live fallback: when the gateway is not sending System Status messages
      * (P-codes disabled), still surface device count + uptime on a timer.
