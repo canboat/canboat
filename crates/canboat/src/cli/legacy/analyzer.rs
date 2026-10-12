@@ -107,7 +107,7 @@ fn parse_format_flag(name: &str) -> Result<InputFormat> {
         "ydwg02" | "yden" => InputFormat::Ydwg02,
         "ikonvert" => InputFormat::Ikonvert,
         "airmar" => InputFormat::Airmar,
-        "chetco" => InputFormat::Chetco,
+        "seasmart" | "chetco" => InputFormat::SeaSmart,
         "garmin" | "garmin-csv" | "garmin_csv1" => InputFormat::GarminCsv,
         "garmin-csv2" | "garmin_csv2" => InputFormat::GarminCsv2,
         "candump" => InputFormat::Candump,

@@ -5,7 +5,7 @@
 //! canboat's input formats carry timestamps in inconsistent shapes:
 //! ISO-8601 with a `T` and trailing `Z`, the classic canboat log form
 //! `YYYY-MM-DD-HH:MM:SS.mmm` (a dash between date and time), a comma as
-//! the millisecond separator (Actisense / Chetco), or bare time-of-day
+//! the millisecond separator (Actisense / SeaSmart), or bare time-of-day
 //! with no date at all (Actisense ASCII, Airmar). We emit a single
 //! canonical form so downstream consumers — and comma-delimited PLAIN
 //! lines in particular — never trip over a stray comma inside the

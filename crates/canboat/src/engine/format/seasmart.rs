@@ -1,6 +1,11 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Chetco N2K-USB line format.
+//! `$PCDIN` line format: Chetco's SeaSmart.Net protocol.
+//!
+//! Chetco's own gateways write it, and so do others: the Quark-elec
+//! QK-A032, QK-A034 and QK-A036 output it over WiFi and USB (the A036
+//! also logs it to its SD card), and the Yacht Devices YDWG-02 and
+//! YDNG-03 read and write it in NMEA 0183 mode.
 //!
 //! Layout (one NMEA-style sentence per line):
 //!
@@ -17,11 +22,11 @@
 //!   - The trailing `*XX` is an XOR checksum (not verified here, only
 //!     used as the data-end marker).
 //!
-//! Mirrors `parseRawFormatChetco` in canboat/common/parse.c. Output
+//! Mirrors `parseRawFormatSeaSmart` in canboat/common/parse.c. Output
 //! timestamp shape matches canboat: `YYYY-MM-DDTHH:MM:SS,mmm`
 //! (UTC seconds + 3-digit ms).
 //!
-//! Priority is always emitted as 0 (canboat does the same — Chetco
+//! Priority is always emitted as 0 (canboat does the same — SeaSmart
 //! captures don't carry one), and the destination is set to 255
 //! (broadcast).
 //!
@@ -65,7 +70,7 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
         value: pgn_tok.to_string(),
         offset: None,
     })?;
-    // Chetco's tstamp is hex milliseconds; canboat's `sscanf %x`
+    // The tstamp is hex milliseconds; canboat's `sscanf %x`
     // stops at any non-hex byte, so accept a trailing `!` (seen in
     // canboat's own parse comment example: `089C77D!`) by taking
     // only the leading hex run.
@@ -112,7 +117,7 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
     }
 
     Ok(RawFrame {
-        timestamp: Some(format_chetco_timestamp(tstamp_ms)),
+        timestamp: Some(format_seasmart_timestamp(tstamp_ms)),
         prio: 0,
         pgn,
         src,
@@ -122,13 +127,13 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
 }
 
 /// `<ms-since-epoch>` → `YYYY-MM-DDTHH:MM:SS,mmm`. Matches the format
-/// string canboat assembles in `parseRawFormatChetco`:
+/// string canboat assembles in `parseRawFormatSeaSmart`:
 ///
 /// ```c
 /// strftime(ts, n, "%Y-%m-%dT%H:%M:%S", localtime_r(&t, &tm));
 /// sprintf(ts + strlen(ts), ",%3.3u", tstamp_ms % 1000);
 /// ```
-fn format_chetco_timestamp(tstamp_ms: u64) -> String {
+fn format_seasmart_timestamp(tstamp_ms: u64) -> String {
     let secs = (tstamp_ms / 1000) as i64;
     let ms = tstamp_ms % 1000;
     let days = secs.div_euclid(86_400);
@@ -145,7 +150,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_chetco_sentence() {
+    fn parses_seasmart_sentence() {
         // Synthesised from canboat's own parse comment:
         //   $PCDIN,01F801,FB12345,07,A0B1C2D3E4F506*XX
         // PGN = 0x01F801 = 129025; src = 7; 7 data bytes;
@@ -227,7 +232,7 @@ mod tests {
         ));
     }
 
-    /// Chetco lines are pre-coalesced, but never longer than the
+    /// SeaSmart lines are pre-coalesced, but never longer than the
     /// fast-packet ceiling.
     #[test]
     fn data_is_clamped_to_the_fast_packet_ceiling() {
@@ -264,9 +269,9 @@ mod tests {
     /// The ms component survives a day rollover.
     #[test]
     fn timestamp_rolls_over_days() {
-        assert_eq!(format_chetco_timestamp(0), "1970-01-01T00:00:00,000");
+        assert_eq!(format_seasmart_timestamp(0), "1970-01-01T00:00:00,000");
         assert_eq!(
-            format_chetco_timestamp(90_061_500),
+            format_seasmart_timestamp(90_061_500),
             "1970-01-02T01:01:01,500"
         );
     }

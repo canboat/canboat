@@ -13,7 +13,6 @@ pub mod aos;
 pub mod bst;
 pub mod bst_d0;
 pub mod candump;
-pub mod chetco;
 pub mod common;
 pub mod ebl;
 pub mod garmin_csv;
@@ -21,6 +20,7 @@ pub mod ikonvert;
 pub mod maretron_ipg;
 pub mod ngt1;
 pub mod plain;
+pub mod seasmart;
 pub mod timestamp;
 pub mod ydwg02;
 
@@ -52,8 +52,9 @@ pub enum InputFormat {
     Ikonvert,
     /// Airmar (`<ts> - <pgn> <canid> <data>`).
     Airmar,
-    /// Chetco `$PCDIN,...` checksummed sentence.
-    Chetco,
+    /// SeaSmart.Net `$PCDIN,...` checksummed sentence (Chetco,
+    /// Quark-elec, Yacht Devices).
+    SeaSmart,
     /// Garmin CSV1 (relative-ms timestamps).
     GarminCsv,
     /// Garmin CSV2 (absolute `M_D_Y_H_M_S_ms` timestamps + an extra
@@ -94,7 +95,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
         "YDWG02" => Some(InputFormat::Ydwg02),
         "IKONVERT" => Some(InputFormat::Ikonvert),
         "AIRMAR" => Some(InputFormat::Airmar),
-        "CHETCO" => Some(InputFormat::Chetco),
+        "SEASMART" | "CHETCO" => Some(InputFormat::SeaSmart),
         "GARMIN_CSV1" | "GARMIN" => Some(InputFormat::GarminCsv),
         "GARMIN_CSV2" => Some(InputFormat::GarminCsv2),
         "CANDUMP" => Some(InputFormat::Candump),
@@ -106,7 +107,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
 /// frames are already coalesced PGN payloads (so the reassembler
 /// should be bypassed). Mirrors canboat C `analyzer.c:391` —
 /// PLAIN/PLAIN_OR_FAST/PLAIN_MIX_FAST/YDWG02 are *not* coalesced;
-/// everything else (FAST, ACTISENSE, IKONVERT, AIRMAR, CHETCO,
+/// everything else (FAST, ACTISENSE, IKONVERT, AIRMAR, SEASMART,
 /// GARMIN_CSV*) is.
 pub fn header_implies_coalesced(line: &str) -> bool {
     let Some(rest) = line.strip_prefix("# format=") else {
@@ -131,7 +132,7 @@ pub fn detect(line: &str) -> Option<InputFormat> {
         return Some(InputFormat::Ikonvert);
     }
     if t.starts_with("$PCDIN") {
-        return Some(InputFormat::Chetco);
+        return Some(InputFormat::SeaSmart);
     }
     // Garmin CSV header lines stand out — both flavours expose a
     // distinct prefix. Matches `detectFormat` in canboat/analyzer.c.
@@ -263,7 +264,7 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
             _ => Ok(None),
         },
         InputFormat::Airmar => airmar::parse_line(line).map(Some),
-        InputFormat::Chetco => chetco::parse_line(line).map(Some),
+        InputFormat::SeaSmart => seasmart::parse_line(line).map(Some),
         InputFormat::GarminCsv | InputFormat::GarminCsv2 => {
             let variant = if format == InputFormat::GarminCsv2 {
                 garmin_csv::Variant::Absolute
@@ -318,8 +319,15 @@ mod tests {
     }
 
     #[test]
-    fn detect_chetco() {
-        assert_eq!(detect("$PCDIN,01F801,..."), Some(InputFormat::Chetco));
+    fn detect_seasmart() {
+        assert_eq!(detect("$PCDIN,01F801,..."), Some(InputFormat::SeaSmart));
+    }
+
+    #[test]
+    fn chetco_is_the_old_name_of_seasmart() {
+        for header in ["# format=SEASMART", "# format=CHETCO", "# format=chetco"] {
+            assert_eq!(parse_format_header(header), Some(InputFormat::SeaSmart));
+        }
     }
 
     #[test]
