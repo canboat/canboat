@@ -432,7 +432,30 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
     return -1;
   }
   tiden = (time_t) (getNow() / UINT64_C(1000));
-  localtime_r(&tiden, &tm);
+  {
+    // The day is the host's UTC one, moved to yesterday or tomorrow when that
+    // puts the gateway's time of day closer to the host clock: near midnight
+    // the two clocks are often on different days (canboat#1039).
+    unsigned int hh, mm, ss;
+
+    if (sscanf(token, "%u:%u:%u", &hh, &mm, &ss) == 3 && hh < 24 && mm < 60 && ss <= 60)
+    {
+      int64_t now = (int64_t) tiden;
+      int64_t day = now - now % 86400;
+      int64_t tod = (int64_t) (hh * 3600 + mm * 60 + ss);
+      int64_t off = day + tod - now;
+
+      if (off > 43200)
+      {
+        tiden -= 86400;
+      }
+      else if (off < -43200)
+      {
+        tiden += 86400;
+      }
+    }
+  }
+  gmtime_r(&tiden, &tm);
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
   snprintf(m->timestamp + strlen(m->timestamp), sizeof(m->timestamp) - strlen(m->timestamp), "%s", token);
 

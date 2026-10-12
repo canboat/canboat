@@ -1,0 +1,5 @@
+# YDWG-02 lines carry only a time of day. The -fixtime clock is 23:00 UTC:
+# the first line is before midnight, the second is after it, on the next
+# day (canboat#1039).
+22:59:59.900 R 09F80114 2B 49 79 21 D0 34 AD 01
+00:10:00.000 R 09F80114 2B 49 79 21 D0 34 AD 01
