@@ -316,8 +316,8 @@ impl<W: Write> FrameWriter for MxpgnWriter<W> {
 }
 
 /// A [`FrameWriter`] emitting one line per frame via a core text
-/// encoder (`fn(&mut String, &RawFrame)`), used for the YDWG02 and
-/// Actisense-ASCII output formats. Mirrors [`PlainWriter`].
+/// encoder (`fn(&mut String, &RawFrame)`), used for the YDWG02,
+/// Actisense-ASCII and SeaSmart output formats. Mirrors [`PlainWriter`].
 pub struct TextLineWriter<W: Write> {
     inner: W,
     buf: String,
@@ -333,6 +333,16 @@ impl<W: Write> TextLineWriter<W> {
     /// Actisense N2K-ASCII lines (`A<time> <sdp> <pgn> <hex>`).
     pub fn actisense(inner: W) -> Self {
         Self::new(inner, write_actisense)
+    }
+
+    /// SeaSmart `$PCDIN` sentences, one whole message each, ending in
+    /// CR LF as NMEA 0183 does.
+    pub fn seasmart(inner: W) -> Self {
+        Self::new(inner, |w, frame| {
+            crate::engine::format::seasmart::write_line(w, frame)?;
+            w.push('\r');
+            Ok(())
+        })
     }
 
     fn new(inner: W, encode: fn(&mut String, &RawFrame) -> std::fmt::Result) -> Self {

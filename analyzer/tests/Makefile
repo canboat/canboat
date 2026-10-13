@@ -545,6 +545,18 @@ test41:
 	diff $(TEMPDIR)/mxpgn.out mxpgn.out
 	diff $(TEMPDIR)/mxpgn.err mxpgn.err
 
+# SeaSmart $PCDIN (#1047): canboatjs's sentence, also behind a TAG block,
+# Chetco's specification examples, a whole fast-packet, and other NMEA 0183
+# sentences before and among them, which hold no message. The last three
+# lines are bad: junk after the data, a surplus field, a wrong checksum.
+.PHONY: test42
+tests: test42
+test42:
+	$(ANALYZER) -json -nv < seasmart.in > $(TEMPDIR)/seasmart.out -fixtime seasmart 2> $(TEMPDIR)/seasmart.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/seasmart.out
+	diff $(TEMPDIR)/seasmart.out seasmart.out
+	diff $(TEMPDIR)/seasmart.err seasmart.err
+
 #
 # Inputs that made a UBSan build of the analyzer report undefined behaviour
 # (#1037): a key/value latitude too wide for its degrees to fit an integer, a

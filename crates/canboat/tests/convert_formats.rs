@@ -100,6 +100,41 @@ fn mxpgn_round_trips_to_mxpgn() {
     assert_eq!(String::from_utf8(out).unwrap(), input);
 }
 
+/// The same `$MXPGN` frames as SeaSmart: one `$PCDIN` per whole message,
+/// which reads back to the same data.
+#[test]
+fn mxpgn_frames_become_whole_seasmart_messages() {
+    let input = "$MXPGN,01F805,3824,C69C803AF1E62B00*16\r\n\
+                 $MXPGN,01F805,3824,EB49AA3812000D01*60\r\n\
+                 $MXPGN,01F805,3824,FB95440C00075102*6D\r\n\
+                 $MXPGN,01F805,3824,0033E14000B81503*1A\r\n\
+                 $MXPGN,01F805,3824,09FC130000000004*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFF008C005A05*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFFFFFF007F06*60\r\n\
+                 $MXPGN,01F801,2801,C1308AC40C5DE343*19\r\n";
+    let out = run(
+        &["convert", "--from", "mxpgn", "--to", "seasmart"],
+        input.as_bytes(),
+    );
+    let pcdin = String::from_utf8(out).unwrap();
+    assert_eq!(
+        pcdin,
+        "$PCDIN,01F805,00000000,24,E6F13A809CC60D001238AA49EB5107000C4495FB15B80040E1\
+         33000000000013FC095A008C00FFFFFF7F00*2D\r\n\
+         $PCDIN,01F801,00000000,01,43E35D0CC48A30C1*23\r\n"
+    );
+    let back = run(
+        &["convert", "--from", "seasmart", "--to", "plain"],
+        pcdin.as_bytes(),
+    );
+    let back = String::from_utf8(back).unwrap();
+    assert!(
+        back.contains(",0,129025,1,255,8,43,e3,5d,0c,c4,8a,30,c1"),
+        "{back}"
+    );
+    assert!(back.contains(",0,129029,36,255,43,e6,f1,3a,80,"), "{back}");
+}
+
 #[test]
 fn actisense_round_trips_to_plain() {
     let acti = run(&["convert", "--to", "actisense"], PLAIN);

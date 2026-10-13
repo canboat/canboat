@@ -2,7 +2,8 @@
 
 //! The network gateways — and their serial cousins — that `canboat
 //! interface --kind` and `canboat server` open the same way: Yacht
-//! Devices RAW, a ShipModul MiniPlex in `$MXPGN`, and an Actisense W2K-1 or
+//! Devices RAW, a ShipModul MiniPlex in `$MXPGN`, a SeaSmart gateway in
+//! `$PCDIN`, and an Actisense W2K-1 or
 //! PRO-NDC-1E2K in RAW ASCII, N2K ASCII, N2K Actisense (BST-D0) or RAW
 //! Actisense (BST-95) mode.
 
@@ -26,6 +27,13 @@ pub enum GatewayKind {
     /// `tcp://host[:port]` (port 10110 if not given) or `udp://…`, or on its
     /// USB serial port (460 800 baud). canboat sets it to send every PGN.
     Miniplex,
+    /// A gateway in Chetco's SeaSmart.Net `$PCDIN`, one whole message per
+    /// sentence: a Chetco SeaSmart, a Quark-elec QK-A032/A034/A036, or a
+    /// Yacht Devices gateway in NMEA 0183 mode. Over `tcp://host[:port]`
+    /// (port 10001, Chetco's, if not given) or `udp://…`, or on a serial
+    /// port (38 400 baud). Not every one takes `$PCDIN` to send: a Yacht
+    /// Devices gateway takes only a few PGNs.
+    SeaSmart,
     /// An Actisense W2K-1, PRO-NDC-1E2K or NGX, set to `format`. (An NGT-1,
     /// in NGT Actisense, is opened with its own driver: see
     /// [`crate::bus::open_ngt1`].)
@@ -58,6 +66,7 @@ impl GatewayKind {
         match self {
             GatewayKind::YachtDevices => 38_400,
             GatewayKind::Miniplex => 460_800,
+            GatewayKind::SeaSmart => 38_400,
             GatewayKind::Actisense(ActisenseFormat::RawActisense) => 115_200,
             GatewayKind::Actisense(ActisenseFormat::N2kAscii)
             | GatewayKind::Actisense(ActisenseFormat::N2kActisense)
@@ -83,6 +92,7 @@ impl GatewayKind {
             self,
             GatewayKind::YachtDevices
                 | GatewayKind::Miniplex
+                | GatewayKind::SeaSmart
                 | GatewayKind::Actisense(ActisenseFormat::N2kAscii)
                 | GatewayKind::Actisense(ActisenseFormat::RawAscii)
         )
@@ -93,6 +103,7 @@ impl GatewayKind {
         match self {
             GatewayKind::YachtDevices => "yachtd",
             GatewayKind::Miniplex => "miniplex",
+            GatewayKind::SeaSmart => "seasmart",
             GatewayKind::Actisense(ActisenseFormat::N2kAscii) => "actisense-n2k-ascii",
             GatewayKind::Actisense(ActisenseFormat::RawAscii) => "actisense-raw-ascii",
             GatewayKind::Actisense(ActisenseFormat::N2kActisense) => "actisense-n2k-actisense",
@@ -172,6 +183,20 @@ pub(crate) fn open(
                 line_gateway::LineFormat::Mxpgn,
                 protocol,
                 line_gateway::MINIPLEX_MXPGN_ALL,
+            )
+        }
+        GatewayKind::SeaSmart => {
+            let (reader, writer) = if network {
+                open_line_endpoint(device, 10001)?
+            } else {
+                serial()?
+            };
+            line_gateway::run(
+                reader,
+                writer,
+                line_gateway::LineFormat::SeaSmart,
+                protocol,
+                &[],
             )
         }
         GatewayKind::Actisense(ActisenseFormat::RawAscii) => {

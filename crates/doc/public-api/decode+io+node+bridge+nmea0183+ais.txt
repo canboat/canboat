@@ -17,6 +17,7 @@ impl core::marker::StructuralPartialEq for canboat::bridge::ActisenseFormat
 #[non_exhaustive] pub enum canboat::bridge::GatewayKind
 pub canboat::bridge::GatewayKind::Actisense(canboat::bridge::ActisenseFormat)
 pub canboat::bridge::GatewayKind::Miniplex
+pub canboat::bridge::GatewayKind::SeaSmart
 pub canboat::bridge::GatewayKind::YachtDevices
 impl canboat::bridge::GatewayKind
 pub fn canboat::bridge::GatewayKind::default_baud(self) -> u32

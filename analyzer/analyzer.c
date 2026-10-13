@@ -558,6 +558,10 @@ int main(int argc, char **argv)
 
       case RAWFORMAT_SEASMART:
         r = parseRawFormatSeaSmart(msg, &m, showJson);
+        if (r == 1)
+        {
+          continue; // another NMEA 0183 sentence, no message
+        }
         break;
 
       case RAWFORMAT_GARMIN_CSV1:
@@ -639,7 +643,7 @@ static enum RawFormats detectFormat(const char *const msg)
     return RAWFORMAT_MXPGN;
   }
 
-  if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
+  if (strncmp(p, "$PCDIN,", 7) == 0)
   {
     logInfo("Detected SeaSmart ($PCDIN) protocol with all data on one line\n");
     multiPackets = MULTIPACKETS_COALESCED;

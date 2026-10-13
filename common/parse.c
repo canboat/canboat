@@ -261,14 +261,42 @@ int parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson)
   unsigned int tstamp;
   time_t       t;
   struct tm    tm;
-  char        *p;
+  char        *p = msg;
+  char        *star;
 
-  if (*msg == 0 || *msg == '\n')
+  if (*p == '\\')
   {
-    return 1;
+    p = strchr(p + 1, '\\'); // a TAG block
+    if (!p)
+    {
+      return 1;
+    }
+    p++;
+  }
+  if (strncmp(p, "$PCDIN,", STRSIZE("$PCDIN,")) != 0)
+  {
+    return 1; // empty, or another NMEA 0183 sentence: no message
   }
 
-  if (sscanf(msg, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
+  star = strchr(p, '*');
+  if (star)
+  {
+    unsigned int  sum;
+    unsigned char xor = 0;
+    char         *q;
+
+    for (q = p + 1; q < star; q++)
+    {
+      xor ^= (unsigned char) *q;
+    }
+    if (sscanf(star + 1, "%2x", &sum) != 1 || sum != xor)
+    {
+      logError("$PCDIN checksum does not match: %s", msg);
+      return 2;
+    }
+  }
+
+  if (sscanf(p, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
   {
     logError("Error reading SeaSmart ($PCDIN) message: %s", msg);
     if (!showJson)
@@ -277,17 +305,30 @@ int parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson)
   }
 
   t = (time_t) tstamp / 1000;
-  localtime_r(&t, &tm);
+  gmtime_r(&t, &tm); // the Z the timestamp is printed with
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
   sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", tstamp % 1000);
 
-  p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
+  // The data starts after the fourth comma.
+  for (i = 0; i < 4 && p; i++)
+  {
+    p = strchr(p, ',');
+    if (p)
+    {
+      p++;
+    }
+  }
+  if (!p)
+  {
+    logError("Error reading SeaSmart ($PCDIN) message: %s", msg);
+    return 2;
+  }
 
-  for (i = 0; *p != '*' && i < FASTPACKET_MAX_SIZE; i++)
+  for (i = 0; *p != '*' && *p != '\r' && *p != '\n' && *p != 0 && i < FASTPACKET_MAX_SIZE; i++)
   {
     if (scanHex(&p, &m->data[i]))
     {
-      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      logError("Error reading $PCDIN data: %s", msg);
       if (!showJson)
         fprintf(stdout, "%s", msg);
       return 2;

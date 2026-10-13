@@ -49,7 +49,7 @@ pub(crate) fn nmea_checksum(body: &str) -> u8 {
 }
 
 /// `line` without a leading NMEA 0183 TAG block (`\…\`).
-fn without_tag_block(line: &str) -> &str {
+pub(crate) fn without_tag_block(line: &str) -> &str {
     match line
         .strip_prefix('\\')
         .and_then(|rest| rest.split_once('\\'))
