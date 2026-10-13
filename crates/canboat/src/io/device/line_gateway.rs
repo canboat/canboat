@@ -1,10 +1,11 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 //! Line-based network gateway codecs: Yacht Devices RAW (YDWG-02 /
-//! YDEN, also the NavLink2's RAW port) and Actisense N2K ASCII (W2K-1).
+//! YDEN, also the NavLink2's RAW port), Actisense N2K ASCII (W2K-1),
+//! ShipModul `$MXPGN` (MiniPlex) and SeaSmart `$PCDIN`.
 //!
-//! Both devices speak newline-delimited text over a TCP (or, receive-
-//! only, UDP) socket. The decoder half accumulates a partial line
+//! They speak newline-delimited text over a TCP or UDP socket, or a
+//! serial port. The decoder half accumulates a partial line
 //! across reads, parses each complete line with the matching
 //! [`crate::engine::format`] parser and — for RAW, whose lines are
 //! individual CAN frames — reassembles fast-packets before emitting.
@@ -18,7 +19,8 @@ use std::io::{Read, Write};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use crate::engine::format::{actisense_ascii, iso11783_compose, mxpgn, ydwg02};
+use crate::engine::format::{actisense_ascii, iso11783_compose, mxpgn, seasmart, ydwg02};
+use crate::engine::frame::FASTPACKET_MAX_SIZE;
 use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::startup::format_iso_ms;
 use crate::engine::{BusProtocol, FramePacketType, RawFrame};
@@ -39,6 +41,10 @@ pub enum LineFormat {
     /// other NMEA 0183 sentences, which carry no frame. Sent in the send
     /// form: the MiniPlex sends from its own address.
     Mxpgn,
+    /// SeaSmart `$PCDIN` sentences, one whole message each, among other
+    /// NMEA 0183 sentences, which carry no message. Sent the same way,
+    /// with no priority or destination: the sentence has neither.
+    SeaSmart,
 }
 
 /// The CAN frames written to a RAW gateway, to know their `T` echoes
@@ -94,6 +100,8 @@ pub struct Decoder {
     acc: String,
     reassembler: Reassembler,
     sent: Sent,
+    /// Whether a `$PCDIN` or `$MXPGN` sentence's checksum is checked.
+    checksum: bool,
 }
 
 impl Decoder {
@@ -109,7 +117,14 @@ impl Decoder {
             acc: String::with_capacity(256),
             reassembler: Reassembler::new(),
             sent: Sent::default(),
+            checksum: true,
         }
+    }
+
+    /// Accept `$PCDIN` and `$MXPGN` sentences whose checksum is wrong.
+    pub fn ignore_checksum(mut self, ignore: bool) -> Self {
+        self.checksum = !ignore;
+        self
     }
 
     /// Know the echoes of what `sent` records.
@@ -171,9 +186,18 @@ impl DeviceDecoder for Decoder {
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                     }
                 }
-                LineFormat::Mxpgn => match mxpgn::parse_line(&line) {
+                LineFormat::Mxpgn => match mxpgn::parse_sentence(&line, self.checksum) {
                     Ok(Some(frame)) => self.push_frame(frame, &now, events),
                     // The NMEA 0183 a MiniPlex mixes in.
+                    Ok(None) => {}
+                    Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
+                },
+                LineFormat::SeaSmart => match seasmart::parse_sentence(&line, self.checksum) {
+                    Ok(Some(mut frame)) => {
+                        frame.timestamp = Some(now.clone());
+                        events.push(DeviceEvent::Frame(frame))
+                    }
+                    // The NMEA 0183 a gateway mixes in.
                     Ok(None) => {}
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
@@ -253,6 +277,26 @@ impl DeviceEncoder for Encoder {
                 actisense_ascii::write_line(&mut out, frame).ok()?;
                 out.push_str("\r\n");
             }
+            LineFormat::SeaSmart => {
+                if frame.data.len() > FASTPACKET_MAX_SIZE {
+                    log::warn!(
+                        "not sending PGN {}: {} bytes exceed a fast-packet",
+                        frame.pgn,
+                        frame.data.len()
+                    );
+                    return None;
+                }
+                if frame.dst != 255 && (frame.pgn >> 8) & 0xff < 240 {
+                    log::warn!(
+                        "PGN {} for {} goes out in $PCDIN, which has no destination: \
+                         the gateway decides where it goes",
+                        frame.pgn,
+                        frame.dst
+                    );
+                }
+                seasmart::write_line(&mut out, frame).ok()?;
+                out.push_str("\r\n");
+            }
             LineFormat::YdwgRaw | LineFormat::Mxpgn => {
                 let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
                 let write_one = |out: &mut String, data: &[u8]| {
@@ -318,17 +362,21 @@ pub const MINIPLEX_MXPGN_ALL: &[u8] = b"$PSMDNO,C,30,0*57\r\n$PSMDNO,C,31,1*57\r
 pub const YDNU_RAW_MODE: &[u8] = b"0\n";
 
 /// Start the gateway reader/writer threads over any byte transport,
-/// writing `init` as soon as the link opens.
+/// writing `init` as soon as the link opens. `ignore_checksum` accepts
+/// `$PCDIN` and `$MXPGN` sentences whose checksum is wrong.
 pub fn run(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,
     format: LineFormat,
     protocol: BusProtocol,
     init: &[u8],
+    ignore_checksum: bool,
 ) -> DeviceHandle {
     let sent = Sent::default();
     super::run(
-        Decoder::with_protocol(format, protocol).with_sent(sent.clone()),
+        Decoder::with_protocol(format, protocol)
+            .with_sent(sent.clone())
+            .ignore_checksum(ignore_checksum),
         Encoder::with_protocol(format, protocol)
             .with_init(init)
             .with_sent(sent),
@@ -489,6 +537,50 @@ mod tests {
         assert!(lines.lines().all(|l| l.starts_with("$MXPGN,01F805,B800,")));
     }
 
+    /// A SeaSmart stream: whole messages among other NMEA 0183, with the
+    /// host's time; what canboat sends is one sentence per message.
+    #[test]
+    fn seasmart_messages_pass_whole_both_ways() {
+        let payload: Vec<u8> = (0u8..43).collect();
+        let f = frame(129029, &payload);
+        let enc = Encoder::new(LineFormat::SeaSmart);
+        let tx = String::from_utf8(enc.encode_frame(&f).unwrap()).unwrap();
+        assert_eq!(tx.lines().count(), 1);
+        assert!(tx.starts_with("$PCDIN,01F805,00000000,07,"), "{tx}");
+
+        let rmc = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A\r\n";
+        let mut dec = Decoder::new(LineFormat::SeaSmart);
+        let mut events = Vec::new();
+        dec.decode(format!("{rmc}{tx}{rmc}").as_bytes(), &mut events);
+        let [DeviceEvent::Frame(out)] = events.as_slice() else {
+            panic!("{events:?}");
+        };
+        assert_eq!((out.pgn, out.src), (129029, 7));
+        assert_eq!(out.data.as_slice(), payload.as_slice());
+        assert!(!out.timestamp.as_deref().unwrap().starts_with("1970"));
+
+        assert!(enc.encode_frame(&frame(129029, &[0; 224])).is_none());
+    }
+
+    /// A wrong checksum is an error, unless it is to be ignored.
+    #[test]
+    fn a_wrong_checksum_is_ignored_only_when_asked() {
+        let wrong = "$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21\r\n\
+                     $MXPGN,01F801,2801,C1308AC40C5DE343*18\r\n";
+        for (format, pgn) in [(LineFormat::SeaSmart, 127257), (LineFormat::Mxpgn, 129025)] {
+            let mut events = Vec::new();
+            Decoder::new(format).decode(wrong.as_bytes(), &mut events);
+            assert!(
+                events.iter().all(|e| matches!(e, DeviceEvent::Error(_))),
+                "{events:?}"
+            );
+            let mut dec = Decoder::new(format).ignore_checksum(true);
+            let out = decode_all(&mut dec, wrong);
+            assert_eq!(out.len(), 1, "{format:?}");
+            assert_eq!(out[0].pgn, pgn);
+        }
+    }
+
     #[test]
     fn ascii_lines_pass_complete_frames() {
         // Round-trip a coalesced frame through the N2K ASCII writer and
@@ -527,6 +619,7 @@ mod tests {
             LineFormat::YdwgRaw,
             BusProtocol::Nmea2000,
             init,
+            false,
         )
         .join();
         sink.0.lock().unwrap().clone()

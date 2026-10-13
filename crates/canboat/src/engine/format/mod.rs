@@ -174,7 +174,7 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     if t.starts_with("!PDGY,") || t.starts_with("$PDGY,") {
         return Some(InputFormat::Ikonvert);
     }
-    if t.starts_with("$PCDIN") {
+    if seasmart::is_pcdin(t) {
         return Some(InputFormat::SeaSmart);
     }
     // Garmin CSV header lines stand out — both flavours expose a
@@ -294,11 +294,24 @@ pub fn parse_for(
     protocol: crate::engine::BusProtocol,
     line: &str,
 ) -> Result<Option<RawFrame>, plain::ParseError> {
+    parse_checked(format, protocol, line, true)
+}
+
+/// [`parse_for`], checking the NMEA 0183 checksum of a `$PCDIN` or
+/// `$MXPGN` sentence only if `checksum` is set.
+pub(crate) fn parse_checked(
+    format: InputFormat,
+    protocol: crate::engine::BusProtocol,
+    line: &str,
+    checksum: bool,
+) -> Result<Option<RawFrame>, plain::ParseError> {
     let standard = protocol.standard_frames();
     match format {
         InputFormat::Candump => candump::parse_line_for(line, standard),
         InputFormat::Plain | InputFormat::PlainMixFast => parse_with(format, line),
         _ if standard => Ok(None),
+        InputFormat::SeaSmart => seasmart::parse_sentence(line, checksum),
+        InputFormat::Mxpgn => mxpgn::parse_sentence(line, checksum),
         _ => parse_with(format, line),
     }
 }
@@ -319,7 +332,7 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
             _ => Ok(None),
         },
         InputFormat::Airmar => airmar::parse_line(line).map(Some),
-        InputFormat::SeaSmart => seasmart::parse_line(line).map(Some),
+        InputFormat::SeaSmart => seasmart::parse_line(line),
         InputFormat::Mxpgn => mxpgn::parse_line(line),
         InputFormat::GarminCsv | InputFormat::GarminCsv2 => {
             let variant = if format == InputFormat::GarminCsv2 {

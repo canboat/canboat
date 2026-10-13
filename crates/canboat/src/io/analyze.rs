@@ -59,6 +59,8 @@ pub struct Config<'a> {
     /// outputs deterministic (the analyzer's `--fixtime`). Frames that
     /// arrive with a timestamp keep it either way, matching canboat C.
     pub fixed_time: Option<&'a str>,
+    /// Accept `$PCDIN` and `$MXPGN` sentences whose checksum is wrong.
+    pub ignore_checksum: bool,
 }
 
 /// Open `path` and stream-decode it via [`decode_stream`]. Binary
@@ -128,7 +130,8 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
         Some(fmt) => LineFrameReader::with_format(source, fmt),
         None => LineFrameReader::new(source),
     }
-    .protocol(cfg.protocol);
+    .protocol(cfg.protocol)
+    .ignore_checksum(cfg.ignore_checksum);
     // canboat's PLAIN_OR_FAST mode locks into "coalesced" once any
     // line carries more than 8 payload bytes — from then on every
     // frame is assumed to be pre-assembled and the reassembler is

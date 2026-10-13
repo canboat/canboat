@@ -764,6 +764,7 @@ pub struct canboat::read::PlainReader<R: alloc::io::buf_read::BufRead>
 impl<R: alloc::io::buf_read::BufRead> canboat::read::PlainReader<R>
 pub fn canboat::read::PlainReader<R>::active_format(&self) -> core::option::Option<canboat::read::InputFormat>
 pub fn canboat::read::PlainReader<R>::header_coalesced(&self) -> bool
+pub fn canboat::read::PlainReader<R>::ignore_checksum(self, bool) -> Self
 pub fn canboat::read::PlainReader<R>::new(R) -> Self
 pub fn canboat::read::PlainReader<R>::protocol(self, canboat::schema::BusProtocol) -> Self
 pub fn canboat::read::PlainReader<R>::with_format(R, canboat::read::InputFormat) -> Self

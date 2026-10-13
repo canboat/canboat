@@ -71,6 +71,7 @@ impl Kind {
             Kind::Socketcan => "socketcan",
             Kind::Gateway(GatewayKind::YachtDevices) => "yachtd",
             Kind::Gateway(GatewayKind::Miniplex) => "miniplex",
+            Kind::Gateway(GatewayKind::SeaSmart) => "seasmart",
             Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)) => {
                 "actisense (n2k-ascii)"
             }
@@ -106,6 +107,7 @@ enum Family {
     Actisense,
     Yachtd,
     Miniplex,
+    SeaSmart,
     Ikonvert,
     Maretron,
     Socketcan,
@@ -149,6 +151,11 @@ const KINDS: &[KindArg] = &[
         "miniplex",
         Family::Miniplex,
         "ShipModul MiniPlex-3 with NMEA 2000, in $MXPGN",
+    ),
+    kind_arg(
+        "seasmart",
+        Family::SeaSmart,
+        "Chetco SeaSmart, Quark-elec, Yacht Devices in NMEA 0183, in $PCDIN",
     ),
     kind_arg("ikonvert", Family::Ikonvert, "Digital Yacht iKonvert"),
     kind_arg("maretron", Family::Maretron, "Maretron IPG100/200"),
@@ -237,6 +244,7 @@ impl KindArg {
                 ),
             },
             Family::Miniplex => plain(Kind::Gateway(GatewayKind::Miniplex)),
+            Family::SeaSmart => plain(Kind::Gateway(GatewayKind::SeaSmart)),
             Family::Ikonvert => plain(Kind::Ikonvert),
             Family::Maretron => plain(Kind::Maretron),
             Family::Socketcan => plain(Kind::Socketcan),
@@ -314,6 +322,7 @@ Gateways (--kind) and their data formats (--data-format):
              raw-actisense   tcp:60002, /dev/tty… (NGX)   rw   yes    -
   yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
   miniplex                   tcp:10110, udp, /dev/tty…    rw   yes    -
+  seasmart                   tcp:10001, udp, /dev/tty…    rw   -      -
   ikonvert                   /dev/ttyUSB0, tcp:6001       rw   -      -
   maretron                   host[:6543]                  rw   -      -
   aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
@@ -327,7 +336,8 @@ Gateways (--kind) and their data formats (--data-format):
   canalyst and usb-can-a, where canboat is the node.
   11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 only.
   A W2K-1 sends ngt-actisense but does not take it; canboat does not
-  know that yet.
+  know that yet. seasmart ($PCDIN) has no priority or destination, and
+  not every gateway takes it to send: Yacht Devices only a few PGNs.
 
   aos is the Across Ocean Systems simulator, which speaks the NGT-1's
   format but is no node: canboat claims an address for it. actisense
@@ -341,6 +351,7 @@ Options only some gateways take:
   --mode              actisense (ngt-actisense)
   --password          maretron
   --no-tx-rate-limit  ikonvert
+  --ignore-checksum   seasmart, miniplex
   --bitrate           socketcan, canalyst, usb-can-a
   --channel           canalyst
   node options        socketcan, canalyst, usb-can-a, aos
@@ -412,6 +423,11 @@ pub struct DeviceArgs {
         help_heading = SPECIFIC
     )]
     pub no_tx_rate_limit: bool,
+
+    /// seasmart, miniplex: accept $PCDIN or $MXPGN sentences whose checksum
+    /// is wrong, as some gateways may send them.
+    #[arg(long, help_heading = SPECIFIC)]
+    pub ignore_checksum: bool,
 
     /// PGNs the application receives, to advertise; never a filter.
     ///
@@ -538,6 +554,7 @@ impl DeviceArgs {
             Kind::Socketcan => &["bitrate", "node", "no-claim"],
             Kind::Canalyst => &["bitrate", "channel", "node", "no-claim"],
             Kind::UsbCanA => &["bitrate", "node", "no-claim"],
+            Kind::Gateway(GatewayKind::SeaSmart | GatewayKind::Miniplex) => &["ignore-checksum"],
             _ => &[],
         };
         let why = if kind == Kind::Ngt1 {
@@ -562,6 +579,7 @@ impl DeviceArgs {
                 "--no-tx-rate-limit",
                 self.no_tx_rate_limit,
             ),
+            ("ignore-checksum", "--ignore-checksum", self.ignore_checksum),
             ("node", "--address", self.address.is_some()),
             ("no-claim", "--no-claim", self.no_claim),
             ("node", "--unique", self.unique.is_some()),
@@ -694,6 +712,18 @@ mod tests {
                 .check(Some(Kind::Socketcan))
                 .is_err()
         );
+        for kind in [GatewayKind::SeaSmart, GatewayKind::Miniplex] {
+            assert!(
+                parse(&["--ignore-checksum"])
+                    .check(Some(Kind::Gateway(kind)))
+                    .is_ok()
+            );
+        }
+        assert!(
+            parse(&["--ignore-checksum"])
+                .check(Some(Kind::Gateway(GatewayKind::YachtDevices)))
+                .is_err()
+        );
         assert!(parse(&["--mode", "normal"]).check(Some(Kind::Ngt1)).is_ok());
         assert!(
             parse(&["--mode", "normal"])
@@ -758,6 +788,7 @@ mod tests {
                 Some(RawAscii),
                 Kind::Gateway(GatewayKind::YachtDevices),
             ),
+            ("seasmart", None, Kind::Gateway(GatewayKind::SeaSmart)),
             ("aos", None, Kind::Aos),
             // The old names imply their format.
             ("ngt1", None, Kind::Ngt1),
@@ -790,6 +821,7 @@ mod tests {
                 "actisense",
                 "yachtd",
                 "miniplex",
+                "seasmart",
                 "ikonvert",
                 "maretron",
                 "socketcan",

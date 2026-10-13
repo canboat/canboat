@@ -214,7 +214,7 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     }
 }
 
-/// ShipModul MiniPlex `$MXPGN` (test40 in analyzer/tests/Makefile, #997):
+/// ShipModul MiniPlex `$MXPGN` (test41 in analyzer/tests/Makefile, #997):
 /// ShipModul's examples, received and to send, one behind a TAG block, a
 /// fast-packet in its frames, and other NMEA 0183 sentences, which hold
 /// no frame and leave the format undecided until the first `$MXPGN`.
@@ -224,6 +224,19 @@ fn mxpgn_json() {
         "mxpgn.in",
         "mxpgn.out",
         &["--json", "--nv", "--fixtime", "mxpgn"],
+    );
+}
+
+/// SeaSmart `$PCDIN` (test42 in analyzer/tests/Makefile, #1047):
+/// canboatjs's sentence, also behind a TAG block, Chetco's examples, a
+/// whole fast-packet, and other NMEA 0183 sentences, which hold no
+/// message and leave the format undecided until the first `$PCDIN`.
+#[test]
+fn seasmart_json() {
+    run_case(
+        "seasmart.in",
+        "seasmart.out",
+        &["--json", "--nv", "--fixtime", "seasmart"],
     );
 }
 

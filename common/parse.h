@@ -36,6 +36,9 @@ typedef struct
   uint8_t  data[MAX_PGN_SIZE];
 } RawMessage;
 
+/* Accept $PCDIN and $MXPGN sentences whose checksum is wrong. */
+extern bool parseIgnoreChecksum;
+
 bool parseFastFormat(StringBuffer *src, RawMessage *msg);
 bool parseInt(const char **msg, int *value, int defValue);
 bool parseConst(const char **msg, const char *str);

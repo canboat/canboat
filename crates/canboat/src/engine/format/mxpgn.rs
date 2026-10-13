@@ -48,8 +48,17 @@ pub(crate) fn nmea_checksum(body: &str) -> u8 {
     body.bytes().fold(0, |sum, b| sum ^ b)
 }
 
+/// Whether `sum`, what follows the `*`, is the checksum of `body`: exactly
+/// two hex digits, as canboat C requires.
+pub(crate) fn checksum_matches(body: &str, sum: &str) -> bool {
+    let digits = sum.trim_end();
+    digits.len() == 2
+        && digits.bytes().all(|b| b.is_ascii_hexdigit())
+        && u8::from_str_radix(digits, 16) == Ok(nmea_checksum(body))
+}
+
 /// `line` without a leading NMEA 0183 TAG block (`\…\`).
-fn without_tag_block(line: &str) -> &str {
+pub(crate) fn without_tag_block(line: &str) -> &str {
     match line
         .strip_prefix('\\')
         .and_then(|rest| rest.split_once('\\'))
@@ -87,6 +96,11 @@ fn bad(field: &'static str, value: &str) -> ParseError {
 /// 0183 sentence, or an error for a malformed one (bad hex, a checksum
 /// that does not match, data that does not fit its length).
 pub fn parse_line(line: &str) -> Result<Option<RawFrame>, ParseError> {
+    parse_sentence(line, true)
+}
+
+/// [`parse_line`], checking the checksum only if `checksum` is set.
+pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, ParseError> {
     let line = line.trim();
     if line.is_empty() {
         return Err(ParseError::Empty);
@@ -103,11 +117,10 @@ pub fn parse_line(line: &str) -> Result<Option<RawFrame>, ParseError> {
         Some((body, sum)) => (body, Some(sum)),
         None => (&sentence[1..], None),
     };
-    if let Some(sum) = sum {
-        let want = u8::from_str_radix(sum.trim(), 16).map_err(|_| bad("checksum", sum))?;
-        if nmea_checksum(body) != want {
-            return Err(bad("checksum", sum));
-        }
+    if let Some(sum) = sum.filter(|_| checksum)
+        && !checksum_matches(body, sum)
+    {
+        return Err(bad("checksum", sum));
     }
     let mut fields = body.split(',').skip(1);
     let (Some(pgn_tok), Some(attr_tok), Some(data_tok), None) =
