@@ -34,7 +34,7 @@ here="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "$here/.." && pwd)"
 # The published contracts. The first must exist at the merge-base; a later
 # one may be new, which counts as an additive change.
-contracts=(docs/canboat.json docs/canboat-j1939.json docs/canboat-quick.json)
+contracts=(docs/canboat.json docs/canboat-j1939.json docs/canboat-quick.json docs/canboat-pseudo.json)
 
 gate=0
 base="${BASE_REF:-origin/master}"

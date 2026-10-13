@@ -1,4 +1,4 @@
-<xs:schema version="2.7.0"
+<xs:schema version="2.8.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -83,6 +83,13 @@ limitations under the License.
             identifiers instead: there the PGN is the identifier, a message
             type, with no priority, source or destination. Absent in documents
             older than schema 2.7.0, which are all NMEA 2000.
+
+            pseudo (docs/canboat-pseudo.xml, since schema 2.8.0) is not a bus:
+            it holds canboat's pseudo-PGNs, 0x40000 and up, which no other
+            document has. They are records of a gateway (Actisense BEM
+            messages, an NMEA 2000 gateway's network status) and of canboat
+            itself. They never appear on a bus, but they do in canboat's
+            output streams, whatever the protocol.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
@@ -102,6 +109,7 @@ limitations under the License.
       <xs:enumeration value="nmea2000"/>
       <xs:enumeration value="j1939"/>
       <xs:enumeration value="quick"/>
+      <xs:enumeration value="pseudo"/>
     </xs:restriction>
   </xs:simpleType>
 

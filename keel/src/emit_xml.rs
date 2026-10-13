@@ -4,6 +4,8 @@
 //! Every deliberate oddity reproduced here is cataloged in QUIRKS.md (Q1-Q19);
 //! the golden byte-diff against analyzer-explain output guards them all.
 
+use std::collections::HashSet;
+
 use crate::cformat::{c_15g, c_g_roundtrip, xml_escape};
 use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn, Protocol};
 
@@ -266,11 +268,12 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         self.p("  </MissingEnumerations>\n");
     }
 
-    /// Emits only the enumerations this document's tree references, so the
-    /// marine `docs/canboat.xml` does not publish the J1939 manufacturer
-    /// registry (and vice versa). See `Database::lookups_used`.
-    fn lookup_sections(&mut self, protocol: Protocol) {
-        let keep = self.db.lookups_used(protocol);
+    /// Emits only the enumerations in `keep`, the ones this document's tree
+    /// references, so the marine `docs/canboat.xml` does not publish the
+    /// J1939 manufacturer registry (and vice versa). See
+    /// `Database::lookups_used`.
+    fn lookup_sections(&mut self, keep: &HashSet<String>) {
+        let keep = keep.clone();
         self.p("  <LookupEnumerations>\n");
         for lk in self.db.ordered_lookups_for("pair", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
@@ -660,18 +663,29 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
 
     // ----- top level ------------------------------------------------------
 
-    pub fn emit(mut self, protocol: Protocol) -> String {
-        self.header(protocol.name());
+    pub fn emit(self, protocol: Protocol) -> String {
+        // canboat's own pseudo-PGNs (gateway and analyzer records, 0x40000
+        // and up) never appear on a bus, so a protocol's document leaves
+        // them out; they have a document of their own (`emit_pseudo_xml`).
+        let pgns: Vec<Pgn> = self
+            .db
+            .pgns_of(protocol)
+            .iter()
+            .filter(|p| p.pgn < ACTISENSE_BEM)
+            .cloned()
+            .collect();
+        let keep = self.db.lookups_used(protocol);
+        self.emit_document(protocol.name(), &keep, &pgns)
+    }
+
+    fn emit_document(mut self, protocol: &str, keep: &HashSet<String>, pgns: &[Pgn]) -> String {
+        self.header(protocol);
         self.physical_quantities();
         self.fieldtypes();
         self.missing();
-        self.lookup_sections(protocol);
+        self.lookup_sections(keep);
         self.p("  <PGNs>\n");
-        let pgns: Vec<Pgn> = self.db.pgns_of(protocol).clone();
-        // canboat's own pseudo-PGNs (gateway and analyzer records, 0x40000
-        // and up) never appear on a bus, so the documents leave them out;
-        // the runtime schema has them.
-        for pgn in pgns.iter().filter(|p| p.pgn < ACTISENSE_BEM) {
+        for pgn in pgns {
             self.pgn(pgn);
         }
         self.p("  </PGNs>\n</PGNDefinitions>\n");
@@ -683,4 +697,19 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
 /// `docs/canboat-quick.xml`.
 pub fn emit_xml(db: &Database, protocol: Protocol) -> String {
     Emitter::new(db).emit(protocol)
+}
+
+/// `docs/canboat-pseudo.xml`: canboat's pseudo-PGNs (0x40000 and up), the
+/// records of a gateway (Actisense BEM, NMEA 2000 gateway status) and of
+/// canboat itself. They never appear on a bus, but they do in canboat's
+/// output streams, on any protocol; `<Protocol>pseudo</Protocol>`.
+pub fn emit_pseudo_xml(db: &Database) -> String {
+    let pgns: Vec<Pgn> = db
+        .pgns
+        .iter()
+        .filter(|p| p.pgn >= ACTISENSE_BEM)
+        .cloned()
+        .collect();
+    let keep = db.lookups_used_by(&pgns);
+    Emitter::new(db).emit_document("pseudo", &keep, &pgns)
 }

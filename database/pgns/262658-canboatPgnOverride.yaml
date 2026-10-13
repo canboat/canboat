@@ -6,8 +6,7 @@ explanation: Control channel for per-device transmission-interval overrides. A C
 fields:
 - id: function
   name: Function
-  type: NUMBER
-  bits: 8
+  type: UINT8
   description: 0=Report (server->tui), 1=Set, 2=Request, 3=Delete (tui->server)
 - id: source
   name: Source
@@ -17,19 +16,18 @@ fields:
   name: PGN
   type: NUMBER
   bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0
   description: Commanded PGN whose transmission interval is overridden
 - id: intervalMs
   name: Interval
-  type: NUMBER
-  bits: 32
+  type: UINT32
   description: Requested transmission interval in ms; 0 = stop transmitting
 - id: manufacturerCode
   name: Manufacturer Code
-  type: NUMBER
-  bits: 16
+  type: UINT16
   description: For proprietary PGNs; 0xffff = not applicable
 - id: industryCode
   name: Industry Code
-  type: NUMBER
-  bits: 8
+  type: UINT8
   description: For proprietary PGNs; 0xff = not applicable
