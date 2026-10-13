@@ -47,6 +47,9 @@ enum OutFormat {
     ActisenseEbl,
     /// ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each.
     Mxpgn,
+    /// SeaSmart `$PCDIN` sentences, one whole message each.
+    #[value(name = "seasmart")]
+    SeaSmart,
 }
 
 impl OutFormat {
@@ -60,6 +63,7 @@ impl OutFormat {
                 | OutFormat::Actisense
                 | OutFormat::ActisenseEbl
                 | OutFormat::Mxpgn
+                | OutFormat::SeaSmart
         )
     }
 }
@@ -190,6 +194,7 @@ Output formats (--to, default json):
   n2k-ascii      Actisense N2K ASCII lines (reassembled messages)
   actisense-ebl  Actisense .ebl binary log (raw frames)
   mxpgn          $MXPGN sentences, as a ShipModul MiniPlex sends them (raw frames)
+  seasmart       $PCDIN sentences, as a SeaSmart gateway takes them (whole messages)
 
 Decoded-output shape (json/text only):
   --id STYLE     spaces | camel (default) | uppercamel
@@ -223,6 +228,10 @@ pub struct Args {
     /// Output format.
     #[arg(long, value_enum, default_value_t = OutFormat::Json)]
     to: OutFormat,
+
+    /// Accept $PCDIN and $MXPGN sentences whose checksum is wrong.
+    #[arg(long)]
+    ignore_checksum: bool,
 
     /// Filter: only emit frames with this source address.
     #[arg(long, value_name = "N")]
@@ -425,10 +434,12 @@ fn convert_raw<W: Write>(
             Some(fmt) => LineFrameReader::with_format(source, fmt),
             None => LineFrameReader::new(source),
         }
-        .protocol(protocol);
-        // MXPGN splits a fast-packet into its frames itself, so it needs
-        // whole messages; the binary readers above join them already.
-        if args.to == OutFormat::Mxpgn {
+        .protocol(protocol)
+        .ignore_checksum(args.ignore_checksum);
+        // MXPGN splits a fast-packet into its frames itself, and SeaSmart
+        // carries it whole, so both need whole messages; the binary
+        // readers above join them already.
+        if matches!(args.to, OutFormat::Mxpgn | OutFormat::SeaSmart) {
             Box::new(Joined::new(lines, protocol))
         } else {
             Box::new(lines)
@@ -440,6 +451,7 @@ fn convert_raw<W: Write>(
         OutFormat::Actisense => Box::new(TextLineWriter::actisense(out)),
         OutFormat::ActisenseEbl => Box::new(EblWriter::new(out)),
         OutFormat::Mxpgn => Box::new(MxpgnWriter::new(out, protocol)),
+        OutFormat::SeaSmart => Box::new(TextLineWriter::seasmart(out)),
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
@@ -550,6 +562,7 @@ fn convert_decoded<W: Write>(
         units: args.shape.units(),
         protocol,
         fixed_time: None,
+        ignore_checksum: args.ignore_checksum,
     };
 
     let mut line = String::with_capacity(512);

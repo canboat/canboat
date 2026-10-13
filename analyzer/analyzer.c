@@ -184,6 +184,7 @@ static void usage(char **argv, char **av)
   printf("     -empty            Modified json format where empty values are shown as NULL\n");
   printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
+  printf("     -ignore-checksum  Accept $PCDIN and $MXPGN sentences whose checksum is wrong\n");
   printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("     -q                Print logging from level ERROR\n");
   printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, rpm as Hz, litres as m3, "
@@ -335,6 +336,10 @@ int main(int argc, char **argv)
     else if (strcasecmp(av[1], "-data") == 0)
     {
       showData = true;
+    }
+    else if (strcasecmp(av[1], "-ignore-checksum") == 0)
+    {
+      parseIgnoreChecksum = true;
     }
     else if (ac > 2 && strcasecmp(av[1], "-fixtime") == 0)
     {
@@ -558,6 +563,10 @@ int main(int argc, char **argv)
 
       case RAWFORMAT_SEASMART:
         r = parseRawFormatSeaSmart(msg, &m, showJson);
+        if (r == 1)
+        {
+          continue; // another NMEA 0183 sentence, no message
+        }
         break;
 
       case RAWFORMAT_GARMIN_CSV1:
@@ -639,7 +648,7 @@ static enum RawFormats detectFormat(const char *const msg)
     return RAWFORMAT_MXPGN;
   }
 
-  if (msg[0] == '$' && strncmp(msg, "$PCDIN", 6) == 0)
+  if (strncmp(p, "$PCDIN,", 7) == 0)
   {
     logInfo("Detected SeaSmart ($PCDIN) protocol with all data on one line\n");
     multiPackets = MULTIPACKETS_COALESCED;

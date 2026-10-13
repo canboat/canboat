@@ -17,6 +17,7 @@ impl core::marker::StructuralPartialEq for canboat::bridge::ActisenseFormat
 #[non_exhaustive] pub enum canboat::bridge::GatewayKind
 pub canboat::bridge::GatewayKind::Actisense(canboat::bridge::ActisenseFormat)
 pub canboat::bridge::GatewayKind::Miniplex
+pub canboat::bridge::GatewayKind::SeaSmart
 pub canboat::bridge::GatewayKind::YachtDevices
 impl canboat::bridge::GatewayKind
 pub fn canboat::bridge::GatewayKind::default_baud(self) -> u32
@@ -136,6 +137,7 @@ pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc
 pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::gateway: core::option::Option<canboat::bridge::Gateway>
 pub canboat::bridge::BridgeConfig::heartbeat_ms: u64
+pub canboat::bridge::BridgeConfig::ignore_checksum: bool
 pub canboat::bridge::BridgeConfig::ikonvert: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::ikonvert_rate_limit_off: bool
 pub canboat::bridge::BridgeConfig::ikonvert_rx: core::option::Option<alloc::string::String>
@@ -1097,6 +1099,7 @@ pub struct canboat::read::PlainReader<R: alloc::io::buf_read::BufRead>
 impl<R: alloc::io::buf_read::BufRead> canboat::read::PlainReader<R>
 pub fn canboat::read::PlainReader<R>::active_format(&self) -> core::option::Option<canboat::read::InputFormat>
 pub fn canboat::read::PlainReader<R>::header_coalesced(&self) -> bool
+pub fn canboat::read::PlainReader<R>::ignore_checksum(self, bool) -> Self
 pub fn canboat::read::PlainReader<R>::new(R) -> Self
 pub fn canboat::read::PlainReader<R>::protocol(self, canboat::schema::BusProtocol) -> Self
 pub fn canboat::read::PlainReader<R>::with_format(R, canboat::read::InputFormat) -> Self

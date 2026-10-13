@@ -46,6 +46,7 @@ fn producer(kind: Kind) -> &'static str {
         Kind::Socketcan => "socketcan-serial",
         Kind::Gateway(GatewayKind::YachtDevices) => "ydwg-gateway",
         Kind::Gateway(GatewayKind::Miniplex) => "miniplex",
+        Kind::Gateway(GatewayKind::SeaSmart) => "seasmart",
         Kind::Gateway(_) => "w2k-gateway",
         Kind::Canalyst => "canalyst",
         Kind::UsbCanA => "usb-can-a",
@@ -411,7 +412,12 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 kind: gateway_kind,
                 device: args.device.clone(),
             };
-            Ok(device::gateway::open(&target, gateway.baud, protocol)?)
+            Ok(device::gateway::open(
+                &target,
+                gateway.baud,
+                protocol,
+                gateway.ignore_checksum,
+            )?)
         }
         Kind::Canalyst => open_canalyst(args),
         Kind::UsbCanA => open_usb_can_a(args),
