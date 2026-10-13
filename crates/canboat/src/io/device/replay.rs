@@ -32,7 +32,7 @@ use crate::engine::format::{
 };
 use crate::engine::{BusProtocol, RawFrame, format_iso_ms};
 
-use super::{DeviceEncoder, DeviceHandle, WriterCmd, canboat_csv, writer_thread};
+use super::{DeviceEncoder, DeviceFailure, DeviceHandle, WriterCmd, canboat_csv, writer_thread};
 
 /// How long a frame without a timestamp waits after the previous one.
 pub const UNTIMED_GAP: Duration = Duration::from_millis(10);
@@ -161,9 +161,16 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
             writer_thread(&mut *writer, encoder, init, None, cmd_rx, &writer_progress);
             writing.store(false, Ordering::Release);
         })?;
+    let lost = DeviceFailure::default();
+    let reader_lost = lost.clone();
     let reader_join = thread::Builder::new()
         .name("replay-reader".into())
-        .spawn(move || play(file, &config, &frames_tx, &reader_writing))?;
+        .spawn(move || {
+            if let Err(why) = play(file, &config, &frames_tx, &reader_writing) {
+                log::error!("{why}");
+                reader_lost.set(&why);
+            }
+        })?;
 
     Ok(DeviceHandle {
         frames_rx,
@@ -172,6 +179,7 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
         writer: Some(writer_join),
         progress,
         failure: Default::default(),
+        lost,
     })
 }
 
@@ -183,15 +191,20 @@ fn same_file(a: &Path, b: &Path) -> bool {
     }
 }
 
-/// Play the capture over and over until the receiver goes away.
-fn play(mut file: File, config: &Config, frames_tx: &mpsc::Sender<RawFrame>, writing: &AtomicBool) {
+/// Play the capture over and over until the receiver goes away; `Err`
+/// with why when the capture can't be played.
+fn play(
+    mut file: File,
+    config: &Config,
+    frames_tx: &mpsc::Sender<RawFrame>,
+    writing: &AtomicBool,
+) -> Result<(), String> {
     let mut pass = 0u64;
     loop {
         pass += 1;
         match play_once(file, config, frames_tx, writing) {
             Ok(Played::Done(0)) => {
-                log::error!("replay: {} holds no frames", config.path.display());
-                return;
+                return Err(format!("replay: {} holds no frames", config.path.display()));
             }
             Ok(Played::Done(frames)) => {
                 log::info!(
@@ -199,17 +212,15 @@ fn play(mut file: File, config: &Config, frames_tx: &mpsc::Sender<RawFrame>, wri
                     config.path.display()
                 );
             }
-            Ok(Played::Stopped) => return,
+            Ok(Played::Stopped) => return Ok(()),
             Err(e) => {
-                log::error!("replay: reading {}: {e}", config.path.display());
-                return;
+                return Err(format!("replay: reading {}: {e}", config.path.display()));
             }
         }
         file = match File::open(&config.path) {
             Ok(f) => f,
             Err(e) => {
-                log::error!("replay: reopening {}: {e}", config.path.display());
-                return;
+                return Err(format!("replay: reopening {}: {e}", config.path.display()));
             }
         };
     }

@@ -95,7 +95,7 @@ mod imp {
         Bus, CAN_EFF_MASK, CAN_SFF_MASK, LinkStats, LoadSample, MAX_POLL_MS, NmeaDevice, TxBuffer,
         TxFrame, dispatch_cmd, format_iso, handle_frame, now_ms,
     };
-    use crate::io::device::{DeviceHandle, WriterCmd, from_parts};
+    use crate::io::device::{DeviceFailure, DeviceHandle, WriterCmd, from_parts};
 
     const CAN_ERR_FLAG: u32 = 0x2000_0000;
     const CAN_EFF_FLAG: u32 = 0x8000_0000;
@@ -471,24 +471,29 @@ mod imp {
         let iface_owned = iface.to_string();
         let progress = Arc::new(AtomicU64::new(0));
         let worker_progress = progress.clone();
+        let lost = DeviceFailure::default();
+        let worker_lost = lost.clone();
         let join = thread::Builder::new()
             .name("socketcan-worker".into())
             .spawn(move || {
                 let shared = Shared {
                     claim_addr,
                     progress: worker_progress,
+                    lost: worker_lost,
                 };
                 worker(sock, fd, iface_owned, config, frames_tx, cmd_rx, shared)
             })?;
 
-        Ok(from_parts(frames_rx, cmd_tx, vec![join], progress))
+        Ok(from_parts(frames_rx, cmd_tx, vec![join], progress, lost))
     }
 
     /// What the worker shares with the rest of the process: the claimed
-    /// address, and its completed writes (for [`super::super::Closed`]).
+    /// address, its completed writes (for [`super::super::Closed`]), and
+    /// why the interface went away.
     struct Shared {
         claim_addr: Arc<AtomicU8>,
         progress: Arc<AtomicU64>,
+        lost: DeviceFailure,
     }
 
     /// The single worker thread that owns the socket and runs the poll
@@ -507,7 +512,12 @@ mod imp {
         let Shared {
             claim_addr,
             progress,
+            lost,
         } = shared;
+        let gone = |why: String| {
+            log::error!("{why}");
+            lost.set(&why);
+        };
         let mut claimer = NmeaDevice::new(
             &config,
             Box::new(SysfsStats {
@@ -624,13 +634,16 @@ mod imp {
                 if e.raw_os_error() == Some(libc::EINTR) {
                     continue;
                 }
-                log::error!("socketcan poll: {e}");
+                gone(format!("socketcan poll: {e}"));
                 return;
             }
 
             // 4. Idle-timeout check.
             if timeout_ms > 0 && now_ms().saturating_sub(last_frame) >= timeout_ms {
-                log::error!("Timeout {} seconds; no data received", config.timeout_secs);
+                gone(format!(
+                    "no data received for {} seconds",
+                    config.timeout_secs
+                ));
                 return;
             }
 
@@ -654,7 +667,7 @@ mod imp {
                         Ok(0) => break,
                         Ok(n) => n,
                         Err(e) => {
-                            log::error!("socketcan recvmmsg: {e}");
+                            gone(format!("socketcan recvmmsg: {e}"));
                             return;
                         }
                     };

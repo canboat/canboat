@@ -28,7 +28,7 @@ use super::iso11783_node::{
     format_iso, handle_frame, now_ms,
 };
 use super::socketcan::CLAIM_UNCLAIMED;
-use super::{DeviceHandle, WriterCmd, from_parts};
+use super::{DeviceFailure, DeviceHandle, WriterCmd, from_parts};
 
 /// How an adapter carries CAN frames over its byte streams.
 pub(crate) trait Link: Send + 'static {
@@ -118,6 +118,7 @@ pub(crate) fn run<L: Link>(
     let (input_tx, input_rx) = mpsc::channel::<Input>();
     let stop = Arc::new(AtomicBool::new(false));
     let progress = Arc::new(AtomicU64::new(0));
+    let lost = DeviceFailure::default();
 
     let reader_join = {
         let (input_tx, stop) = (input_tx.clone(), stop.clone());
@@ -138,12 +139,15 @@ pub(crate) fn run<L: Link>(
             let _ = input_tx.send(Input::CmdClosed);
         })?;
     let worker_join = {
-        let progress = progress.clone();
+        let (progress, lost) = (progress.clone(), lost.clone());
         thread::Builder::new()
             .name(format!("{}-worker", L::NAME))
             .spawn(move || {
                 let mut worker = Worker::<L>::new(writer, &config, frames_tx, progress);
-                worker.run(&config, &input_rx, &claim_addr);
+                if let Err(why) = worker.run(&config, &input_rx, &claim_addr) {
+                    log::error!("{why}");
+                    lost.set(&why);
+                }
                 stop.store(true, Ordering::Relaxed);
             })?
     };
@@ -152,6 +156,7 @@ pub(crate) fn run<L: Link>(
         cmd_tx,
         vec![worker_join, reader_join],
         progress,
+        lost,
     ))
 }
 
@@ -247,7 +252,14 @@ impl<L: Link> Worker<L> {
         )
     }
 
-    fn run(&mut self, config: &Config, input: &mpsc::Receiver<Input>, claim_addr: &AtomicU8) {
+    /// Run until closed or until every sender is gone; `Err` with why when
+    /// the adapter went away instead.
+    fn run(
+        &mut self,
+        config: &Config,
+        input: &mpsc::Receiver<Input>,
+        claim_addr: &AtomicU8,
+    ) -> Result<(), String> {
         claim_addr.store(CLAIM_UNCLAIMED, Ordering::Relaxed);
         let mut published = CLAIM_UNCLAIMED;
         let timeout_ms = config.timeout_secs.saturating_mul(1000);
@@ -260,8 +272,7 @@ impl<L: Link> Worker<L> {
             let now = now_ms();
             self.tx_buf.poll_tp(now);
             if let Err(e) = self.write_queued() {
-                log::error!("{}: writing to the adapter: {e}", L::NAME);
-                return;
+                return Err(format!("{}: writing to the adapter: {e}", L::NAME));
             }
             let claim = &self.node.claim;
             let mut wait = if claim.is_timing() && claim.deadline() > now {
@@ -284,22 +295,23 @@ impl<L: Link> Worker<L> {
                     if let Some(done) = done {
                         let _ = done.send(flushed);
                     }
-                    return;
+                    return Ok(());
                 }
                 Ok(Input::Cmd(cmd)) => {
                     let (mut bus, node) = self.bus();
                     dispatch_cmd(&mut bus, node, cmd);
                 }
                 Ok(Input::Gone(e)) => {
-                    log::error!("{}: the adapter went away: {e}", L::NAME);
-                    return;
+                    return Err(format!("{}: the adapter went away: {e}", L::NAME));
                 }
-                Ok(Input::CmdClosed) | Err(mpsc::RecvTimeoutError::Disconnected) => return,
+                Ok(Input::CmdClosed) | Err(mpsc::RecvTimeoutError::Disconnected) => return Ok(()),
                 Err(mpsc::RecvTimeoutError::Timeout) => {}
             }
             if timeout_ms > 0 && now_ms().saturating_sub(last_frame) >= timeout_ms {
-                log::error!("Timeout {} seconds; no data received", config.timeout_secs);
-                return;
+                return Err(format!(
+                    "no data received for {} seconds",
+                    config.timeout_secs
+                ));
             }
             let (mut bus, node) = self.bus();
             node.tick(&mut bus, now_ms());

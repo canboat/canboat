@@ -28,6 +28,11 @@ const BUCKET_N_SIZE: usize = 7;
 const BUCKET_0_OFFSET: usize = 2;
 const BUCKET_N_OFFSET: usize = 1;
 const FASTPACKET_MAX_INDEX: u32 = 0x1f;
+/// How often a reassembler with a clock sums up its incomplete
+/// fast-packets; see [`Reassembler::tick`].
+const INCOMPLETE_SUMMARY_MS: u64 = 60_000;
+/// The PGN and source pairs a summary names; the rest it only counts.
+const INCOMPLETE_SUMMARY_TOP: usize = 5;
 
 /// ISO Transport Protocol carries messages that don't fit in a
 /// single CAN frame OR in fast-packet framing (223-byte ceiling).
@@ -236,6 +241,47 @@ pub struct Reassembler {
     tp_slots: Vec<TpSlot>,
     next_age: u64,
     tp_next_age: u64,
+    incomplete: Incomplete,
+}
+
+/// The incomplete fast-packets since the last summary, per PGN and source.
+#[derive(Default)]
+struct Incomplete {
+    counts: std::collections::BTreeMap<(u32, u8), u32>,
+    /// When the last summary was given, once [`Reassembler::tick`] has
+    /// given a time; until then each incomplete fast-packet is a warning.
+    since_ms: Option<u64>,
+}
+
+impl Incomplete {
+    /// `n incomplete fast packets <when> (pgn 129029 src 3: 120, …)`.
+    fn summary(&self, when: &str) -> String {
+        let total: u32 = self.counts.values().sum();
+        let mut by_count: Vec<_> = self.counts.iter().collect();
+        by_count.sort_by(|a, b| b.1.cmp(a.1).then(a.0.cmp(b.0)));
+        let mut named: Vec<String> = by_count
+            .iter()
+            .take(INCOMPLETE_SUMMARY_TOP)
+            .map(|((pgn, src), n)| format!("pgn {pgn} src {src}: {n}"))
+            .collect();
+        if by_count.len() > INCOMPLETE_SUMMARY_TOP {
+            named.push("…".into());
+        }
+        format!(
+            "{total} incomplete fast packet{} {when} ({}); \
+             RUST_LOG=canboat::engine::reassembly=debug shows each",
+            if total == 1 { "" } else { "s" },
+            named.join(", ")
+        )
+    }
+}
+
+impl Drop for Reassembler {
+    fn drop(&mut self) {
+        if self.incomplete.since_ms.is_some() && !self.incomplete.counts.is_empty() {
+            log::warn!("{}", self.incomplete.summary("since the last summary"));
+        }
+    }
 }
 
 impl Default for Reassembler {
@@ -251,6 +297,28 @@ impl Reassembler {
             tp_slots: vec![TpSlot::default(); ISO_TP_SLOTS],
             next_age: 0,
             tp_next_age: 0,
+            incomplete: Incomplete::default(),
+        }
+    }
+
+    /// Pass the time, in Unix milliseconds, for a live source. From the
+    /// first call each incomplete fast-packet is logged at `debug`, and a
+    /// warning sums them up once a minute: a gateway that loses frames
+    /// loses them all day. Without it, as for a capture being converted,
+    /// each one is a warning of its own.
+    pub fn tick(&mut self, now_ms: u64) {
+        let inc = &mut self.incomplete;
+        let since = *inc.since_ms.get_or_insert(now_ms);
+        let elapsed = now_ms.saturating_sub(since);
+        if elapsed >= INCOMPLETE_SUMMARY_MS {
+            if !inc.counts.is_empty() {
+                log::warn!(
+                    "{}",
+                    inc.summary(&format!("in the last {} s", elapsed / 1000))
+                );
+                inc.counts.clear();
+            }
+            inc.since_ms = Some(now_ms);
         }
     }
 
@@ -353,7 +421,18 @@ impl Reassembler {
 
         if duplicate || completes_instantly {
             let slot = &self.slots[slot_idx];
-            log::warn!(
+            let level = if self.incomplete.since_ms.is_some() {
+                *self
+                    .incomplete
+                    .counts
+                    .entry((frame.pgn, frame.src))
+                    .or_default() += 1;
+                log::Level::Debug
+            } else {
+                log::Level::Warn
+            };
+            log::log!(
+                level,
                 "Incomplete fast packet pgn={} src={} seq=0x{:02x}: \
                  frame index {} {} before the sequence completed. \
                  Already received frame{} {{{}}}{}. Restarting assembly with this frame.",
@@ -1073,5 +1152,65 @@ mod tests {
         );
         // Duplicate frame index — must not return an Error variant.
         assert_eq!(r.push(f0, FramePacketType::Fast), Reassembled::Partial);
+    }
+
+    /// Push frame 0 of a 129029 from `src` twice: one incomplete fast-packet.
+    fn lose_one(r: &mut Reassembler, src: u8) {
+        let f0 = frame(
+            129029,
+            src,
+            vec![0x00, 14, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5],
+        );
+        r.push(f0.clone(), FramePacketType::Fast);
+        r.push(f0, FramePacketType::Fast);
+    }
+
+    #[test]
+    fn without_a_clock_incomplete_fast_packets_are_not_counted() {
+        // Each is a warning of its own then, as when converting a capture.
+        let mut r = Reassembler::new();
+        lose_one(&mut r, 3);
+        assert!(r.incomplete.counts.is_empty());
+    }
+
+    #[test]
+    fn with_a_clock_incomplete_fast_packets_are_summed_up_each_minute() {
+        let mut r = Reassembler::new();
+        r.tick(1_000);
+        lose_one(&mut r, 3);
+        lose_one(&mut r, 7);
+        // Frame 0 again restarts the one left in the slot: two more.
+        lose_one(&mut r, 3);
+        assert_eq!(r.incomplete.counts.get(&(129029, 3)), Some(&3));
+        assert_eq!(
+            r.incomplete.summary("in the last 60 s"),
+            "4 incomplete fast packets in the last 60 s \
+             (pgn 129029 src 3: 3, pgn 129029 src 7: 1); \
+             RUST_LOG=canboat::engine::reassembly=debug shows each"
+        );
+        // Not yet a minute: still counting.
+        r.tick(60_999);
+        assert_eq!(r.incomplete.counts.len(), 2);
+        // A minute: summed up, and counting starts over.
+        r.tick(61_000);
+        assert!(r.incomplete.counts.is_empty());
+        assert_eq!(r.incomplete.since_ms, Some(61_000));
+    }
+
+    #[test]
+    fn a_summary_names_the_most_frequent() {
+        let mut inc = Incomplete::default();
+        for src in 0..7u8 {
+            inc.counts.insert((129029, src), u32::from(src) + 1);
+        }
+        let s = inc.summary("in the last 60 s");
+        assert!(
+            s.starts_with(
+                "28 incomplete fast packets in the last 60 s (pgn 129029 src 6: 7, \
+                 pgn 129029 src 5: 6, pgn 129029 src 4: 5, pgn 129029 src 3: 4, \
+                 pgn 129029 src 2: 3, …)"
+            ),
+            "{s}"
+        );
     }
 }

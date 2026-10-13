@@ -332,6 +332,7 @@ pub fn run(
                     _ => FramePacketType::Other,
                 })
                 .unwrap_or(FramePacketType::Other);
+            reasm.tick(crate::io::device::now_ms());
             match reasm.push(frame, packet_type) {
                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => f,
                 _ => continue,

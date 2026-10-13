@@ -57,6 +57,7 @@ impl Bst95 {
 impl Codec for Bst95 {
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
         let dropped = self.bdtp.dropped;
+        self.reassembler.tick(now_ms);
         for &b in bytes {
             let Some(m) = self.bdtp.push_byte(b) else {
                 continue;

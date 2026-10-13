@@ -140,8 +140,10 @@ pub fn run(mut args: Args) -> Result<()> {
 /// Move frames between the device and stdin/stdout until a stream ends.
 fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     let protocol = args.gateway.protocol();
-    // Why the device was given up on, if its frames stop for that.
+    // Why the device was given up on, or went away, if its frames stop
+    // for that: then exit with an error, so a service manager restarts us.
     let failure = handle.failure();
+    let lost = handle.lost();
     // `--rx-filter`, for what the gateway does not filter itself; an
     // iKonvert has done it already, which this does not undo.
     let filter = RxFilter::new(&args.gateway.rx_filter);
@@ -205,7 +207,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
     }
-    match failure.get() {
+    match failure.get().or(lost.get()) {
         Some(why) => anyhow::bail!("{why}"),
         None => Ok(()),
     }
