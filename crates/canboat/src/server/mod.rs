@@ -95,7 +95,7 @@ use crate::io::open_serial_rw;
 pub struct Args {
     /// The kind of gateway; without one, frames are read from stdin.
     ///
-    /// With socketcan or canalyst canboat becomes a full NMEA 2000 bus
+    /// With socketcan, canalyst or usb-can-a canboat becomes a full NMEA 2000 bus
     /// participant: it claims an address, answers ISO Requests and Group
     /// Functions, and sends Heartbeats.
     #[arg(long, value_enum, value_name = "KIND", requires = "device", help_heading = device_args::GATEWAY)]
@@ -167,7 +167,7 @@ pub struct Args {
     /// Apply a quirk to the bus; repeatable (see the possible values).
     ///
     /// `scx20` and `motion` impersonate or claim a device and need
-    /// `--kind socketcan` or `canalyst`; `wmm` emits canboat's own PGN and
+    /// `--kind socketcan`, `canalyst` or `usb-can-a`; `wmm` emits canboat's own PGN and
     /// works with any gateway that can send; `gps-rollover` only rewrites
     /// decoded dates and needs no gateway at all.
     /// `gps-rollover=<device>[,<device>...]` also corrects every date the
@@ -333,11 +333,15 @@ pub struct BridgeConfig {
     pub canalyst: Option<String>,
     /// The CANalyst-II CAN channel, 0 or 1.
     pub canalyst_channel: u8,
+    /// A Waveshare USB-CAN-A on this serial port, run as a node like
+    /// `socketcan`, claiming `address` at `socketcan_bitrate`. `baud` is the
+    /// serial speed, if it is not the adapter's 2 000 000.
+    pub usb_can_a: Option<String>,
     /// A Yacht Devices gateway, or an Actisense in a data format other than
     /// NGT Actisense (`--kind yachtd`, or `actisense` with `--data-format`
     /// n2k-ascii, n2k-actisense, raw-ascii or raw-actisense).
     pub gateway: Option<Gateway>,
-    /// The address to claim with `socketcan` or `canalyst`, or with
+    /// The address to claim with `socketcan`, `canalyst` or `usb-can-a`, or with
     /// `actisense` when that is an AOS simulator.
     pub address: u8,
     /// The rest of that node's ISO NAME and behaviour: the unique number
@@ -357,7 +361,7 @@ pub struct BridgeConfig {
     /// external `ip link set … up` unit being ordered first.
     pub socketcan_configure_link: bool,
     /// Bit rate `socketcan_configure_link` sets, and the bit rate the
-    /// `canalyst` adapter runs at: 250 000 (the default, and always right
+    /// `canalyst` and `usb_can_a` adapters run at: 250 000 (the default, and always right
     /// for NMEA 2000) or 500 000 for a J1939-14 bus.
     pub socketcan_bitrate: u32,
     /// What the bus carries (`--protocol`): picks the decode table and, with
@@ -437,10 +441,10 @@ pub struct BridgeConfig {
 
 impl BridgeConfig {
     /// Whether the backend runs canboat's own node on a raw CAN link
-    /// (`socketcan` or `canalyst`): it claims an address and sends a
-    /// frame from the source it names.
+    /// (`socketcan`, `canalyst` or `usb_can_a`): it claims an address and
+    /// sends a frame from the source it names.
     pub(crate) fn is_node(&self) -> bool {
-        self.socketcan.is_some() || self.canalyst.is_some()
+        self.socketcan.is_some() || self.canalyst.is_some() || self.usb_can_a.is_some()
     }
 }
 
@@ -454,6 +458,7 @@ impl Default for BridgeConfig {
             socketcan: None,
             canalyst: None,
             canalyst_channel: 0,
+            usb_can_a: None,
             gateway: None,
             address: 0,
             unique: 0,
@@ -570,6 +575,7 @@ impl From<Args> for BridgeConfig {
             socketcan: device(Kind::Socketcan),
             canalyst: device(Kind::Canalyst),
             canalyst_channel: g.channel.unwrap_or(0),
+            usb_can_a: device(Kind::UsbCanA),
             gateway: source.as_ref().and_then(|(kind, device)| {
                 Some(Gateway {
                     kind: kind.gateway()?,
@@ -692,7 +698,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     {
         anyhow::bail!(
             "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
-             framing themselves; use --kind socketcan, canalyst, yachtd, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
+             framing themselves; use --kind socketcan, canalyst, usb-can-a, yachtd, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
             config.protocol
         );
     }
@@ -957,6 +963,51 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             let (reader, writer) =
                 crate::io::canalyst::open_rw(&selector, channel, config.bitrate)?;
             device::canalyst::run(
+                reader,
+                writer,
+                config.clone(),
+                Arc::clone(&claim_for_factory),
+            )
+        });
+        let sup = Supervisor::new(factory);
+        let (rx, sup) = split_supervisor(sup);
+        // Coalesced by the node, as for SocketCAN.
+        return Ok(OpenedSource {
+            frames_rx: rx,
+            supervisor: Some(sup),
+            pre_coalesced: Arc::new(AtomicBool::new(true)),
+            claim_addr: Some(claim_addr),
+            pgn_list_status: (!pgn_lists.is_empty())
+                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
+        });
+    }
+    if let Some(path) = config.usb_can_a.as_deref() {
+        let path = path.to_string();
+        let baud = config.baud;
+        let pgn_lists = effective_pgn_lists(config);
+        let config = device::socketcan::Config {
+            model_version: Some("canboat-pipeline-rs"),
+            pgn_lists: pgn_lists.clone(),
+            learn_tx_pgns: config.learn_tx_pgns,
+            protocol: config.protocol,
+            bitrate: config.socketcan_bitrate,
+            state_dir: config.config_dir.clone(),
+            ..node_identity(config)
+        };
+        // A bit rate the adapter lacks is refused now, not at every
+        // reconnect.
+        if crate::engine::codec::usb_can_a::config_packet(config.bitrate, config.protocol).is_none()
+        {
+            anyhow::bail!("--kind usb-can-a does not run at {} bit/s", config.bitrate);
+        }
+        // Shared across factory reconnects, as for SocketCAN.
+        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
+            device::socketcan::CLAIM_UNCLAIMED,
+        ));
+        let claim_for_factory = Arc::clone(&claim_addr);
+        let factory = NamedFactory::new("usb-can-a", move || {
+            let (reader, writer) = device::usb_can_a::open_rw(&path, baud)?;
+            device::usb_can_a::run(
                 reader,
                 writer,
                 config.clone(),

@@ -293,6 +293,10 @@ pub mod read {
     /// autodetects. Wrap a file, a stdin lock, or [`open_capture`].
     #[cfg(feature = "io")]
     pub use crate::io::LineFrameReader as PlainReader;
+    /// A [`FrameSource`] over the bytes a Waveshare USB-CAN-A sends on its
+    /// serial port, with their fast-packets joined.
+    #[cfg(feature = "io")]
+    pub use crate::io::UsbCanAReader;
 
     /// Open a capture as a [`PlainReader`] ready for a [`Decoder`]: a plain
     /// PLAIN/FAST text log, or a `.pcap` / `.pcap.gz` / `.nif` container
@@ -485,6 +489,15 @@ pub mod codec {
     /// USB-CAN-B (`04d8:0053`). The caller opens the channel.
     pub mod canalyst {
         pub use crate::engine::codec::canalyst::{Canalyst, PACKET_LEN};
+    }
+
+    /// Waveshare USB-CAN-A raw CAN frames in 20-byte packets, over the
+    /// adapter's serial port (`1a86:7523`, at [`BAUD`](usb_can_a::BAUD)).
+    /// [`Codec::open`] gives the configuration packet.
+    pub mod usb_can_a {
+        pub use crate::engine::codec::usb_can_a::{
+            BAUD, FRAME_LEN, UsbCanA, bitrates, config_packet,
+        };
     }
 
     /// The 29-bit ISO 11783 CAN identifier ⇄ priority, PGN, source and

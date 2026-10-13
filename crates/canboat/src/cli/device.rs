@@ -23,6 +23,8 @@ pub enum Kind {
     Maretron,
     Socketcan,
     Canalyst,
+    /// Waveshare USB-CAN-A, on its serial port.
+    UsbCanA,
     /// Yacht Devices, or an Actisense in another data format: the gateways
     /// both commands open the same way.
     Gateway(GatewayKind),
@@ -34,6 +36,7 @@ impl Kind {
         match self {
             Kind::Ngt1 | Kind::Aos => 115_200,
             Kind::Ikonvert => 230_400,
+            Kind::UsbCanA => crate::io::device::usb_can_a::BAUD,
             _ => self.gateway().map_or(0, GatewayKind::default_baud),
         }
     }
@@ -49,7 +52,7 @@ impl Kind {
     /// The gateways canboat drives as the CAN controller, running its own
     /// node on them.
     pub fn is_can_controller(self) -> bool {
-        matches!(self, Kind::Socketcan | Kind::Canalyst)
+        matches!(self, Kind::Socketcan | Kind::Canalyst | Kind::UsbCanA)
     }
 
     /// Whether the gateway passes raw CAN frames, so it can carry a bus
@@ -80,6 +83,7 @@ impl Kind {
                 "actisense (raw-ascii)"
             }
             Kind::Canalyst => "canalyst",
+            Kind::UsbCanA => "usb-can-a",
         }
     }
 }
@@ -104,6 +108,7 @@ enum Family {
     Maretron,
     Socketcan,
     Canalyst,
+    UsbCanA,
     Aos,
 }
 
@@ -149,6 +154,11 @@ const KINDS: &[KindArg] = &[
         "canalyst",
         Family::Canalyst,
         "CANalyst-II (Waveshare USB-CAN-B) over usb; canboat is the node",
+    ),
+    kind_arg(
+        "usb-can-a",
+        Family::UsbCanA,
+        "Waveshare USB-CAN-A on its serial port; canboat is the node",
     ),
     kind_arg(
         "aos",
@@ -223,6 +233,7 @@ impl KindArg {
             Family::Maretron => plain(Kind::Maretron),
             Family::Socketcan => plain(Kind::Socketcan),
             Family::Canalyst => plain(Kind::Canalyst),
+            Family::UsbCanA => plain(Kind::UsbCanA),
             Family::Aos => plain(Kind::Aos),
         }
     }
@@ -275,10 +286,10 @@ impl From<Ngt1Mode> for OperatingMode {
 
 /// Help headings, in the order they appear.
 pub const GATEWAY: &str = "Gateway";
-pub const CAN: &str = "CAN controller (socketcan, canalyst)";
+pub const CAN: &str = "CAN controller (socketcan, canalyst, usb-can-a)";
 pub const SPECIFIC: &str = "Gateway-specific";
 pub const LISTS: &str = "PGN lists";
-pub const NODE: &str = "canboat's node (socketcan, canalyst, aos)";
+pub const NODE: &str = "canboat's node (socketcan, canalyst, usb-can-a, aos)";
 pub const BUS: &str = "Bus";
 
 /// The end of `--help` for both commands: the gateways and their data
@@ -299,11 +310,12 @@ Gateways (--kind) and their data formats (--data-format):
   aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
   socketcan                  can0                         rw   yes    yes
   canalyst                   usb[:VVVV:PPPP]              rw   yes    yes
+  usb-can-a                  /dev/ttyUSB0                 rw   yes    yes
 
   * the default. rw: canboat reads from and writes to the bus; a
   udp://[bind:]port only reads. J1939 (--protocol j1939): where it says
-  yes; ISO TP messages are received there, but sent only on socketcan and
-  canalyst, where canboat is the node.
+  yes; ISO TP messages are received there, but sent only on socketcan,
+  canalyst and usb-can-a, where canboat is the node.
   11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 only.
   A W2K-1 sends ngt-actisense but does not take it; canboat does not
   know that yet.
@@ -320,9 +332,9 @@ Options only some gateways take:
   --mode              actisense (ngt-actisense)
   --password          maretron
   --no-tx-rate-limit  ikonvert
-  --bitrate           socketcan, canalyst
+  --bitrate           socketcan, canalyst, usb-can-a
   --channel           canalyst
-  node options        socketcan, canalyst, aos
+  node options        socketcan, canalyst, usb-can-a, aos
 
 What each gateway does with the PGN lists:
 
@@ -332,7 +344,8 @@ What each gateway does with the PGN lists:
   actisense        ignored              Transmit PGN Enable list; only
   (ngt-actisense)                       these are sent
   aos, socketcan,  advertised           advertised
-  canalyst
+  canalyst,
+  usb-can-a
   others           ignored              ignored
 
   --rx-pgn never filters; --rx-filter does, in the gateway on ikonvert
@@ -357,7 +370,7 @@ pub struct DeviceArgs {
     #[arg(short = 'b', long, short_alias = 's', value_name = "BAUD", help_heading = GATEWAY)]
     pub baud: Option<u32>,
 
-    /// The CAN bus bit rate [default: canalyst 250000; socketcan as configured].
+    /// The CAN bus bit rate [default: canalyst, usb-can-a 250000; socketcan as configured].
     ///
     /// On socketcan this brings the interface down, sets the rate and brings
     /// it up again, which needs root or CAP_NET_ADMIN. 250000 for NMEA 2000,
@@ -498,13 +511,13 @@ impl DeviceArgs {
         let name = kind.name();
         if protocol == BusProtocol::Quick && !kind.is_can_controller() {
             bail!(
-                "--protocol quick needs socketcan or canalyst: the other gateways pass only 29-bit frames"
+                "--protocol quick needs socketcan, canalyst or usb-can-a: the other gateways pass only 29-bit frames"
             );
         }
         if protocol != BusProtocol::Nmea2000 && !kind.passes_raw_frames() {
             bail!(
                 "--protocol {protocol} needs a gateway that passes raw CAN frames \
-                 (socketcan, canalyst, yachtd, or actisense in raw-ascii or raw-actisense); \
+                 (socketcan, canalyst, usb-can-a, yachtd, or actisense in raw-ascii or raw-actisense); \
                  {name} does NMEA 2000 framing itself"
             );
         }
@@ -515,6 +528,7 @@ impl DeviceArgs {
             Kind::Maretron => &["password"],
             Kind::Socketcan => &["bitrate", "node", "no-claim"],
             Kind::Canalyst => &["bitrate", "channel", "node", "no-claim"],
+            Kind::UsbCanA => &["bitrate", "node", "no-claim"],
             _ => &[],
         };
         let why = if kind == Kind::Ngt1 {
@@ -551,7 +565,7 @@ impl DeviceArgs {
             if set && !allowed.contains(&group) {
                 if flag == "--bitrate" {
                     bail!(
-                        "--bitrate sets the CAN bus rate of socketcan or canalyst, which canboat \
+                        "--bitrate sets the CAN bus rate of socketcan, canalyst or usb-can-a, which canboat \
                          drives as the CAN controller ({why}; for the serial speed to a gateway, \
                          use --baud)"
                     );
@@ -569,7 +583,7 @@ impl DeviceArgs {
             .expect("DeviceArgs::check rejects a --protocol this cannot convert")
     }
 
-    /// The node of a socketcan or canalyst gateway, or of an AOS simulator
+    /// The node of a socketcan, canalyst or usb-can-a gateway, or of an AOS simulator
     /// on ngt1, without the per-gateway parts (model version, bit rate).
     pub fn node_config(&self) -> crate::io::device::socketcan::Config {
         let defaults = crate::io::device::socketcan::Config::default();
@@ -680,7 +694,7 @@ mod tests {
         // The node options: the CAN controllers and the AOS simulator.
         let err = parse(&["-a", "9"]).check(Some(Kind::Ngt1)).unwrap_err();
         assert!(err.to_string().contains("--kind aos"), "{err}");
-        for kind in [Kind::Socketcan, Kind::Canalyst, Kind::Aos] {
+        for kind in [Kind::Socketcan, Kind::Canalyst, Kind::UsbCanA, Kind::Aos] {
             assert!(
                 parse(&["-a", "9", "-u", "1", "-n"])
                     .check(Some(kind))
@@ -770,6 +784,7 @@ mod tests {
                 "maretron",
                 "socketcan",
                 "canalyst",
+                "usb-can-a",
                 "aos"
             ]
         );
@@ -786,6 +801,8 @@ mod tests {
         assert!(j1939.check(Some(Kind::Ngt1)).is_err());
         let quick = parse(&["--protocol", "quick"]);
         assert!(quick.check(Some(Kind::Canalyst)).is_ok());
+        assert!(quick.check(Some(Kind::UsbCanA)).is_ok());
+        assert!(j1939.check(Some(Kind::UsbCanA)).is_ok());
         assert!(
             quick
                 .check(Some(Kind::Gateway(GatewayKind::Actisense(

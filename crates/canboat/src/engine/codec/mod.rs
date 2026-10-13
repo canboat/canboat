@@ -27,6 +27,8 @@ pub mod ikonvert;
 pub mod maretron;
 pub mod ngt1;
 pub mod ngt1_tx_list;
+pub(crate) mod raw_can;
+pub mod usb_can_a;
 
 use std::time::Duration;
 

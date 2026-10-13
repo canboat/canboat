@@ -129,7 +129,7 @@ impl Bridge {
             );
         }
         // The scx20 and motion quirks impersonate a device (motion claims a
-        // whole new virtual node), so they need --kind socketcan or canalyst —
+        // whole new virtual node), so they need --kind socketcan, canalyst or usb-can-a —
         // the backends that preserve a frame's src on outbound. The wmm quirk emits
         // canboat's own PGN 127258, so it only needs *some* writable backend
         // — that check happens below once one is known.
@@ -137,7 +137,7 @@ impl Bridge {
             if config.quirk.contains(&kind) && !config.is_node() {
                 let name = kind.name();
                 anyhow::bail!(
-                    "--quirk {name} only works with --kind socketcan or canalyst; it claims/impersonates \
+                    "--quirk {name} only works with --kind socketcan, canalyst or usb-can-a; it claims/impersonates \
                      a device, and other backends rewrite src on outbound writes so the \
                      frame cannot reach the bus with the claimed source address"
                 );
@@ -228,7 +228,7 @@ impl Bridge {
                  to in stdin/log-only mode"
             );
         }
-        // (motion is already gated to socketcan/canalyst above, which guarantees a
+        // (motion is already gated to the node backends above, which guarantees a
         // writable backend, so it needs no separate device_sender check.)
 
         // In device mode treat stdin like `actisense-serial -p`: parse

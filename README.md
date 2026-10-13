@@ -14,10 +14,12 @@ If you just want to know how the NMEA 2000 protocol works, with an explanation o
 To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
 
 A plain USB CAN adapter works too, on every platform: a Linux SocketCAN
-interface, or a CANalyst-II such as the Waveshare USB-CAN-B (`04d8:0053`),
+interface, a CANalyst-II such as the Waveshare USB-CAN-B (`04d8:0053`),
 which `canboat` opens directly over USB — `canboat interface --kind canalyst usb`
-or `canboat server --kind canalyst --device usb`. On either, canboat is a full NMEA 2000
-node: it claims an address and answers ISO Requests.
+or `canboat server --kind canalyst --device usb` — or a Waveshare USB-CAN-A
+(`1a86:7523`) on its serial port, `canboat interface --kind usb-can-a
+/dev/ttyUSB0`. On each, canboat is a full NMEA 2000 node: it claims an
+address and answers ISO Requests.
 
 The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a
 gateway: `--kind aos`. It speaks the NGT-1's framing but claims no address
@@ -45,12 +47,13 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 | `aos` | | AOS simulator | serial, `usb`, `tcp://` (6001) | rw | – | – |
 | `socketcan` | | Linux CAN interface | `can0` | rw | yes | yes |
 | `canalyst` | | CANalyst-II, Waveshare USB-CAN-B | `usb` | rw | yes | yes |
+| `usb-can-a` | | Waveshare USB-CAN-A | serial | rw | yes | yes |
 
 - **Read/write:** `udp://[bind:]port` only receives. A W2K-1 sends
   `ngt-actisense` but does not take it; canboat does not handle that yet.
 - **J1939** (`--protocol j1939`): ISO TP messages are received wherever it says
-  yes, but sent only on SocketCAN and the CANalyst-II, where canboat is the
-  node. **11-bit** frames are Quick PCS (`--protocol
+  yes, but sent only on SocketCAN, the CANalyst-II and the USB-CAN-A, where
+  canboat is the node. **11-bit** frames are Quick PCS (`--protocol
   quick`). The rest carry NMEA 2000 only.
 - An option only some gateways have (`--bitrate`, `--channel`, `--password`,
   `--mode`, the ISO NAME options) says which in `--help`, and is refused for
@@ -86,7 +89,7 @@ no C equivalent is tier 1 as the only implementation.
 | | |
 | --- | --- |
 | `canboat convert` | decode a capture between any supported formats |
-| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / Yacht Devices / W2K-1 / PRO-NDC / SocketCAN / CANalyst-II) |
+| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / Yacht Devices / W2K-1 / PRO-NDC / SocketCAN / CANalyst-II / USB-CAN-A) |
 | `canboat n2kd` | multiplex an analyzer-JSON stream to TCP clients |
 | `canboat server` | the whole device → analyzer → n2kd pipeline in one process |
 | `canboat tui` | interactive terminal browser for a live stream or a capture |
@@ -113,9 +116,9 @@ or invent data, so you switch on the ones you need:
 | `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
 | `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
 | `gps-relay` | Re-sends the data PGNs the devices listed in `gps-rollover=…` broadcast (not their network management, and not anything addressed), from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display. Needs a real device list — `gps-rollover=all` is refused here | `canboat server --quirk gps-rollover=<device> --quirk gps-relay` (needs a writable backend) |
-| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--kind socketcan` or `canalyst`) |
+| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
-| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--kind socketcan` or `canalyst`) |
+| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
 
 `gps-rollover` is the odd one out: it corrects a decoded value rather than
 putting a frame on the bus, which is why it is available when decoding a
@@ -212,7 +215,7 @@ them depends on the gateway:
 
 | Gateway | Transmit list | Receive list |
 |---|---|---|
-| SocketCAN, CANalyst-II | Advertised by canboat itself. Nothing is filtered. | Advertised |
+| SocketCAN, CANalyst-II, USB-CAN-A | Advertised by canboat itself. Nothing is filtered. | Advertised |
 | iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway, which answers PGN 126464 from it; a filter only with `--rx-filter` (`NORMAL` mode) |
 | NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
 | AOS simulator (`aos`) | Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered. | Advertised |
@@ -270,6 +273,7 @@ The full list of understood formats:
 | Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |
 | Actisense EBL | Actisense `.ebl` log files | _(binary)_ | `actisense-serial -r <file.ebl> \| analyzer` |
 | Actisense W2K-1 | W2K-1 gateway capture | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |
+| Waveshare USB-CAN-A | The 20-byte frames the adapter sends on its serial port | _(binary)_ | `canboat convert --from usb-can-a <file>` |
 | candump (Angstrom) | Linux can-utils | `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0` | `candump2analyzer <file> \| analyzer` |
 | candump (Debian) | Linux can-utils | `can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
 | candump log | Linux can-utils (`candump -l`) | `(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF` | `candump2analyzer <file> \| analyzer` |
