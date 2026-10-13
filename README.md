@@ -44,7 +44,7 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 | `yachtd` | `raw-ascii` | YDWG-02, YDEN-02, YDNR-02, YDNU-02 | `tcp://` (1457), `udp://`, YDNU-02 serial | rw | yes | – |
 | `miniplex` | | ShipModul MiniPlex-3 with NMEA 2000, in `$MXPGN` | `tcp://` (10110), `udp://`, serial | rw | yes | – |
 | `seasmart` | | Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode, in `$PCDIN` | `tcp://` (10001), `udp://`, serial | rw | – | – |
-| `ikonvert` | | iKonvert, NavLink2 | serial, `tcp://` (6001) | rw | – | – |
+| `ikonvert` | | iKonvert, NavLink2 | serial, `tcp://` (2000), `udp://` (2000) | rw | – | – |
 | `maretron` | | IPG100/200 | `host[:6543]` | rw | – | – |
 | `aos` | | AOS simulator | serial, `usb`, `tcp://` (6001) | rw | – | – |
 | `socketcan` | | Linux CAN interface | `can0` | rw | yes | yes |
@@ -57,6 +57,27 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   yes, but sent only on SocketCAN, the CANalyst-II and the USB-CAN-A, where
   canboat is the node. **11-bit** frames are Quick PCS (`--protocol
   quick`). The rest carry NMEA 2000 only.
+- **ikonvert: use TCP for a NavLink2.** A NavLink2 serves the iKonvert
+  protocol on TCP *or* UDP, whichever its web page is set to, on port 2000
+  (canboat's default for both). Over `tcp://` canboat puts the gateway on the
+  bus, sets its PGN lists, and reads and writes; when it exits, it takes the
+  gateway off the bus again (`$PDGY,N2NET_OFFLINE`). Over `udp://[bind:][port]`
+  canboat only receives:
+  - **The gateway must already be active.** A NavLink2 passes no PGNs until a
+    client puts it on the bus (`$PDGY,N2NET_INIT`), and canboat can't send
+    that over UDP. canboat expects some other client to have done so since the
+    gateway started (it stays on the bus after that client leaves, until it
+    is power cycled or taken off), and never takes it off the bus itself. It
+    warns when the gateway reports that it is off the bus. A canboat session
+    over `tcp://` can't be that client: it takes the gateway off the bus when
+    it exits.
+  - **Nothing reaches the gateway:** `--tx-pgn`, `--rx-pgn` and
+    `--no-tx-rate-limit` are ignored with a warning. `--rx-filter` still works,
+    because canboat applies it. To send, use `tcp://`: Digital Yacht says TCP
+    is needed to drive an autopilot.
+
+  Use `udp://2000` rather than a local address, or the broadcast may be
+  missed. A ser2net bridge needs its own port given.
 - **miniplex:** when it connects, canboat sets the MiniPlex to send every
   PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2). Over
   a receive-only `udp://port` it can't, so set that on the MiniPlex first,

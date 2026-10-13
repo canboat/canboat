@@ -71,6 +71,23 @@ pub(crate) fn open_line_endpoint_sends(
     let Some(rest) = device.strip_prefix("udp://") else {
         return Ok((open_tcp(device, default_tcp_port)?, true));
     };
+    let (pair, sends) = open_udp(rest)?;
+    if sends {
+        log::info!("UDP: sending to the gateway at udp://{rest}, and receiving from it");
+    } else {
+        log::warn!(
+            "UDP gateway mode is receive-only; transmitted frames are dropped \
+             (give the gateway's address, udp://gateway:port, to send)"
+        );
+    }
+    Ok((pair, sends))
+}
+
+/// A `udp://` endpoint, `rest` being what follows `udp://`: a port, or
+/// `host:port`. Receives only for a port or an address of this host, and
+/// otherwise also sends to `host`, which it then only receives from;
+/// whether it sends is returned alongside.
+pub(crate) fn open_udp(rest: &str) -> io::Result<(Pair, bool)> {
     let addr = if rest.contains(':') {
         rest.to_socket_addrs()?.next().ok_or_else(|| {
             io::Error::new(io::ErrorKind::NotFound, format!("no addresses for {rest}"))
@@ -103,10 +120,6 @@ pub(crate) fn open_line_endpoint_sends(
         return Ok((receive_only(sock), false));
     };
     sock.set_read_timeout(Some(READ_TIMEOUT))?;
-    log::info!(
-        "UDP: receiving on port {}, sending to the gateway at {gateway}",
-        addr.port()
-    );
     let reader: Box<dyn Read + Send> = Box::new(UdpRead {
         sock: sock.try_clone()?,
         from: Some(gateway.ip()),
@@ -120,10 +133,6 @@ pub(crate) fn open_line_endpoint_sends(
 }
 
 fn receive_only(sock: UdpSocket) -> Pair {
-    log::warn!(
-        "UDP gateway mode is receive-only; transmitted frames are dropped \
-         (give the gateway's address, udp://gateway:port, to send)"
-    );
     let _ = sock.set_read_timeout(Some(READ_TIMEOUT));
     (Box::new(UdpRead { sock, from: None }), Box::new(io::sink()))
 }
