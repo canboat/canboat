@@ -798,6 +798,9 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         // A NavLink2's UDP output only receives: nothing reaches the
         // gateway, so its lists are not written.
         let receive_only = path.starts_with("udp://");
+        if receive_only && rate_limit_off {
+            log::warn!("--no-tx-rate-limit: canboat sends nothing over udp://");
+        }
         let pgn_list_status = if receive_only {
             unsupported_pgn_lists(config)
         } else {

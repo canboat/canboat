@@ -382,6 +382,11 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         Kind::Ikonvert => {
             let baud = gateway.baud.unwrap_or_else(|| args.kind.default_baud());
             let (r, w, receive_only) = device::ikonvert::open(&args.device, baud)?;
+            if receive_only && args.write_only {
+                anyhow::bail!(
+                    "--write-only: ikonvert over udp:// only receives; use tcp:// to send"
+                );
+            }
             let config = if receive_only {
                 // Nothing reaches the gateway: its lists and rate limit
                 // stay as they are. --rx-filter still filters, in canboat.
