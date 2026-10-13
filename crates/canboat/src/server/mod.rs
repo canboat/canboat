@@ -795,15 +795,30 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_list_status =
             (!effective.is_empty()).then(|| device::ikonvert::pgn_list_status(&effective));
         let rate_limit_off = config.ikonvert_rate_limit_off;
+        // A NavLink2's UDP output only receives: nothing reaches the
+        // gateway, so its lists are not written.
+        let receive_only = path.starts_with("udp://");
+        let pgn_list_status = if receive_only {
+            unsupported_pgn_lists(config)
+        } else {
+            pgn_list_status
+        };
         let factory = NamedFactory::new("ikonvert", move || {
-            let (reader, writer) = open_serial_or_tcp(&path, baud)?;
-            let config = device::ikonvert::Config {
-                rx_list: rx_list.clone(),
-                tx_list: tx_list.clone(),
-                pgn_lists: pgn_lists.clone(),
-                extra_tx_pgns: extra_tx_pgns.clone(),
-                rate_limit_off,
-                ..Default::default()
+            let (reader, writer, receive_only) = device::ikonvert::open(&path, baud)?;
+            let config = if receive_only {
+                device::ikonvert::Config {
+                    skip_init: true,
+                    ..Default::default()
+                }
+            } else {
+                device::ikonvert::Config {
+                    rx_list: rx_list.clone(),
+                    tx_list: tx_list.clone(),
+                    pgn_lists: pgn_lists.clone(),
+                    extra_tx_pgns: extra_tx_pgns.clone(),
+                    rate_limit_off,
+                    ..Default::default()
+                }
             };
             Ok(device::ikonvert::run(reader, writer, config))
         });

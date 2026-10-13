@@ -79,9 +79,9 @@ pub struct Config {
     pub extra_tx_pgns: Vec<u32>,
     /// Disable the iKonvert TX rate limit. Off by default.
     pub rate_limit_off: bool,
-    /// Skip the init handshake entirely. Useful when the "writer
-    /// side" is `/dev/null` (replay-from-file mode), since there's
-    /// no device on the other end to ACK the commands.
+    /// Skip the init handshake entirely, and never send it: when there
+    /// is no device on the other end to ACK the commands (replaying a
+    /// file), or the link only receives (a NavLink2's UDP output).
     pub skip_init: bool,
 }
 
@@ -183,6 +183,9 @@ pub struct Ikonvert {
     /// complete.
     init_state: u32,
     skip_init: bool,
+    /// Whether the off-bus warning, for a link that does not initialise
+    /// the gateway, has been given.
+    warned_off_bus: bool,
     gate: Option<TxGate>,
 }
 
@@ -201,6 +204,7 @@ impl Ikonvert {
             init: Init::new(&config),
             init_state,
             skip_init: config.skip_init,
+            warned_off_bus: false,
             gate: tx_gate(&config),
         }
     }
@@ -336,6 +340,16 @@ impl Ikonvert {
                     );
                     events.push(Event::Frame(frame));
                 }
+                None if self.skip_init && !self.warned_off_bus => {
+                    // The keep-alive is what a gateway sends while it is
+                    // off the bus, and this link cannot put it on.
+                    self.warned_off_bus = true;
+                    log::warn!(
+                        "ikonvert: the gateway is off the bus and sends no PGNs until a \
+                         client puts it on (N2NET_INIT), which canboat can't over udp://; \
+                         use tcp://"
+                    );
+                }
                 None => log::debug!("ikonvert: keep-alive heartbeat"),
             }
             self.maybe_resend_offline(events);
@@ -368,6 +382,12 @@ impl Ikonvert {
                 } else {
                     log::info!("ikonvert: initialization complete");
                 }
+            }
+            STATE_DONE if self.skip_init => {
+                // The gateway (re)started: off the bus until someone
+                // initialises it, which this link does not. Warn again
+                // when it says so.
+                self.warned_off_bus = false;
             }
             STATE_DONE => {
                 log::warn!("ikonvert: device reset detected, re-initialising");
@@ -569,6 +589,41 @@ mod tests {
         assert_eq!(f.src, 35);
         assert_eq!(&f.data[..], &[1, 2, 3]);
         assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z"));
+    }
+
+    /// A link that only receives (a NavLink2's UDP output) never sends
+    /// the gateway anything: not on open or close, and not when it
+    /// restarts. Its frames, its status and the NavLink2's keep-alive (one
+    /// field more than an iKonvert's) still come through as they should.
+    #[test]
+    fn a_receive_only_link_sends_nothing() {
+        let mut codec = Ikonvert::new(Config {
+            skip_init: true,
+            ..Config::default()
+        });
+        assert!(codec.open().is_empty());
+        let mut events = Vec::new();
+        codec.receive(
+            b"$PDGY,TEXT,Digital_Yacht_NavLink 2_v2.22_#AB-181018-12345_Mode:15\r\n\
+              $PDGY,000000,,,,,,,\r\n\
+              !PDGY,127250,2,3,255,481.734,2C20AAAAAAE=\r\n\
+              $PDGY,000000,4,,5,482,1,0\r\n",
+            NOW,
+            &mut events,
+        );
+        assert!(
+            !events.iter().any(|e| matches!(e, Event::Send(_))),
+            "{events:?}"
+        );
+        let pgns: Vec<u32> = events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Frame(f) => Some(f.pgn),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(pgns, [127250, 0x40100]); // IKONVERT_BEM, the gateway status
+        assert!(codec.close().is_empty());
     }
 
     /// Bytes without a line end are dropped at the limit, and lines that

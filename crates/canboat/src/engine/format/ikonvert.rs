@@ -222,7 +222,8 @@ pub fn build_network_status(status: NetworkStatus, timestamp: Option<String>) ->
 /// because it parses iKonvert's wire format.
 ///
 /// `body` is the text after the `$PDGY,` prefix. Returns `None` for
-/// the keep-alive form (all six fields empty) and for any body that
+/// the keep-alive form (every field empty: six on an iKonvert, seven on a
+/// NavLink2) and for any body that
 /// does not start with `000000,`. Mirrors the heartbeat branch of
 /// `parseIKonvertAsciiMessage`: load and errors are written
 /// unconditionally (iKonvert always reports them, even as 0xff /
@@ -230,7 +231,7 @@ pub fn build_network_status(status: NetworkStatus, timestamp: Option<String>) ->
 /// N2K "no data" sentinel survives.
 pub fn synthesize_network_status(body: &str, timestamp: String) -> Option<RawFrame> {
     let rest = body.strip_prefix("000000,")?;
-    if rest == ",,,,," {
+    if rest.split(',').all(str::is_empty) {
         return None;
     }
     let mut fields = rest.split(',');
@@ -406,6 +407,9 @@ mod tests {
     fn keep_alive_heartbeat_does_not_synthesize() {
         // The iKonvert keep-alive form: `$PDGY,000000,,,,,,`.
         assert!(synthesize_network_status("000000,,,,,,", "ts".into()).is_none());
+        // A NavLink2's has one field more (Digital Yacht, "NavLink2
+        // Developer's Guide" V1.04: `$PDGY,000000,,,,,,,`).
+        assert!(synthesize_network_status("000000,,,,,,,", "ts".into()).is_none());
     }
 
     #[test]

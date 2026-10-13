@@ -323,7 +323,7 @@ Gateways (--kind) and their data formats (--data-format):
   yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
   miniplex                   tcp:10110, udp, /dev/tty…    rw   yes    -
   seasmart                   tcp:10001, udp, /dev/tty…    rw   -      -
-  ikonvert                   /dev/ttyUSB0, tcp:6001       rw   -      -
+  ikonvert                   /dev/ttyUSB0, tcp:2000, udp  rw   -      -
   maretron                   host[:6543]                  rw   -      -
   aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
   socketcan                  can0                         rw   yes    yes
@@ -338,6 +338,11 @@ Gateways (--kind) and their data formats (--data-format):
   A W2K-1 sends ngt-actisense but does not take it; canboat does not
   know that yet. seasmart ($PCDIN) has no priority or destination, and
   not every gateway takes it to send: Yacht Devices only a few PGNs.
+  ikonvert: tcp:// is the better mode for a NavLink2. Over
+  udp://[bind:][port] (its UDP output, port 2000) canboat only
+  receives: it expects the gateway to be on the bus already, put there
+  by another client, and never takes it off. Its PGN lists and rate
+  limit stay as they are.
 
   aos is the Across Ocean Systems simulator, which speaks the NGT-1's
   format but is no node: canboat claims an address for it. actisense

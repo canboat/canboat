@@ -380,13 +380,28 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             Ok(device::ngt1::run_aos(r, w, node, claim))
         }
         Kind::Ikonvert => {
-            let (r, w) = open_stream(args)?;
-            let config = device::ikonvert::Config {
-                rx_list: gateway.ikonvert_rx_list(),
-                pgn_lists: lists,
-                rate_limit_off: gateway.no_tx_rate_limit,
-                skip_init: false,
-                ..Default::default()
+            let baud = gateway.baud.unwrap_or_else(|| args.kind.default_baud());
+            let (r, w, receive_only) = device::ikonvert::open(&args.device, baud)?;
+            let config = if receive_only {
+                // Nothing reaches the gateway: its lists and rate limit
+                // stay as they are. --rx-filter still filters, in canboat.
+                unsupported("receive PGN", &lists.rx);
+                unsupported("transmit PGN", &lists.tx);
+                if gateway.no_tx_rate_limit {
+                    log::warn!("--no-tx-rate-limit: canboat sends nothing over udp://");
+                }
+                device::ikonvert::Config {
+                    skip_init: true,
+                    ..Default::default()
+                }
+            } else {
+                device::ikonvert::Config {
+                    rx_list: gateway.ikonvert_rx_list(),
+                    pgn_lists: lists,
+                    rate_limit_off: gateway.no_tx_rate_limit,
+                    skip_init: false,
+                    ..Default::default()
+                }
             };
             Ok(device::ikonvert::run(r, w, config))
         }
@@ -485,9 +500,8 @@ fn open_usb_can_a(args: &Args) -> Result<DeviceHandle> {
 /// `interface` is live-device only — captured byte streams are decoded
 /// with `canboat convert`, not here.
 fn open_stream(args: &Args) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    // A serial-protocol gateway reached over the network (the NavLink2
-    // serves the iKonvert protocol on TCP 6001; ser2net setups do the
-    // same for an NGT-1): same codec, different transport.
+    // A serial-protocol gateway reached over the network (ser2net
+    // setups do this for an NGT-1): same codec, different transport.
     if args.device.starts_with("tcp://") {
         return Ok(crate::io::net::open_tcp(&args.device, 6001)?);
     }
