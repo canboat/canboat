@@ -9,3 +9,6 @@ ERROR seasmart [analyzer] Unknown message error 2: '$PCDIN,01F801,00000000,01,43
 ERROR seasmart [analyzer] $PCDIN checksum does not match: $PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21
 ERROR seasmart [analyzer] Unknown message error 2: '$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21
 '
+ERROR seasmart [analyzer] $PCDIN checksum does not match: $PCDIN,01F119,00000000,0F,2AAF00D1067414FF*59JUNK
+ERROR seasmart [analyzer] Unknown message error 2: '$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*59JUNK
+'

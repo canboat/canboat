@@ -547,8 +547,9 @@ test41:
 
 # SeaSmart $PCDIN (#1047): canboatjs's sentence, also behind a TAG block,
 # Chetco's specification examples, a whole fast-packet, and other NMEA 0183
-# sentences before and among them, which hold no message. The last three
-# lines are bad: junk after the data, a surplus field, a wrong checksum.
+# sentences before and among them, which hold no message. The last four
+# lines are bad: junk after the data, a surplus field, a wrong checksum, and
+# junk after the checksum.
 .PHONY: test42
 tests: test42
 test42:
@@ -556,8 +557,8 @@ test42:
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/seasmart.out
 	diff $(TEMPDIR)/seasmart.out seasmart.out
 	diff $(TEMPDIR)/seasmart.err seasmart.err
-	# -ignore-checksum takes the last line too: a third 127257.
-	test `$(ANALYZER) -json -ignore-checksum < seasmart.in 2>/dev/null | grep -c '"pgn":127257'` = 3
+	# -ignore-checksum takes the last two lines too: four 127257s in all.
+	test `$(ANALYZER) -json -ignore-checksum < seasmart.in 2>/dev/null | grep -c '"pgn":127257'` = 4
 
 #
 # Inputs that made a UBSan build of the analyzer report undefined behaviour

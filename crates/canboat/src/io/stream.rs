@@ -346,9 +346,18 @@ impl<W: Write> TextLineWriter<W> {
     }
 
     /// SeaSmart `$PCDIN` sentences, one whole message each, ending in
-    /// CR LF as NMEA 0183 does.
+    /// CR LF as NMEA 0183 does. A message longer than a fast-packet, which
+    /// a reader would cut short, is skipped with a warning.
     pub fn seasmart(inner: W) -> Self {
         Self::new(inner, |w, frame| {
+            if frame.data.len() > crate::engine::frame::FASTPACKET_MAX_SIZE {
+                log::warn!(
+                    "not writing PGN {}: {} bytes exceed a fast-packet",
+                    frame.pgn,
+                    frame.data.len()
+                );
+                return Ok(());
+            }
             crate::engine::format::seasmart::write_line(w, frame)?;
             w.push('\r');
             Ok(())
@@ -368,6 +377,10 @@ impl<W: Write> FrameWriter for TextLineWriter<W> {
     fn write_frame(&mut self, frame: &RawFrame) -> io::Result<()> {
         self.buf.clear();
         (self.encode)(&mut self.buf, frame).expect("text write to String");
+        if self.buf.is_empty() {
+            // Skipped by the encoder.
+            return Ok(());
+        }
         self.buf.push('\n');
         self.inner.write_all(self.buf.as_bytes())
     }
@@ -747,5 +760,30 @@ mod tests {
         let mut r = LineFrameReader::new(Cursor::new(input));
         assert!(r.read_frame().unwrap().is_none());
         assert!(r.header_coalesced());
+    }
+
+    /// SeaSmart: one sentence per message; one longer than a fast-packet,
+    /// which a reader would cut short, is skipped.
+    #[test]
+    fn seasmart_writes_whole_messages_and_skips_oversized_ones() {
+        let mut out = Vec::new();
+        {
+            let mut w = TextLineWriter::seasmart(&mut out);
+            let long = RawFrame::new(None, 6, 0xef00, 1, 2, std::iter::repeat_n(0u8, 300));
+            w.write_frame(&long).unwrap();
+            let attitude = RawFrame::new(
+                None,
+                3,
+                127257,
+                15,
+                255,
+                [0x2a, 0xaf, 0x00, 0xd1, 0x06, 0x74, 0x14, 0xff],
+            );
+            w.write_frame(&attitude).unwrap();
+        }
+        assert_eq!(
+            String::from_utf8(out).unwrap(),
+            "$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*59\r\n"
+        );
     }
 }

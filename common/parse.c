@@ -44,6 +44,34 @@ static char *findOccurrence(char *msg, char c, int count)
   return p;
 }
 
+/*
+ * Whether the NMEA 0183 sentence starting at `dollar` (its '$') has the
+ * checksum after `star`: exactly two hex digits, then only the line end,
+ * as the Rust parsers require.
+ */
+static bool nmeaChecksumMatches(const char *dollar, const char *star)
+{
+  unsigned char xor = 0;
+  const char   *q;
+
+  for (q = dollar + 1; q < star; q++)
+  {
+    xor ^= (unsigned char) *q;
+  }
+  if (!isxdigit((unsigned char) star[1]) || !isxdigit((unsigned char) star[2]))
+  {
+    return false;
+  }
+  for (q = star + 3; *q; q++)
+  {
+    if (!isspace((unsigned char) *q))
+    {
+      return false;
+    }
+  }
+  return strtoul((char[3]){star[1], star[2], 0}, NULL, 16) == xor;
+}
+
 static int setParsedValues(RawMessage *m, unsigned int prio, unsigned int pgn, unsigned int dst, unsigned int src, unsigned int len)
 {
   m->prio = prio;
@@ -281,21 +309,10 @@ int parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson)
   }
 
   star = strchr(p, '*');
-  if (star && !parseIgnoreChecksum)
+  if (star && !parseIgnoreChecksum && !nmeaChecksumMatches(p, star))
   {
-    unsigned int  sum;
-    unsigned char xor = 0;
-    char         *q;
-
-    for (q = p + 1; q < star; q++)
-    {
-      xor ^= (unsigned char) *q;
-    }
-    if (sscanf(star + 1, "%2x", &sum) != 1 || sum != xor)
-    {
-      logError("$PCDIN checksum does not match: %s", msg);
-      return 2;
-    }
+    logError("$PCDIN checksum does not match: %s", msg);
+    return 2;
   }
 
   if (sscanf(p, "$PCDIN,%x,%x,%x,", &pgn, &tstamp, &src) < 3)
@@ -492,21 +509,10 @@ int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
   }
 
   star = strchr(p, '*');
-  if (star && !parseIgnoreChecksum)
+  if (star && !parseIgnoreChecksum && !nmeaChecksumMatches(p, star))
   {
-    unsigned int  sum;
-    unsigned char xor = 0;
-    char         *q;
-
-    for (q = p + 1; q < star; q++)
-    {
-      xor ^= (unsigned char) *q;
-    }
-    if (sscanf(star + 1, "%2x", &sum) != 1 || sum != xor)
-    {
-      logError("$MXPGN checksum does not match: %s", msg);
-      return 2;
-    }
+    logError("$MXPGN checksum does not match: %s", msg);
+    return 2;
   }
 
   pgn = (unsigned int) strtoul(p + 7, &end, 16);

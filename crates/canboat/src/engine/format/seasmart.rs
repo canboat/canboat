@@ -41,7 +41,9 @@ use std::fmt;
 
 use smallvec::SmallVec;
 
-use crate::engine::format::mxpgn::{is_nmea0183, nmea_checksum, without_tag_block};
+use crate::engine::format::mxpgn::{
+    checksum_matches, is_nmea0183, nmea_checksum, without_tag_block,
+};
 use crate::engine::format::plain::ParseError;
 use crate::engine::format::timestamp::days_to_ymd;
 use crate::engine::frame::{FASTPACKET_MAX_SIZE, RawFrame};
@@ -78,19 +80,14 @@ pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, Pa
         Some((body, sum)) => (body, Some(sum)),
         None => (&sentence[1..], None),
     };
-    if let Some(sum) = sum.filter(|_| checksum) {
-        let want = u8::from_str_radix(sum.trim(), 16).map_err(|_| ParseError::BadInteger {
+    if let Some(sum) = sum.filter(|_| checksum)
+        && !checksum_matches(body, sum)
+    {
+        return Err(ParseError::BadInteger {
             field: "checksum",
             value: sum.to_string(),
             offset: None,
-        })?;
-        if nmea_checksum(body) != want {
-            return Err(ParseError::BadInteger {
-                field: "checksum",
-                value: sum.to_string(),
-                offset: None,
-            });
-        }
+        });
     }
     let rest = &body["PCDIN,".len()..];
     let mut iter = rest.splitn(4, ',');
@@ -373,6 +370,13 @@ mod tests {
         ));
         let f = parse_sentence(wrong, false).unwrap().unwrap();
         assert_eq!((f.pgn, f.src), (127257, 15));
+        // Exactly two digits, and nothing after them but the line end, as
+        // canboat C requires.
+        for bad in ["*59JUNK", "*59 x", "*5", "*059"] {
+            let line = format!("$PCDIN,01F119,00000000,0F,2AAF00D1067414FF{bad}");
+            assert!(parse_line(&line).is_err(), "{line}");
+        }
+        assert!(parse_line("$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*59 \r\n").is_ok());
     }
 
     /// A Quark-elec gateway mixes other NMEA 0183 in: no message, and
