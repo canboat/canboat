@@ -75,6 +75,7 @@ const MAX_DEVICE_ADDRESS: u8 = 251;
 /// A device whose every date is stamped from a rolled-over clock, as
 /// named on the command line. See [`Device::from_str`] for the syntax.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Device {
     /// A source address (0–251). Simple, but a device may claim a
     /// different address after the next power cycle.
@@ -160,6 +161,7 @@ impl Device {
 
 /// Which dates the GPS rollover quirk corrects.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive]
 pub enum Target {
     /// Only dates a GNSS receiver produced: PGN 129029, 129033, and
     /// 126992 when its Source is GPS. `gps-rollover` with no argument.

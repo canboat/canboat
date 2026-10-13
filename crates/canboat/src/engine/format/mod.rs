@@ -34,6 +34,7 @@ use crate::engine::frame::RawFrame;
 /// One of the canboat-supported ASCII line formats.
 ///
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum InputFormat {
     /// Canboat PLAIN / FAST line (`<ts>,<prio>,<pgn>,...,<hex>,...`).
     /// Once any line is wider than 8 payload bytes the parser locks
@@ -71,6 +72,37 @@ pub enum InputFormat {
     /// shape (`<0x18eeff01> [8] 05 a0 …`). One raw CAN frame
     /// per line; canboat C reads these via `candump2analyzer`.
     Candump,
+}
+
+/// How the lines of an [`InputFormat`] carry a multi-frame message.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Framing {
+    /// Each line is one CAN frame, so a fast-packet arrives in its frames
+    /// and needs a [`Reassembler`](crate::engine::reassembly::Reassembler).
+    Single,
+    /// Each line is a whole message, already joined by the gateway.
+    Coalesced,
+    /// A line may be either. In PLAIN a line of other than 8 bytes is a
+    /// whole message, and an 8-byte line of a fast PGN is a frame unless
+    /// the stream is known to be coalesced.
+    Unknown,
+}
+
+impl InputFormat {
+    /// How this format's lines carry a multi-frame message; mirrors the
+    /// analyzer's `MULTIPACKETS_SEPARATE` and `MULTIPACKETS_COALESCED`.
+    pub fn framing(self) -> Framing {
+        match self {
+            InputFormat::Ydwg02 | InputFormat::Mxpgn | InputFormat::Candump => Framing::Single,
+            InputFormat::ActisenseAscii
+            | InputFormat::Ikonvert
+            | InputFormat::Airmar
+            | InputFormat::SeaSmart
+            | InputFormat::GarminCsv
+            | InputFormat::GarminCsv2 => Framing::Coalesced,
+            InputFormat::Plain | InputFormat::PlainMixFast => Framing::Unknown,
+        }
+    }
 }
 
 /// Parse a `# format=<NAME>` header comment line. Returns the
@@ -309,6 +341,31 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn framing_follows_the_analyzer() {
+        // analyzer.c's detectFormat sets MULTIPACKETS_SEPARATE for these.
+        for f in [
+            InputFormat::Ydwg02,
+            InputFormat::Mxpgn,
+            InputFormat::Candump,
+        ] {
+            assert_eq!(f.framing(), Framing::Single, "{f:?}");
+        }
+        for f in [
+            InputFormat::ActisenseAscii,
+            InputFormat::Ikonvert,
+            InputFormat::Airmar,
+            InputFormat::SeaSmart,
+            InputFormat::GarminCsv,
+            InputFormat::GarminCsv2,
+        ] {
+            assert_eq!(f.framing(), Framing::Coalesced, "{f:?}");
+        }
+        for f in [InputFormat::Plain, InputFormat::PlainMixFast] {
+            assert_eq!(f.framing(), Framing::Unknown, "{f:?}");
+        }
+    }
 
     #[test]
     fn detect_plain() {

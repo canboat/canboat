@@ -272,7 +272,7 @@ pub mod output {
 pub mod read {
     /// The ASCII line formats `PlainReader` (feature `io`) understands; pass
     /// one to `PlainReader::with_format` to skip autodetection.
-    pub use crate::engine::format::InputFormat;
+    pub use crate::engine::format::{Framing, InputFormat};
     pub use crate::engine::json_to_decoded as from_analyzer_json;
     pub use crate::engine::{Decoder, FrameSource};
 
@@ -532,8 +532,6 @@ pub mod codec {
     /// `!PDGY`, Airmar, SeaSmart `$PCDIN`, ShipModul `$MXPGN`, Garmin CSV. For a gateway that
     /// speaks one of them over a socket, or a capture read without the `io` feature.
     pub mod line {
-        /// Which dialect a line is in; the same type as `read::InputFormat`.
-        pub use crate::engine::format::InputFormat;
         /// Why a line did not parse.
         pub use crate::engine::format::PlainError as ParseError;
         /// Frame → an Actisense N2K ASCII (W2K-1) line.
@@ -549,6 +547,8 @@ pub mod codec {
         pub use crate::engine::format::parse_with as parse;
         /// Frame → a canboat PLAIN line.
         pub use crate::engine::format::plain::write_line as write_plain;
+        /// Which dialect a line is in; the same type as `read::InputFormat`.
+        pub use crate::engine::format::{Framing, InputFormat};
     }
 }
 
