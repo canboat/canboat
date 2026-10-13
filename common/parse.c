@@ -598,7 +598,7 @@ static int parsePsmd(char *msg, char *p, RawMessage *m)
                  &psmdnp.loadEquivalency)
               != 5
           || psmdnp.src > 255 || version < 0.0 || version * 1000.0 + 0.5 >= 65533.0 || psmdnp.productCode > 65532
-          || psmdnp.loadEquivalency > 252)
+          || psmdnp.certificationLevel > 255 || psmdnp.loadEquivalency > 252)
       {
         logError("Error reading $PSMDNP: %s", msg);
         return 2;

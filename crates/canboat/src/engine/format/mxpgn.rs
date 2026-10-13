@@ -321,11 +321,16 @@ impl Psmd {
                 if !(0.0..=65532.0).contains(&version_raw) {
                     return Err(bad("nmea2000Version", version));
                 }
+                // A lookup, so masked by the encoder: check its byte here.
+                let certification_level = int("certificationLevel", level)?;
+                if !(0..=255).contains(&certification_level) {
+                    return Err(bad("certificationLevel", level));
+                }
                 self.product = Some(Product {
                     src: src.trim().parse().map_err(|_| bad("src", src))?,
                     version: version_raw as u64,
                     product_code: int("productCode", code)?,
-                    certification_level: int("certificationLevel", level)?,
+                    certification_level,
                     load_equivalency: int("loadEquivalency", load)?,
                     model: None,
                 });
@@ -607,6 +612,8 @@ mod tests {
             "$PSMDNP,A,1,-1.000,26884,2,0",
             "$PSMDNP,A,1,2.000,65533,2,0",
             "$PSMDNP,A,1,2.000,26884,2,253",
+            "$PSMDNP,A,1,2.000,26884,-1,0",
+            "$PSMDNP,A,1,2.000,26884,256,0",
         ] {
             let mut psmd = Psmd::default();
             let product = psmd.push(a, false).and_then(|_| {
