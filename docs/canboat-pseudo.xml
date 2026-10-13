@@ -2315,10 +2315,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>PGN</FieldType>
         </Field>
         <Field>
           <Order>4</Order>

@@ -2311,10 +2311,7 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
-            "FieldType":"NUMBER"
+            "FieldType":"PGN"
           },
           {
             "Order":4,

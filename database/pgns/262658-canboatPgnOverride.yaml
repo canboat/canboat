@@ -14,7 +14,7 @@ fields:
   description: N2K source address of the device the override targets
 - id: pgn
   name: PGN
-  type: NUMBER
+  type: PGN
   bits: 24
   rangeMin: 0.0
   rangeMax: 262143.0

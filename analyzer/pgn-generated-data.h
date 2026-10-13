@@ -11321,7 +11321,7 @@ Pgn pgnList[] = {
      {
       {.name = "Function", .camelName = "function", .fieldType = "UINT8", .resolution = 1.0, .description = "0=Report (server->tui), 1=Set, 2=Request, 3=Delete (tui->server)"},
       {.name = "Source", .camelName = "source", .fieldType = "ADDRESS", .resolution = 1.0, .description = "N2K source address of the device the override targets", .reservedOverride = 1},
-      {.name = "PGN", .camelName = "pgn", .fieldType = "NUMBER", .size = 24, .resolution = 1.0, .description = "Commanded PGN whose transmission interval is overridden", .rangeMin = 0.0, .rangeMax = 262143.0},
+      {.name = "PGN", .camelName = "pgn", .fieldType = "PGN", .size = 24, .description = "Commanded PGN whose transmission interval is overridden", .rangeMin = 0.0, .rangeMax = 262143.0},
       {.name = "Interval", .camelName = "intervalMs", .fieldType = "UINT32", .resolution = 1.0, .description = "Requested transmission interval in ms; 0 = stop transmitting"},
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "UINT16", .resolution = 1.0, .description = "For proprietary PGNs; 0xffff = not applicable"},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "UINT8", .resolution = 1.0, .description = "For proprietary PGNs; 0xff = not applicable"}
