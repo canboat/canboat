@@ -481,6 +481,171 @@ static int hexDigit(char c)
  * Returns 0 for a frame, 1 for another NMEA 0183 sentence (a MiniPlex mixes them
  * in), 2 for a malformed $MXPGN sentence.
  */
+/*
+ * The NMEA 2000 network management a ShipModul MiniPlex sends as its own
+ * sentences, never as $MXPGN ("MiniPlex-3 NMEA and Proprietary Sentences",
+ * FW V3.40.0, pp. 25-29):
+ *
+ *   $PSMDNC,R,<NAME, 16 hex digits>,<source>              PGN 60928
+ *   $PSMDNP,A,<source>,<version>,<product code>,<certification level>,<load>
+ *   $PSMDNP,B,<model ID>,<serial code>                    PGN 126996, in
+ *   $PSMDNP,C,<software version>,<model version>          three parts
+ *
+ * The parts of $PSMDNP arrive in order, and only A names the source. A
+ * software version may hold a comma (an NGT-1's is "1.100, 2.690"): the last
+ * field of B and C is the second, the rest the first. Mirrors mxpgn::Psmd in
+ * the Rust crate.
+ */
+static struct
+{
+  bool         haveA;
+  bool         haveB;
+  unsigned int src;
+  unsigned int version;
+  unsigned int productCode;
+  unsigned int certificationLevel;
+  unsigned int loadEquivalency;
+  char         model[33];
+  char         serial[33];
+} psmdnp;
+
+/* A fixed 32-byte string of PGN 126996, padded with 0xff. */
+static void putStringFix(uint8_t *data, const char *text)
+{
+  size_t len = strlen(text);
+
+  if (len > 32)
+  {
+    len = 32;
+  }
+  memcpy(data, text, len);
+  memset(data + len, 0xff, 32 - len);
+}
+
+/* Copy `src` to `dst` (size `size`), cut short to fit. */
+static void copyField(char *dst, size_t size, const char *src)
+{
+  snprintf(dst, size, "%s", src);
+}
+
+/*
+ * The $PSMDNC or $PSMDNP sentence `p` (its '$', behind any TAG block): 0 with
+ * the message in `m` once one is complete, 1 for none (yet), 2 for an error.
+ */
+static int parsePsmd(char *msg, char *p, RawMessage *m)
+{
+  char         body[256];
+  char        *star = strchr(p, '*');
+  char        *last;
+  char         now[DATE_LENGTH];
+  size_t       len;
+  bool         isNc = strncmp(p, "$PSMDNC,", 8) == 0;
+  uint64_t     name;
+  unsigned int src;
+  char         flag;
+  char         nameHex[17];
+
+  if (star && !parseIgnoreChecksum && !nmeaChecksumMatches(p, star))
+  {
+    logError("$PSMD checksum does not match: %s", msg);
+    return 2;
+  }
+  // The fields after "$PSMDNx,", up to the checksum or the line end.
+  len = star ? (size_t) (star - p) : strcspn(p, "\r\n");
+  if (len < 8 || len - 8 >= sizeof(body))
+  {
+    return 1;
+  }
+  memcpy(body, p + 8, len - 8);
+  body[len - 8] = 0;
+
+  snprintf(m->timestamp, sizeof(m->timestamp), "%s", fmtNow(now));
+
+  if (isNc)
+  {
+    int i;
+
+    if (body[0] == 'C' && body[1] == ',')
+    {
+      return 1; // a command, setting another device's address: no claim
+    }
+    if (sscanf(body, "%c,%16[0-9A-Fa-f],%u", &flag, nameHex, &src) != 3 || flag != 'R' || strlen(nameHex) != 16 || src > 255)
+    {
+      logError("Error reading $PSMDNC: %s", msg);
+      return 2;
+    }
+    name = strtoull(nameHex, NULL, 16);
+    for (i = 0; i < 8; i++) // the NAME goes on the bus least significant byte first
+    {
+      m->data[i] = (uint8_t) (name >> (8 * i));
+    }
+    return setParsedValues(m, 6, 60928, 255, src, 8);
+  }
+
+  switch (body[0])
+  {
+    case 'A':
+    {
+      double version;
+
+      psmdnp.haveA = psmdnp.haveB = false;
+      if (sscanf(body,
+                 "A,%u,%lf,%u,%u,%u",
+                 &psmdnp.src,
+                 &version,
+                 &psmdnp.productCode,
+                 &psmdnp.certificationLevel,
+                 &psmdnp.loadEquivalency)
+              != 5
+          || psmdnp.src > 255)
+      {
+        logError("Error reading $PSMDNP: %s", msg);
+        return 2;
+      }
+      psmdnp.version = (unsigned int) (version * 1000.0 + 0.5);
+      psmdnp.haveA   = true;
+      return 1;
+    }
+
+    case 'B':
+    case 'C':
+      last = strrchr(body, ',');
+      if (body[1] != ',' || !last || last == body + 1)
+      {
+        logError("Error reading $PSMDNP: %s", msg);
+        return 2;
+      }
+      *last = 0;
+      if (body[0] == 'B')
+      {
+        copyField(psmdnp.model, sizeof(psmdnp.model), body + 2);
+        copyField(psmdnp.serial, sizeof(psmdnp.serial), last + 1);
+        psmdnp.haveB = psmdnp.haveA;
+        return 1;
+      }
+      if (!psmdnp.haveB)
+      {
+        psmdnp.haveA = false; // the parts before it were missed
+        return 1;
+      }
+      m->data[0] = (uint8_t) psmdnp.version;
+      m->data[1] = (uint8_t) (psmdnp.version >> 8);
+      m->data[2] = (uint8_t) psmdnp.productCode;
+      m->data[3] = (uint8_t) (psmdnp.productCode >> 8);
+      putStringFix(m->data + 4, psmdnp.model);
+      putStringFix(m->data + 36, body + 2);
+      putStringFix(m->data + 68, last + 1);
+      putStringFix(m->data + 100, psmdnp.serial);
+      m->data[132]  = (uint8_t) psmdnp.certificationLevel;
+      m->data[133]  = (uint8_t) psmdnp.loadEquivalency;
+      psmdnp.haveA = psmdnp.haveB = false;
+      return setParsedValues(m, 6, 126996, 255, psmdnp.src, 134);
+
+    default:
+      return 1;
+  }
+}
+
 int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
 {
   char        *p = msg;
@@ -502,6 +667,10 @@ int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
       return 1;
     }
     p++;
+  }
+  if (strncmp(p, "$PSMDNC,", 8) == 0 || strncmp(p, "$PSMDNP,", 8) == 0)
+  {
+    return parsePsmd(msg, p, m);
   }
   if (p[0] != '$' || strlen(p) < 7 || strncmp(p + 3, "PGN,", 4) != 0)
   {

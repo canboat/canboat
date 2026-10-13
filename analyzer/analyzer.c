@@ -641,7 +641,8 @@ static enum RawFormats detectFormat(const char *const msg)
     p = strchr(p + 1, '\\');
     p = p ? p + 1 : msg;
   }
-  if (p[0] == '$' && strlen(p) > 7 && strncmp(p + 3, "PGN,", 4) == 0)
+  if ((p[0] == '$' && strlen(p) > 7 && strncmp(p + 3, "PGN,", 4) == 0) || strncmp(p, "$PSMDNC,", 8) == 0
+      || strncmp(p, "$PSMDNP,", 8) == 0)
   {
     logInfo("Detected ShipModul MiniPlex $MXPGN protocol with one line per frame\n");
     multiPackets = MULTIPACKETS_SEPARATE;
@@ -653,6 +654,13 @@ static enum RawFormats detectFormat(const char *const msg)
     logInfo("Detected SeaSmart ($PCDIN) protocol with all data on one line\n");
     multiPackets = MULTIPACKETS_COALESCED;
     return RAWFORMAT_SEASMART;
+  }
+
+  if (isNmea0183(p))
+  {
+    // Another NMEA 0183 sentence ($GPRMC, $PSMDSTAT, ...): no frame, and not
+    // a PLAIN or FAST line, however its commas fall.
+    return RAWFORMAT_UNKNOWN;
   }
 
   if (strcmp(msg, "Sequence #,Timestamp,PGN,Name,Manufacturer,Remote Address,Local Address,Priority,Single Frame,Size,Packet\n")

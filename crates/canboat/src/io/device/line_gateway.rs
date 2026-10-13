@@ -102,6 +102,8 @@ pub struct Decoder {
     sent: Sent,
     /// Whether a `$PCDIN` or `$MXPGN` sentence's checksum is checked.
     checksum: bool,
+    /// A MiniPlex's Address Claims and Product Information.
+    psmd: mxpgn::Psmd,
 }
 
 impl Decoder {
@@ -118,6 +120,7 @@ impl Decoder {
             reassembler: Reassembler::new(),
             sent: Sent::default(),
             checksum: true,
+            psmd: mxpgn::Psmd::default(),
         }
     }
 
@@ -188,8 +191,17 @@ impl DeviceDecoder for Decoder {
                 }
                 LineFormat::Mxpgn => match mxpgn::parse_sentence(&line, self.checksum) {
                     Ok(Some(frame)) => self.push_frame(frame, &now, events),
-                    // The NMEA 0183 a MiniPlex mixes in.
-                    Ok(None) => {}
+                    // The NMEA 0183 a MiniPlex mixes in, among which its
+                    // Address Claims and Product Information: whole
+                    // messages, which need no joining.
+                    Ok(None) => match self.psmd.push(&line, self.checksum) {
+                        Ok(Some(mut message)) => {
+                            message.timestamp = Some(now.clone());
+                            events.push(DeviceEvent::Frame(message));
+                        }
+                        Ok(None) => {}
+                        Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
+                    },
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
                 LineFormat::SeaSmart => match seasmart::parse_sentence(&line, self.checksum) {
@@ -272,6 +284,13 @@ impl DeviceEncoder for Encoder {
             return None;
         }
         let mut out = String::with_capacity(64);
+        if self.format == LineFormat::Mxpgn
+            && let Some(pgn) = miniplex_request(frame)
+        {
+            // Its answers come as `$PSMDNC` / `$PSMDNP` only for a request
+            // the MiniPlex made itself.
+            return Some(mxpgn::request(pgn, frame.dst).into_bytes());
+        }
         match self.format {
             LineFormat::N2kAscii => {
                 actisense_ascii::write_line(&mut out, frame).ok()?;
@@ -355,6 +374,31 @@ impl DeviceEncoder for Encoder {
 /// "MiniPlex-3 NMEA and Proprietary Sentences", `$PSMDNO`). Address
 /// Claims and Product Information still come as `$PSMDNC` and `$PSMDNP`.
 pub const MINIPLEX_MXPGN_ALL: &[u8] = b"$PSMDNO,C,30,0*57\r\n$PSMDNO,C,31,1*57\r\n";
+
+/// [`MINIPLEX_MXPGN_ALL`], then a request for every device's Address Claim
+/// and Product Information (`$PSMDNR`), so that the devices on the bus are
+/// known from the start. The MiniPlex passes on Product Information only
+/// for a request it made.
+pub fn miniplex_init() -> Vec<u8> {
+    let mut init = MINIPLEX_MXPGN_ALL.to_vec();
+    for pgn in MINIPLEX_REQUESTED {
+        init.extend_from_slice(mxpgn::request(pgn, 255).as_bytes());
+    }
+    init
+}
+
+/// The PGNs a MiniPlex answers requests for with its own sentences.
+const MINIPLEX_REQUESTED: [u32; 2] = [60928, 126996];
+
+/// The PGN `frame` requests, if it is an ISO Request (59904) for one that
+/// a MiniPlex must request itself ([`MINIPLEX_REQUESTED`]).
+fn miniplex_request(frame: &RawFrame) -> Option<u32> {
+    let [a, b, c, ..] = frame.data[..] else {
+        return None;
+    };
+    let pgn = u32::from_le_bytes([a, b, c, 0]);
+    (frame.pgn == 59904 && MINIPLEX_REQUESTED.contains(&pgn)).then_some(pgn)
+}
 
 /// What a Yacht Devices USB gateway (YDNU-02) is sent when its serial
 /// port opens, to put it in RAW mode, as canboatjs does: `0` and a line
@@ -579,6 +623,41 @@ mod tests {
             assert_eq!(out.len(), 1, "{format:?}");
             assert_eq!(out[0].pgn, pgn);
         }
+    }
+
+    /// A MiniPlex's Address Claims and Product Information come through
+    /// whole; canboat asks it for them on connect, and an ISO Request for
+    /// one goes as the MiniPlex's own request.
+    #[test]
+    fn miniplex_devices_are_read_and_requested() {
+        let mut dec = Decoder::new(LineFormat::Mxpgn);
+        let out = decode_all(
+            &mut dec,
+            "$PSMDNC,R,C032870022220839,7*31\r\n\
+             $PSMDNP,A,7,2.100,11369,2,1*70\r\n\
+             $PSMDNP,B,NMEA 2000<->0183 Gateway (NGW-1),133177*61\r\n\
+             $PSMDNP,C,1.100, 2.660,NGW-1-USB  hv1.03*5C\r\n",
+        );
+        let got: Vec<_> = out.iter().map(|f| (f.pgn, f.src, f.data.len())).collect();
+        assert_eq!(got, [(60928, 7, 8), (126996, 7, 134)]);
+        assert!(out.iter().all(|f| f.timestamp.is_some()));
+
+        let init = String::from_utf8(miniplex_init()).unwrap();
+        assert!(
+            init.ends_with("$PSMDNR,60928*0F\r\n$PSMDNR,126996*39\r\n"),
+            "{init}"
+        );
+
+        let enc = Encoder::new(LineFormat::Mxpgn);
+        let ask = |pgn: u32, dst: u8| {
+            let [a, b, c, _] = pgn.to_le_bytes();
+            let request = RawFrame::new(None, 6, 59904, 0, dst, [a, b, c]);
+            String::from_utf8(enc.encode_frame(&request).unwrap()).unwrap()
+        };
+        assert_eq!(ask(126996, 255), "$PSMDNR,126996*39\r\n");
+        assert!(ask(60928, 7).starts_with("$PSMDNR,60928,7*"));
+        // Any other request goes on the bus as it is.
+        assert!(ask(126998, 7).starts_with("$MXPGN,00EA00,"));
     }
 
     #[test]

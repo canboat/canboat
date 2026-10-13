@@ -168,7 +168,7 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     if t.is_empty() || t.starts_with('#') {
         return None;
     }
-    if mxpgn::is_mxpgn(t) {
+    if mxpgn::is_mxpgn(t) || mxpgn::is_psmd(t) {
         return Some(InputFormat::Mxpgn);
     }
     if t.starts_with("!PDGY,") || t.starts_with("$PDGY,") {
