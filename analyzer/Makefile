@@ -35,6 +35,8 @@ JSON2FILE_J1939=../docs/canboat-j1939.json
 HTML2FILE_J1939=../docs/canboat-j1939.html
 XML2FILE_QUICK=../docs/canboat-quick.xml
 JSON2FILE_QUICK=../docs/canboat-quick.json
+XML2FILE_PSEUDO=../docs/canboat-pseudo.xml
+JSON2FILE_PSEUDO=../docs/canboat-pseudo.json
 HTML2FILE_QUICK=../docs/canboat-quick.html
 GENERATED_DATA=pgn-generated-data.h physicalquantity-generated-data.h fieldtype-generated-data.h
 HEADERS=analyzer.h pgn.h lookup-generated-data.h fieldtype.h $(GENERATED_DATA)
@@ -68,6 +70,7 @@ keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 	xmllint --schema $(XSD2FILE) $(XML2FILE_J1939) --noout
 	xmllint --schema $(XSD2FILE) $(XML2FILE_QUICK) --noout
+	xmllint --schema $(XSD2FILE) $(XML2FILE_PSEUDO) --noout
 
 $(XML2FILE): keel-generate
 
@@ -100,11 +103,17 @@ $(JSON2FILE_QUICK): keel-generate canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE_QUICK) >$(@)
 	python3 validate-json.py --range --allow-utf8 $(@)
 
+# canboat's pseudo-PGNs (0x40000 and up), which the documents above leave
+# out: a JSON document only, as the HTML page's text is about a bus.
+$(JSON2FILE_PSEUDO): keel-generate canboat2json.xslt validate-json.py
+	xsltproc canboat2json.xslt $(XML2FILE_PSEUDO) >$(@)
+	python3 validate-json.py --range $(@)
+
 validation: $(JSON2FILE) $(NMEA_JSONFILE) $(RECONCILE)
 	python3 $(RECONCILE) --canboat $(JSON2FILE) --nmea $(NMEA_JSONFILE) --check
 	
 
-generated: validation $(JSON2FILE) $(HTML2FILE) $(JSON2FILE_J1939) $(HTML2FILE_J1939) $(JSON2FILE_QUICK) $(HTML2FILE_QUICK)
+generated: validation $(JSON2FILE) $(HTML2FILE) $(JSON2FILE_J1939) $(HTML2FILE_J1939) $(JSON2FILE_QUICK) $(HTML2FILE_QUICK) $(JSON2FILE_PSEUDO)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

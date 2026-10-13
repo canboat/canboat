@@ -446,6 +446,18 @@ impl Database {
         }
     }
 
+    /// The enumerations `pgns` name, with those their fieldtype-lookup
+    /// entries name in turn: the lookups a document of just these PGNs holds.
+    pub fn lookups_used_by<'p>(&self, pgns: impl IntoIterator<Item = &'p Pgn>) -> HashSet<String> {
+        let used = pgns
+            .into_iter()
+            .flat_map(|p| p.fields.iter())
+            .filter_map(|f| f.lookup_ref())
+            .map(|(_, n)| n.to_string())
+            .collect();
+        self.with_nested_lookups(used)
+    }
+
     pub fn lookups_used(&self, protocol: Protocol) -> HashSet<String> {
         fn names<'p>(pgns: impl IntoIterator<Item = &'p Pgn>) -> Vec<String> {
             pgns.into_iter()
@@ -469,7 +481,12 @@ impl Database {
             );
         }
 
-        // Close over nested lookups named by fieldtype-lookup entries.
+        self.with_nested_lookups(used)
+    }
+
+    /// `used`, closed over the nested lookups named by fieldtype-lookup
+    /// entries.
+    fn with_nested_lookups(&self, mut used: HashSet<String>) -> HashSet<String> {
         loop {
             let nested: Vec<String> = used
                 .iter()

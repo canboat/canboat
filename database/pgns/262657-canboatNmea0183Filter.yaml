@@ -6,8 +6,7 @@ explanation: Control channel for the NMEA 0183 sentence filter. Carried only on 
 fields:
 - id: function
   name: Function
-  type: NUMBER
-  bits: 8
+  type: UINT8
   description: 0=Report (pipeline->tui), 1=Set (tui->pipeline)
 - id: source
   name: Source
@@ -20,8 +19,7 @@ fields:
   description: 3-letter NMEA 0183 formatter, or 'ALL' for the whole source
 - id: muted
   name: Muted
-  type: NUMBER
-  bits: 8
+  type: UINT8
   description: 0=active (emitting), 1=muted
 - id: reserved
   name: Reserved

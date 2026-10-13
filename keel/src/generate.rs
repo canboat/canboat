@@ -50,6 +50,10 @@ pub fn emit_artifacts(
     }
     out.extend([
         (
+            root.join("docs/canboat-pseudo.xml"),
+            emit_xml::emit_pseudo_xml(db),
+        ),
+        (
             root.join("analyzer/physicalquantity-generated-data.h"),
             emit_c::emit_physicalquantity_data_h(db),
         ),

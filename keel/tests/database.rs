@@ -108,6 +108,32 @@ fn generated_artifacts_are_up_to_date() {
     );
 }
 
+/// canboat's pseudo-PGNs are in their own document and in no protocol's:
+/// every PGN of 0x40000 and up in the one, none in the others (#992).
+#[test]
+fn pseudo_pgns_have_a_document_of_their_own() {
+    let (_root, db, _authored) = load();
+    let pgns = |xml: &str| -> Vec<u32> {
+        xml.match_indices("<PGN>")
+            .map(|(i, _)| {
+                let rest = &xml[i + 5..];
+                rest[..rest.find('<').unwrap()].parse().unwrap()
+            })
+            .collect()
+    };
+    let pseudo = emit_xml::emit_pseudo_xml(&db);
+    assert!(pseudo.contains("<Protocol>pseudo</Protocol>"));
+    let in_pseudo = pgns(&pseudo);
+    let expected = db.pgns.iter().filter(|p| p.pgn >= 0x40000).count();
+    assert_eq!(in_pseudo.len(), expected);
+    assert!(in_pseudo.iter().all(|&p| p >= 0x40000));
+    assert!(in_pseudo.contains(&262386), "Actisense: System status");
+    for protocol in Protocol::ALL {
+        let doc = pgns(&emit_xml::emit_xml(&db, protocol));
+        assert!(doc.iter().all(|&p| p < 0x40000), "{protocol:?}");
+    }
+}
+
 /// Emission is a pure function of the database: emitting twice gives the
 /// same bytes. A `HashMap` iterated without sorting would show up here.
 #[test]
