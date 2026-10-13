@@ -135,6 +135,20 @@ fn mxpgn_frames_become_whole_seasmart_messages() {
     assert!(back.contains(",0,129029,36,255,43,e6,f1,3a,80,"), "{back}");
 }
 
+/// A wrong checksum drops the sentence, unless --ignore-checksum.
+#[test]
+fn ignore_checksum_takes_a_wrong_one() {
+    let wrong = b"$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21\n";
+    let out = run(&["convert", "--from", "seasmart", "--to", "plain"], wrong);
+    assert!(out.is_empty(), "{}", String::from_utf8_lossy(&out));
+    let out = run(&["convert", "--to", "plain", "--ignore-checksum"], wrong);
+    let out = String::from_utf8(out).unwrap();
+    assert!(
+        out.contains(",0,127257,15,255,8,2a,af,00,d1,06,74,14,ff"),
+        "{out}"
+    );
+}
+
 #[test]
 fn actisense_round_trips_to_plain() {
     let acti = run(&["convert", "--to", "actisense"], PLAIN);

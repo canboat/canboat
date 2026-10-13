@@ -351,6 +351,7 @@ Options only some gateways take:
   --mode              actisense (ngt-actisense)
   --password          maretron
   --no-tx-rate-limit  ikonvert
+  --ignore-checksum   seasmart, miniplex
   --bitrate           socketcan, canalyst, usb-can-a
   --channel           canalyst
   node options        socketcan, canalyst, usb-can-a, aos
@@ -422,6 +423,11 @@ pub struct DeviceArgs {
         help_heading = SPECIFIC
     )]
     pub no_tx_rate_limit: bool,
+
+    /// seasmart, miniplex: accept $PCDIN or $MXPGN sentences whose checksum
+    /// is wrong, as some gateways may send them.
+    #[arg(long, help_heading = SPECIFIC)]
+    pub ignore_checksum: bool,
 
     /// PGNs the application receives, to advertise; never a filter.
     ///
@@ -548,6 +554,7 @@ impl DeviceArgs {
             Kind::Socketcan => &["bitrate", "node", "no-claim"],
             Kind::Canalyst => &["bitrate", "channel", "node", "no-claim"],
             Kind::UsbCanA => &["bitrate", "node", "no-claim"],
+            Kind::Gateway(GatewayKind::SeaSmart | GatewayKind::Miniplex) => &["ignore-checksum"],
             _ => &[],
         };
         let why = if kind == Kind::Ngt1 {
@@ -572,6 +579,7 @@ impl DeviceArgs {
                 "--no-tx-rate-limit",
                 self.no_tx_rate_limit,
             ),
+            ("ignore-checksum", "--ignore-checksum", self.ignore_checksum),
             ("node", "--address", self.address.is_some()),
             ("no-claim", "--no-claim", self.no_claim),
             ("node", "--unique", self.unique.is_some()),
@@ -702,6 +710,18 @@ mod tests {
         assert!(
             parse(&["--channel", "1"])
                 .check(Some(Kind::Socketcan))
+                .is_err()
+        );
+        for kind in [GatewayKind::SeaSmart, GatewayKind::Miniplex] {
+            assert!(
+                parse(&["--ignore-checksum"])
+                    .check(Some(Kind::Gateway(kind)))
+                    .is_ok()
+            );
+        }
+        assert!(
+            parse(&["--ignore-checksum"])
+                .check(Some(Kind::Gateway(GatewayKind::YachtDevices)))
                 .is_err()
         );
         assert!(parse(&["--mode", "normal"]).check(Some(Kind::Ngt1)).is_ok());

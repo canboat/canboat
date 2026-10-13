@@ -229,6 +229,10 @@ pub struct Args {
     #[arg(long, value_enum, default_value_t = OutFormat::Json)]
     to: OutFormat,
 
+    /// Accept $PCDIN and $MXPGN sentences whose checksum is wrong.
+    #[arg(long)]
+    ignore_checksum: bool,
+
     /// Filter: only emit frames with this source address.
     #[arg(long, value_name = "N")]
     src: Option<u8>,
@@ -430,7 +434,8 @@ fn convert_raw<W: Write>(
             Some(fmt) => LineFrameReader::with_format(source, fmt),
             None => LineFrameReader::new(source),
         }
-        .protocol(protocol);
+        .protocol(protocol)
+        .ignore_checksum(args.ignore_checksum);
         // MXPGN splits a fast-packet into its frames itself, and SeaSmart
         // carries it whole, so both need whole messages; the binary
         // readers above join them already.
@@ -557,6 +562,7 @@ fn convert_decoded<W: Write>(
         units: args.shape.units(),
         protocol,
         fixed_time: None,
+        ignore_checksum: args.ignore_checksum,
     };
 
     let mut line = String::with_capacity(512);

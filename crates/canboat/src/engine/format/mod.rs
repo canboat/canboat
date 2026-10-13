@@ -294,11 +294,24 @@ pub fn parse_for(
     protocol: crate::engine::BusProtocol,
     line: &str,
 ) -> Result<Option<RawFrame>, plain::ParseError> {
+    parse_checked(format, protocol, line, true)
+}
+
+/// [`parse_for`], checking the NMEA 0183 checksum of a `$PCDIN` or
+/// `$MXPGN` sentence only if `checksum` is set.
+pub(crate) fn parse_checked(
+    format: InputFormat,
+    protocol: crate::engine::BusProtocol,
+    line: &str,
+    checksum: bool,
+) -> Result<Option<RawFrame>, plain::ParseError> {
     let standard = protocol.standard_frames();
     match format {
         InputFormat::Candump => candump::parse_line_for(line, standard),
         InputFormat::Plain | InputFormat::PlainMixFast => parse_with(format, line),
         _ if standard => Ok(None),
+        InputFormat::SeaSmart => seasmart::parse_sentence(line, checksum),
+        InputFormat::Mxpgn => mxpgn::parse_sentence(line, checksum),
         _ => parse_with(format, line),
     }
 }

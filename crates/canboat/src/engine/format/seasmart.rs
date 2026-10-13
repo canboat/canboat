@@ -55,6 +55,13 @@ pub fn is_pcdin(line: &str) -> bool {
 /// 0183 sentence (a Quark-elec gateway mixes them in), or an error for a
 /// malformed one, or one whose checksum does not match.
 pub fn parse_line(line: &str) -> Result<Option<RawFrame>, ParseError> {
+    parse_sentence(line, true)
+}
+
+/// [`parse_line`], checking the checksum only if `checksum` is set: some
+/// sources write a wrong one (the examples in Quark-elec's manuals,
+/// Chetco's own switch page).
+pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, ParseError> {
     let line = line.trim();
     if line.is_empty() {
         return Err(ParseError::Empty);
@@ -71,7 +78,7 @@ pub fn parse_line(line: &str) -> Result<Option<RawFrame>, ParseError> {
         Some((body, sum)) => (body, Some(sum)),
         None => (&sentence[1..], None),
     };
-    if let Some(sum) = sum {
+    if let Some(sum) = sum.filter(|_| checksum) {
         let want = u8::from_str_radix(sum.trim(), 16).map_err(|_| ParseError::BadInteger {
             field: "checksum",
             value: sum.to_string(),
@@ -356,13 +363,16 @@ mod tests {
                 &[0x2a, 0xaf, 0x00, 0xd1, 0x06, 0x74, 0x14, 0xff]
             );
         }
+        let wrong = "$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21";
         assert!(matches!(
-            parse_line("$PCDIN,01F119,00000000,0F,2AAF00D1067414FF*21"),
+            parse_line(wrong),
             Err(ParseError::BadInteger {
                 field: "checksum",
                 ..
             })
         ));
+        let f = parse_sentence(wrong, false).unwrap().unwrap();
+        assert_eq!((f.pgn, f.src), (127257, 15));
     }
 
     /// A Quark-elec gateway mixes other NMEA 0183 in: no message, and

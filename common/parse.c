@@ -22,6 +22,8 @@ limitations under the License.
 
 #include <parse.h>
 
+bool parseIgnoreChecksum = false;
+
 static char *findOccurrence(char *msg, char c, int count)
 {
   int   i;
@@ -279,7 +281,7 @@ int parseRawFormatSeaSmart(char *msg, RawMessage *m, bool showJson)
   }
 
   star = strchr(p, '*');
-  if (star)
+  if (star && !parseIgnoreChecksum)
   {
     unsigned int  sum;
     unsigned char xor = 0;
@@ -490,7 +492,7 @@ int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
   }
 
   star = strchr(p, '*');
-  if (star)
+  if (star && !parseIgnoreChecksum)
   {
     unsigned int  sum;
     unsigned char xor = 0;

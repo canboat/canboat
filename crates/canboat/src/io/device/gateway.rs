@@ -122,11 +122,13 @@ pub struct Gateway {
 }
 
 /// Open `gateway` and start its codec. `baud`, for a serial port, defaults
-/// to [`GatewayKind::default_baud`].
+/// to [`GatewayKind::default_baud`]. `ignore_checksum` accepts `$PCDIN` and
+/// `$MXPGN` sentences whose checksum is wrong.
 pub(crate) fn open(
     gateway: &Gateway,
     baud: Option<u32>,
     protocol: BusProtocol,
+    ignore_checksum: bool,
 ) -> io::Result<DeviceHandle> {
     let device = gateway.device.as_str();
     let network = ["tcp://", "udp://"].iter().any(|p| device.starts_with(p));
@@ -161,6 +163,7 @@ pub(crate) fn open(
                 line_gateway::LineFormat::YdwgRaw,
                 protocol,
                 init,
+                ignore_checksum,
             )
         }
         GatewayKind::Miniplex => {
@@ -183,6 +186,7 @@ pub(crate) fn open(
                 line_gateway::LineFormat::Mxpgn,
                 protocol,
                 line_gateway::MINIPLEX_MXPGN_ALL,
+                ignore_checksum,
             )
         }
         GatewayKind::SeaSmart => {
@@ -197,6 +201,7 @@ pub(crate) fn open(
                 line_gateway::LineFormat::SeaSmart,
                 protocol,
                 &[],
+                ignore_checksum,
             )
         }
         GatewayKind::Actisense(ActisenseFormat::RawAscii) => {
@@ -207,6 +212,7 @@ pub(crate) fn open(
                 line_gateway::LineFormat::YdwgRaw,
                 protocol,
                 &[],
+                ignore_checksum,
             )
         }
         GatewayKind::Actisense(ActisenseFormat::N2kAscii) => {
@@ -217,6 +223,7 @@ pub(crate) fn open(
                 line_gateway::LineFormat::N2kAscii,
                 protocol,
                 &[],
+                ignore_checksum,
             )
         }
         GatewayKind::Actisense(ActisenseFormat::N2kActisense) => {
@@ -250,7 +257,7 @@ mod tests {
                 kind,
                 device: "udp://192.0.2.1:60002".into(),
             };
-            let Err(e) = open(&gateway, None, BusProtocol::Nmea2000) else {
+            let Err(e) = open(&gateway, None, BusProtocol::Nmea2000, false) else {
                 panic!("{kind:?} opened over UDP");
             };
             assert_eq!(e.kind(), io::ErrorKind::InvalidInput, "{e}");

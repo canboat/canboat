@@ -70,6 +70,11 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   Chetco's port is 10001; give the port of the others (Quark-elec 2000, Yacht
   Devices 1456 by default). Received messages get the host's time: the
   sentence's own time stamp is no clock time.
+- **seasmart, miniplex:** a sentence whose checksum is wrong is dropped, with
+  an error. Some sources write wrong ones (the examples in Quark-elec's
+  manuals, Chetco's own switch page): `--ignore-checksum` takes them anyway,
+  as do `canboat convert --ignore-checksum` and `analyzer -ignore-checksum`
+  for a capture.
 - An option only some gateways have (`--bitrate`, `--channel`, `--password`,
   `--mode`, the ISO NAME options) says which in `--help`, and is refused for
   the others.

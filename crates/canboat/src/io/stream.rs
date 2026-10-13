@@ -33,7 +33,7 @@ use crate::engine::format::ebl::{
 use crate::engine::format::plain::write_line as write_plain;
 use crate::engine::format::ydwg02::write_line as write_ydwg02;
 use crate::engine::format::{
-    InputFormat, detect, header_implies_coalesced, is_undecided, parse_for, parse_format_header,
+    InputFormat, detect, header_implies_coalesced, is_undecided, parse_checked, parse_format_header,
 };
 
 /// Pull-based source of [`RawFrame`]s — the engine
@@ -97,6 +97,8 @@ pub struct LineFrameReader<R: BufRead> {
     protocol: crate::engine::BusProtocol,
     /// NMEA 0183 lines skipped while the format is still open.
     undecided: usize,
+    /// Whether a `$PCDIN` or `$MXPGN` sentence's checksum is checked.
+    checksum: bool,
 }
 
 /// How many leading NMEA 0183 lines that hold no frame leave the format
@@ -113,6 +115,7 @@ impl<R: BufRead> LineFrameReader<R> {
             header_coalesced: false,
             protocol: crate::engine::BusProtocol::Nmea2000,
             undecided: 0,
+            checksum: true,
         }
     }
 
@@ -125,6 +128,7 @@ impl<R: BufRead> LineFrameReader<R> {
             header_coalesced: false,
             protocol: crate::engine::BusProtocol::Nmea2000,
             undecided: 0,
+            checksum: true,
         }
     }
 
@@ -133,6 +137,12 @@ impl<R: BufRead> LineFrameReader<R> {
     /// 11-bit ones on Quick, 29-bit ISO 11783 ones otherwise.
     pub fn protocol(mut self, protocol: crate::engine::BusProtocol) -> Self {
         self.protocol = protocol;
+        self
+    }
+
+    /// Accept `$PCDIN` and `$MXPGN` sentences whose checksum is wrong.
+    pub fn ignore_checksum(mut self, ignore: bool) -> Self {
+        self.checksum = !ignore;
         self
     }
 
@@ -189,7 +199,7 @@ impl<R: BufRead> FrameReader for LineFrameReader<R> {
                 log::debug!("input format: {:?}", self.active);
             }
             let format = self.active.expect("active format set above");
-            match parse_for(format, self.protocol, line) {
+            match parse_checked(format, self.protocol, line, self.checksum) {
                 Ok(Some(frame)) => return Ok(Some(frame)),
                 // iKonvert control sentences, Garmin CSV headers, etc.
                 Ok(None) => continue,

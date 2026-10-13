@@ -381,6 +381,9 @@ pub struct BridgeConfig {
     pub ikonvert_rx: Option<String>,
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
+    /// A `seasmart` or `miniplex` gateway: accept `$PCDIN` or `$MXPGN`
+    /// sentences whose checksum is wrong (`--ignore-checksum`).
+    pub ignore_checksum: bool,
     /// Pass on only these PGNs (`--rx-filter`), and always the
     /// network-management PGNs and canboat's own. An iKonvert also gets
     /// them as its own filter (`ikonvert_rx`); for every other source
@@ -479,6 +482,7 @@ impl Default for BridgeConfig {
             ikonvert_rx: None,
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
+            ignore_checksum: false,
             rx_filter: Vec::new(),
             pgn_lists: PgnLists::default(),
             learn_tx_pgns: true,
@@ -607,6 +611,7 @@ impl From<Args> for BridgeConfig {
             },
             ikonvert_tx: None,
             ikonvert_rate_limit_off: g.no_tx_rate_limit,
+            ignore_checksum: g.ignore_checksum,
             rx_filter: g.rx_filter.clone(),
             pgn_lists,
             learn_tx_pgns: node.learn_tx_pgns,
@@ -837,9 +842,10 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         });
     }
     if let Some(gateway) = config.gateway.clone() {
-        let (baud, protocol) = (config.baud, config.protocol);
+        let (baud, protocol, ignore_checksum) =
+            (config.baud, config.protocol, config.ignore_checksum);
         let factory = NamedFactory::new(gateway.kind.name(), move || {
-            device::gateway::open(&gateway, baud, protocol)
+            device::gateway::open(&gateway, baud, protocol, ignore_checksum)
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);

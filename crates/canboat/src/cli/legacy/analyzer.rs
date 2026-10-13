@@ -89,6 +89,11 @@ struct Cli {
     #[arg(long, value_name = "NAME")]
     format: Option<String>,
 
+    /// Accept $PCDIN and $MXPGN sentences whose checksum is wrong
+    /// (`-ignore-checksum`).
+    #[arg(long)]
+    ignore_checksum: bool,
+
     /// `--protocol j1939` decodes against the J1939 schema instead of NMEA
     /// 2000 — the equivalent of running canboat C's `analyzer-j1939`.
     #[command(flatten)]
@@ -175,6 +180,7 @@ fn run_cli(cli: Cli) -> Result<()> {
         units,
         protocol,
         fixed_time: cli.fixtime.as_deref(),
+        ignore_checksum: cli.ignore_checksum,
     };
 
     let mut sink_err: Option<anyhow::Error> = None;

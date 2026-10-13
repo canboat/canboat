@@ -556,6 +556,8 @@ test42:
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/seasmart.out
 	diff $(TEMPDIR)/seasmart.out seasmart.out
 	diff $(TEMPDIR)/seasmart.err seasmart.err
+	# -ignore-checksum takes the last line too: a third 127257.
+	test `$(ANALYZER) -json -ignore-checksum < seasmart.in 2>/dev/null | grep -c '"pgn":127257'` = 3
 
 #
 # Inputs that made a UBSan build of the analyzer report undefined behaviour
