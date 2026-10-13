@@ -135,11 +135,13 @@ pub struct DeviceHandle {
     progress: Arc<AtomicU64>,
     /// Why the device was given up on, when it was.
     failure: DeviceFailure,
+    /// Why the device's frames stopped, when the device went away.
+    lost: DeviceFailure,
 }
 
-/// Why a device was given up on: set when its codec finds it is not the
-/// device it is for. Clone it out of a [`DeviceHandle`] to ask once the
-/// frames have stopped.
+/// Why a device stopped: see [`DeviceHandle::failure`] and
+/// [`DeviceHandle::lost`]. Clone it out of a [`DeviceHandle`] to ask once
+/// the frames have stopped.
 #[derive(Debug, Clone, Default)]
 pub struct DeviceFailure(Arc<std::sync::OnceLock<String>>);
 
@@ -174,6 +176,14 @@ impl DeviceHandle {
     /// Clone it to ask once they have.
     pub fn failure(&self) -> DeviceFailure {
         self.failure.clone()
+    }
+
+    /// Why the device's frames stopped, when the device went away without
+    /// being closed: a read error (a gateway that reset the connection), its
+    /// end of stream, or the device's own `--timeout`. Unlike a
+    /// [`failure`](Self::failure), reconnecting may mend it.
+    pub fn lost(&self) -> DeviceFailure {
+        self.lost.clone()
     }
 
     /// Queue a frame to be encoded and written to the device.
@@ -318,11 +328,13 @@ impl FrameSender {
 ///
 /// `progress` counts the device's completed writes, as the generic
 /// writer's does, so a close can tell a draining backlog from a stuck one.
+/// `lost` is the codec's to set when the device goes away.
 pub(crate) fn from_parts(
     frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
     progress: Arc<AtomicU64>,
+    lost: DeviceFailure,
 ) -> DeviceHandle {
     DeviceHandle {
         frames_rx,
@@ -331,6 +343,7 @@ pub(crate) fn from_parts(
         writer: None,
         progress,
         failure: DeviceFailure::default(),
+        lost,
     }
 }
 
@@ -367,6 +380,8 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
 
     let failure = DeviceFailure::default();
     let reader_failure = failure.clone();
+    let lost = DeviceFailure::default();
+    let reader_lost = lost.clone();
     let reader_join = thread::Builder::new()
         .name("device-reader".into())
         .spawn(move || {
@@ -376,6 +391,7 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
                 frames_tx,
                 cmd_tx_for_reader,
                 &reader_failure,
+                &reader_lost,
             )
         })
         .expect("spawn device reader");
@@ -387,6 +403,7 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
         writer: Some(writer_join),
         progress,
         failure,
+        lost,
     }
 }
 
@@ -410,7 +427,7 @@ pub fn run_codec<C: Codec + Send + 'static>(
 }
 
 /// The host clock in Unix milliseconds, as the codecs take it.
-fn now_ms() -> u64 {
+pub(crate) fn now_ms() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis() as u64)
@@ -497,6 +514,7 @@ fn reader_thread<D: DeviceDecoder>(
     frames_tx: mpsc::Sender<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     failure: &DeviceFailure,
+    lost: &DeviceFailure,
 ) {
     let mut buf = [0u8; 4096];
     let mut events: Vec<DeviceEvent> = Vec::with_capacity(8);
@@ -528,7 +546,10 @@ fn reader_thread<D: DeviceDecoder>(
     };
     loop {
         match reader.read(&mut buf) {
-            Ok(0) => return,
+            Ok(0) => {
+                lost.set("the device ended the connection");
+                return;
+            }
             Ok(n) => {
                 decoder.decode(&buf[..n], &mut events);
                 if !deliver(&mut events) {
@@ -550,7 +571,9 @@ fn reader_thread<D: DeviceDecoder>(
             }
             Err(e) if e.kind() == io::ErrorKind::Interrupted => continue,
             Err(e) => {
-                log::error!("device read error: {e}");
+                let why = format!("device read error: {e}");
+                log::error!("{why}");
+                lost.set(&why);
                 return;
             }
         }
@@ -789,5 +812,36 @@ mod tests {
         );
         let ticks = handle.frames_rx.iter().count();
         assert_eq!(ticks, 3);
+    }
+
+    /// A gateway that reboots resets the connection: the frames end and
+    /// the handle says why, so `interface` can exit with an error.
+    #[test]
+    fn a_read_error_loses_the_device() {
+        struct Reset;
+        impl Read for Reset {
+            fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+                Err(io::ErrorKind::ConnectionReset.into())
+            }
+        }
+        let handle = run(Ticker, NoEncoder, Box::new(Reset), Box::new(io::sink()));
+        let (failure, lost) = (handle.failure(), handle.lost());
+        assert_eq!(handle.frames_rx.iter().count(), 0);
+        assert_eq!(failure.get(), None);
+        assert_eq!(lost.get(), Some("device read error: connection reset"));
+    }
+
+    /// A device that ends its stream is gone too.
+    #[test]
+    fn the_end_of_the_stream_loses_the_device() {
+        let handle = run(
+            Ticker,
+            NoEncoder,
+            Box::new(QuietThenEof(0)),
+            Box::new(io::sink()),
+        );
+        let lost = handle.lost();
+        assert_eq!(handle.frames_rx.iter().count(), 0);
+        assert_eq!(lost.get(), Some("the device ended the connection"));
     }
 }

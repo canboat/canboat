@@ -192,6 +192,12 @@ impl UsbCanA {
 }
 
 impl Codec for UsbCanA {
+    /// A quiet bus still gets its minute's summary of incomplete
+    /// fast-packets.
+    fn tick(&mut self, now_ms: u64, _events: &mut Vec<Event>) {
+        self.reassembler.tick(now_ms);
+    }
+
     /// The configuration packet.
     fn open(&mut self) -> Vec<u8> {
         self.config.to_vec()

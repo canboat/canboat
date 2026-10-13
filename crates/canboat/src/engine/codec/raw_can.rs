@@ -39,6 +39,9 @@ pub(crate) fn receive(
     now_ms: Option<u64>,
     events: &mut Vec<Event>,
 ) {
+    if let Some(now_ms) = now_ms {
+        reassembler.tick(now_ms);
+    }
     // NMEA 2000 and J1939 are 29-bit, Quick 11-bit: skip the other kind
     // rather than reinterpret its identifier.
     if extended == protocol.standard_frames() {

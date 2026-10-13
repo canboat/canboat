@@ -985,6 +985,7 @@ pub(super) fn handle_frame(
     data: &[u8],
     when: u64,
 ) {
+    reasm.tick(when);
     let (prio, pgn, src, dst) = iso11783_decompose(can_id);
     let single_frame = RawFrame::new(
         Some(format_iso(when)),

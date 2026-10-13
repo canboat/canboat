@@ -286,6 +286,7 @@ pub fn canboat::bus::DeviceHandle::closer(&self) -> canboat::bus::DeviceCloser
 pub fn canboat::bus::DeviceHandle::failure(&self) -> canboat::bus::DeviceFailure
 pub fn canboat::bus::DeviceHandle::frame_sender(&self) -> canboat::bus::FrameSender
 pub fn canboat::bus::DeviceHandle::join(self)
+pub fn canboat::bus::DeviceHandle::lost(&self) -> canboat::bus::DeviceFailure
 pub fn canboat::bus::DeviceHandle::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
 pub struct canboat::bus::DeviceWriterGone
 impl core::clone::Clone for canboat::bus::DeviceWriterGone
@@ -1690,8 +1691,11 @@ pub struct canboat::Reassembler
 impl canboat::Reassembler
 pub fn canboat::Reassembler::new() -> Self
 pub fn canboat::Reassembler::push(&mut self, canboat::Frame, canboat::FramePacketType) -> canboat::Reassembled
+pub fn canboat::Reassembler::tick(&mut self, u64)
 impl core::default::Default for canboat::Reassembler
 pub fn canboat::Reassembler::default() -> Self
+impl core::ops::drop::Drop for canboat::Reassembler
+pub fn canboat::Reassembler::drop(&mut self)
 pub const canboat::ADDR_GLOBAL: u8
 pub const canboat::ADDR_NULL: u8
 pub const canboat::CANBOAT_VERSION: &str
