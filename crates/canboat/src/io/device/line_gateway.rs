@@ -133,6 +133,12 @@ impl Decoder {
 }
 
 impl DeviceDecoder for Decoder {
+    /// A quiet line still gets its minute's summary of incomplete
+    /// fast-packets.
+    fn tick(&mut self, _events: &mut Vec<DeviceEvent>) {
+        self.reassembler.tick(super::now_ms());
+    }
+
     /// Frames get the host's time, as from every other gateway: the
     /// gateways' own is a time of day without a date, and a YDEN's runs
     /// behind the host's, and now and then backwards (canboat#1039).

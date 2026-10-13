@@ -315,6 +315,7 @@ impl<L: Link> Worker<L> {
             }
             let (mut bus, node) = self.bus();
             node.tick(&mut bus, now_ms());
+            self.reasm.tick(now_ms());
             let live = self.node.claim.send_address().unwrap_or(CLAIM_UNCLAIMED);
             if live != published {
                 claim_addr.store(live, Ordering::Relaxed);

@@ -487,6 +487,29 @@ mod imp {
         Ok(from_parts(frames_rx, cmd_tx, vec![join], progress, lost))
     }
 
+    /// The error pending on socket `fd`, which reading it clears.
+    fn socket_error(fd: i32) -> std::io::Error {
+        let mut err: libc::c_int = 0;
+        let mut len = std::mem::size_of::<libc::c_int>() as libc::socklen_t;
+        // SAFETY: getsockopt with a valid fd and an int-sized option.
+        let rc = unsafe {
+            libc::getsockopt(
+                fd,
+                libc::SOL_SOCKET,
+                libc::SO_ERROR,
+                &mut err as *mut _ as *mut libc::c_void,
+                &mut len,
+            )
+        };
+        if rc < 0 {
+            std::io::Error::last_os_error()
+        } else if err != 0 {
+            std::io::Error::from_raw_os_error(err)
+        } else {
+            std::io::Error::other("the socket reported an error")
+        }
+    }
+
     /// What the worker shares with the rest of the process: the claimed
     /// address, its completed writes (for [`super::super::Closed`]), and
     /// why the interface went away.
@@ -637,6 +660,13 @@ mod imp {
                 gone(format!("socketcan poll: {e}"));
                 return;
             }
+            // An interface that goes down, or away, is an error on the
+            // socket (ENETDOWN, ENODEV), not data: poll says so in
+            // revents, and only reading the error clears it.
+            if pfd.revents & (libc::POLLERR | libc::POLLHUP | libc::POLLNVAL) != 0 {
+                gone(format!("socketcan {iface}: {}", socket_error(fd)));
+                return;
+            }
 
             // 4. Idle-timeout check.
             if timeout_ms > 0 && now_ms().saturating_sub(last_frame) >= timeout_ms {
@@ -736,6 +766,7 @@ mod imp {
                 frames_tx: &frames_tx,
             };
             claimer.tick(&mut bus, now_ms());
+            reasm.tick(now_ms());
 
             // 8. Publish the live claim to the shared atom so external
             //    consumers (e.g. the canboat-pipeline CSV injector,

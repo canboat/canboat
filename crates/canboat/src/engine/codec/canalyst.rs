@@ -139,6 +139,12 @@ impl Canalyst {
 }
 
 impl Codec for Canalyst {
+    /// A quiet bus still gets its minute's summary of incomplete
+    /// fast-packets.
+    fn tick(&mut self, now_ms: u64, _events: &mut Vec<Event>) {
+        self.reassembler.tick(now_ms);
+    }
+
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
         let (protocol, reassembler) = (self.protocol, &mut self.reassembler);
         self.packets.push(bytes, |packet| match messages(packet) {

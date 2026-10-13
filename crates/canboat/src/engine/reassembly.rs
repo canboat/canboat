@@ -308,7 +308,12 @@ impl Reassembler {
     /// each one is a warning of its own.
     pub fn tick(&mut self, now_ms: u64) {
         let inc = &mut self.incomplete;
-        let since = *inc.since_ms.get_or_insert(now_ms);
+        let mut since = *inc.since_ms.get_or_insert(now_ms);
+        // A host clock set back starts the minute over, keeping the count.
+        if now_ms < since {
+            since = now_ms;
+            inc.since_ms = Some(now_ms);
+        }
         let elapsed = now_ms.saturating_sub(since);
         if elapsed >= INCOMPLETE_SUMMARY_MS {
             if !inc.counts.is_empty() {
@@ -1195,6 +1200,21 @@ mod tests {
         r.tick(61_000);
         assert!(r.incomplete.counts.is_empty());
         assert_eq!(r.incomplete.since_ms, Some(61_000));
+    }
+
+    #[test]
+    fn a_clock_set_back_starts_the_minute_over() {
+        const NOW: u64 = 1_780_082_164_826;
+        const HOUR: u64 = 3_600_000;
+        let mut r = Reassembler::new();
+        r.tick(NOW);
+        lose_one(&mut r, 3);
+        // Set back an hour: the count stays, its minute starts now.
+        r.tick(NOW - HOUR);
+        assert_eq!(r.incomplete.since_ms, Some(NOW - HOUR));
+        assert_eq!(r.incomplete.counts.len(), 1);
+        r.tick(NOW - HOUR + 60_000);
+        assert!(r.incomplete.counts.is_empty());
     }
 
     #[test]
