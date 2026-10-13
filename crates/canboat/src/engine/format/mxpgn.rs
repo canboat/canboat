@@ -316,9 +316,14 @@ impl Psmd {
                     .trim()
                     .parse()
                     .map_err(|_| bad("nmea2000Version", version))?;
+                // Raw, so unchecked by the encoder: 0.000 ..= 65.532.
+                let version_raw = (version_f * 1000.0).round();
+                if !(0.0..=65532.0).contains(&version_raw) {
+                    return Err(bad("nmea2000Version", version));
+                }
                 self.product = Some(Product {
                     src: src.trim().parse().map_err(|_| bad("src", src))?,
-                    version: (version_f * 1000.0).round() as u64,
+                    version: version_raw as u64,
                     product_code: int("productCode", code)?,
                     certification_level: int("certificationLevel", level)?,
                     load_equivalency: int("loadEquivalency", load)?,
@@ -593,6 +598,23 @@ mod tests {
         assert!(psmd.push(wrong, true).is_err());
         assert!(psmd.push(wrong, false).unwrap().is_some());
         assert!(is_psmd("$PSMDNP,A,1,2.000,26884,2,0*7A") && !is_psmd("$PSMDSTAT,R,1*00"));
+    }
+
+    #[test]
+    fn psmd_rejects_out_of_range_product_fields() {
+        for a in [
+            "$PSMDNP,A,1,65.533,26884,2,0",
+            "$PSMDNP,A,1,-1.000,26884,2,0",
+            "$PSMDNP,A,1,2.000,65533,2,0",
+            "$PSMDNP,A,1,2.000,26884,2,253",
+        ] {
+            let mut psmd = Psmd::default();
+            let product = psmd.push(a, false).and_then(|_| {
+                psmd.push("$PSMDNP,B,MiniPlex,3A000001", false)?;
+                psmd.push("$PSMDNP,C,3.41.0,MPX", false)
+            });
+            assert!(product.is_err(), "{a}");
+        }
     }
 
     #[test]
