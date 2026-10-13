@@ -57,8 +57,9 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   canboat is the node. **11-bit** frames are Quick PCS (`--protocol
   quick`). The rest carry NMEA 2000 only.
 - **miniplex:** when it connects, canboat sets the MiniPlex to send every
-  PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2). The
-  MiniPlex sends Address Claims and Product Information as `$PSMDNC` and
+  PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2). Over
+  a receive-only `udp://port` it can't, so set that on the MiniPlex first,
+  or give its address, `udp://miniplex:port`. The MiniPlex sends Address Claims and Product Information as `$PSMDNC` and
   `$PSMDNP` instead, which canboat does not read yet.
 - An option only some gateways have (`--bitrate`, `--channel`, `--password`,
   `--mode`, the ISO NAME options) says which in `--help`, and is refused for

@@ -81,6 +81,25 @@ fn ydwg02_round_trips_to_plain() {
     assert!(s.contains(BODY), "round-trip lost the body: {s}");
 }
 
+/// A fast-packet in its `$MXPGN` frames comes out in the same frames: they
+/// are joined first, not split a second time.
+#[test]
+fn mxpgn_round_trips_to_mxpgn() {
+    let input = "$MXPGN,01F805,3824,C69C803AF1E62B00*16\r\n\
+                 $MXPGN,01F805,3824,EB49AA3812000D01*60\r\n\
+                 $MXPGN,01F805,3824,FB95440C00075102*6D\r\n\
+                 $MXPGN,01F805,3824,0033E14000B81503*1A\r\n\
+                 $MXPGN,01F805,3824,09FC130000000004*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFF008C005A05*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFFFFFF007F06*60\r\n\
+                 $MXPGN,01F801,2801,C1308AC40C5DE343*19\r\n";
+    let out = run(
+        &["convert", "--from", "mxpgn", "--to", "mxpgn"],
+        input.as_bytes(),
+    );
+    assert_eq!(String::from_utf8(out).unwrap(), input);
+}
+
 #[test]
 fn actisense_round_trips_to_plain() {
     let acti = run(&["convert", "--to", "actisense"], PLAIN);

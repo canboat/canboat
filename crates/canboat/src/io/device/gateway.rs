@@ -9,7 +9,7 @@
 use std::io;
 
 use crate::engine::BusProtocol;
-use crate::io::net::{open_line_endpoint, open_tcp};
+use crate::io::net::{open_line_endpoint, open_line_endpoint_sends, open_tcp};
 use crate::io::open_serial_rw;
 
 use super::{DeviceHandle, line_gateway};
@@ -154,7 +154,15 @@ pub(crate) fn open(
         }
         GatewayKind::Miniplex => {
             let (reader, writer) = if network {
-                open_line_endpoint(device, 10110)?
+                let (pair, sends) = open_line_endpoint_sends(device, 10110)?;
+                if !sends {
+                    log::warn!(
+                        "canboat can't set a MiniPlex it can't send to: set it to send \
+                         every PGN as $MXPGN yourself ($PSMDNO options 30 and 31, \
+                         mode 2), or give its address, udp://miniplex:port"
+                    );
+                }
+                pair
             } else {
                 serial()?
             };

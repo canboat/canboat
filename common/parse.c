@@ -492,7 +492,10 @@ int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
 
   for (len = 0; hexDigit(data[len]) >= 0; len++)
     ;
-  if (len % 2 != 0 || len > 16)
+  // The data ends the sentence: then comes its checksum or the line's end.
+  for (end = data + len; *end != '*' && isspace((unsigned char) *end); end++)
+    ;
+  if (len % 2 != 0 || len > 16 || (data[len] != '*' && *end != '\0'))
   {
     logError("Error reading $MXPGN data: %s", msg);
     return 2;

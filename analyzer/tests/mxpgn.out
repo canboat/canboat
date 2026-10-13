@@ -5,3 +5,4 @@
 {"timestamp":"mxpgn","prio":7,"src":0,"dst":9,"pgn":59904,"description":"ISO Request","fields":{"PGN":{"value":126998,"name":"Configuration Information"}}}
 {"timestamp":"mxpgn","prio":7,"src":0,"dst":9,"pgn":59904,"description":"ISO Request","fields":{"PGN":{"value":126998,"name":"Configuration Information"}}}
 {"timestamp":"mxpgn","prio":3,"src":36,"dst":255,"pgn":129029,"description":"GNSS Position Data","fields":{"SID":230,"Date":{"value":15089,"name":"2011.04.25"},"Time":{"value":23112.0000,"name":"06:25:12.0000"},"Latitude":52.7461333,"Longitude": 5.1815566,"Altitude":3.400000,"GNSS type":{"value":3,"name":"GPS+SBAS/WAAS"},"Method":{"value":1,"name":"GNSS fix"},"Integrity":{"value":0,"name":"No integrity checking"},"Number of SVs":9,"HDOP":0.90,"PDOP":1.40,"Reference Stations":0}}
+{"timestamp":"mxpgn","prio":2,"src":1,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":20.7479619,"Longitude":-105.3783356}}

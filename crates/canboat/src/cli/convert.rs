@@ -18,9 +18,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::engine::format::InputFormat;
+use crate::engine::format::{Framing, InputFormat};
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
-use crate::engine::{BusProtocol, RawFrame};
+use crate::engine::{BusProtocol, FramePacketType, RawFrame, Reassembled, Reassembler};
 use crate::io::{
     BstD0Reader, BstReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
     MxpgnWriter, PlainWriter, TextLineWriter, UsbCanAReader, analyze, container, copy,
@@ -421,13 +421,18 @@ fn convert_raw<W: Write>(
             protocol.database(args.shape.units()),
         ))
     } else {
-        Box::new(
-            match forced {
-                Some(fmt) => LineFrameReader::with_format(source, fmt),
-                None => LineFrameReader::new(source),
-            }
-            .protocol(protocol),
-        )
+        let lines = match forced {
+            Some(fmt) => LineFrameReader::with_format(source, fmt),
+            None => LineFrameReader::new(source),
+        }
+        .protocol(protocol);
+        // MXPGN splits a fast-packet into its frames itself, so it needs
+        // whole messages; the binary readers above join them already.
+        if args.to == OutFormat::Mxpgn {
+            Box::new(Joined::new(lines, protocol))
+        } else {
+            Box::new(lines)
+        }
     };
     let mut writer: Box<dyn FrameWriter + '_> = match args.to {
         OutFormat::Plain => Box::new(PlainWriter::new(out)),
@@ -449,6 +454,51 @@ fn convert_raw<W: Write>(
     }
     writer.flush().context("flushing output")?;
     Ok(())
+}
+
+/// The frames of a line capture with each fast-packet joined into its
+/// message, by the analyzer's rules: a line of more than 8 bytes, or a
+/// `# format=` header of a coalesced format, means the whole stream is
+/// coalesced already (but for PLAIN_MIX_FAST), as is every line of a
+/// format whose lines are whole messages.
+struct Joined<R: BufRead> {
+    lines: LineFrameReader<R>,
+    protocol: BusProtocol,
+    reassembler: Reassembler,
+    coalesced: bool,
+}
+
+impl<R: BufRead> Joined<R> {
+    fn new(lines: LineFrameReader<R>, protocol: BusProtocol) -> Self {
+        Self {
+            lines,
+            protocol,
+            reassembler: Reassembler::new(),
+            coalesced: false,
+        }
+    }
+}
+
+impl<R: BufRead> FrameReader for Joined<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        while let Some(frame) = self.lines.read_frame()? {
+            let format = self.lines.active_format();
+            self.coalesced |= self.lines.header_coalesced()
+                || (frame.data.len() > 8 && format != Some(InputFormat::PlainMixFast));
+            let whole = self.coalesced || format.is_some_and(|f| f.framing() == Framing::Coalesced);
+            let packet_type = if whole {
+                FramePacketType::Other
+            } else {
+                self.protocol.packet_type(frame.pgn)
+            };
+            match self.reassembler.push(frame, packet_type) {
+                Reassembled::PassThrough(f) | Reassembled::Complete(f) => return Ok(Some(f)),
+                Reassembled::Partial => {}
+                Reassembled::Error(e) => log::warn!("reassembly error: {e}"),
+            }
+        }
+        Ok(None)
+    }
 }
 
 /// Decoded path: drive the analyzer pipeline and render each record as
