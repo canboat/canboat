@@ -564,10 +564,13 @@ impl DecodedPgn {
 }
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum DecodeError {
     #[error("PGN {pgn} not found in database")]
+    #[non_exhaustive]
     UnknownPgn { pgn: u32 },
     #[error("PGN {pgn} payload too short for field {field:?}")]
+    #[non_exhaustive]
     ShortPayload { pgn: u32, field: String },
 }
 

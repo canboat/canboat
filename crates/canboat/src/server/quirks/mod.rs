@@ -50,6 +50,7 @@ use crate::engine::{DecodedPgn, RawFrame};
 /// `gps-rollover` — plus, for `gps-rollover`, an optional `=<devices>`
 /// argument; see [`Target::parse`].
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum QuirkKind {
     /// Furuno SCX-20: fabricate its PGN 126996 Product Information when
     /// the bus asks (its firmware sometimes "forgets" to answer, breaking

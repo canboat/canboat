@@ -18,12 +18,12 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::engine::format::InputFormat;
+use crate::engine::format::{Framing, InputFormat};
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
-use crate::engine::{BusProtocol, RawFrame};
+use crate::engine::{BusProtocol, FramePacketType, RawFrame, Reassembled, Reassembler};
 use crate::io::{
     BstD0Reader, BstReader, EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader,
-    PlainWriter, TextLineWriter, UsbCanAReader, analyze, container, copy,
+    MxpgnWriter, PlainWriter, TextLineWriter, UsbCanAReader, analyze, container, copy,
 };
 
 /// Output format for `convert --to`.
@@ -45,6 +45,8 @@ enum OutFormat {
     /// Actisense `.ebl` binary log (raw frames).
     #[value(name = "actisense-ebl", alias = "ebl")]
     ActisenseEbl,
+    /// ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each.
+    Mxpgn,
 }
 
 impl OutFormat {
@@ -53,7 +55,11 @@ impl OutFormat {
     fn is_frame_level(self) -> bool {
         matches!(
             self,
-            OutFormat::Plain | OutFormat::Ydwg02 | OutFormat::Actisense | OutFormat::ActisenseEbl
+            OutFormat::Plain
+                | OutFormat::Ydwg02
+                | OutFormat::Actisense
+                | OutFormat::ActisenseEbl
+                | OutFormat::Mxpgn
         )
     }
 }
@@ -91,6 +97,11 @@ enum FromFormat {
     /// `$PCDIN,…` sentences (Chetco SeaSmart.Net, Quark-elec, Yacht Devices).
     #[value(name = "seasmart", alias = "chetco")]
     SeaSmart,
+    /// `$MXPGN,…` sentences (ShipModul MiniPlex, or an Actisense gateway's
+    /// NMEA 0183 output), one CAN frame each; other NMEA 0183 sentences in
+    /// the stream are skipped.
+    #[value(name = "mxpgn")]
+    Mxpgn,
     /// Garmin CSV (relative ms-since-boot timestamps).
     #[value(name = "garmin", alias = "garmin-csv")]
     Garmin,
@@ -134,6 +145,7 @@ impl FromFormat {
             FromFormat::Ikonvert => InputFormat::Ikonvert,
             FromFormat::Airmar => InputFormat::Airmar,
             FromFormat::SeaSmart => InputFormat::SeaSmart,
+            FromFormat::Mxpgn => InputFormat::Mxpgn,
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
@@ -157,7 +169,7 @@ Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 
 Input line formats (auto-detected from the first line, or forced with --from):
   plain, plain-mix-fast, n2k-ascii, raw-ascii, ikonvert, airmar, seasmart,
-  garmin, garmin-csv2, candump.
+  mxpgn, garmin, garmin-csv2, candump.
   (n2k-ascii and raw-ascii are Actisense's names; actisense and ydwg02 still
   work.)
 
@@ -177,6 +189,7 @@ Output formats (--to, default json):
   raw-ascii      RAW ASCII lines, as a YDWG-02 sends them (raw frames)
   n2k-ascii      Actisense N2K ASCII lines (reassembled messages)
   actisense-ebl  Actisense .ebl binary log (raw frames)
+  mxpgn          $MXPGN sentences, as a ShipModul MiniPlex sends them (raw frames)
 
 Decoded-output shape (json/text only):
   --id STYLE     spaces | camel (default) | uppercamel
@@ -408,19 +421,25 @@ fn convert_raw<W: Write>(
             protocol.database(args.shape.units()),
         ))
     } else {
-        Box::new(
-            match forced {
-                Some(fmt) => LineFrameReader::with_format(source, fmt),
-                None => LineFrameReader::new(source),
-            }
-            .protocol(protocol),
-        )
+        let lines = match forced {
+            Some(fmt) => LineFrameReader::with_format(source, fmt),
+            None => LineFrameReader::new(source),
+        }
+        .protocol(protocol);
+        // MXPGN splits a fast-packet into its frames itself, so it needs
+        // whole messages; the binary readers above join them already.
+        if args.to == OutFormat::Mxpgn {
+            Box::new(Joined::new(lines, protocol))
+        } else {
+            Box::new(lines)
+        }
     };
     let mut writer: Box<dyn FrameWriter + '_> = match args.to {
         OutFormat::Plain => Box::new(PlainWriter::new(out)),
         OutFormat::Ydwg02 => Box::new(TextLineWriter::ydwg02(out)),
         OutFormat::Actisense => Box::new(TextLineWriter::actisense(out)),
         OutFormat::ActisenseEbl => Box::new(EblWriter::new(out)),
+        OutFormat::Mxpgn => Box::new(MxpgnWriter::new(out, protocol)),
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
@@ -435,6 +454,51 @@ fn convert_raw<W: Write>(
     }
     writer.flush().context("flushing output")?;
     Ok(())
+}
+
+/// The frames of a line capture with each fast-packet joined into its
+/// message, by the analyzer's rules: a line of more than 8 bytes, or a
+/// `# format=` header of a coalesced format, means the whole stream is
+/// coalesced already (but for PLAIN_MIX_FAST), as is every line of a
+/// format whose lines are whole messages.
+struct Joined<R: BufRead> {
+    lines: LineFrameReader<R>,
+    protocol: BusProtocol,
+    reassembler: Reassembler,
+    coalesced: bool,
+}
+
+impl<R: BufRead> Joined<R> {
+    fn new(lines: LineFrameReader<R>, protocol: BusProtocol) -> Self {
+        Self {
+            lines,
+            protocol,
+            reassembler: Reassembler::new(),
+            coalesced: false,
+        }
+    }
+}
+
+impl<R: BufRead> FrameReader for Joined<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        while let Some(frame) = self.lines.read_frame()? {
+            let format = self.lines.active_format();
+            self.coalesced |= self.lines.header_coalesced()
+                || (frame.data.len() > 8 && format != Some(InputFormat::PlainMixFast));
+            let whole = self.coalesced || format.is_some_and(|f| f.framing() == Framing::Coalesced);
+            let packet_type = if whole {
+                FramePacketType::Other
+            } else {
+                self.protocol.packet_type(frame.pgn)
+            };
+            match self.reassembler.push(frame, packet_type) {
+                Reassembled::PassThrough(f) | Reassembled::Complete(f) => return Ok(Some(f)),
+                Reassembled::Partial => {}
+                Reassembled::Error(e) => log::warn!("reassembly error: {e}"),
+            }
+        }
+        Ok(None)
+    }
 }
 
 /// Decoded path: drive the analyzer pipeline and render each record as

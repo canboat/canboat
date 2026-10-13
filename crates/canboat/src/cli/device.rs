@@ -70,6 +70,7 @@ impl Kind {
             Kind::Maretron => "maretron",
             Kind::Socketcan => "socketcan",
             Kind::Gateway(GatewayKind::YachtDevices) => "yachtd",
+            Kind::Gateway(GatewayKind::Miniplex) => "miniplex",
             Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::N2kAscii)) => {
                 "actisense (n2k-ascii)"
             }
@@ -104,6 +105,7 @@ pub struct KindArg {
 enum Family {
     Actisense,
     Yachtd,
+    Miniplex,
     Ikonvert,
     Maretron,
     Socketcan,
@@ -142,6 +144,11 @@ const KINDS: &[KindArg] = &[
         "yachtd",
         Family::Yachtd,
         "Yacht Devices YDWG-02, YDEN-02, YDNR-02, YDNU-02, in RAW ASCII",
+    ),
+    kind_arg(
+        "miniplex",
+        Family::Miniplex,
+        "ShipModul MiniPlex-3 with NMEA 2000, in $MXPGN",
     ),
     kind_arg("ikonvert", Family::Ikonvert, "Digital Yacht iKonvert"),
     kind_arg("maretron", Family::Maretron, "Maretron IPG100/200"),
@@ -229,6 +236,7 @@ impl KindArg {
                     f.name()
                 ),
             },
+            Family::Miniplex => plain(Kind::Gateway(GatewayKind::Miniplex)),
             Family::Ikonvert => plain(Kind::Ikonvert),
             Family::Maretron => plain(Kind::Maretron),
             Family::Socketcan => plain(Kind::Socketcan),
@@ -305,6 +313,7 @@ Gateways (--kind) and their data formats (--data-format):
              raw-ascii       tcp:60002, udp               rw   yes    -
              raw-actisense   tcp:60002, /dev/tty… (NGX)   rw   yes    -
   yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
+  miniplex                   tcp:10110, udp, /dev/tty…    rw   yes    -
   ikonvert                   /dev/ttyUSB0, tcp:6001       rw   -      -
   maretron                   host[:6543]                  rw   -      -
   aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
@@ -517,7 +526,7 @@ impl DeviceArgs {
         if protocol != BusProtocol::Nmea2000 && !kind.passes_raw_frames() {
             bail!(
                 "--protocol {protocol} needs a gateway that passes raw CAN frames \
-                 (socketcan, canalyst, usb-can-a, yachtd, or actisense in raw-ascii or raw-actisense); \
+                 (socketcan, canalyst, usb-can-a, yachtd, miniplex, or actisense in raw-ascii or raw-actisense); \
                  {name} does NMEA 2000 framing itself"
             );
         }
@@ -780,6 +789,7 @@ mod tests {
             [
                 "actisense",
                 "yachtd",
+                "miniplex",
                 "ikonvert",
                 "maretron",
                 "socketcan",

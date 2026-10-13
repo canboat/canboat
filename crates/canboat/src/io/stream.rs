@@ -33,7 +33,7 @@ use crate::engine::format::ebl::{
 use crate::engine::format::plain::write_line as write_plain;
 use crate::engine::format::ydwg02::write_line as write_ydwg02;
 use crate::engine::format::{
-    InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
+    InputFormat, detect, header_implies_coalesced, is_undecided, parse_for, parse_format_header,
 };
 
 /// Pull-based source of [`RawFrame`]s — the engine
@@ -95,7 +95,13 @@ pub struct LineFrameReader<R: BufRead> {
     header_coalesced: bool,
     /// The bus the lines come from: which raw CAN frames count.
     protocol: crate::engine::BusProtocol,
+    /// NMEA 0183 lines skipped while the format is still open.
+    undecided: usize,
 }
+
+/// How many leading NMEA 0183 lines that hold no frame leave the format
+/// open before it falls back to PLAIN.
+const MAX_UNDECIDED: usize = 1000;
 
 impl<R: BufRead> LineFrameReader<R> {
     /// Wrap `reader`, auto-detecting the format from its first content
@@ -106,6 +112,7 @@ impl<R: BufRead> LineFrameReader<R> {
             active: None,
             header_coalesced: false,
             protocol: crate::engine::BusProtocol::Nmea2000,
+            undecided: 0,
         }
     }
 
@@ -117,6 +124,7 @@ impl<R: BufRead> LineFrameReader<R> {
             active: Some(format),
             header_coalesced: false,
             protocol: crate::engine::BusProtocol::Nmea2000,
+            undecided: 0,
         }
     }
 
@@ -168,8 +176,15 @@ impl<R: BufRead> FrameReader for LineFrameReader<R> {
                 continue;
             }
             // Auto-detect on the first content line if not forced.
-            // Canboat falls back to PLAIN when nothing else matches.
+            // Canboat falls back to PLAIN when nothing else matches; an NMEA
+            // 0183 sentence that holds no frame leaves it open, for a
+            // while: a MiniPlex stream may start with `$GPRMC` before its
+            // first `$MXPGN`.
             if self.active.is_none() {
+                if is_undecided(line) && self.undecided < MAX_UNDECIDED {
+                    self.undecided += 1;
+                    continue;
+                }
                 self.active = detect(line).or(Some(InputFormat::Plain));
                 log::debug!("input format: {:?}", self.active);
             }
@@ -212,6 +227,87 @@ impl<W: Write> FrameWriter for PlainWriter<W> {
         write_plain(&mut self.buf, frame).expect("PLAIN write to String");
         self.buf.push('\n');
         self.inner.write_all(self.buf.as_bytes())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.inner.flush()
+    }
+}
+
+/// A [`FrameWriter`] of ShipModul `$MXPGN` sentences, one CAN frame each,
+/// as a MiniPlex sends what it receives: a message longer than a frame
+/// goes out in its fast-packet frames, one sentence each.
+pub struct MxpgnWriter<W: Write> {
+    inner: W,
+    protocol: BusProtocol,
+    /// Per-(pgn, src) fast-packet sequence counters, mod 8.
+    seq: std::collections::HashMap<(u32, u8), u8>,
+    buf: String,
+}
+
+impl<W: Write> MxpgnWriter<W> {
+    /// Sentences for a bus carrying `protocol`, which decides which
+    /// messages are fast-packets.
+    pub fn new(inner: W, protocol: BusProtocol) -> Self {
+        Self {
+            inner,
+            protocol,
+            seq: Default::default(),
+            buf: String::with_capacity(64),
+        }
+    }
+
+    fn write_one(&mut self, frame: &RawFrame, data: &[u8]) -> io::Result<()> {
+        let mut one = RawFrame::new(
+            None,
+            frame.prio,
+            frame.pgn,
+            frame.src,
+            frame.dst,
+            data.iter().copied(),
+        );
+        one.timestamp.clone_from(&frame.timestamp);
+        self.buf.clear();
+        crate::engine::format::mxpgn::write_line(&mut self.buf, &one, false)
+            .expect("$MXPGN write to String");
+        self.buf.push_str("\r\n");
+        self.inner.write_all(self.buf.as_bytes())
+    }
+}
+
+impl<W: Write> FrameWriter for MxpgnWriter<W> {
+    fn write_frame(&mut self, frame: &RawFrame) -> io::Result<()> {
+        use crate::engine::{FramePacketType, fastpacket};
+        // canboat's own records never went over the bus, and Quick's
+        // 11-bit frames have no PGN.
+        if frame.pgn >= fastpacket::CANBOAT_PGN_START || self.protocol.standard_frames() {
+            return Ok(());
+        }
+        if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
+            let e = self.seq.entry((frame.pgn, frame.src)).or_insert(0);
+            let seq = *e;
+            *e = (seq + 1) & 7;
+            let Some(chunks) = fastpacket::fragment(seq, &frame.data) else {
+                log::warn!(
+                    "not writing PGN {}: {} bytes exceed a fast-packet",
+                    frame.pgn,
+                    frame.data.len()
+                );
+                return Ok(());
+            };
+            for chunk in chunks {
+                self.write_one(frame, &chunk)?;
+            }
+        } else if frame.data.len() <= 8 {
+            self.write_one(frame, &frame.data.clone())?;
+        } else {
+            log::warn!(
+                "not writing PGN {}: {} bytes do not fit one frame",
+                frame.pgn,
+                frame.data.len()
+            );
+        }
+        Ok(())
     }
 
     fn flush(&mut self) -> io::Result<()> {

@@ -49,6 +49,7 @@ pub enum Event {
 
 /// Why [`Codec::send`] did not encode a frame.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Refused {
     /// A canboat-internal PGN (`>= 0x40000`), which never goes on the bus.
     Synthetic,

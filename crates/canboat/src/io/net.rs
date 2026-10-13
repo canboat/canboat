@@ -59,8 +59,17 @@ pub(crate) fn open_tcp(device: &str, default_port: u16) -> io::Result<Pair> {
 /// line, to that port (a YDEN-02 with its UDP server set to
 /// Bidirectional, canboat#1039), and takes only the gateway's datagrams.
 pub(crate) fn open_line_endpoint(device: &str, default_tcp_port: u16) -> io::Result<Pair> {
+    open_line_endpoint_sends(device, default_tcp_port).map(|(pair, _)| pair)
+}
+
+/// [`open_line_endpoint`], and whether what is written reaches the
+/// gateway: not for a receive-only `udp://`.
+pub(crate) fn open_line_endpoint_sends(
+    device: &str,
+    default_tcp_port: u16,
+) -> io::Result<(Pair, bool)> {
     let Some(rest) = device.strip_prefix("udp://") else {
-        return open_tcp(device, default_tcp_port);
+        return Ok((open_tcp(device, default_tcp_port)?, true));
     };
     let addr = if rest.contains(':') {
         rest.to_socket_addrs()?.next().ok_or_else(|| {
@@ -79,7 +88,7 @@ pub(crate) fn open_line_endpoint(device: &str, default_tcp_port: u16) -> io::Res
         None
     } else {
         match UdpSocket::bind(addr) {
-            Ok(sock) => return Ok(receive_only(sock)),
+            Ok(sock) => return Ok((receive_only(sock), false)),
             // Not an address of this host: the gateway's.
             Err(e) if e.kind() == io::ErrorKind::AddrNotAvailable => Some(addr),
             Err(e) => return Err(e),
@@ -91,7 +100,7 @@ pub(crate) fn open_line_endpoint(device: &str, default_tcp_port: u16) -> io::Res
     };
     let sock = UdpSocket::bind((any, addr.port()))?;
     let Some(gateway) = gateway else {
-        return Ok(receive_only(sock));
+        return Ok((receive_only(sock), false));
     };
     sock.set_read_timeout(Some(READ_TIMEOUT))?;
     log::info!(
@@ -107,7 +116,7 @@ pub(crate) fn open_line_endpoint(device: &str, default_tcp_port: u16) -> io::Res
         to: gateway,
         pending: Vec::new(),
     });
-    Ok((reader, writer))
+    Ok(((reader, writer), true))
 }
 
 fn receive_only(sock: UdpSocket) -> Pair {

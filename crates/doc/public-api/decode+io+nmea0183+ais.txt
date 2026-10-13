@@ -210,17 +210,33 @@ pub const canboat::codec::iso_tp::T3_MS: u64
 pub const canboat::codec::iso_tp::T4_MS: u64
 pub const canboat::codec::iso_tp::TP_MAX_SIZE: usize
 pub mod canboat::codec::line
-pub enum canboat::codec::line::InputFormat
+pub enum canboat::codec::line::Framing
+pub canboat::codec::line::Framing::Coalesced
+pub canboat::codec::line::Framing::Single
+pub canboat::codec::line::Framing::Unknown
+impl core::clone::Clone for canboat::read::Framing
+pub fn canboat::read::Framing::clone(&self) -> Self
+impl core::cmp::Eq for canboat::read::Framing
+impl core::cmp::PartialEq for canboat::read::Framing
+pub fn canboat::read::Framing::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::read::Framing
+pub fn canboat::read::Framing::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::Framing
+impl core::marker::StructuralPartialEq for canboat::read::Framing
+#[non_exhaustive] pub enum canboat::codec::line::InputFormat
 pub canboat::codec::line::InputFormat::ActisenseAscii
 pub canboat::codec::line::InputFormat::Airmar
 pub canboat::codec::line::InputFormat::Candump
 pub canboat::codec::line::InputFormat::GarminCsv
 pub canboat::codec::line::InputFormat::GarminCsv2
 pub canboat::codec::line::InputFormat::Ikonvert
+pub canboat::codec::line::InputFormat::Mxpgn
 pub canboat::codec::line::InputFormat::Plain
 pub canboat::codec::line::InputFormat::PlainMixFast
 pub canboat::codec::line::InputFormat::SeaSmart
 pub canboat::codec::line::InputFormat::Ydwg02
+impl canboat::read::InputFormat
+pub fn canboat::read::InputFormat::framing(self) -> canboat::read::Framing
 impl core::clone::Clone for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::clone(&self) -> Self
 impl core::cmp::Eq for canboat::read::InputFormat
@@ -230,23 +246,23 @@ impl core::fmt::Debug for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::read::InputFormat
 impl core::marker::StructuralPartialEq for canboat::read::InputFormat
-pub enum canboat::codec::line::ParseError
-pub canboat::codec::line::ParseError::BadHeader
+#[non_exhaustive] pub enum canboat::codec::line::ParseError
+#[non_exhaustive] pub canboat::codec::line::ParseError::BadHeader
 pub canboat::codec::line::ParseError::BadHeader::expected: usize
 pub canboat::codec::line::ParseError::BadHeader::found: usize
-pub canboat::codec::line::ParseError::BadHexByte
+#[non_exhaustive] pub canboat::codec::line::ParseError::BadHexByte
 pub canboat::codec::line::ParseError::BadHexByte::index: usize
 pub canboat::codec::line::ParseError::BadHexByte::offset: core::option::Option<usize>
 pub canboat::codec::line::ParseError::BadHexByte::value: alloc::string::String
-pub canboat::codec::line::ParseError::BadInteger
+#[non_exhaustive] pub canboat::codec::line::ParseError::BadInteger
 pub canboat::codec::line::ParseError::BadInteger::field: &'static str
 pub canboat::codec::line::ParseError::BadInteger::offset: core::option::Option<usize>
 pub canboat::codec::line::ParseError::BadInteger::value: alloc::string::String
-pub canboat::codec::line::ParseError::BadPayloadCount
+#[non_exhaustive] pub canboat::codec::line::ParseError::BadPayloadCount
 pub canboat::codec::line::ParseError::BadPayloadCount::expected: usize
 pub canboat::codec::line::ParseError::BadPayloadCount::found: usize
 pub canboat::codec::line::ParseError::Empty
-pub canboat::codec::line::ParseError::LengthTooLarge
+#[non_exhaustive] pub canboat::codec::line::ParseError::LengthTooLarge
 pub canboat::codec::line::ParseError::LengthTooLarge::len: usize
 pub canboat::codec::line::ParseError::MissingPayload
 pub canboat::codec::line::ParseError::MissingTimestamp
@@ -385,7 +401,7 @@ pub fn canboat::codec::Event::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::codec::Event
 pub fn canboat::codec::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::codec::Event
-pub enum canboat::codec::Refused
+#[non_exhaustive] pub enum canboat::codec::Refused
 pub canboat::codec::Refused::NotOnTxList
 pub canboat::codec::Refused::Synthetic
 pub canboat::codec::Refused::TooLarge
@@ -512,11 +528,11 @@ impl core::fmt::Debug for canboat::output::JsonOptions
 pub fn canboat::output::JsonOptions::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub fn canboat::output::write_json<W: core::fmt::Write>(&mut W, &canboat::DecodedPgn, &canboat::output::JsonOptions) -> core::fmt::Result
 pub mod canboat::prelude
-pub enum canboat::prelude::DecodeError
-pub canboat::prelude::DecodeError::ShortPayload
+#[non_exhaustive] pub enum canboat::prelude::DecodeError
+#[non_exhaustive] pub canboat::prelude::DecodeError::ShortPayload
 pub canboat::prelude::DecodeError::ShortPayload::field: alloc::string::String
 pub canboat::prelude::DecodeError::ShortPayload::pgn: u32
-pub canboat::prelude::DecodeError::UnknownPgn
+#[non_exhaustive] pub canboat::prelude::DecodeError::UnknownPgn
 pub canboat::prelude::DecodeError::UnknownPgn::pgn: u32
 impl core::error::Error for canboat::DecodeError
 impl core::fmt::Debug for canboat::DecodeError
@@ -683,17 +699,33 @@ impl core::fmt::Debug for canboat::Frame
 pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Frame
 pub mod canboat::read
-pub enum canboat::read::InputFormat
+pub enum canboat::read::Framing
+pub canboat::read::Framing::Coalesced
+pub canboat::read::Framing::Single
+pub canboat::read::Framing::Unknown
+impl core::clone::Clone for canboat::read::Framing
+pub fn canboat::read::Framing::clone(&self) -> Self
+impl core::cmp::Eq for canboat::read::Framing
+impl core::cmp::PartialEq for canboat::read::Framing
+pub fn canboat::read::Framing::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::read::Framing
+pub fn canboat::read::Framing::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::Framing
+impl core::marker::StructuralPartialEq for canboat::read::Framing
+#[non_exhaustive] pub enum canboat::read::InputFormat
 pub canboat::read::InputFormat::ActisenseAscii
 pub canboat::read::InputFormat::Airmar
 pub canboat::read::InputFormat::Candump
 pub canboat::read::InputFormat::GarminCsv
 pub canboat::read::InputFormat::GarminCsv2
 pub canboat::read::InputFormat::Ikonvert
+pub canboat::read::InputFormat::Mxpgn
 pub canboat::read::InputFormat::Plain
 pub canboat::read::InputFormat::PlainMixFast
 pub canboat::read::InputFormat::SeaSmart
 pub canboat::read::InputFormat::Ydwg02
+impl canboat::read::InputFormat
+pub fn canboat::read::InputFormat::framing(self) -> canboat::read::Framing
 impl core::clone::Clone for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::clone(&self) -> Self
 impl core::cmp::Eq for canboat::read::InputFormat
@@ -1004,11 +1036,11 @@ pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter
 impl core::fmt::Display for canboat::schema::UnknownBusProtocol
 pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::schema::UnknownBusProtocol
-pub enum canboat::DecodeError
-pub canboat::DecodeError::ShortPayload
+#[non_exhaustive] pub enum canboat::DecodeError
+#[non_exhaustive] pub canboat::DecodeError::ShortPayload
 pub canboat::DecodeError::ShortPayload::field: alloc::string::String
 pub canboat::DecodeError::ShortPayload::pgn: u32
-pub canboat::DecodeError::UnknownPgn
+#[non_exhaustive] pub canboat::DecodeError::UnknownPgn
 pub canboat::DecodeError::UnknownPgn::pgn: u32
 impl core::error::Error for canboat::DecodeError
 impl core::fmt::Debug for canboat::DecodeError
@@ -1171,9 +1203,9 @@ pub fn canboat::Reassembled::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::Reassembled
 pub fn canboat::Reassembled::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Reassembled
-pub enum canboat::ReassemblyError
+#[non_exhaustive] pub enum canboat::ReassemblyError
 pub canboat::ReassemblyError::EmptyData
-pub canboat::ReassemblyError::OutOfSlots
+#[non_exhaustive] pub canboat::ReassemblyError::OutOfSlots
 pub canboat::ReassemblyError::OutOfSlots::pgn: u32
 pub canboat::ReassemblyError::OutOfSlots::src: u8
 impl core::cmp::Eq for canboat::ReassemblyError

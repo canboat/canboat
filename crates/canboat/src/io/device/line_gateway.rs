@@ -18,7 +18,7 @@ use std::io::{Read, Write};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use crate::engine::format::{actisense_ascii, iso11783_compose, ydwg02};
+use crate::engine::format::{actisense_ascii, iso11783_compose, mxpgn, ydwg02};
 use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::startup::format_iso_ms;
 use crate::engine::{BusProtocol, FramePacketType, RawFrame};
@@ -35,6 +35,10 @@ pub enum LineFormat {
     /// Actisense N2K ASCII: `A…` lines carrying complete (coalesced)
     /// messages in both directions.
     N2kAscii,
+    /// ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, among
+    /// other NMEA 0183 sentences, which carry no frame. Sent in the send
+    /// form: the MiniPlex sends from its own address.
+    Mxpgn,
 }
 
 /// The CAN frames written to a RAW gateway, to know their `T` echoes
@@ -113,6 +117,19 @@ impl Decoder {
         self.sent = sent;
         self
     }
+
+    /// Pass on a CAN frame received at `now`, joining fast-packets.
+    fn push_frame(&mut self, mut frame: RawFrame, now: &str, events: &mut Vec<DeviceEvent>) {
+        frame.timestamp = Some(now.to_string());
+        let pt = self.protocol.packet_type(frame.pgn);
+        match self.reassembler.push(frame, pt) {
+            Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
+                events.push(DeviceEvent::Frame(f))
+            }
+            Reassembled::Partial => {}
+            Reassembled::Error(e) => events.push(DeviceEvent::Error(e.to_string())),
+        }
+    }
 }
 
 impl DeviceDecoder for Decoder {
@@ -142,22 +159,16 @@ impl DeviceDecoder for Decoder {
                                     iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst),
                                     &frame.data,
                                 ) => {}
-                        Ok(mut frame) => {
-                            frame.timestamp = Some(now.clone());
-                            let pt = self.protocol.packet_type(frame.pgn);
-                            match self.reassembler.push(frame, pt) {
-                                Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
-                                    events.push(DeviceEvent::Frame(f))
-                                }
-                                Reassembled::Partial => {}
-                                Reassembled::Error(e) => {
-                                    events.push(DeviceEvent::Error(e.to_string()))
-                                }
-                            }
-                        }
+                        Ok(frame) => self.push_frame(frame, &now, events),
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                     }
                 }
+                LineFormat::Mxpgn => match mxpgn::parse_line(&line) {
+                    Ok(Some(frame)) => self.push_frame(frame, &now, events),
+                    // The NMEA 0183 a MiniPlex mixes in.
+                    Ok(None) => {}
+                    Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
+                },
                 LineFormat::N2kAscii => match actisense_ascii::parse_line(&line) {
                     Ok(mut frame) => {
                         frame.timestamp = Some(now.clone());
@@ -234,13 +245,25 @@ impl DeviceEncoder for Encoder {
                 actisense_ascii::write_line(&mut out, frame).ok()?;
                 out.push_str("\r\n");
             }
-            LineFormat::YdwgRaw => {
+            LineFormat::YdwgRaw | LineFormat::Mxpgn => {
                 let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
                 let write_one = |out: &mut String, data: &[u8]| {
-                    self.sent.note(canid, data);
-                    let _ = write!(out, "{canid:08X}");
-                    for b in data {
-                        let _ = write!(out, " {b:02X}");
+                    if self.format == LineFormat::Mxpgn {
+                        let one = RawFrame::new(
+                            None,
+                            frame.prio,
+                            frame.pgn,
+                            frame.src,
+                            frame.dst,
+                            data.iter().copied(),
+                        );
+                        let _ = mxpgn::write_line(out, &one, true);
+                    } else {
+                        self.sent.note(canid, data);
+                        let _ = write!(out, "{canid:08X}");
+                        for b in data {
+                            let _ = write!(out, " {b:02X}");
+                        }
                     }
                     out.push_str("\r\n");
                 };
@@ -274,6 +297,12 @@ impl DeviceEncoder for Encoder {
         Some(out.into_bytes())
     }
 }
+
+/// What a ShipModul MiniPlex is sent when the link opens: options 30 and
+/// 31 set to mode 2, every PGN received sent on as `$MXPGN` (ShipModul,
+/// "MiniPlex-3 NMEA and Proprietary Sentences", `$PSMDNO`). Address
+/// Claims and Product Information still come as `$PSMDNC` and `$PSMDNP`.
+pub const MINIPLEX_MXPGN_ALL: &[u8] = b"$PSMDNO,C,30,0*57\r\n$PSMDNO,C,31,1*57\r\n";
 
 /// What a Yacht Devices USB gateway (YDNU-02) is sent when its serial
 /// port opens, to put it in RAW mode, as canboatjs does: `0` and a line
@@ -419,6 +448,37 @@ mod tests {
         let out = decode_all(&mut dec, "1223 01 02 03 04 05 06 07 08\r\n");
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].pgn, 127250);
+    }
+
+    /// A MiniPlex stream: `$MXPGN` frames among other NMEA 0183, a
+    /// fast-packet in its frames; what canboat sends goes in the send form.
+    #[test]
+    fn mxpgn_frames_are_joined_and_sent_in_the_send_form() {
+        let mut dec = Decoder::new(LineFormat::Mxpgn);
+        let rmc = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A\r\n";
+        let mut text = String::from(rmc);
+        let sent = frame(129029, &(0u8..20).collect::<Vec<_>>());
+        let mut wire = String::new();
+        for chunk in crate::engine::fastpacket::fragment(0, &sent.data).unwrap() {
+            let one = RawFrame::new(None, 3, 129029, 7, 255, chunk);
+            crate::engine::format::mxpgn::write_line(&mut wire, &one, false).unwrap();
+            wire.push_str("\r\n");
+        }
+        text.push_str(&wire);
+        text.push_str(rmc);
+        let out = decode_all(&mut dec, &text);
+        assert_eq!(out.len(), 1);
+        assert_eq!((out[0].pgn, out[0].src), (129029, 7));
+        assert_eq!(out[0].data.as_slice(), sent.data.as_slice());
+
+        let enc = Encoder::new(LineFormat::Mxpgn);
+        let request = RawFrame::new(None, 6, 59904, 0, 9, [0x16, 0xf0, 0x01]);
+        let bytes = enc.encode_frame(&request).unwrap();
+        assert_eq!(bytes, b"$MXPGN,00EA00,E309,01F016*6B\r\n");
+        let lines = enc.encode_frame(&sent).unwrap();
+        let lines = String::from_utf8(lines).unwrap();
+        assert_eq!(lines.lines().count(), 3);
+        assert!(lines.lines().all(|l| l.starts_with("$MXPGN,01F805,B800,")));
     }
 
     #[test]

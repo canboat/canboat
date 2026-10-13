@@ -37,14 +37,17 @@ const HEX_NIBBLE: [u8; 256] = {
 };
 
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ParseError {
     #[error("line is empty")]
     Empty,
     #[error("missing timestamp separator")]
     MissingTimestamp,
     #[error("expected {expected} comma-separated header fields, found {found}")]
+    #[non_exhaustive]
     BadHeader { expected: usize, found: usize },
     #[error("malformed integer in field {field}: {value:?}")]
+    #[non_exhaustive]
     BadInteger {
         field: &'static str,
         value: String,
@@ -55,10 +58,13 @@ pub enum ParseError {
         offset: Option<usize>,
     },
     #[error("declared length {len} exceeds max {max}", max = RAWFRAME_MAX_SIZE)]
+    #[non_exhaustive]
     LengthTooLarge { len: usize },
     #[error("expected {expected} hex bytes, found {found}")]
+    #[non_exhaustive]
     BadPayloadCount { expected: usize, found: usize },
     #[error("malformed hex byte {value:?} at index {index}")]
+    #[non_exhaustive]
     BadHexByte {
         index: usize,
         value: String,

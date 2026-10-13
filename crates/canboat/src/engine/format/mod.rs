@@ -18,6 +18,7 @@ pub mod ebl;
 pub mod garmin_csv;
 pub mod ikonvert;
 pub mod maretron_ipg;
+pub mod mxpgn;
 pub mod ngt1;
 pub mod plain;
 pub mod seasmart;
@@ -33,6 +34,7 @@ use crate::engine::frame::RawFrame;
 /// One of the canboat-supported ASCII line formats.
 ///
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum InputFormat {
     /// Canboat PLAIN / FAST line (`<ts>,<prio>,<pgn>,...,<hex>,...`).
     /// Once any line is wider than 8 payload bytes the parser locks
@@ -55,6 +57,10 @@ pub enum InputFormat {
     /// SeaSmart.Net `$PCDIN,...` checksummed sentence (Chetco,
     /// Quark-elec, Yacht Devices).
     SeaSmart,
+    /// ShipModul MiniPlex `$MXPGN,...` sentences: one CAN frame each, so
+    /// fast-packets arrive in their frames. Other NMEA 0183 sentences in
+    /// the stream carry no frame.
+    Mxpgn,
     /// Garmin CSV1 (relative-ms timestamps).
     GarminCsv,
     /// Garmin CSV2 (absolute `M_D_Y_H_M_S_ms` timestamps + an extra
@@ -66,6 +72,37 @@ pub enum InputFormat {
     /// shape (`<0x18eeff01> [8] 05 a0 …`). One raw CAN frame
     /// per line; canboat C reads these via `candump2analyzer`.
     Candump,
+}
+
+/// How the lines of an [`InputFormat`] carry a multi-frame message.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Framing {
+    /// Each line is one CAN frame, so a fast-packet arrives in its frames
+    /// and needs a [`Reassembler`](crate::engine::reassembly::Reassembler).
+    Single,
+    /// Each line is a whole message, already joined by the gateway.
+    Coalesced,
+    /// A line may be either. In PLAIN a line of other than 8 bytes is a
+    /// whole message, and an 8-byte line of a fast PGN is a frame unless
+    /// the stream is known to be coalesced.
+    Unknown,
+}
+
+impl InputFormat {
+    /// How this format's lines carry a multi-frame message; mirrors the
+    /// analyzer's `MULTIPACKETS_SEPARATE` and `MULTIPACKETS_COALESCED`.
+    pub fn framing(self) -> Framing {
+        match self {
+            InputFormat::Ydwg02 | InputFormat::Mxpgn | InputFormat::Candump => Framing::Single,
+            InputFormat::ActisenseAscii
+            | InputFormat::Ikonvert
+            | InputFormat::Airmar
+            | InputFormat::SeaSmart
+            | InputFormat::GarminCsv
+            | InputFormat::GarminCsv2 => Framing::Coalesced,
+            InputFormat::Plain | InputFormat::PlainMixFast => Framing::Unknown,
+        }
+    }
 }
 
 /// Parse a `# format=<NAME>` header comment line. Returns the
@@ -96,6 +133,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
         "IKONVERT" => Some(InputFormat::Ikonvert),
         "AIRMAR" => Some(InputFormat::Airmar),
         "SEASMART" | "CHETCO" => Some(InputFormat::SeaSmart),
+        "MXPGN" => Some(InputFormat::Mxpgn),
         "GARMIN_CSV1" | "GARMIN" => Some(InputFormat::GarminCsv),
         "GARMIN_CSV2" => Some(InputFormat::GarminCsv2),
         "CANDUMP" => Some(InputFormat::Candump),
@@ -106,7 +144,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
 /// True when a `# format=<NAME>` header declares a format whose
 /// frames are already coalesced PGN payloads (so the reassembler
 /// should be bypassed). Mirrors canboat C `analyzer.c:391` —
-/// PLAIN/PLAIN_OR_FAST/PLAIN_MIX_FAST/YDWG02 are *not* coalesced;
+/// PLAIN/PLAIN_OR_FAST/PLAIN_MIX_FAST/YDWG02/CANDUMP/MXPGN are *not* coalesced;
 /// everything else (FAST, ACTISENSE, IKONVERT, AIRMAR, SEASMART,
 /// GARMIN_CSV*) is.
 pub fn header_implies_coalesced(line: &str) -> bool {
@@ -116,17 +154,22 @@ pub fn header_implies_coalesced(line: &str) -> bool {
     let name = rest.trim().to_ascii_uppercase();
     !matches!(
         name.as_str(),
-        "PLAIN" | "PLAIN_OR_FAST" | "PLAIN_MIX_FAST" | "YDWG02" | "CANDUMP"
+        "PLAIN" | "PLAIN_OR_FAST" | "PLAIN_MIX_FAST" | "YDWG02" | "CANDUMP" | "MXPGN"
     )
 }
 
 /// Auto-detect the line format from a single representative line.
 /// Returns `None` if nothing matches; callers should fall back to
-/// [`InputFormat::Plain`] in that case (canboat's behavior).
+/// [`InputFormat::Plain`] in that case (canboat's behavior), except for
+/// an NMEA 0183 sentence that carries no frame ([`is_undecided`]): the
+/// next line may.
 pub fn detect(line: &str) -> Option<InputFormat> {
     let t = line.trim_start();
     if t.is_empty() || t.starts_with('#') {
         return None;
+    }
+    if mxpgn::is_mxpgn(t) {
+        return Some(InputFormat::Mxpgn);
     }
     if t.starts_with("!PDGY,") || t.starts_with("$PDGY,") {
         return Some(InputFormat::Ikonvert);
@@ -166,11 +209,23 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     {
         return Some(InputFormat::Candump);
     }
+    // Any other NMEA 0183 sentence (`$GPRMC`, `!AIVDM`, …) holds no frame
+    // and leaves the format open.
+    if mxpgn::is_nmea0183(t) {
+        return None;
+    }
     // PLAIN/FAST: ISO-like timestamp + `,prio,pgn,…`.
     if t.contains(',') {
         return Some(InputFormat::Plain);
     }
     None
+}
+
+/// Whether `line` leaves the format open: an NMEA 0183 sentence that
+/// [`detect`] does not know (`$GPRMC`, `!AIVDM`, …). A MiniPlex or a
+/// SeaSmart gateway mixes these in, so a stream can start with them.
+pub fn is_undecided(line: &str) -> bool {
+    detect(line).is_none() && mxpgn::is_nmea0183(line)
 }
 
 fn looks_like_airmar(line: &str) -> bool {
@@ -265,6 +320,7 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
         },
         InputFormat::Airmar => airmar::parse_line(line).map(Some),
         InputFormat::SeaSmart => seasmart::parse_line(line).map(Some),
+        InputFormat::Mxpgn => mxpgn::parse_line(line),
         InputFormat::GarminCsv | InputFormat::GarminCsv2 => {
             let variant = if format == InputFormat::GarminCsv2 {
                 garmin_csv::Variant::Absolute
@@ -285,6 +341,31 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn framing_follows_the_analyzer() {
+        // analyzer.c's detectFormat sets MULTIPACKETS_SEPARATE for these.
+        for f in [
+            InputFormat::Ydwg02,
+            InputFormat::Mxpgn,
+            InputFormat::Candump,
+        ] {
+            assert_eq!(f.framing(), Framing::Single, "{f:?}");
+        }
+        for f in [
+            InputFormat::ActisenseAscii,
+            InputFormat::Ikonvert,
+            InputFormat::Airmar,
+            InputFormat::SeaSmart,
+            InputFormat::GarminCsv,
+            InputFormat::GarminCsv2,
+        ] {
+            assert_eq!(f.framing(), Framing::Coalesced, "{f:?}");
+        }
+        for f in [InputFormat::Plain, InputFormat::PlainMixFast] {
+            assert_eq!(f.framing(), Framing::Unknown, "{f:?}");
+        }
+    }
 
     #[test]
     fn detect_plain() {
@@ -316,6 +397,24 @@ mod tests {
             detect("!PDGY,127257,3,35,255,12.345,AQID"),
             Some(InputFormat::Ikonvert)
         );
+    }
+
+    #[test]
+    fn detect_mxpgn() {
+        assert_eq!(
+            detect("$MXPGN,01F801,2801,C1308AC40C5DE343*19"),
+            Some(InputFormat::Mxpgn)
+        );
+        assert_eq!(
+            parse_format_header("# format=MXPGN"),
+            Some(InputFormat::Mxpgn)
+        );
+        assert!(!header_implies_coalesced("# format=MXPGN"));
+        // Other NMEA 0183 leaves the format open, rather than PLAIN.
+        let rmc = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
+        assert_eq!(detect(rmc), None);
+        assert!(is_undecided(rmc));
+        assert!(!is_undecided("$PCDIN,01F801,000C7E1B,0F,FFFF*6E"));
     }
 
     #[test]

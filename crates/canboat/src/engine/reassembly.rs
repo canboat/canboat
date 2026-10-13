@@ -99,10 +99,12 @@ pub enum Reassembled {
 }
 
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ReassemblyError {
     #[error("fast-packet frame received with empty data")]
     EmptyData,
     #[error("no reassembly slot available; dropped pgn {pgn} src {src}")]
+    #[non_exhaustive]
     OutOfSlots { pgn: u32, src: u8 },
 }
 

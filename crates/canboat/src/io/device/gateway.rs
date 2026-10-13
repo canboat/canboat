@@ -2,13 +2,14 @@
 
 //! The network gateways — and their serial cousins — that `canboat
 //! interface --kind` and `canboat server` open the same way: Yacht
-//! Devices RAW, and an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII, N2K
-//! ASCII, N2K Actisense (BST-D0) or RAW Actisense (BST-95) mode.
+//! Devices RAW, a ShipModul MiniPlex in `$MXPGN`, and an Actisense W2K-1 or
+//! PRO-NDC-1E2K in RAW ASCII, N2K ASCII, N2K Actisense (BST-D0) or RAW
+//! Actisense (BST-95) mode.
 
 use std::io;
 
 use crate::engine::BusProtocol;
-use crate::io::net::{open_line_endpoint, open_tcp};
+use crate::io::net::{open_line_endpoint, open_line_endpoint_sends, open_tcp};
 use crate::io::open_serial_rw;
 
 use super::{DeviceHandle, line_gateway};
@@ -21,6 +22,10 @@ pub enum GatewayKind {
     /// NavLink2 RAW port over `tcp://host[:port]` (port 1457 if not given)
     /// or `udp://…`, or a YDNU-02 on its serial port (38 400 baud).
     YachtDevices,
+    /// A ShipModul MiniPlex-3 with NMEA 2000, in `$MXPGN`: over
+    /// `tcp://host[:port]` (port 10110 if not given) or `udp://…`, or on its
+    /// USB serial port (460 800 baud). canboat sets it to send every PGN.
+    Miniplex,
     /// An Actisense W2K-1, PRO-NDC-1E2K or NGX, set to `format`. (An NGT-1,
     /// in NGT Actisense, is opened with its own driver: see
     /// [`crate::bus::open_ngt1`].)
@@ -52,6 +57,7 @@ impl GatewayKind {
     pub fn default_baud(self) -> u32 {
         match self {
             GatewayKind::YachtDevices => 38_400,
+            GatewayKind::Miniplex => 460_800,
             GatewayKind::Actisense(ActisenseFormat::RawActisense) => 115_200,
             GatewayKind::Actisense(ActisenseFormat::N2kAscii)
             | GatewayKind::Actisense(ActisenseFormat::N2kActisense)
@@ -65,6 +71,7 @@ impl GatewayKind {
         matches!(
             self,
             GatewayKind::YachtDevices
+                | GatewayKind::Miniplex
                 | GatewayKind::Actisense(ActisenseFormat::RawActisense)
                 | GatewayKind::Actisense(ActisenseFormat::RawAscii)
         )
@@ -75,6 +82,7 @@ impl GatewayKind {
         matches!(
             self,
             GatewayKind::YachtDevices
+                | GatewayKind::Miniplex
                 | GatewayKind::Actisense(ActisenseFormat::N2kAscii)
                 | GatewayKind::Actisense(ActisenseFormat::RawAscii)
         )
@@ -84,6 +92,7 @@ impl GatewayKind {
     pub fn name(self) -> &'static str {
         match self {
             GatewayKind::YachtDevices => "yachtd",
+            GatewayKind::Miniplex => "miniplex",
             GatewayKind::Actisense(ActisenseFormat::N2kAscii) => "actisense-n2k-ascii",
             GatewayKind::Actisense(ActisenseFormat::RawAscii) => "actisense-raw-ascii",
             GatewayKind::Actisense(ActisenseFormat::N2kActisense) => "actisense-n2k-actisense",
@@ -141,6 +150,28 @@ pub(crate) fn open(
                 line_gateway::LineFormat::YdwgRaw,
                 protocol,
                 init,
+            )
+        }
+        GatewayKind::Miniplex => {
+            let (reader, writer) = if network {
+                let (pair, sends) = open_line_endpoint_sends(device, 10110)?;
+                if !sends {
+                    log::warn!(
+                        "canboat can't set a MiniPlex it can't send to: set it to send \
+                         every PGN as $MXPGN yourself ($PSMDNO options 30 and 31, \
+                         mode 2), or give its address, udp://miniplex:port"
+                    );
+                }
+                pair
+            } else {
+                serial()?
+            };
+            line_gateway::run(
+                reader,
+                writer,
+                line_gateway::LineFormat::Mxpgn,
+                protocol,
+                line_gateway::MINIPLEX_MXPGN_ALL,
             )
         }
         GatewayKind::Actisense(ActisenseFormat::RawAscii) => {

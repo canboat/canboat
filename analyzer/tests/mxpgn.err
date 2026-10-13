@@ -1,0 +1,11 @@
+INFO mxpgn [analyzer] Timestamp fixed
+INFO mxpgn [analyzer] Detected ShipModul MiniPlex $MXPGN protocol with one line per frame
+ERROR mxpgn [analyzer] Error reading $MXPGN data: $MXPGN,01F801,2801,C1308AC40C5DE343XYZ
+ERROR mxpgn [analyzer] Unknown message error 2: '$MXPGN,01F801,2801,C1308AC40C5DE343XYZ
+'
+ERROR mxpgn [analyzer] Error reading $MXPGN data: $MXPGN,01F801,2801,C1308AC40C5DE343,extra
+ERROR mxpgn [analyzer] Unknown message error 2: '$MXPGN,01F801,2801,C1308AC40C5DE343,extra
+'
+ERROR mxpgn [analyzer] $MXPGN checksum does not match: $MXPGN,01F801,2801,C1308AC40C5DE343*18
+ERROR mxpgn [analyzer] Unknown message error 2: '$MXPGN,01F801,2801,C1308AC40C5DE343*18
+'
