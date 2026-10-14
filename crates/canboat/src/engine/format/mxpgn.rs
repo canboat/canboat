@@ -1,11 +1,11 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 //! `$MXPGN` line format: ShipModul MiniPlex NMEA 2000 frames inside NMEA
-//! 0183 sentences, as a MiniPlex-3 sends them, and as an Actisense
-//! gateway does when its NMEA 0183 output is set to it.
+//! 0183 sentences, as a MiniPlex-3 sends them, and, with the data the
+//! other way round, as an Actisense gateway does (see below).
 //!
 //! Layout (ShipModul, "MiniPlex-3 NMEA and Proprietary Sentences",
-//! FW V3.40.0, p. 4; the Actisense SDK copies it):
+//! FW V3.40.0, p. 4; the Actisense SDK copies its words):
 //!
 //! ```text
 //!   $--PGN,pppppp,aaaa,d--d*hh
@@ -25,6 +25,13 @@
 //!     Appendix D.1): the last byte first.
 //!   - `*hh` — the NMEA 0183 checksum, checked when present.
 //!
+//! Actisense gateways put the data the other way round: the frame's bytes
+//! in the order they are on the bus, first byte first ([`DataOrder::Bus`]).
+//! The Actisense SDK copies ShipModul's description, but its own example
+//! (`$MXPGN,01F214,6842,00B004FF7FFFFFFF`, 127508 at 12.00 V) and a W2K-2
+//! (firmware 3.095) both have it so, and a W2K-2 sends only what is
+//! written so.
+//!
 //! One sentence is one CAN frame: a fast-packet arrives as one sentence
 //! per frame, for the caller to join. Sentences carry no time. A leading
 //! NMEA 0183 TAG block (`\s:MX01*hh\`) is skipped, and every other
@@ -37,6 +44,17 @@ use smallvec::SmallVec;
 use crate::engine::format::common::{iso11783_compose, iso11783_decompose};
 use crate::engine::format::plain::ParseError;
 use crate::engine::frame::RawFrame;
+
+/// How the data field orders a frame's bytes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum DataOrder {
+    /// As one number, most significant first, so the frame's last byte
+    /// first: ShipModul's MiniPlex.
+    #[default]
+    Reversed,
+    /// The frame's bytes in bus order, first byte first: Actisense.
+    Bus,
+}
 
 /// Whether `pgn` is PDU1 (addressed): its low byte is the destination.
 fn is_pdu1(pgn: u32) -> bool {
@@ -108,6 +126,15 @@ pub fn parse_line(line: &str) -> Result<Option<RawFrame>, ParseError> {
 
 /// [`parse_line`], checking the checksum only if `checksum` is set.
 pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, ParseError> {
+    parse_ordered(line, checksum, DataOrder::Reversed)
+}
+
+/// [`parse_sentence`], the data in `order`.
+pub fn parse_ordered(
+    line: &str,
+    checksum: bool,
+    order: DataOrder,
+) -> Result<Option<RawFrame>, ParseError> {
     let line = line.trim();
     if line.is_empty() {
         return Err(ParseError::Empty);
@@ -149,8 +176,13 @@ pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, Pa
         });
     }
     let mut data: SmallVec<[u8; 8]> = SmallVec::new();
-    // The last byte first: read the pairs from the end.
-    for (i, pair) in data_tok.as_bytes().rchunks(2).enumerate() {
+    let pairs = data_tok.as_bytes().chunks(2);
+    let pairs: Vec<&[u8]> = match order {
+        // The last byte first: read the pairs from the end.
+        DataOrder::Reversed => pairs.rev().collect(),
+        DataOrder::Bus => pairs.collect(),
+    };
+    for (i, pair) in pairs.into_iter().enumerate() {
         let s = std::str::from_utf8(pair).unwrap_or("");
         data.push(
             u8::from_str_radix(s, 16).map_err(|_| ParseError::BadHexByte {
@@ -207,7 +239,18 @@ pub fn parse_sentence(line: &str, checksum: bool) -> Result<Option<RawFrame>, Pa
 /// sentence with its checksum (no line end). `send` writes the form a
 /// MiniPlex transmits (S set, the destination in the attribute word);
 /// otherwise the form it sends for a received frame (the source there).
+#[cfg(test)]
 pub fn write_line<W: fmt::Write>(w: &mut W, frame: &RawFrame, send: bool) -> fmt::Result {
+    write_ordered(w, frame, send, DataOrder::Reversed)
+}
+
+/// [`write_line`], the data in `order`.
+pub fn write_ordered<W: fmt::Write>(
+    w: &mut W,
+    frame: &RawFrame,
+    send: bool,
+    order: DataOrder,
+) -> fmt::Result {
     debug_assert!(frame.data.len() <= 8);
     let id = iso11783_compose(frame.prio & 7, frame.pgn, frame.src, frame.dst);
     let (_, pgn, _, dst) = iso11783_decompose(id);
@@ -226,8 +269,10 @@ pub fn write_line<W: fmt::Write>(w: &mut W, frame: &RawFrame, send: bool) -> fmt
         | (frame.data.len() as u16) << 8
         | u16::from(address);
     let mut body = format!("MXPGN,{pgn_field:06X},{attr:04X},");
-    for b in frame.data.iter().rev() {
-        body.push_str(&format!("{b:02X}"));
+    let hex = |b: &u8| format!("{b:02X}");
+    match order {
+        DataOrder::Reversed => frame.data.iter().rev().for_each(|b| body.push_str(&hex(b))),
+        DataOrder::Bus => frame.data.iter().for_each(|b| body.push_str(&hex(b))),
     }
     write!(w, "${body}*{:02X}", nmea_checksum(&body))
 }
@@ -495,6 +540,53 @@ mod tests {
         let request = RawFrame::new(None, 7, 59904, 0, 0x09, [0x16, 0xf0, 0x01]);
         write_line(&mut line, &request, true).unwrap();
         assert_eq!(line, "$MXPGN,00EA00,F309,01F016*68");
+    }
+
+    fn parse_bus(line: &str) -> RawFrame {
+        parse_ordered(line, true, DataOrder::Bus).unwrap().unwrap()
+    }
+
+    /// The Actisense SDK's example: 127508 from 0x42, battery 0 at
+    /// 12.00 V, the rest not available.
+    #[test]
+    fn actisenses_example_is_in_bus_order() {
+        let f = parse_bus("$MXPGN,01F214,6842,00B004FF7FFFFFFF*1F");
+        assert_eq!(head(&f), (6, 127508, 0x42, 255));
+        assert_eq!(
+            f.data.as_slice(),
+            [0x00, 0xb0, 0x04, 0xff, 0x7f, 0xff, 0xff, 0xff]
+        );
+        assert_eq!(u16::from_le_bytes([f.data[1], f.data[2]]), 1200);
+    }
+
+    /// A W2K-2's Position: 53.18 N, 5.43 E in bus order; read the
+    /// MiniPlex way it is no position at all.
+    #[test]
+    fn a_w2k2_position() {
+        let line = "$MXPGN,01F801,2806,1999B21F095D3C03*16";
+        let f = parse_bus(line);
+        assert_eq!(head(&f), (2, 129025, 6, 255));
+        let lat = i32::from_le_bytes(f.data[0..4].try_into().unwrap());
+        let lon = i32::from_le_bytes(f.data[4..8].try_into().unwrap());
+        assert_eq!((lat / 100_000, lon / 100_000), (5317, 542));
+        let shipmodul = parse(line);
+        assert_eq!(
+            shipmodul.data.iter().rev().collect::<Vec<_>>(),
+            f.data.iter().collect::<Vec<_>>()
+        );
+    }
+
+    /// What a W2K-2 sends on: the data in bus order. An ISO Request for
+    /// Product Information to all.
+    #[test]
+    fn the_send_form_in_bus_order() {
+        let request = RawFrame::new(None, 6, 59904, 0, 255, [0x14, 0xf0, 0x01]);
+        let mut line = String::new();
+        write_ordered(&mut line, &request, true, DataOrder::Bus).unwrap();
+        assert_eq!(line, "$MXPGN,00EA00,E3FF,14F001*60");
+        let back = parse_bus(&line);
+        assert_eq!(head(&back), (6, 59904, 0, 255));
+        assert_eq!(back.data, request.data);
     }
 
     #[test]

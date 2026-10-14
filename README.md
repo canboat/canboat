@@ -41,6 +41,7 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 | | `n2k-actisense` (BST-D0) | W2K-1, PRO-NDC-1E2K | `tcp://` (60002) | rw | – | – |
 | | `raw-ascii` | W2K-1, PRO-NDC-1E2K | `tcp://` (60002), `udp://` | rw | yes | – |
 | | `raw-actisense` (BST-95) | W2K-1, PRO-NDC-1E2K, NGX | `tcp://` (60002), NGX serial | rw | yes | – |
+| | `mxpgn` | W2K-2 (CANDIRECT, NMEA 0183) | `tcp://` (20000), `udp://` | rw | yes | – |
 | `yachtd` | `raw-ascii` | YDWG-02, YDEN-02, YDNR-02, YDNU-02 | `tcp://` (1457), `udp://`, YDNU-02 serial | rw | yes | – |
 | `miniplex` | | ShipModul MiniPlex-3 with NMEA 2000, in `$MXPGN` | `tcp://` (10110), `udp://`, serial | rw | yes | – |
 | `seasmart` | | Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode, in `$PCDIN` | `tcp://` (10001), `udp://`, serial | rw | – | – |
@@ -87,6 +88,26 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   its own `$PSMDNC` and `$PSMDNP`, and the latter only for a request it made:
   canboat reads both as those PGNs, also in a capture (`canboat convert`,
   `analyzer`), and sends an ISO Request for either as `$PSMDNR`.
+- **W2K-2:** each data server (60001–60003) takes one Tx Format, set on its
+  *Serial* page: `ngt-actisense`, `n2k-actisense`, `n2k-ascii`, or NMEA
+  0183, which holds only the sentences the W2K-2 converts, never a PGN.
+  Each needs a route from N2K on the *Routing* page, which a change of Tx
+  Format can clear; to send, a route to an enabled virtual device (N2KV1,
+  "Data1", by default; Data2 and Data3 start disabled, and what is routed
+  to them is dropped). It also has a hidden data server, CANDIRECT, on port
+  20000, which its web pages do not show: in BST-95 it is `raw-actisense`
+  (`tcp://w2k:20000`), in NMEA 0183 it sends every CAN frame as `$MXPGN`,
+  for `--data-format mxpgn`. canboat's NGT-1 code works with it: the W2K-2
+  refuses the NGT-1's Rx All mode, and canboat goes on in its mode. Seen on
+  firmware 3.025 and 3.095; what a W2K-1 does is not known.
+- **actisense mxpgn:** an Actisense gateway writes `$MXPGN`'s data in bus
+  order, first byte first, where a MiniPlex writes it as one number, last
+  byte first; both cite the same rule. Actisense's own example
+  (`$MXPGN,01F214,6842,00B004FF7FFFFFFF`, a battery at 12.00 V) and a
+  W2K-2 have it so, and a W2K-2 sends only what is written so. Nothing in a
+  stream says which, so a capture is read as ShipModul's unless told:
+  `canboat convert --from actisense-mxpgn`, `analyzer -format
+  ACTISENSE_MXPGN`.
 - **seasmart:** `$PCDIN` carries one whole message, with its source but no
   priority or destination, so an addressed PGN goes where the gateway decides.
   Not every gateway takes it to send: Yacht Devices gateways take only 59904,
@@ -313,7 +334,8 @@ The full list of understood formats:
 | `AIRMAR` | Airmar weather/depth devices | `0123 -8 09F80 …` | `analyzer` (auto) |
 | `SEASMART` (or `CHETCO`) | `$PCDIN` sentences: Chetco SeaSmart.Net, Quark-elec (QK-A032, QK-A034, QK-A036), Yacht Devices in NMEA 0183 mode (YDWG-02, YDNG-03) | `$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*58` | `analyzer` (auto), `canboat convert --from seasmart` |
 | `GARMIN_CSV1` / `GARMIN_CSV2` | Garmin CSV export | `0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF` | `analyzer` (auto) |
-| `MXPGN` | ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, and its `$PSMDNC` / `$PSMDNP` (Address Claim, Product Information), among other NMEA 0183; also an Actisense gateway's NMEA 0183 output set to it (`canboat convert --from mxpgn`) | `$MXPGN,01F112,2807,FC7FFF7FFF168012*11` | `analyzer` (auto) |
+| `MXPGN` | ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, and its `$PSMDNC` / `$PSMDNP` (Address Claim, Product Information), among other NMEA 0183 (`canboat convert --from mxpgn`) | `$MXPGN,01F112,2807,FC7FFF7FFF168012*11` | `analyzer` (auto) |
+| `ACTISENSE_MXPGN` | `$MXPGN` as an Actisense gateway sends it (a W2K-2's CANDIRECT in NMEA 0183): the data in bus order (`canboat convert --from actisense-mxpgn`) | `$MXPGN,01F214,6842,00B004FF7FFFFFFF*1F` | `analyzer -format ACTISENSE_MXPGN` |
 | `YDWG02` | RAW ASCII: Yacht Devices RAW (YDWG-02 / YDNU-02), an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode (`canboat convert --from raw-ascii`) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
 | `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII (`canboat convert --from n2k-ascii`) | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
 | Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |

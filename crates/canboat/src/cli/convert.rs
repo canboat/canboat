@@ -47,6 +47,10 @@ enum OutFormat {
     ActisenseEbl,
     /// ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each.
     Mxpgn,
+    /// `$MXPGN` sentences with the data in bus order, as an Actisense
+    /// gateway sends them.
+    #[value(name = "actisense-mxpgn")]
+    ActisenseMxpgn,
     /// SeaSmart `$PCDIN` sentences, one whole message each.
     #[value(name = "seasmart")]
     SeaSmart,
@@ -63,6 +67,7 @@ impl OutFormat {
                 | OutFormat::Actisense
                 | OutFormat::ActisenseEbl
                 | OutFormat::Mxpgn
+                | OutFormat::ActisenseMxpgn
                 | OutFormat::SeaSmart
         )
     }
@@ -101,11 +106,14 @@ enum FromFormat {
     /// `$PCDIN,…` sentences (Chetco SeaSmart.Net, Quark-elec, Yacht Devices).
     #[value(name = "seasmart", alias = "chetco")]
     SeaSmart,
-    /// `$MXPGN,…` sentences (ShipModul MiniPlex, or an Actisense gateway's
-    /// NMEA 0183 output), one CAN frame each; other NMEA 0183 sentences in
-    /// the stream are skipped.
+    /// `$MXPGN,…` sentences as a ShipModul MiniPlex sends them, one CAN
+    /// frame each; other NMEA 0183 sentences in the stream are skipped.
     #[value(name = "mxpgn")]
     Mxpgn,
+    /// `$MXPGN,…` sentences as an Actisense gateway sends them (a W2K-2's
+    /// CANDIRECT data server in NMEA 0183): the data in bus order.
+    #[value(name = "actisense-mxpgn")]
+    ActisenseMxpgn,
     /// Garmin CSV (relative ms-since-boot timestamps).
     #[value(name = "garmin", alias = "garmin-csv")]
     Garmin,
@@ -150,6 +158,7 @@ impl FromFormat {
             FromFormat::Airmar => InputFormat::Airmar,
             FromFormat::SeaSmart => InputFormat::SeaSmart,
             FromFormat::Mxpgn => InputFormat::Mxpgn,
+            FromFormat::ActisenseMxpgn => InputFormat::ActisenseMxpgn,
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
             FromFormat::Candump => InputFormat::Candump,
@@ -173,9 +182,12 @@ Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 
 Input line formats (auto-detected from the first line, or forced with --from):
   plain, plain-mix-fast, n2k-ascii, raw-ascii, ikonvert, airmar, seasmart,
-  mxpgn, garmin, garmin-csv2, candump.
+  mxpgn, garmin, garmin-csv2, candump; actisense-mxpgn only with --from.
   (n2k-ascii and raw-ascii are Actisense's names; actisense and ydwg02 still
-  work.)
+  work.) mxpgn is ShipModul's $MXPGN, the data last byte first;
+  actisense-mxpgn the same sentences with the data in bus order, as an
+  Actisense gateway (a W2K-2) sends them. Nothing in a stream tells them
+  apart, so $MXPGN is read as ShipModul's unless --from says otherwise.
 
 Binary input formats (forced with --from; a .ebl file is recognised by name):
   actisense-ebl  Actisense .ebl binary log
@@ -194,6 +206,7 @@ Output formats (--to, default json):
   n2k-ascii      Actisense N2K ASCII lines (reassembled messages)
   actisense-ebl  Actisense .ebl binary log (raw frames)
   mxpgn          $MXPGN sentences, as a ShipModul MiniPlex sends them (raw frames)
+  actisense-mxpgn  $MXPGN sentences, as an Actisense gateway sends them (raw frames)
   seasmart       $PCDIN sentences, as a SeaSmart gateway takes them (whole messages)
 
 Decoded-output shape (json/text only):
@@ -439,7 +452,10 @@ fn convert_raw<W: Write>(
         // MXPGN splits a fast-packet into its frames itself, and SeaSmart
         // carries it whole, so both need whole messages; the binary
         // readers above join them already.
-        if matches!(args.to, OutFormat::Mxpgn | OutFormat::SeaSmart) {
+        if matches!(
+            args.to,
+            OutFormat::Mxpgn | OutFormat::ActisenseMxpgn | OutFormat::SeaSmart
+        ) {
             Box::new(Joined::new(lines, protocol))
         } else {
             Box::new(lines)
@@ -451,6 +467,7 @@ fn convert_raw<W: Write>(
         OutFormat::Actisense => Box::new(TextLineWriter::actisense(out)),
         OutFormat::ActisenseEbl => Box::new(EblWriter::new(out)),
         OutFormat::Mxpgn => Box::new(MxpgnWriter::new(out, protocol)),
+        OutFormat::ActisenseMxpgn => Box::new(MxpgnWriter::actisense(out, protocol)),
         OutFormat::SeaSmart => Box::new(TextLineWriter::seasmart(out)),
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };

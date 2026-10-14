@@ -127,6 +127,7 @@ impl core::marker::Copy for canboat::read::Framing
 impl core::marker::StructuralPartialEq for canboat::read::Framing
 #[non_exhaustive] pub enum canboat::codec::line::InputFormat
 pub canboat::codec::line::InputFormat::ActisenseAscii
+pub canboat::codec::line::InputFormat::ActisenseMxpgn
 pub canboat::codec::line::InputFormat::Airmar
 pub canboat::codec::line::InputFormat::Candump
 pub canboat::codec::line::InputFormat::GarminCsv
@@ -616,6 +617,7 @@ impl core::marker::Copy for canboat::read::Framing
 impl core::marker::StructuralPartialEq for canboat::read::Framing
 #[non_exhaustive] pub enum canboat::read::InputFormat
 pub canboat::read::InputFormat::ActisenseAscii
+pub canboat::read::InputFormat::ActisenseMxpgn
 pub canboat::read::InputFormat::Airmar
 pub canboat::read::InputFormat::Candump
 pub canboat::read::InputFormat::GarminCsv

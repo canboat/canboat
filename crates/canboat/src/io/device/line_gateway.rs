@@ -41,10 +41,24 @@ pub enum LineFormat {
     /// other NMEA 0183 sentences, which carry no frame. Sent in the send
     /// form: the MiniPlex sends from its own address.
     Mxpgn,
+    /// `$MXPGN` as an Actisense gateway sends and takes it: the data in bus
+    /// order (see [`mxpgn::DataOrder`]); otherwise as [`Self::Mxpgn`].
+    ActisenseMxpgn,
     /// SeaSmart `$PCDIN` sentences, one whole message each, among other
     /// NMEA 0183 sentences, which carry no message. Sent the same way,
     /// with no priority or destination: the sentence has neither.
     SeaSmart,
+}
+
+impl LineFormat {
+    /// How its `$MXPGN` orders the data.
+    fn mxpgn_order(self) -> mxpgn::DataOrder {
+        if self == LineFormat::ActisenseMxpgn {
+            mxpgn::DataOrder::Bus
+        } else {
+            mxpgn::DataOrder::Reversed
+        }
+    }
 }
 
 /// The CAN frames written to a RAW gateway, to know their `T` echoes
@@ -189,21 +203,23 @@ impl DeviceDecoder for Decoder {
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                     }
                 }
-                LineFormat::Mxpgn => match mxpgn::parse_sentence(&line, self.checksum) {
-                    Ok(Some(frame)) => self.push_frame(frame, &now, events),
-                    // The NMEA 0183 a MiniPlex mixes in, among which its
-                    // Address Claims and Product Information: whole
-                    // messages, which need no joining.
-                    Ok(None) => match self.psmd.push(&line, self.checksum) {
-                        Ok(Some(mut message)) => {
-                            message.timestamp = Some(now.clone());
-                            events.push(DeviceEvent::Frame(message));
-                        }
-                        Ok(None) => {}
+                LineFormat::Mxpgn | LineFormat::ActisenseMxpgn => {
+                    match mxpgn::parse_ordered(&line, self.checksum, self.format.mxpgn_order()) {
+                        Ok(Some(frame)) => self.push_frame(frame, &now, events),
+                        // The NMEA 0183 a MiniPlex mixes in, among which its
+                        // Address Claims and Product Information: whole
+                        // messages, which need no joining.
+                        Ok(None) => match self.psmd.push(&line, self.checksum) {
+                            Ok(Some(mut message)) => {
+                                message.timestamp = Some(now.clone());
+                                events.push(DeviceEvent::Frame(message));
+                            }
+                            Ok(None) => {}
+                            Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
+                        },
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
-                    },
-                    Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
-                },
+                    }
+                }
                 LineFormat::SeaSmart => match seasmart::parse_sentence(&line, self.checksum) {
                     Ok(Some(mut frame)) => {
                         frame.timestamp = Some(now.clone());
@@ -316,10 +332,10 @@ impl DeviceEncoder for Encoder {
                 seasmart::write_line(&mut out, frame).ok()?;
                 out.push_str("\r\n");
             }
-            LineFormat::YdwgRaw | LineFormat::Mxpgn => {
+            LineFormat::YdwgRaw | LineFormat::Mxpgn | LineFormat::ActisenseMxpgn => {
                 let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
                 let write_one = |out: &mut String, data: &[u8]| {
-                    if self.format == LineFormat::Mxpgn {
+                    if self.format != LineFormat::YdwgRaw {
                         let one = RawFrame::new(
                             None,
                             frame.prio,
@@ -328,7 +344,7 @@ impl DeviceEncoder for Encoder {
                             frame.dst,
                             data.iter().copied(),
                         );
-                        let _ = mxpgn::write_line(out, &one, true);
+                        let _ = mxpgn::write_ordered(out, &one, true, self.format.mxpgn_order());
                     } else {
                         self.sent.note(canid, data);
                         let _ = write!(out, "{canid:08X}");
@@ -604,6 +620,30 @@ mod tests {
         assert!(!out.timestamp.as_deref().unwrap().starts_with("1970"));
 
         assert!(enc.encode_frame(&frame(129029, &[0; 224])).is_none());
+    }
+
+    /// An Actisense stream (a W2K-2): `$MXPGN` with the data in bus order,
+    /// a fast-packet in its frames; what canboat sends goes the same way.
+    #[test]
+    fn actisense_mxpgn_is_in_bus_order_both_ways() {
+        let mut dec = Decoder::new(LineFormat::ActisenseMxpgn);
+        let w2k2 = "$MXPGN,01F805,3806,402BFF04510158F4*1D\r\n\
+                    $MXPGN,01F805,3806,41284097D2A5B553*61\r\n\
+                    $MXPGN,01F805,3806,426107F08DE6544A*1C\r\n\
+                    $MXPGN,01F805,3806,43DEC00070FF6B06*17\r\n\
+                    $MXPGN,01F805,3806,440000000012FC04*15\r\n\
+                    $MXPGN,01F805,3806,456A0272029F1100*1B\r\n\
+                    $MXPGN,01F805,3806,460000FFFFFFFFFF*15\r\n";
+        let out = decode_all(&mut dec, w2k2);
+        assert_eq!(out.len(), 1);
+        assert_eq!((out[0].pgn, out[0].src, out[0].data.len()), (129029, 6, 43));
+        // The SID, then days since 1970: 2026-10-14.
+        assert_eq!(&out[0].data[..3], &[0xff, 0x04, 0x51]);
+
+        let enc = Encoder::new(LineFormat::ActisenseMxpgn);
+        let request = RawFrame::new(None, 6, 59904, 0, 255, [0x14, 0xf0, 0x01]);
+        let bytes = enc.encode_frame(&request).unwrap();
+        assert_eq!(bytes, b"$MXPGN,00EA00,E3FF,14F001*60\r\n");
     }
 
     /// A wrong checksum is an error, unless it is to be ignored.

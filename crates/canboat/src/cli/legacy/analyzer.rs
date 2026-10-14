@@ -114,6 +114,7 @@ fn parse_format_flag(name: &str) -> Result<InputFormat> {
         "airmar" => InputFormat::Airmar,
         "seasmart" | "chetco" => InputFormat::SeaSmart,
         "mxpgn" => InputFormat::Mxpgn,
+        "actisense_mxpgn" | "actisense-mxpgn" => InputFormat::ActisenseMxpgn,
         "garmin" | "garmin-csv" | "garmin_csv1" => InputFormat::GarminCsv,
         "garmin-csv2" | "garmin_csv2" => InputFormat::GarminCsv2,
         "candump" => InputFormat::Candump,
