@@ -25,15 +25,19 @@ use crate::engine::format::timestamp::time_of_day;
 use crate::engine::frame::RawFrame;
 
 /// Encode `frame` as an Actisense N2K-ASCII line (no trailing newline):
-/// `A<HHMMSS.mmm> <SDP:X> <PGN:X> <contiguous upper-case hex>`, where
+/// `A<HHMMSS.mmm> <SDP:05X> <PGN:05X> <contiguous upper-case hex>`, where
 /// `SDP = (src << 12) | (dst << 4) | prio`. The inverse of [`parse_line`];
 /// data bytes are packed as one hex run, as canboat emits them.
+///
+/// Both header fields are five digits, as Actisense specifies them: a
+/// W2K-2 (firmware 3.095) drops a line to send whose `SSDDP` or `PPPPP`
+/// is shorter, such as an ISO Request from address 0 (`00FF6 0EA00`).
 pub fn write_line<W: fmt::Write>(w: &mut W, frame: &RawFrame) -> fmt::Result {
     // Actisense's time token has no colons: HHMMSS.mmm.
     let mut tod = time_of_day(frame.timestamp.as_deref());
     tod.retain(|c| c != ':');
     let sdp = ((frame.src as u32) << 12) | ((frame.dst as u32) << 4) | (frame.prio as u32);
-    write!(w, "A{tod} {sdp:X} {pgn:X}", pgn = frame.pgn)?;
+    write!(w, "A{tod} {sdp:05X} {pgn:05X}", pgn = frame.pgn)?;
     if !frame.data.is_empty() {
         w.write_char(' ')?;
         for b in &frame.data {
@@ -365,6 +369,21 @@ mod tests {
         assert_eq!(back.timestamp.as_deref(), Some("17:33:21,107"));
     }
 
+    /// What a W2K-2 takes to send: an ISO Request from address 0, five
+    /// digits each for the header fields.
+    #[test]
+    fn write_line_pads_the_header_fields() {
+        let frame = RawFrame::new(None, 6, 59904, 0, 255, [0x14, 0xf0, 0x01]);
+        let mut line = String::new();
+        write_line(&mut line, &frame).unwrap();
+        assert_eq!(line, "A000000.000 00FF6 0EA00 14F001");
+        let back = parse_line(&line).unwrap();
+        assert_eq!(
+            (back.prio, back.pgn, back.src, back.dst),
+            (6, 59904, 0, 255)
+        );
+    }
+
     #[test]
     fn write_line_empty_data() {
         let frame = RawFrame {
@@ -377,6 +396,6 @@ mod tests {
         };
         let mut line = String::new();
         write_line(&mut line, &frame).unwrap();
-        assert_eq!(line, "A000000.000 1023 1F119");
+        assert_eq!(line, "A000000.000 01023 1F119");
     }
 }
