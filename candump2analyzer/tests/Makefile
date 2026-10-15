@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 tests all
+.PHONY: test-pcan-view test-angstrom test-bad-length tests all
 
 all:	tests
 
@@ -30,11 +30,11 @@ all:	tests
 # (FMT_6) to the analyzer's PLAIN input format, including absolute timestamps
 # derived from the ;$STARTTIME= header. See issue #250.
 #
-test1:
+test-pcan-view:
 	$(CANDUMP2ANALYZER) pcan-view.in > $(TEMPDIR)/pcan-view.out 2> $(TEMPDIR)/pcan-view.err
 	diff $(TEMPDIR)/pcan-view.out pcan-view.out
 
-tests:	test1 test2 test3
+tests:	test-pcan-view test-angstrom test-bad-length
 
 #
 # The Angstrom candump style ("<0x18eeff01> [8] 05 a0 ..."), FMT_1. Its lines
@@ -42,7 +42,7 @@ tests:	test1 test2 test3
 # everything after the timestamp column. The Rust candump reader is checked
 # against the same pair (crates/canboat/tests/convert_formats.rs, #998).
 #
-test2:
+test-angstrom:
 	$(CANDUMP2ANALYZER) angstrom.in | cut -d, -f2- > $(TEMPDIR)/angstrom.out 2> $(TEMPDIR)/angstrom.err
 	diff $(TEMPDIR)/angstrom.out angstrom.out
 
@@ -51,7 +51,7 @@ test2:
 # or more than 8) are skipped with a message, not padded or passed on (#998).
 # The Rust candump reader is checked against the same files.
 #
-test3:
+test-bad-length:
 	for f in angstrom-bad-length debian-bad-length; do \
 	  $(CANDUMP2ANALYZER) $$f.in 2> $(TEMPDIR)/$$f.err | cut -d, -f2- > $(TEMPDIR)/$$f.out || exit 1; \
 	  diff $(TEMPDIR)/$$f.out $$f.out || exit 1; \

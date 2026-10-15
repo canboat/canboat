@@ -195,7 +195,7 @@ copy + review:
 
 ```
 make                                   # rebuild
-make -C analyzer test3                 # writes /tmp/pgn-test.out + .err; the diff shows the change
+make -C analyzer/tests test-pgn-text  # writes /tmp/pgn-test.out + .err; the diff shows the change
 # inspect the diff — confirm it is intentional, then:
 cp /tmp/pgn-test.out analyzer/tests/pgn-test.out
 cp /tmp/pgn-test.err analyzer/tests/pgn-test.err
@@ -582,7 +582,7 @@ lengths, ranges and sentinels are **derived** — do not write them.
 | Add a **manufacturer code** | `analyzer/lookup-generated-data.h` (`MANUFACTURER_CODE`) | same (`util/update-manufacturer-codes.sh` drafts lines) |
 | Change the **docs-site look** | `docs/canboat.xsl` / `.css` / `.js` | `make generated` |
 | Change the **validation schema** | `docs/canboat.xsd` | `make generated` |
-| Add a **regression test** | `analyzer/tests/<name>.{in,out,err}` + a `testN` target | `make -C analyzer tests` |
+| Add a **regression test** | `analyzer/tests/<name>.{in,out,err}` + a `test-<name>` target (named for its subject, not numbered, so that two branches adding tests don't both take the next number) | `make -C analyzer tests` |
 | Bump **version / schema** | `common/version.h` | `make generated` |
 
 **NEVER hand-edit:** `docs/canboat.xml`, `docs/canboat.html`,

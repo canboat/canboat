@@ -23,7 +23,7 @@ ANALYZER=$(TARGETDIR)/analyzer
 SAMPLES=../../samples
 TEMPDIR=/tmp
 
-.PHONY: test1 tests all
+.PHONY: test-w2k-json tests all
 
 all:	tests
 
@@ -35,10 +35,10 @@ all:	tests
 # message with wall-clock time; -fixtime fixes only the log lines (stderr), so
 # the per-message timestamps in stdout are normalised away before diffing.
 #
-test1:
+test-w2k-json:
 	$(ACTISENSE) -r $(SAMPLES)/NKpayloadsW2K-1.txt 2>/dev/null | $(ANALYZER) -json -nv -q -fixtime w2k 2>$(TEMPDIR)/w2k.err | sed 's/"timestamp":"[^"]*"/"timestamp":"-"/' > $(TEMPDIR)/w2k.out
 	python3 ../../analyzer/validate-json.py --line-by-line $(TEMPDIR)/w2k.out
 	diff $(TEMPDIR)/w2k.out w2k.out
 	diff $(TEMPDIR)/w2k.err w2k.err
 
-tests:	test1
+tests:	test-w2k-json

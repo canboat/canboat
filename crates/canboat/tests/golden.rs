@@ -214,7 +214,7 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     }
 }
 
-/// ShipModul MiniPlex `$MXPGN` (test41 in analyzer/tests/Makefile, #997):
+/// ShipModul MiniPlex `$MXPGN` (test-mxpgn in analyzer/tests/Makefile, #997):
 /// ShipModul's examples, received and to send, one behind a TAG block, a
 /// fast-packet in its frames, and other NMEA 0183 sentences, which hold
 /// no frame and leave the format undecided until the first `$MXPGN`.
@@ -227,7 +227,7 @@ fn mxpgn_json() {
     );
 }
 
-/// A real ShipModul MiniPlex-3Wi-N2K (test43 in analyzer/tests/Makefile):
+/// A real ShipModul MiniPlex-3Wi-N2K (test-miniplex in analyzer/tests/Makefile):
 /// the bus's devices as `$PSMDNC` / `$PSMDNP` among other NMEA 0183, then
 /// `$MXPGN` with 129029 and 129540 in their fast-packet frames.
 #[test]
@@ -239,7 +239,7 @@ fn miniplex_json() {
     );
 }
 
-/// Actisense `$MXPGN` (test44 in analyzer/tests/Makefile): the data in
+/// Actisense `$MXPGN` (test-actisense-mxpgn in analyzer/tests/Makefile): the data in
 /// bus order, as a W2K-2 sends it; the Actisense SDK's example, a W2K-2's
 /// Position and a whole fast-packet, and an ISO Request in the send form.
 #[test]
@@ -258,7 +258,7 @@ fn actisense_mxpgn_json() {
     );
 }
 
-/// SeaSmart `$PCDIN` (test42 in analyzer/tests/Makefile, #1047):
+/// SeaSmart `$PCDIN` (test-seasmart in analyzer/tests/Makefile, #1047):
 /// canboatjs's sentence, also behind a TAG block, Chetco's examples, a
 /// whole fast-packet, and other NMEA 0183 sentences, which hold no
 /// message and leave the format undecided until the first `$PCDIN`.
@@ -271,7 +271,7 @@ fn seasmart_json() {
     );
 }
 
-/// `-si`: the database's non-SI units leave in SI (test28 in
+/// `-si`: the database's non-SI units leave in SI (test-si-units in
 /// analyzer/tests/Makefile) — kWh/Ah/% as J/C/ratio (65005, 127505,
 /// 127506, 127513, 130576 signed), rpm as Hz (127488, 130825), L and L/h
 /// as m3 and m3/s (127489, 127496, 127497, 130567), semi-circles and
@@ -286,7 +286,7 @@ fn pgn_si_units_json() {
     );
 }
 
-/// Dynamic field values follow the unit system as fields do (test29 in
+/// Dynamic field values follow the unit system as fields do (test-dynamic-units in
 /// analyzer/tests/Makefile): Victron VE.Can registers in kWh, K and Ah,
 /// and Simnet 130845 Heading Offset in rad.
 #[test]
@@ -303,7 +303,7 @@ fn pgn_dynamic_units_json() {
     );
 }
 
-/// DECIMAL (#962, test32 in analyzer/tests/Makefile): a byte that is not
+/// DECIMAL (#962, test-decimal in analyzer/tests/Makefile): a byte that is not
 /// a digit pair, or a field the packet ends inside, is not available.
 #[test]
 fn pgn_decimal_json() {
@@ -314,7 +314,7 @@ fn pgn_decimal_json() {
     );
 }
 
-/// Below RangeMin (#983, test35 in analyzer/tests/Makefile): a latitude
+/// Below RangeMin (#983, test-below-range-min in analyzer/tests/Makefile): a latitude
 /// below -90 deg and angles below -pi are out of range, a reading at the
 /// edge or at an int16's full negative end is not. In Metric and SI.
 #[test]
@@ -331,7 +331,7 @@ fn pgn_below_range_min_json() {
     );
 }
 
-/// Sentinels in a field with an offset (#984, test33 in
+/// Sentinels in a field with an offset (#984, test-offset-sentinels in
 /// analyzer/tests/Makefile): 127513 Peukert Exponent 0xfd, 0xfe and 0xff
 /// have no value, while 1.25 and the top value 1.5 decode.
 #[test]
@@ -343,7 +343,7 @@ fn pgn_offset_sentinels_json() {
     );
 }
 
-/// The same for J1939 Excess-K temperatures (#984, test34 in
+/// The same for J1939 Excess-K temperatures (#984, test-j1939-offset-sentinels in
 /// analyzer/tests/Makefile), in Metric and SI.
 #[test]
 fn j1939_offset_sentinels_json() {
@@ -368,7 +368,7 @@ fn j1939_offset_sentinels_json() {
 }
 
 /// A real value for every unit the database uses, static and dynamic, in
-/// Metric and SI (test31 in analyzer/tests/Makefile).
+/// Metric and SI (test-unit-coverage in analyzer/tests/Makefile).
 #[test]
 fn pgn_unit_coverage_json() {
     run_case(
@@ -439,7 +439,7 @@ fn j1939_unit_coverage_json() {
     );
 }
 
-/// FLOAT fields follow the unit system as scaled numbers do (test30 in
+/// FLOAT fields follow the unit system as scaled numbers do (test-float-units in
 /// analyzer/tests/Makefile): Garmin autopilot heading and rates of turn,
 /// and the 129045 datum rotations, all IEEE floats in rad and rad/s.
 #[test]
@@ -469,7 +469,7 @@ fn pgn_60928_json_nv() {
 /// `--quirk gps-rollover` in its three shapes over one fixture: the
 /// GNSS rule alone, a device named by manufacturer:unique (so the NAME
 /// has to be learned from the PGN 60928 claim that precedes its 129808),
-/// and `all`. See test27 in analyzer/tests/Makefile for what each line
+/// and `all`. See test-gps-rollover in analyzer/tests/Makefile for what each line
 /// is and why the expectations hold until ~2032.
 #[test]
 fn pgn_gps_rollover_quirk() {
