@@ -582,7 +582,7 @@ lengths, ranges and sentinels are **derived** — do not write them.
 | Add a **manufacturer code** | `analyzer/lookup-generated-data.h` (`MANUFACTURER_CODE`) | same (`util/update-manufacturer-codes.sh` drafts lines) |
 | Change the **docs-site look** | `docs/canboat.xsl` / `.css` / `.js` | `make generated` |
 | Change the **validation schema** | `docs/canboat.xsd` | `make generated` |
-| Add a **regression test** | `analyzer/tests/<name>.{in,out,err}` + a `test-<name>` target (named for its subject, not numbered, so that two branches adding tests don't both take the next number) | `make -C analyzer tests` |
+| Add a **regression test** | `analyzer/tests/<name>.{in,out,err}` + `analyzer/tests/test-<name>.mk` with its `test-<name>` target (a file of its own, named for its subject, so that two branches adding tests don't touch the same lines) | `make -C analyzer tests` |
 | Bump **version / schema** | `common/version.h` | `make generated` |
 
 **NEVER hand-edit:** `docs/canboat.xml`, `docs/canboat.html`,
