@@ -79,10 +79,14 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   Use `udp://2000` rather than a local address, or the broadcast may be
   missed. A ser2net bridge needs its own port given.
 - **miniplex:** when it connects, canboat sets the MiniPlex to send every
-  PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2). Over
-  a receive-only `udp://port` it can't, so set that on the MiniPlex first,
-  or give its address, `udp://miniplex:port`. The MiniPlex sends Address Claims and Product Information as `$PSMDNC` and
-  `$PSMDNP` instead, which canboat does not read yet.
+  PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2), and asks
+  it for every device's Address Claim and Product Information (`$PSMDNR`).
+  Over a receive-only `udp://port` it can't, so set that on the MiniPlex
+  first, or give its address, `udp://miniplex:port`. The MiniPlex never sends
+  Address Claims (60928) and Product Information (126996) as `$MXPGN`, but as
+  its own `$PSMDNC` and `$PSMDNP`, and the latter only for a request it made:
+  canboat reads both as those PGNs, also in a capture (`canboat convert`,
+  `analyzer`), and sends an ISO Request for either as `$PSMDNR`.
 - **seasmart:** `$PCDIN` carries one whole message, with its source but no
   priority or destination, so an addressed PGN goes where the gateway decides.
   Not every gateway takes it to send: Yacht Devices gateways take only 59904,
@@ -309,7 +313,7 @@ The full list of understood formats:
 | `AIRMAR` | Airmar weather/depth devices | `0123 -8 09F80 …` | `analyzer` (auto) |
 | `SEASMART` (or `CHETCO`) | `$PCDIN` sentences: Chetco SeaSmart.Net, Quark-elec (QK-A032, QK-A034, QK-A036), Yacht Devices in NMEA 0183 mode (YDWG-02, YDNG-03) | `$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*58` | `analyzer` (auto), `canboat convert --from seasmart` |
 | `GARMIN_CSV1` / `GARMIN_CSV2` | Garmin CSV export | `0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF` | `analyzer` (auto) |
-| `MXPGN` | ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, among other NMEA 0183; also an Actisense gateway's NMEA 0183 output set to it (`canboat convert --from mxpgn`) | `$MXPGN,01F112,2807,FC7FFF7FFF168012*11` | `analyzer` (auto) |
+| `MXPGN` | ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, and its `$PSMDNC` / `$PSMDNP` (Address Claim, Product Information), among other NMEA 0183; also an Actisense gateway's NMEA 0183 output set to it (`canboat convert --from mxpgn`) | `$MXPGN,01F112,2807,FC7FFF7FFF168012*11` | `analyzer` (auto) |
 | `YDWG02` | RAW ASCII: Yacht Devices RAW (YDWG-02 / YDNU-02), an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode (`canboat convert --from raw-ascii`) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
 | `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII (`canboat convert --from n2k-ascii`) | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
 | Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |

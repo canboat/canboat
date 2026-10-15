@@ -99,6 +99,11 @@ pub struct LineFrameReader<R: BufRead> {
     undecided: usize,
     /// Whether a `$PCDIN` or `$MXPGN` sentence's checksum is checked.
     checksum: bool,
+    /// A MiniPlex's Address Claims and Product Information, which come
+    /// whole; and the frames of one that is a fast-packet, still to read.
+    psmd: crate::engine::format::mxpgn::Psmd,
+    pending: std::collections::VecDeque<RawFrame>,
+    psmd_seq: u8,
 }
 
 /// How many leading NMEA 0183 lines that hold no frame leave the format
@@ -116,6 +121,9 @@ impl<R: BufRead> LineFrameReader<R> {
             protocol: crate::engine::BusProtocol::Nmea2000,
             undecided: 0,
             checksum: true,
+            psmd: Default::default(),
+            pending: Default::default(),
+            psmd_seq: 0,
         }
     }
 
@@ -129,6 +137,9 @@ impl<R: BufRead> LineFrameReader<R> {
             protocol: crate::engine::BusProtocol::Nmea2000,
             undecided: 0,
             checksum: true,
+            psmd: Default::default(),
+            pending: Default::default(),
+            psmd_seq: 0,
         }
     }
 
@@ -163,6 +174,9 @@ impl<R: BufRead> LineFrameReader<R> {
 impl<R: BufRead> FrameReader for LineFrameReader<R> {
     fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
         loop {
+            if let Some(frame) = self.pending.pop_front() {
+                return Ok(Some(frame));
+            }
             let Some(line) = self.lines.next_line()? else {
                 return Ok(None);
             };
@@ -201,6 +215,33 @@ impl<R: BufRead> FrameReader for LineFrameReader<R> {
             let format = self.active.expect("active format set above");
             match parse_checked(format, self.protocol, line, self.checksum) {
                 Ok(Some(frame)) => return Ok(Some(frame)),
+                // A MiniPlex's Address Claim or Product Information, among
+                // its CAN frames: the latter goes in its fast-packet frames
+                // too.
+                Ok(None) if format == InputFormat::Mxpgn => {
+                    match self.psmd.push(line, self.checksum) {
+                        Ok(Some(message)) if message.data.len() > 8 => {
+                            let seq = self.psmd_seq;
+                            self.psmd_seq = (seq + 1) & 7;
+                            for chunk in crate::engine::fastpacket::fragment(seq, &message.data)
+                                .unwrap_or_default()
+                            {
+                                self.pending.push_back(RawFrame::new(
+                                    None,
+                                    message.prio,
+                                    message.pgn,
+                                    message.src,
+                                    message.dst,
+                                    chunk,
+                                ));
+                            }
+                        }
+                        Ok(Some(message)) => return Ok(Some(message)),
+                        Ok(None) => {}
+                        Err(e) => log::warn!("skipping malformed input line: {e}"),
+                    }
+                    continue;
+                }
                 // iKonvert control sentences, Garmin CSV headers, etc.
                 Ok(None) => continue,
                 Err(crate::engine::format::PlainError::Empty) => continue,

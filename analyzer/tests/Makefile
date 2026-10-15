@@ -560,6 +560,19 @@ test42:
 	# -ignore-checksum takes the last two lines too: four 127257s in all.
 	test `$(ANALYZER) -json -ignore-checksum < seasmart.in 2>/dev/null | grep -c '"pgn":127257'` = 4
 
+# A real ShipModul MiniPlex-3Wi-N2K (firmware 3.41.0), from ShipModul (the
+# same as samples/miniplex-3wi-n2k-*.txt): its NMEA 0183 output, with the
+# Address Claims and Product Information of the bus's eight devices as
+# $PSMDNC and $PSMDNP, among $GPRMC and others; then its $MXPGN output, with
+# 129029 and 129540 in their fast-packet frames.
+.PHONY: test43
+tests: test43
+test43:
+	$(ANALYZER) -json -nv < miniplex.in > $(TEMPDIR)/miniplex.out -fixtime miniplex 2> $(TEMPDIR)/miniplex.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/miniplex.out
+	diff $(TEMPDIR)/miniplex.out miniplex.out
+	diff $(TEMPDIR)/miniplex.err miniplex.err
+
 #
 # Inputs that made a UBSan build of the analyzer report undefined behaviour
 # (#1037): a key/value latitude too wide for its degrees to fit an integer, a

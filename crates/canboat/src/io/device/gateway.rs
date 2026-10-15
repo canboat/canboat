@@ -185,7 +185,7 @@ pub(crate) fn open(
                 writer,
                 line_gateway::LineFormat::Mxpgn,
                 protocol,
-                line_gateway::MINIPLEX_MXPGN_ALL,
+                &line_gateway::miniplex_init(),
                 ignore_checksum,
             )
         }

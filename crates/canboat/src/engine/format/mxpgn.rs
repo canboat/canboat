@@ -75,6 +75,13 @@ pub fn is_mxpgn(line: &str) -> bool {
     s.len() > 7 && s[0] == b'$' && &s[3..7] == b"PGN,"
 }
 
+/// Whether `line` is a MiniPlex's `$PSMDNC` or `$PSMDNP` ([`Psmd`]),
+/// possibly behind a TAG block: a MiniPlex stream, even without `$MXPGN`.
+pub fn is_psmd(line: &str) -> bool {
+    let s = without_tag_block(line.trim_start());
+    s.starts_with("$PSMDNC,") || s.starts_with("$PSMDNP,")
+}
+
 /// Whether `line` is an NMEA 0183 sentence (`$` or `!`), or starts with a
 /// TAG block: a line a MiniPlex stream holds that need not be a frame.
 pub fn is_nmea0183(line: &str) -> bool {
@@ -225,6 +232,202 @@ pub fn write_line<W: fmt::Write>(w: &mut W, frame: &RawFrame, send: bool) -> fmt
     write!(w, "${body}*{:02X}", nmea_checksum(&body))
 }
 
+/// The NMEA 2000 network management a MiniPlex sends as its own `$PSMD…`
+/// sentences, never as `$MXPGN`, whatever it is set to (ShipModul,
+/// "MiniPlex-3 NMEA and Proprietary Sentences", FW V3.40.0, pp. 25–29):
+///
+/// ```text
+///   $PSMDNC,R,<NAME, 16 hex digits>,<source>            PGN 60928
+///   $PSMDNP,A,<source>,<version>,<product code>,<certification level>,<load>
+///   $PSMDNP,B,<model ID>,<serial code>                  PGN 126996, in
+///   $PSMDNP,C,<software version>,<model version>        three parts
+/// ```
+///
+/// An Address Claim comes whenever a device claims an address; Product
+/// Information only in answer to `$PSMDNR,126996` ([`request`]). The three
+/// `$PSMDNP` parts arrive in order, and only `A` names the source. A
+/// software version may hold a comma (an NGT-1's is `1.100, 2.690`): the
+/// last field of `B` and `C` is the second one, the rest the first.
+#[derive(Debug, Default)]
+pub struct Psmd {
+    product: Option<Product>,
+}
+
+#[derive(Debug)]
+struct Product {
+    src: u8,
+    /// The NMEA 2000 version × 1000, as PGN 126996 carries it.
+    version: u64,
+    product_code: i64,
+    certification_level: i64,
+    load_equivalency: i64,
+    /// Part `B`: the model ID and the serial code.
+    model: Option<(String, String)>,
+}
+
+/// The two fields `rest` holds, the second being its last, the first all
+/// before it (which may hold a comma).
+fn split_last(rest: &str) -> Option<(&str, &str)> {
+    rest.rsplit_once(',')
+}
+
+impl Psmd {
+    /// The message the `$PSMDNC` or `$PSMDNP` sentence `line` completes:
+    /// PGN 60928 from a `$PSMDNC` report, PGN 126996 from the `C` part of
+    /// a `$PSMDNP` that followed its `A` and `B`; `Ok(None)` for another
+    /// part or another sentence; an error for a malformed one. `checksum`
+    /// checks the checksum, as [`parse_sentence`] does.
+    pub fn push(&mut self, line: &str, checksum: bool) -> Result<Option<RawFrame>, ParseError> {
+        let sentence = without_tag_block(line.trim());
+        let Some(rest) = sentence.strip_prefix('$') else {
+            return Ok(None);
+        };
+        let (body, sum) = match rest.split_once('*') {
+            Some((body, sum)) => (body, Some(sum)),
+            None => (rest, None),
+        };
+        let is_nc = body.starts_with("PSMDNC,");
+        let is_np = body.starts_with("PSMDNP,");
+        if !is_nc && !is_np {
+            return Ok(None);
+        }
+        if let Some(sum) = sum.filter(|_| checksum)
+            && !checksum_matches(body, sum)
+        {
+            return Err(bad("checksum", sum));
+        }
+        if is_nc {
+            return address_claim(&body["PSMDNC,".len()..]);
+        }
+        let rest = &body["PSMDNP,".len()..];
+        let (part, fields) = rest.split_once(',').unwrap_or((rest, ""));
+        match part {
+            "A" => {
+                self.product = None;
+                let f: Vec<&str> = fields.split(',').collect();
+                let [src, version, code, level, load] = f[..] else {
+                    return Err(ParseError::BadHeader {
+                        expected: 6,
+                        found: f.len() + 1,
+                    });
+                };
+                let int = |field, v: &str| v.trim().parse::<i64>().map_err(|_| bad(field, v));
+                let version_f: f64 = version
+                    .trim()
+                    .parse()
+                    .map_err(|_| bad("nmea2000Version", version))?;
+                // Raw, so unchecked by the encoder: 0.000 ..= 65.532.
+                let version_raw = (version_f * 1000.0).round();
+                if !(0.0..=65532.0).contains(&version_raw) {
+                    return Err(bad("nmea2000Version", version));
+                }
+                // A lookup, so masked by the encoder: check its byte here.
+                let certification_level = int("certificationLevel", level)?;
+                if !(0..=255).contains(&certification_level) {
+                    return Err(bad("certificationLevel", level));
+                }
+                self.product = Some(Product {
+                    src: src.trim().parse().map_err(|_| bad("src", src))?,
+                    version: version_raw as u64,
+                    product_code: int("productCode", code)?,
+                    certification_level,
+                    load_equivalency: int("loadEquivalency", load)?,
+                    model: None,
+                });
+                Ok(None)
+            }
+            "B" => {
+                let (model, serial) = split_last(fields).ok_or_else(|| bad("modelId", fields))?;
+                if let Some(p) = self.product.as_mut() {
+                    p.model = Some((model.to_string(), serial.to_string()));
+                }
+                Ok(None)
+            }
+            "C" => {
+                let (software, version) =
+                    split_last(fields).ok_or_else(|| bad("softwareVersionCode", fields))?;
+                // Without the parts before it (missed), it completes nothing.
+                match self.product.take() {
+                    Some(p @ Product { model: Some(_), .. }) => {
+                        let (model, serial) = p.model.as_ref().expect("matched above");
+                        product_information(&p, model, serial, software, version).map(Some)
+                    }
+                    _ => Ok(None),
+                }
+            }
+            _ => Ok(None),
+        }
+    }
+}
+
+/// PGN 60928 from the fields of a `$PSMDNC` report: `R`, the NAME, the
+/// source. A command (`C`, setting another device's address) is no claim.
+fn address_claim(fields: &str) -> Result<Option<RawFrame>, ParseError> {
+    let f: Vec<&str> = fields.split(',').collect();
+    let [flag, name, src] = f[..] else {
+        return Err(ParseError::BadHeader {
+            expected: 4,
+            found: f.len() + 1,
+        });
+    };
+    if flag != "R" {
+        return Ok(None);
+    }
+    if name.len() != 16 {
+        return Err(bad("name", name));
+    }
+    let name = u64::from_str_radix(name, 16).map_err(|_| bad("name", name))?;
+    let src = src.trim().parse::<u8>().map_err(|_| bad("src", src))?;
+    // The NAME goes on the bus least significant byte first.
+    Ok(Some(RawFrame::new(
+        None,
+        6,
+        60928,
+        src,
+        255,
+        name.to_le_bytes(),
+    )))
+}
+
+/// PGN 126996 from the three `$PSMDNP` parts.
+fn product_information(
+    p: &Product,
+    model: &str,
+    serial: &str,
+    software: &str,
+    version: &str,
+) -> Result<RawFrame, ParseError> {
+    use crate::engine::encode::Raw;
+    use crate::engine::field::product_information as pi;
+    let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+    let build = || -> Result<RawFrame, crate::engine::encode::EncodeError> {
+        let mut b = db.encode("productInformation")?.source(p.src);
+        b.push(pi::NMEA2000_VERSION, Raw(p.version))?;
+        b.push(pi::PRODUCT_CODE, p.product_code)?;
+        b.push(pi::MODEL_ID, model)?;
+        b.push(pi::SOFTWARE_VERSION_CODE, software)?;
+        b.push(pi::MODEL_VERSION, version)?;
+        b.push(pi::MODEL_SERIAL_CODE, serial)?;
+        b.push(pi::CERTIFICATION_LEVEL, p.certification_level)?;
+        b.push(pi::LOAD_EQUIVALENCY, p.load_equivalency)?;
+        b.build()
+    };
+    build().map_err(|e| bad("productInformation", &e.to_string()))
+}
+
+/// The `$PSMDNR` sentence, with its checksum and line end, that asks a
+/// MiniPlex to request `pgn` on the bus, from `dst` or (255) everyone, and
+/// pass on the answers: Address Claims as `$PSMDNC`, Product Information
+/// as `$PSMDNP`, which it sends only so.
+pub fn request(pgn: u32, dst: u8) -> String {
+    let body = if dst == 255 {
+        format!("PSMDNR,{pgn}")
+    } else {
+        format!("PSMDNR,{pgn},{dst}")
+    };
+    format!("${body}*{:02X}\r\n", nmea_checksum(&body))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -333,5 +536,103 @@ mod tests {
         assert!(!is_mxpgn("$PCDIN,01F801,000C7E1B,0F,FFFF*6E"));
         assert!(is_nmea0183("$GPRMC,1"));
         assert!(!is_nmea0183("A173321.107 23FF7 1F513"));
+    }
+
+    /// A MiniPlex-3Wi-N2K's Address Claims and Product Information, from
+    /// ShipModul's capture (samples/miniplex-3wi-n2k-nmea0183.txt): an
+    /// NGT-1, whose software version holds a comma.
+    #[test]
+    fn psmd_address_claim_and_product_information() {
+        let mut psmd = Psmd::default();
+        let claim = psmd
+            .push("$PSMDNC,R,C032820022224170,3*30", true)
+            .unwrap()
+            .unwrap();
+        assert_eq!(head(&claim), (6, 60928, 3, 255));
+        assert_eq!(
+            u64::from_le_bytes(claim.data[..].try_into().unwrap()),
+            0xC032820022224170
+        );
+        for line in [
+            "$PSMDNP,A,3,2.100,28199,2,1*73",
+            "$PSMDNP,B,NMEA 2000 PC Interface (NGT-1),147824*65",
+        ] {
+            assert!(psmd.push(line, true).unwrap().is_none(), "{line}");
+        }
+        let info = psmd
+            .push("$PSMDNP,C,1.100, 2.690,NGT-1-USB  [5]*61", true)
+            .unwrap()
+            .unwrap();
+        assert_eq!(head(&info), (6, 126996, 3, 255));
+        assert_eq!(info.data.len(), 134);
+        assert_eq!(&info.data[..4], &[0x34, 0x08, 0x27, 0x6e]); // 2100, 28199
+        // Fixed strings, padded with 0xff.
+        let text = |at: usize| {
+            let field = &info.data[at..at + 32];
+            let end = field.iter().rposition(|&b| b != 0xff).map_or(0, |i| i + 1);
+            String::from_utf8_lossy(&field[..end]).into_owned()
+        };
+        assert_eq!(text(4), "NMEA 2000 PC Interface (NGT-1)");
+        assert_eq!(text(36), "1.100, 2.690");
+        assert_eq!(text(68), "NGT-1-USB  [5]");
+        assert_eq!(text(100), "147824");
+        assert_eq!(&info.data[132..], &[2, 1]);
+    }
+
+    /// A part without the ones before it completes nothing; a command, other
+    /// MiniPlex sentences and a wrong checksum are no message (the last an
+    /// error, unless the checksum is not checked).
+    #[test]
+    fn psmd_ignores_what_completes_nothing() {
+        let mut psmd = Psmd::default();
+        for line in [
+            "$PSMDNP,C,3.41.0,MPX-3E-N V1.0 - Main*5F",
+            "$PSMDNP,B,MiniPlex-3E-N2K - Main,3A000001*4C",
+            "$PSMDNP,C,3.41.0,MPX-3E-N V1.0 - Main*5F",
+            "$PSMDSTAT,R,1130,15,0,42,0,0*57",
+            "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A",
+        ] {
+            assert!(psmd.push(line, true).unwrap().is_none(), "{line}");
+        }
+        let command = format!(
+            "$PSMDNC,C,C03287004A680009,4*{:02X}",
+            nmea_checksum("PSMDNC,C,C03287004A680009,4")
+        );
+        assert!(psmd.push(&command, true).unwrap().is_none());
+        let wrong = "$PSMDNC,R,C03287004A680009,1*48";
+        assert!(psmd.push(wrong, true).is_err());
+        assert!(psmd.push(wrong, false).unwrap().is_some());
+        assert!(is_psmd("$PSMDNP,A,1,2.000,26884,2,0*7A") && !is_psmd("$PSMDSTAT,R,1*00"));
+    }
+
+    #[test]
+    fn psmd_rejects_out_of_range_product_fields() {
+        for a in [
+            "$PSMDNP,A,1,65.533,26884,2,0",
+            "$PSMDNP,A,1,-1.000,26884,2,0",
+            "$PSMDNP,A,1,2.000,65533,2,0",
+            "$PSMDNP,A,1,2.000,26884,2,253",
+            "$PSMDNP,A,1,2.000,26884,-1,0",
+            "$PSMDNP,A,1,2.000,26884,256,0",
+        ] {
+            let mut psmd = Psmd::default();
+            let product = psmd.push(a, false).and_then(|_| {
+                psmd.push("$PSMDNP,B,MiniPlex,3A000001", false)?;
+                psmd.push("$PSMDNP,C,3.41.0,MPX", false)
+            });
+            assert!(product.is_err(), "{a}");
+        }
+    }
+
+    #[test]
+    fn psmd_requests() {
+        assert_eq!(request(126996, 255), "$PSMDNR,126996*39\r\n");
+        assert_eq!(
+            request(60928, 7),
+            format!(
+                "$PSMDNR,60928,7*{:02X}\r\n",
+                nmea_checksum("PSMDNR,60928,7")
+            )
+        );
     }
 }
