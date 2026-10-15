@@ -227,6 +227,18 @@ fn mxpgn_json() {
     );
 }
 
+/// A real ShipModul MiniPlex-3Wi-N2K (test43 in analyzer/tests/Makefile):
+/// the bus's devices as `$PSMDNC` / `$PSMDNP` among other NMEA 0183, then
+/// `$MXPGN` with 129029 and 129540 in their fast-packet frames.
+#[test]
+fn miniplex_json() {
+    run_case(
+        "miniplex.in",
+        "miniplex.out",
+        &["--json", "--nv", "--fixtime", "miniplex"],
+    );
+}
+
 /// SeaSmart `$PCDIN` (test42 in analyzer/tests/Makefile, #1047):
 /// canboatjs's sentence, also behind a TAG block, Chetco's examples, a
 /// whole fast-packet, and other NMEA 0183 sentences, which hold no
