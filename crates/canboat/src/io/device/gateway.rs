@@ -58,6 +58,11 @@ pub enum ActisenseFormat {
     /// over `tcp://host[:port]` (port 60002), or an NGX in CAN Packet mode
     /// on its serial port (115 200 baud).
     RawActisense,
+    /// NMEA 0183 with `$MXPGN`, CAN frames, the data in bus order (not
+    /// ShipModul's): a W2K-2's hidden CANDIRECT data server set to NMEA
+    /// 0183, over `tcp://host[:port]` (port 20000, CANDIRECT's) or
+    /// `udp://…`. Not yet seen on a W2K-1.
+    Mxpgn,
 }
 
 impl GatewayKind {
@@ -70,7 +75,8 @@ impl GatewayKind {
             GatewayKind::Actisense(ActisenseFormat::RawActisense) => 115_200,
             GatewayKind::Actisense(ActisenseFormat::N2kAscii)
             | GatewayKind::Actisense(ActisenseFormat::N2kActisense)
-            | GatewayKind::Actisense(ActisenseFormat::RawAscii) => 0,
+            | GatewayKind::Actisense(ActisenseFormat::RawAscii)
+            | GatewayKind::Actisense(ActisenseFormat::Mxpgn) => 0,
         }
     }
 
@@ -83,6 +89,7 @@ impl GatewayKind {
                 | GatewayKind::Miniplex
                 | GatewayKind::Actisense(ActisenseFormat::RawActisense)
                 | GatewayKind::Actisense(ActisenseFormat::RawAscii)
+                | GatewayKind::Actisense(ActisenseFormat::Mxpgn)
         )
     }
 
@@ -95,6 +102,7 @@ impl GatewayKind {
                 | GatewayKind::SeaSmart
                 | GatewayKind::Actisense(ActisenseFormat::N2kAscii)
                 | GatewayKind::Actisense(ActisenseFormat::RawAscii)
+                | GatewayKind::Actisense(ActisenseFormat::Mxpgn)
         )
     }
 
@@ -108,6 +116,7 @@ impl GatewayKind {
             GatewayKind::Actisense(ActisenseFormat::RawAscii) => "actisense-raw-ascii",
             GatewayKind::Actisense(ActisenseFormat::N2kActisense) => "actisense-n2k-actisense",
             GatewayKind::Actisense(ActisenseFormat::RawActisense) => "actisense-raw-actisense",
+            GatewayKind::Actisense(ActisenseFormat::Mxpgn) => "actisense-mxpgn",
         }
     }
 }
@@ -221,6 +230,17 @@ pub(crate) fn open(
                 reader,
                 writer,
                 line_gateway::LineFormat::N2kAscii,
+                protocol,
+                &[],
+                ignore_checksum,
+            )
+        }
+        GatewayKind::Actisense(ActisenseFormat::Mxpgn) => {
+            let (reader, writer) = open_line_endpoint(device, 20000)?;
+            line_gateway::run(
+                reader,
+                writer,
+                line_gateway::LineFormat::ActisenseMxpgn,
                 protocol,
                 &[],
                 ignore_checksum,

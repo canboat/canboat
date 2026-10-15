@@ -239,6 +239,25 @@ fn miniplex_json() {
     );
 }
 
+/// Actisense `$MXPGN` (test44 in analyzer/tests/Makefile): the data in
+/// bus order, as a W2K-2 sends it; the Actisense SDK's example, a W2K-2's
+/// Position and a whole fast-packet, and an ISO Request in the send form.
+#[test]
+fn actisense_mxpgn_json() {
+    run_case(
+        "actisense-mxpgn.in",
+        "actisense-mxpgn.out",
+        &[
+            "--json",
+            "--nv",
+            "--format",
+            "actisense_mxpgn",
+            "--fixtime",
+            "actisense-mxpgn",
+        ],
+    );
+}
+
 /// SeaSmart `$PCDIN` (test42 in analyzer/tests/Makefile, #1047):
 /// canboatjs's sentence, also behind a TAG block, Chetco's examples, a
 /// whole fast-packet, and other NMEA 0183 sentences, which hold no

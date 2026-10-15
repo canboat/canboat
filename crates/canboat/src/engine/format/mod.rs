@@ -61,6 +61,11 @@ pub enum InputFormat {
     /// fast-packets arrive in their frames. Other NMEA 0183 sentences in
     /// the stream carry no frame.
     Mxpgn,
+    /// `$MXPGN` sentences as an Actisense gateway sends them (a W2K-2's
+    /// hidden CANDIRECT data server set to NMEA 0183): as [`Mxpgn`](Self::Mxpgn),
+    /// but with the data in bus order. Never detected; a stream says
+    /// nothing of which order it has.
+    ActisenseMxpgn,
     /// Garmin CSV1 (relative-ms timestamps).
     GarminCsv,
     /// Garmin CSV2 (absolute `M_D_Y_H_M_S_ms` timestamps + an extra
@@ -93,7 +98,10 @@ impl InputFormat {
     /// analyzer's `MULTIPACKETS_SEPARATE` and `MULTIPACKETS_COALESCED`.
     pub fn framing(self) -> Framing {
         match self {
-            InputFormat::Ydwg02 | InputFormat::Mxpgn | InputFormat::Candump => Framing::Single,
+            InputFormat::Ydwg02
+            | InputFormat::Mxpgn
+            | InputFormat::ActisenseMxpgn
+            | InputFormat::Candump => Framing::Single,
             InputFormat::ActisenseAscii
             | InputFormat::Ikonvert
             | InputFormat::Airmar
@@ -134,6 +142,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
         "AIRMAR" => Some(InputFormat::Airmar),
         "SEASMART" | "CHETCO" => Some(InputFormat::SeaSmart),
         "MXPGN" => Some(InputFormat::Mxpgn),
+        "ACTISENSE_MXPGN" => Some(InputFormat::ActisenseMxpgn),
         "GARMIN_CSV1" | "GARMIN" => Some(InputFormat::GarminCsv),
         "GARMIN_CSV2" => Some(InputFormat::GarminCsv2),
         "CANDUMP" => Some(InputFormat::Candump),
@@ -312,6 +321,7 @@ pub(crate) fn parse_checked(
         _ if standard => Ok(None),
         InputFormat::SeaSmart => seasmart::parse_sentence(line, checksum),
         InputFormat::Mxpgn => mxpgn::parse_sentence(line, checksum),
+        InputFormat::ActisenseMxpgn => mxpgn::parse_ordered(line, checksum, mxpgn::DataOrder::Bus),
         _ => parse_with(format, line),
     }
 }
@@ -334,6 +344,7 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
         InputFormat::Airmar => airmar::parse_line(line).map(Some),
         InputFormat::SeaSmart => seasmart::parse_line(line),
         InputFormat::Mxpgn => mxpgn::parse_line(line),
+        InputFormat::ActisenseMxpgn => mxpgn::parse_ordered(line, true, mxpgn::DataOrder::Bus),
         InputFormat::GarminCsv | InputFormat::GarminCsv2 => {
             let variant = if format == InputFormat::GarminCsv2 {
                 garmin_csv::Variant::Absolute
@@ -361,6 +372,7 @@ mod tests {
         for f in [
             InputFormat::Ydwg02,
             InputFormat::Mxpgn,
+            InputFormat::ActisenseMxpgn,
             InputFormat::Candump,
         ] {
             assert_eq!(f.framing(), Framing::Single, "{f:?}");

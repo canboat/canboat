@@ -38,7 +38,8 @@ enum RawFormats
   RAWFORMAT_GARMIN_CSV2,
   RAWFORMAT_YDWG02,
   RAWFORMAT_ACTISENSE_N2K_ASCII,
-  RAWFORMAT_MXPGN
+  RAWFORMAT_MXPGN,
+  RAWFORMAT_ACTISENSE_MXPGN
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -54,7 +55,8 @@ const char *RAW_FORMAT_STR[] = {"UNKNOWN",
                                 "GARMIN_CSV2",
                                 "YDWG02",
                                 "ACTISENSE_N2K_ASCII",
-                                "MXPGN"};
+                                "MXPGN",
+                                "ACTISENSE_MXPGN"};
 
 enum MultiPackets
 {
@@ -390,7 +392,7 @@ int main(int argc, char **argv)
         {
           format = (enum RawFormats) i;
           if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
-              && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN)
+              && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN && format != RAWFORMAT_ACTISENSE_MXPGN)
           {
             multiPackets = MULTIPACKETS_COALESCED;
           }
@@ -483,7 +485,7 @@ int main(int argc, char **argv)
             {
               format = (enum RawFormats) i;
               if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
-                  && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN)
+                  && format != RAWFORMAT_YDWG02 && format != RAWFORMAT_MXPGN && format != RAWFORMAT_ACTISENSE_MXPGN)
               {
                 multiPackets = MULTIPACKETS_COALESCED;
               }
@@ -583,7 +585,8 @@ int main(int argc, char **argv)
         break;
 
       case RAWFORMAT_MXPGN:
-        r = parseRawFormatMxpgn(msg, &m, showJson);
+      case RAWFORMAT_ACTISENSE_MXPGN:
+        r = parseRawFormatMxpgn(msg, &m, showJson, format == RAWFORMAT_ACTISENSE_MXPGN);
         if (r == 1)
         {
           continue; // another NMEA 0183 sentence, no frame

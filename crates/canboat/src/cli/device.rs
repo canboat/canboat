@@ -84,6 +84,7 @@ impl Kind {
             Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawAscii)) => {
                 "actisense (raw-ascii)"
             }
+            Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::Mxpgn)) => "actisense (mxpgn)",
             Kind::Canalyst => "canalyst",
             Kind::UsbCanA => "usb-can-a",
         }
@@ -235,6 +236,7 @@ impl KindArg {
                 DataFormat::RawActisense => {
                     Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::RawActisense))
                 }
+                DataFormat::Mxpgn => Kind::Gateway(GatewayKind::Actisense(ActisenseFormat::Mxpgn)),
             }),
             Family::Yachtd => match format {
                 None | Some(DataFormat::RawAscii) => Ok(Kind::Gateway(GatewayKind::YachtDevices)),
@@ -269,6 +271,9 @@ pub enum DataFormat {
     RawAscii,
     /// RAW Actisense (BST-95): CAN frames, binary.
     RawActisense,
+    /// NMEA 0183 with `$MXPGN`: CAN frames, the data in bus order, as a
+    /// W2K-2's CANDIRECT data server sends them.
+    Mxpgn,
 }
 
 impl DataFormat {
@@ -280,6 +285,7 @@ impl DataFormat {
             DataFormat::N2kActisense => "n2k-actisense",
             DataFormat::RawAscii => "raw-ascii",
             DataFormat::RawActisense => "raw-actisense",
+            DataFormat::Mxpgn => "mxpgn",
         }
     }
 }
@@ -320,6 +326,7 @@ Gateways (--kind) and their data formats (--data-format):
              n2k-actisense   tcp:60002                    rw   -      -
              raw-ascii       tcp:60002, udp               rw   yes    -
              raw-actisense   tcp:60002, /dev/tty… (NGX)   rw   yes    -
+             mxpgn           tcp:20000, udp               rw   yes    -
   yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
   miniplex                   tcp:10110, udp, /dev/tty…    rw   yes    -
   seasmart                   tcp:10001, udp, /dev/tty…    rw   -      -
@@ -338,6 +345,10 @@ Gateways (--kind) and their data formats (--data-format):
   A W2K-1 sends ngt-actisense but does not take it; canboat does not
   know that yet. seasmart ($PCDIN) has no priority or destination, and
   not every gateway takes it to send: Yacht Devices only a few PGNs.
+  actisense mxpgn: $MXPGN with the data in bus order, unlike a
+  MiniPlex's (--kind miniplex). A W2K-2 sends it only on its hidden
+  CANDIRECT data server (port 20000) set to NMEA 0183; its own data
+  servers' NMEA 0183 has no $MXPGN. A W2K-1 is not known to send it.
   ikonvert: tcp:// is the better mode for a NavLink2. Over
   udp://[bind:][port] (its UDP output, port 2000) canboat only
   receives: it expects the gateway to be on the bus already, put there

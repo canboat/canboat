@@ -287,10 +287,12 @@ impl<W: Write> FrameWriter for PlainWriter<W> {
 
 /// A [`FrameWriter`] of ShipModul `$MXPGN` sentences, one CAN frame each,
 /// as a MiniPlex sends what it receives: a message longer than a frame
-/// goes out in its fast-packet frames, one sentence each.
+/// goes out in its fast-packet frames, one sentence each. [`Self::actisense`]
+/// writes the data in bus order, as an Actisense gateway does.
 pub struct MxpgnWriter<W: Write> {
     inner: W,
     protocol: BusProtocol,
+    order: crate::engine::format::mxpgn::DataOrder,
     /// Per-(pgn, src) fast-packet sequence counters, mod 8.
     seq: std::collections::HashMap<(u32, u8), u8>,
     buf: String,
@@ -303,8 +305,18 @@ impl<W: Write> MxpgnWriter<W> {
         Self {
             inner,
             protocol,
+            order: Default::default(),
             seq: Default::default(),
             buf: String::with_capacity(64),
+        }
+    }
+
+    /// [`Self::new`], the data in bus order, as an Actisense gateway
+    /// sends it.
+    pub fn actisense(inner: W, protocol: BusProtocol) -> Self {
+        Self {
+            order: crate::engine::format::mxpgn::DataOrder::Bus,
+            ..Self::new(inner, protocol)
         }
     }
 
@@ -319,7 +331,7 @@ impl<W: Write> MxpgnWriter<W> {
         );
         one.timestamp.clone_from(&frame.timestamp);
         self.buf.clear();
-        crate::engine::format::mxpgn::write_line(&mut self.buf, &one, false)
+        crate::engine::format::mxpgn::write_ordered(&mut self.buf, &one, false, self.order)
             .expect("$MXPGN write to String");
         self.buf.push_str("\r\n");
         self.inner.write_all(self.buf.as_bytes())

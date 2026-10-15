@@ -478,6 +478,10 @@ static int hexDigit(char c)
  * the PGN. d--d is the data as one number, the last byte first. One sentence is
  * one CAN frame; they carry no time. A leading TAG block (\s:MX01*hh\) is skipped.
  *
+ * An Actisense gateway (a W2K-2's CANDIRECT data server in NMEA 0183) writes the
+ * data in bus order instead, first byte first: busOrder. Nothing in the sentence
+ * says which, so -format ACTISENSE_MXPGN asks for it.
+ *
  * Returns 0 for a frame, 1 for another NMEA 0183 sentence (a MiniPlex mixes them
  * in), 2 for a malformed $MXPGN sentence.
  */
@@ -647,7 +651,7 @@ static int parsePsmd(char *msg, char *p, RawMessage *m)
   }
 }
 
-int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
+int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson, bool busOrder)
 {
   char        *p = msg;
   char        *data;
@@ -735,10 +739,10 @@ int parseRawFormatMxpgn(char *msg, RawMessage *m, bool showJson)
     return 2;
   }
 
-  // The last byte first.
+  // ShipModul's: the last byte first; Actisense's: in bus order.
   for (i = 0; i < len; i++)
   {
-    const char *pair = data + 2 * (len - 1 - i);
+    const char *pair = data + 2 * (busOrder ? i : len - 1 - i);
 
     m->data[i] = (unsigned char) (hexDigit(pair[0]) << 4 | hexDigit(pair[1]));
   }
