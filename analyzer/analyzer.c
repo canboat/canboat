@@ -1690,7 +1690,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   size_t  bits;
   size_t  startBit;
   int     repetition;
-  char    fieldName[60];
+  char    fieldName[256];
   uint8_t variableFieldStart;
   uint8_t variableFieldCount;
 
@@ -1782,13 +1782,15 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       break;
     }
 
+    // The copy is bounded: the longest generated J1939 field name is 83 bytes,
+    // and with the repetition suffix a short buffer would overflow on the stack.
     if (showCamel)
     {
-      strcpy(fieldName, field->camelName ? field->camelName : field->name);
+      snprintf(fieldName, sizeof(fieldName), "%s", field->camelName ? field->camelName : field->name);
     }
     else
     {
-      strcpy(fieldName, field->name);
+      snprintf(fieldName, sizeof(fieldName), "%s", field->name);
     }
 
     if (repetition >= 1 && !showJson)
@@ -1797,8 +1799,8 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       // "Wind Speed 2"). This used to key on camelName presence as a cheap
       // proxy for the -camel mode, which broke down once every field
       // carries an explicit camelName (id) from the generated tables.
-      strcat(fieldName, showCamel ? "_" : " ");
-      sprintf(fieldName + strlen(fieldName), "%u", repetition);
+      size_t len = strlen(fieldName);
+      snprintf(fieldName + len, sizeof(fieldName) - len, "%s%u", showCamel ? "_" : " ", repetition);
     }
 
     if (!printField(field, fieldName, data, length, startBit, &bits, true))
