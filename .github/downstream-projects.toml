@@ -22,3 +22,8 @@
 repo = "wellenvogel/avnav"
 releases = "major"
 request = "https://github.com/wellenvogel/avnav/issues/617"
+
+[[project]]
+repo = "antipole2/JavaScript_pi"
+releases = "minor"
+request = "https://github.com/canboat/canboat/issues/1056"
