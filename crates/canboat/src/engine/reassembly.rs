@@ -1210,8 +1210,13 @@ mod tests {
         assert!(lock(&r.incomplete).counts.is_empty());
     }
 
+    /// [`summarize_incomplete`] flushes every reassembler with a clock, so
+    /// the tests that give one a clock and count take turns.
+    static CLOCKED: Mutex<()> = Mutex::new(());
+
     #[test]
     fn with_a_clock_incomplete_fast_packets_are_summed_up_each_minute() {
+        let _clocked = lock(&CLOCKED);
         let mut r = Reassembler::new();
         r.tick(1_000);
         lose_one(&mut r, 3);
@@ -1236,6 +1241,7 @@ mod tests {
 
     #[test]
     fn a_stop_sums_up_what_was_counted_since_the_last_summary() {
+        let _clocked = lock(&CLOCKED);
         // As on SIGTERM: summed up, though the reassembler is not dropped.
         let mut r = Reassembler::new();
         r.tick(1_000);
@@ -1247,6 +1253,7 @@ mod tests {
 
     #[test]
     fn a_clock_set_back_starts_the_minute_over() {
+        let _clocked = lock(&CLOCKED);
         const NOW: u64 = 1_780_082_164_826;
         const HOUR: u64 = 3_600_000;
         let mut r = Reassembler::new();
