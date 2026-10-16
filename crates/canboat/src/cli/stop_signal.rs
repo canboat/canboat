@@ -50,6 +50,8 @@ pub fn on_stop(stop: impl FnOnce() -> bool + Send + 'static) {
             }
             log::info!("stopping on signal");
             let clean = stop();
+            // Exiting drops no reassembler, so none gives its last summary.
+            crate::engine::summarize_incomplete();
             std::process::exit(if clean { 0 } else { 1 });
         })
         .expect("spawn stop-signal watcher");

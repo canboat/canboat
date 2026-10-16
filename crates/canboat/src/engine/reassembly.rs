@@ -20,6 +20,8 @@
 //!
 //! Slot eviction follows canboat: 64 slots, FIFO oldest-out on overflow.
 
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError, Weak};
+
 use crate::engine::frame::{FASTPACKET_MAX_SIZE, RawFrame};
 
 const REASSEMBLY_BUFFER_SIZE: usize = 64;
@@ -241,7 +243,29 @@ pub struct Reassembler {
     tp_slots: Vec<TpSlot>,
     next_age: u64,
     tp_next_age: u64,
-    incomplete: Incomplete,
+    /// Shared with [`LIVE`] once there is a clock.
+    incomplete: Arc<Mutex<Incomplete>>,
+}
+
+/// The incomplete fast-packet counts of the reassemblers with a clock, so
+/// [`summarize_incomplete`] can still sum them up when a signal ends the
+/// process, which drops none of them (canboat#1039).
+static LIVE: Mutex<Vec<Weak<Mutex<Incomplete>>>> = Mutex::new(Vec::new());
+
+fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(PoisonError::into_inner)
+}
+
+/// Sum up, as a warning, the incomplete fast-packets of each live source
+/// since its last summary: for a process about to exit without dropping
+/// its reassemblers, as on SIGTERM.
+pub fn summarize_incomplete() {
+    // Not holding LIVE while locking a reassembler's counts, which
+    // `tick` holds while it adds to LIVE.
+    let live: Vec<_> = lock(&LIVE).iter().filter_map(Weak::upgrade).collect();
+    for incomplete in live {
+        lock(&incomplete).flush();
+    }
 }
 
 /// The incomplete fast-packets since the last summary, per PGN and source.
@@ -254,6 +278,14 @@ struct Incomplete {
 }
 
 impl Incomplete {
+    /// The summary of what was counted since the last one, if anything was.
+    fn flush(&mut self) {
+        if self.since_ms.is_some() && !self.counts.is_empty() {
+            log::warn!("{}", self.summary("since the last summary"));
+            self.counts.clear();
+        }
+    }
+
     /// `n incomplete fast packets <when> (pgn 129029 src 3: 120, …)`.
     fn summary(&self, when: &str) -> String {
         let total: u32 = self.counts.values().sum();
@@ -278,9 +310,7 @@ impl Incomplete {
 
 impl Drop for Reassembler {
     fn drop(&mut self) {
-        if self.incomplete.since_ms.is_some() && !self.incomplete.counts.is_empty() {
-            log::warn!("{}", self.incomplete.summary("since the last summary"));
-        }
+        lock(&self.incomplete).flush();
     }
 }
 
@@ -297,7 +327,7 @@ impl Reassembler {
             tp_slots: vec![TpSlot::default(); ISO_TP_SLOTS],
             next_age: 0,
             tp_next_age: 0,
-            incomplete: Incomplete::default(),
+            incomplete: Arc::default(),
         }
     }
 
@@ -307,7 +337,12 @@ impl Reassembler {
     /// loses them all day. Without it, as for a capture being converted,
     /// each one is a warning of its own.
     pub fn tick(&mut self, now_ms: u64) {
-        let inc = &mut self.incomplete;
+        let mut inc = lock(&self.incomplete);
+        if inc.since_ms.is_none() {
+            let mut live = lock(&LIVE);
+            live.retain(|w| w.strong_count() > 0);
+            live.push(Arc::downgrade(&self.incomplete));
+        }
         let mut since = *inc.since_ms.get_or_insert(now_ms);
         // A host clock set back starts the minute over, keeping the count.
         if now_ms < since {
@@ -426,12 +461,9 @@ impl Reassembler {
 
         if duplicate || completes_instantly {
             let slot = &self.slots[slot_idx];
-            let level = if self.incomplete.since_ms.is_some() {
-                *self
-                    .incomplete
-                    .counts
-                    .entry((frame.pgn, frame.src))
-                    .or_default() += 1;
+            let mut inc = lock(&self.incomplete);
+            let level = if inc.since_ms.is_some() {
+                *inc.counts.entry((frame.pgn, frame.src)).or_default() += 1;
                 log::Level::Debug
             } else {
                 log::Level::Warn
@@ -1175,7 +1207,7 @@ mod tests {
         // Each is a warning of its own then, as when converting a capture.
         let mut r = Reassembler::new();
         lose_one(&mut r, 3);
-        assert!(r.incomplete.counts.is_empty());
+        assert!(lock(&r.incomplete).counts.is_empty());
     }
 
     #[test]
@@ -1186,20 +1218,31 @@ mod tests {
         lose_one(&mut r, 7);
         // Frame 0 again restarts the one left in the slot: two more.
         lose_one(&mut r, 3);
-        assert_eq!(r.incomplete.counts.get(&(129029, 3)), Some(&3));
+        assert_eq!(lock(&r.incomplete).counts.get(&(129029, 3)), Some(&3));
         assert_eq!(
-            r.incomplete.summary("in the last 60 s"),
+            lock(&r.incomplete).summary("in the last 60 s"),
             "4 incomplete fast packets in the last 60 s \
              (pgn 129029 src 3: 3, pgn 129029 src 7: 1); \
              RUST_LOG=canboat::engine::reassembly=debug shows each"
         );
         // Not yet a minute: still counting.
         r.tick(60_999);
-        assert_eq!(r.incomplete.counts.len(), 2);
+        assert_eq!(lock(&r.incomplete).counts.len(), 2);
         // A minute: summed up, and counting starts over.
         r.tick(61_000);
-        assert!(r.incomplete.counts.is_empty());
-        assert_eq!(r.incomplete.since_ms, Some(61_000));
+        assert!(lock(&r.incomplete).counts.is_empty());
+        assert_eq!(lock(&r.incomplete).since_ms, Some(61_000));
+    }
+
+    #[test]
+    fn a_stop_sums_up_what_was_counted_since_the_last_summary() {
+        // As on SIGTERM: summed up, though the reassembler is not dropped.
+        let mut r = Reassembler::new();
+        r.tick(1_000);
+        lose_one(&mut r, 3);
+        assert_eq!(lock(&r.incomplete).counts.len(), 1);
+        summarize_incomplete();
+        assert!(lock(&r.incomplete).counts.is_empty());
     }
 
     #[test]
@@ -1211,10 +1254,10 @@ mod tests {
         lose_one(&mut r, 3);
         // Set back an hour: the count stays, its minute starts now.
         r.tick(NOW - HOUR);
-        assert_eq!(r.incomplete.since_ms, Some(NOW - HOUR));
-        assert_eq!(r.incomplete.counts.len(), 1);
+        assert_eq!(lock(&r.incomplete).since_ms, Some(NOW - HOUR));
+        assert_eq!(lock(&r.incomplete).counts.len(), 1);
         r.tick(NOW - HOUR + 60_000);
-        assert!(r.incomplete.counts.is_empty());
+        assert!(lock(&r.incomplete).counts.is_empty());
     }
 
     #[test]

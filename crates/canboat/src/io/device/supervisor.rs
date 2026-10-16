@@ -176,6 +176,7 @@ fn supervisor_loop<F: DeviceFactory>(
             .take()
             .expect("held_cmd_rx is always Some at session start");
         let session_failure = handle.failure();
+        let session_lost = handle.lost();
         held_cmd_rx = Some(run_session(
             factory.name(),
             handle,
@@ -193,7 +194,10 @@ fn supervisor_loop<F: DeviceFactory>(
             failure.set(why);
             break;
         }
-        log::warn!("{}: session ended; will reconnect", factory.name());
+        match session_lost.get() {
+            Some(why) => log::warn!("{}: session ended: {why}; will reconnect", factory.name()),
+            None => log::warn!("{}: session ended; will reconnect", factory.name()),
+        }
         sleep_interruptible(Duration::from_millis(500), &stop);
     }
     log::info!("{}: supervisor stopped", factory.name());
