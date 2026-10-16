@@ -556,14 +556,7 @@ fn reader_thread<D: DeviceDecoder>(
                     return;
                 }
             }
-            // A serial port's timeout is TimedOut; a TCP socket's read
-            // timeout is WouldBlock on Unix.
-            Err(e)
-                if matches!(
-                    e.kind(),
-                    io::ErrorKind::TimedOut | io::ErrorKind::WouldBlock
-                ) =>
-            {
+            Err(e) if is_read_timeout(&e) => {
                 decoder.tick(&mut events);
                 if !deliver(&mut events) {
                     return;
@@ -577,6 +570,19 @@ fn reader_thread<D: DeviceDecoder>(
                 return;
             }
         }
+    }
+}
+
+/// Whether a read error is only the read timing out, to read on after.
+/// A serial port's timeout is TimedOut, made up by the serialport crate;
+/// a socket's read timeout is WouldBlock on Unix, TimedOut on Windows.
+/// On Unix an ETIMEDOUT from the OS is the connection timing out instead:
+/// its TCP keepalive got no answer from the gateway (canboat#1039).
+fn is_read_timeout(e: &io::Error) -> bool {
+    match e.kind() {
+        io::ErrorKind::WouldBlock => true,
+        io::ErrorKind::TimedOut => cfg!(windows) || e.raw_os_error().is_none(),
+        _ => false,
     }
 }
 
@@ -829,6 +835,46 @@ mod tests {
         assert_eq!(handle.frames_rx.iter().count(), 0);
         assert_eq!(failure.get(), None);
         assert_eq!(lost.get(), Some("device read error: connection reset"));
+    }
+
+    /// A TCP keepalive that got no answer ends the read with ETIMEDOUT:
+    /// the gateway is gone, though the error is TimedOut like a serial
+    /// port's read timeout (canboat#1039).
+    #[cfg(unix)]
+    #[test]
+    fn a_connection_timing_out_loses_the_device() {
+        struct KeepaliveGaveUp;
+        impl Read for KeepaliveGaveUp {
+            fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+                Err(io::Error::from_raw_os_error(libc::ETIMEDOUT))
+            }
+        }
+        let handle = run(
+            Ticker,
+            NoEncoder,
+            Box::new(KeepaliveGaveUp),
+            Box::new(io::sink()),
+        );
+        let lost = handle.lost();
+        assert_eq!(handle.frames_rx.iter().count(), 0);
+        let why = lost.get().expect("the device is lost");
+        assert!(why.starts_with("device read error: "), "{why}");
+        assert_ne!(why, "the device ended the connection");
+    }
+
+    #[test]
+    fn only_a_read_timeout_is_read_on_after() {
+        assert!(is_read_timeout(&io::ErrorKind::WouldBlock.into()));
+        // The serialport crate's: no OS error.
+        assert!(is_read_timeout(&io::Error::new(
+            io::ErrorKind::TimedOut,
+            "Operation timed out"
+        )));
+        assert!(!is_read_timeout(&io::ErrorKind::ConnectionReset.into()));
+        #[cfg(unix)]
+        assert!(!is_read_timeout(&io::Error::from_raw_os_error(
+            libc::ETIMEDOUT
+        )));
     }
 
     /// A device that ends its stream is gone too.

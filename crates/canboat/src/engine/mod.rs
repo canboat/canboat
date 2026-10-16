@@ -47,7 +47,9 @@ pub use decode::{DecodeError, DecodedField, DecodedPgn, FieldValue};
 pub use encode::{EncodeError, EncodeValue, PgnBuilder, Raw};
 pub use frame::{ADDR_GLOBAL, ADDR_NULL, FASTPACKET_MAX_SIZE, RAWFRAME_MAX_SIZE, RawFrame};
 pub use from_json::json_to_decoded;
-pub use reassembly::{FramePacketType, Reassembled, Reassembler, ReassemblyError};
+pub use reassembly::{
+    FramePacketType, Reassembled, Reassembler, ReassemblyError, summarize_incomplete,
+};
 pub use schema_data::{COPYRIGHT_ID, SCHEMA_HASH, VERSION as CANBOAT_JSON_VERSION};
 pub use schema_data::{field, pgn};
 pub use source::{Decoder, FrameSource};

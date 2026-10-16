@@ -138,6 +138,9 @@ fn run_server(config: server::BridgeConfig) -> anyhow::Result<()> {
         // from stdin, it only ends when stdin does.
         log::info!("stopping on signal");
         bridge.shutdown();
+        // The pipeline threads are not joined, so their reassemblers are
+        // not dropped: sum up what they counted since the last summary.
+        crate::engine::summarize_incomplete();
     } else {
         bridge.wait();
     }
