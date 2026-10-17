@@ -90,9 +90,7 @@ chore: add real-world Fusion and Victron sample captures
 
 ## Adding or fixing a PGN
 
-PGN definitions live as YAML under [`database/`](./database): one file per PGN
-variant in `pgns/`, one per enumeration in `lookups/`. The recommended path
-is the evidence-first editor:
+The recommended path is the evidence-first editor:
 
 ```sh
 keel/keel edit          # local web editor, no network, no npm
@@ -111,11 +109,54 @@ You can also edit the YAML under `database/` by hand and run `keel/keel check`.
 Either way, author only the observed data — order, bit offsets, lengths, ranges
 and sentinels are derived. AGENTS.md §9 has the full workflow.
 
+`keel` has a few more commands that help:
+
+| | |
+| --- | --- |
+| `keel/keel check` | check the database against every rule, and its samples against their expected decodes |
+| `keel/keel generate` | write the generated files `keel` owns (`make generated` also builds the JSON, HTML and DBC) |
+| `keel/keel explain` | print the database as readable text |
+| `keel/keel decode` | decode sample lines from stdin with keel's own decoder |
+| `keel/keel harvest FILE...` | decode captures and add a few samples per PGN variant to the database |
+| `keel/keel rules` | list the rules `check` enforces |
+
+If you are only working on the Rust side, `make rust` regenerates what it needs
+and builds, without xsltproc, xmllint or python; see [BUILDING.md](./BUILDING.md).
+
 ## Database changes should be backed by evidence
 
 New or corrected decodes should be justified by a real capture (add it under
 `samples/` and cite it in the PGN's `notes:` key) or by public documentation. The
 goal is a database that is reverse-engineered from observation, not guesswork.
+
+- Captures from more than one device or firmware version are better than one.
+- Say *why* a field means what you say: "the value follows the depth on the
+  display" is evidence, "it looks like a temperature" is not.
+- For a proprietary PGN, say what the device was doing at the time.
+- Where a field is a guess, say so. A definition that admits it is uncertain is
+  far more useful than one that quietly invents a unit.
+
+## The database is a public contract
+
+Other projects generate their code from `docs/canboat.json`, so a change to a
+definition can break them; [doc/definitions.md](./doc/definitions.md) says how
+changes are classified. Before you open the PR, run
+
+```sh
+make pr
+```
+
+It regenerates the database and reports which level your change is, and so
+which PR title type it needs; CI checks the same. A rename is never free:
+somebody's code keys on that name.
+
+## Changing the programs
+
+Changing the programs rather than the database works the same way; see
+[BUILDING.md](./BUILDING.md). The C programs and the `canboat` binary are both
+tier 1, so a fix to how something is decoded usually belongs in both. Many of
+the golden tests in `analyzer/tests/` run through both, the Rust side in
+`crates/canboat/tests/golden.rs`.
 
 ## Need help?
 

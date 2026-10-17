@@ -20,7 +20,7 @@ GitHub Pages site in docs/:
   - in a table cell, `\\|` for a | that does not end the cell
 
 A relative link is made to work on the site: to a .md file that is also
-converted (doc/*.md, research/*.md), it goes to that page; to a file in docs/,
+converted (doc/**.md, research/*.md), it goes to that page; to a file in docs/,
 to that file; to anything else in the repository, to the file on GitHub.
 
 Usage:
@@ -70,7 +70,7 @@ PAGE = """<!DOCTYPE html>
 </style>
 </head>
 <body>
-<nav><a href="index.html">CANboat documentation</a></nav>
+<nav><a href="{home}">CANboat documentation</a></nav>
 {body}
 </body>
 </html>
@@ -85,8 +85,27 @@ def slug(text):
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GITHUB = "https://github.com/canboat/canboat/blob/master/"
-CONVERTED = ("doc", "research")  # their *.md become docs/*.html
-SOURCE_DIR = ""  # the input's directory, relative to REPO; set by main()
+SOURCE = ""  # the input file, relative to REPO; set by main()
+
+
+def site_path(path):
+    """Where a repository file is on the site (docs/), or None.
+
+    doc/X.md and doc/<dir>/X.md become X.html and <dir>/X.html, research/X.md
+    becomes X.html, and a file in docs/ stays where it is."""
+    top, _, rest = path.partition("/")
+    if top == "doc" and rest.endswith(".md"):
+        return rest[:-3] + ".html"
+    if top == "research" and "/" not in rest and rest.endswith(".md"):
+        return rest[:-3] + ".html"
+    if top == "docs" and rest:
+        return rest
+    return None
+
+
+def relative(site, frm):
+    """The link to site path `site` from the page at site path `frm`."""
+    return os.path.relpath(site, os.path.dirname(frm) or ".").replace(os.sep, "/")
 
 
 def site_link(url):
@@ -95,14 +114,13 @@ def site_link(url):
         return url
     path, frag = (url.split("#", 1) + [""])[:2]
     frag = "#" + frag if frag else ""
-    target = os.path.normpath(os.path.join(SOURCE_DIR, path)).replace(os.sep, "/")
-    top, _, rest = target.partition("/")
-    if top in CONVERTED and "/" not in rest and rest.endswith(".md"):
-        return rest[:-3] + ".html" + frag
-    if top == "docs" and rest:
-        return rest + frag
+    target = os.path.normpath(os.path.join(os.path.dirname(SOURCE), path)).replace(os.sep, "/")
     if target.startswith(".."):
         return url
+    page = site_path(SOURCE)
+    there = site_path(target)
+    if page and there:
+        return relative(there, page) + frag
     if os.path.isdir(os.path.join(REPO, target)):
         return GITHUB.replace("/blob/", "/tree/") + target.rstrip("/") + frag
     return GITHUB + target + frag
@@ -310,8 +328,8 @@ def main():
     ap.add_argument("--title", help="page title (default: first heading or file name)")
     args = ap.parse_args()
 
-    global SOURCE_DIR
-    SOURCE_DIR = os.path.relpath(os.path.dirname(os.path.abspath(args.input)), REPO)
+    global SOURCE
+    SOURCE = os.path.relpath(os.path.abspath(args.input), REPO).replace(os.sep, "/")
 
     with open(args.input, "r", encoding="utf-8") as f:
         md = f.read()
@@ -320,7 +338,8 @@ def main():
     if not title:
         m = re.search(r"^#\s+(.*)", md, re.M)
         title = m.group(1).strip() if m else args.input
-    page = PAGE.format(title=html.escape(title), style=STYLE, body=body)
+    page = PAGE.format(title=html.escape(title), style=STYLE, body=body,
+                       home=relative("index.html", site_path(SOURCE) or "index.html"))
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(page)

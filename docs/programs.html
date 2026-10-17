@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The `canboat` binary</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="the-canboat-binary">The <code>canboat</code> binary</h1>
+<p><code>canboat</code> is one executable with subcommands: it does what CANboat's C programs do, plus <code>canboat server</code>, <code>canboat tui</code> and the gateways the C drivers never had. Both are <strong>tier 1</strong>: supported, tested and released together, and where both do a job they are interchangeable. The C programs are in <a href="c/programs.html">c/programs.md</a>.</p>
+<p>The PGN database is compiled into it: there is nothing to load at runtime, and every subcommand decodes the same way.</p>
+<table>
+<thead><tr>
+<th>Job</th>
+<th><code>canboat</code></th>
+<th>The C programs</th>
+</tr></thead>
+<tbody>
+<tr><td>Decode a capture</td><td><a href="#canboat-convert"><code>canboat convert</code></a></td><td><a href="c/programs.html#analyzer"><code>analyzer</code></a></td></tr>
+<tr><td>Read and write a gateway</td><td><a href="#canboat-interface"><code>canboat interface</code></a>, for every gateway in <a href="gateways.html">gateways.md</a></td><td><a href="c/programs.html#actisense-serial"><code>actisense-serial</code></a>, <a href="c/programs.html#ikonvert-serial"><code>ikonvert-serial</code></a>, <a href="c/programs.html#socketcan-serial"><code>socketcan-serial</code></a>, <a href="c/programs.html#maretron-ipg"><code>maretron-ipg</code></a></td></tr>
+<tr><td>Gateway, decode and serve in one process</td><td><a href="server.html"><code>canboat server</code></a></td><td></td></tr>
+<tr><td>Serve decoded JSON to TCP clients</td><td><a href="#canboat-n2kd"><code>canboat n2kd</code></a></td><td></td></tr>
+<tr><td>Browse a live bus or a capture</td><td><a href="#canboat-tui"><code>canboat tui</code></a></td><td></td></tr>
+<tr><td>Build a message</td><td><a href="#canboat-format-message"><code>canboat format-message</code></a></td><td><a href="c/programs.html#format-message"><code>format-message</code></a> (PHP), <a href="c/programs.html#request-group-function-and-command-group-function"><code>request-group-function</code>, <code>command-group-function</code></a></td></tr>
+<tr><td>Play a capture at its own pace</td><td><a href="#canboat-replay"><code>canboat replay</code></a></td><td><a href="c/programs.html#replay"><code>replay</code></a></td></tr>
+<tr><td>Convert other capture formats</td><td><code>canboat convert</code></td><td><a href="c/programs.html#candump2analyzer"><code>candump2analyzer</code></a>, <a href="c/programs.html#pcap2candump"><code>pcap2candump</code></a></td></tr>
+<tr><td>Write to a SocketCAN interface</td><td><code>canboat interface --kind socketcan -w</code></td><td><a href="c/programs.html#socketcan-writer"><code>socketcan-writer</code></a></td></tr>
+<tr><td>List the devices on the bus</td><td><code>canboat tui</code></td><td><a href="c/programs.html#list-product-information"><code>list-product-information</code></a> (PHP)</td></tr>
+<tr><td>NMEA 0183 plumbing</td><td></td><td><a href="c/programs.html#nmea0183-serial"><code>nmea0183-serial</code></a>, <a href="c/programs.html#iptee"><code>iptee</code></a></td></tr>
+</tbody>
+</table>
+<p>Every subcommand takes <code>--help</code>. <a href="using.html">using.md</a> puts them together into pipelines.</p>
+<blockquote class="alert alert-warning">
+<p class="alert-title">Warning</p>
+<p>The PGN database is reverse engineered. Most definitions have been confirmed against several devices, but some fields are educated guesses. Do not build something safety-critical on a decoded value without checking it against what the instrument itself shows.</p>
+</blockquote>
+<h2 id="canboat-convert"><code>canboat convert</code></h2>
+<p>Decodes a capture, or converts it to another capture format. The input format is detected from the first line, or set with <code>--from</code>; <code>.pcap</code>, <code>.pcap.gz</code> and <code>.nif</code> containers are unwrapped. <a href="file-formats.html">file-formats.md</a> lists the formats.</p>
+<pre><code class="language-sh">canboat convert capture.log                 # JSON
+canboat convert --to text capture.log       # human-readable
+canboat convert --to plain capture.candump  # canboat PLAIN, for analyzer
+canboat convert --pgn 129025 --src 3 capture.log</code></pre>
+<pre><code class="language-text">$ canboat convert small.log
+{&quot;version&quot;:&quot;8.3.0&quot;,&quot;commit&quot;:&quot;7ac57fdb&quot;,&quot;units&quot;:&quot;si&quot;,&quot;protocol&quot;:&quot;nmea2000&quot;,&quot;showLookupValues&quot;:false}
+{&quot;timestamp&quot;:&quot;2011-11-24T22:42:04.388Z&quot;,&quot;prio&quot;:2,&quot;src&quot;:36,&quot;dst&quot;:255,&quot;pgn&quot;:127251,&quot;description&quot;:&quot;Rate of Turn&quot;,&quot;fields&quot;:{&quot;sid&quot;:125,&quot;rate&quot;:0.0050963438}}
+{&quot;timestamp&quot;:&quot;2011-11-24T22:42:04.390Z&quot;,&quot;prio&quot;:2,&quot;src&quot;:36,&quot;dst&quot;:255,&quot;pgn&quot;:127250,&quot;description&quot;:&quot;Vessel Heading&quot;,&quot;fields&quot;:{&quot;sid&quot;:0,&quot;heading&quot;:3.1834,&quot;deviation&quot;:0.0000,&quot;variation&quot;:0.0000,&quot;reference&quot;:&quot;Magnetic&quot;}}</code></pre>
+<p>The first line is a header, not a message: the version, the units, the protocol, and whether lookups are written as value and name (<code>--no-banner</code> leaves it out). Its JSON is not quite the C <code>analyzer</code>'s: field keys are lowerCamelCase and values are in SI units (radians, kelvin, pascal). <code>--id spaces --units metric</code> gives <code>analyzer</code>'s keys and units. <code>--nv</code>, <code>--empty</code> and <code>--debug</code> match <code>analyzer</code>'s <code>-nv</code>, <code>-empty</code> and <code>-debug</code>; <code>--protocol j1939</code> or <code>quick</code> decodes those buses. <code>--quirk gps-rollover</code> corrects dates, as in <a href="server.html#device-quirks">server.md</a>.</p>
+<h2 id="canboat-interface"><code>canboat interface</code></h2>
+<p>Bridges a live gateway to stdin and stdout, in canboat's FAST format: what it receives goes to stdout, what it reads on stdin goes onto the bus.</p>
+<pre><code class="language-sh">canboat interface --kind actisense /dev/ttyUSB0
+canboat interface --kind yachtd tcp://ydwg
+canboat interface --kind socketcan can0</code></pre>
+<p><code>-r</code> only reads, <code>-w</code> only writes, and <code>-b</code> sets the baud rate. The gateways, their options and their PGN lists are in <a href="gateways.html">gateways.md</a>.</p>
+<h2 id="canboat-server"><code>canboat server</code></h2>
+<p>The whole gateway → decode → serve chain in one process; see <a href="server.html">server.md</a>.</p>
+<h2 id="canboat-n2kd"><code>canboat n2kd</code></h2>
+<p>Reads decoded JSON on stdin, from <code>analyzer -json</code> or <code>canboat convert</code>, and serves it to TCP clients on the same ports as <code>canboat server</code>, from base port 2597 (<code>-p</code>): the snapshot, the JSON stream, NMEA 0183, the raw input port and the AIS snapshot. It listens on 127.0.0.1 unless given <code>--public</code>.</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer -json -nv | canboat n2kd</code></pre>
+<p>It replaces the C <code>n2kd</code>, which was removed in v8. For a new setup, <code>canboat server</code> is usually the better choice: being one process, it can also answer ISO Requests and Group Functions, track the devices on the bus, and request what has gone stale. Use <code>canboat n2kd</code> when you want the pipeline, for instance to decode elsewhere or to tee a stage with <a href="c/programs.html#iptee"><code>iptee</code></a>.</p>
+<h2 id="canboat-tui"><code>canboat tui</code></h2>
+<p>An interactive terminal browser: the PGNs on the bus, the devices sending them, and the decoded fields of the one you select.</p>
+<pre><code class="language-sh">canboat tui --host pi.local       # a canboat server or n2kd
+canboat tui --log capture.log     # a capture</code></pre>
+<p>It reads the snapshot (2597) and JSON stream (2598) ports. There is no default host: with neither option it starts idle, with a dialog to load a capture or connect.</p>
+<h2 id="canboat-format-message"><code>canboat format-message</code></h2>
+<p>Builds one message from field values, for any PGN, in canboat PLAIN or another format (<code>--to</code>). A number is in the field's unit; <code>raw:N</code> writes the wire bits.</p>
+<pre><code class="language-sh">canboat format-message --list               # every PGN
+canboat format-message 126996 --help        # a PGN&#x27;s fields
+canboat format-message isoRequest --dst 0 PGN=126996</code></pre>
+<h2 id="canboat-replay"><code>canboat replay</code></h2>
+<p>Writes a PLAIN or FAST capture from stdin to stdout at the pace it was recorded, as the C <a href="c/programs.html#replay"><code>replay</code></a> does. <code>canboat server --replay</code> serves a capture as a live bus instead; see <a href="server.html">server.md</a>.</p>
+<h2 id="canboat-install-shims"><code>canboat install-shims</code></h2>
+<p>Makes the subcommands answer to the old names (<code>analyzer</code>, <code>n2kd</code>, <code>actisense-serial</code>, …), with symlinks in the binary's own directory or in <code>--dir</code>. It never takes a name that another program already holds, so it is safe in a directory with the C programs installed, and it says which names it left alone:</p>
+<pre><code class="language-text">/usr/local/bin/analyzer: left alone, a file is already there
+/usr/local/bin/n2kd -&gt; /usr/local/bin/canboat</code></pre>
+</body>
+</html>

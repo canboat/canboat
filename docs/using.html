@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Using CANboat</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="using-canboat">Using CANboat</h1>
+<p>CANboat is not turnkey: it is meant for engineers and hobbyists who want to see what is on their NMEA 2000 network, for reverse engineering, analysis, replay, testing and debugging other devices. If you just want to use your instruments, a project built on CANboat is friendlier: <a href="https://signalk.org/">Signal K</a>, or <a href="https://openplotter.org/">OpenPlotter</a>.</p>
+<p>This page works up from the simplest case, with the <code>canboat</code> binary (<a href="programs.html">programs.md</a>). The same with the C programs is in <a href="c/using.html">c/using.md</a>.</p>
+<h2 id="decode-a-capture-you-already-have">Decode a capture you already have</h2>
+<pre><code class="language-sh">canboat convert --to text capture.log    # for you to read
+canboat convert capture.log              # JSON, for another program</code></pre>
+<p>The format is detected from the first line; <a href="file-formats.html">file-formats.md</a> lists what canboat reads.</p>
+<h2 id="watch-a-live-bus">Watch a live bus</h2>
+<p><code>canboat interface</code> reads a gateway and writes its frames to stdout; pipe them into <code>canboat convert</code>. For an Actisense NGT-1 on <code>/dev/ttyUSB0</code>:</p>
+<pre><code class="language-sh">canboat interface --kind actisense -r /dev/ttyUSB0 | canboat convert --to text</code></pre>
+<p><a href="gateways.html">gateways.md</a> has the other gateways and how to name them.</p>
+<h2 id="watch-one-device-or-one-pgn">Watch one device, or one PGN</h2>
+<p>This is what you want when reverse engineering. Only what source address 35 sends:</p>
+<pre><code class="language-sh">canboat interface --kind actisense -r /dev/ttyUSB0 | canboat convert --to text --src 35</code></pre>
+<p>Once you know which PGN interests you, add <code>--pgn</code>, and <code>--debug</code> to see each field's bytes and bits next to its value, which is what you need when a field looks wrong:</p>
+<pre><code class="language-sh">canboat interface --kind actisense -r /dev/ttyUSB0 | canboat convert --to text --pgn 130311 --debug</code></pre>
+<h2 id="browse-interactively">Browse interactively</h2>
+<pre><code class="language-sh">canboat server --kind actisense --device /dev/ttyUSB0 &amp;
+canboat tui --host localhost</code></pre>
+<p><code>canboat tui</code> shows the PGNs on the bus, the devices sending them, and the decoded fields of the one you select. It also opens a capture: <code>canboat tui --log capture.log</code>.</p>
+<h2 id="serve-the-data-to-other-software">Serve the data to other software</h2>
+<p><code>canboat server</code> reads the gateway, decodes, and serves JSON, NMEA 0183 and the raw frames on TCP ports, all in one process:</p>
+<pre><code class="language-sh">canboat server --kind actisense --device /dev/ttyUSB0
+nc localhost 2598                       # every decoded message, as JSON
+nc localhost 2599                       # NMEA 0183, for a chart plotter program</code></pre>
+<p><a href="server.html">server.md</a> has the ports, and how to run it as a service.</p>
+<p>If the decoding happens elsewhere, <code>canboat n2kd</code> serves a JSON stream it reads on stdin on the same ports:</p>
+<pre><code class="language-sh">canboat interface --kind actisense -r /dev/ttyUSB0 | canboat convert | canboat n2kd</code></pre>
+<h2 id="replay-a-capture">Replay a capture</h2>
+<p>At the pace it was recorded:</p>
+<pre><code class="language-sh">canboat replay &lt; capture.log | canboat convert --to text</code></pre>
+<p>Or as a live bus, ports and all, to test a consumer without a boat:</p>
+<pre><code class="language-sh">canboat server --replay capture.log</code></pre>
+<h2 id="write-to-the-bus">Write to the bus</h2>
+<p><code>canboat interface</code> sends what it reads on stdin, as PLAIN or FAST lines, to the bus. <code>canboat format-message</code> builds the line, so you need not write the hex yourself. An ISO Request to every device for its Product Information:</p>
+<pre><code class="language-sh">canboat format-message isoRequest --dst 255 PGN=126996 | canboat interface --kind actisense -w /dev/ttyUSB0</code></pre>
+<p>While <code>canboat server</code> has the gateway, write to its input port instead:</p>
+<pre><code class="language-sh">canboat format-message isoRequest --dst 255 PGN=126996 | nc localhost 2600</code></pre>
+<p>Whether a gateway passes a message on is up to the gateway: an NGT-1 or an iKonvert sends only the PGNs on its transmit list. See <a href="gateways.html#transmit-and-receive-pgn-lists---tx-pgn---rx-pgn">gateways.md</a>.</p>
+<h2 id="with-signal-k">With Signal K</h2>
+<p>Signal K uses CANboat's sibling, <a href="https://github.com/canboat/canboatjs">canboatjs</a>, which is built for it.</p>
+</body>
+</html>

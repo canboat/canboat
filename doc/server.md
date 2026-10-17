@@ -31,6 +31,64 @@ The state the filter and override ports set is kept in `--config-dir`:
 `/etc/default/canboat` if it is writable (the systemd/root case), otherwise
 `~/.local/canboat`. `canboat server --help` has the rest of the options.
 
+## Running it as a service
+
+`canboat server` is one process with nothing else to supervise, so any init
+system with a restart policy will do. With systemd, as a system service in
+`/etc/systemd/system/canboat.service`:
+
+```ini
+[Unit]
+Description=CANboat server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/canboat server --kind actisense --device /dev/serial/by-id/usb-Actisense_NGT-1_XXXX-if00-port0
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+then `sudo systemctl enable --now canboat`, and `journalctl -u canboat -f` for
+its log. Or as a user service, in `~/.config/systemd/user/canboat.service`, with
+`ExecStart=%h/.cargo/bin/canboat …` and `WantedBy=default.target`:
+
+```sh
+systemctl --user enable --now canboat
+sudo loginctl enable-linger $USER    # start at boot, and keep running after you log out
+journalctl --user -u canboat -f
+```
+
+- **The device name.** Use the stable name under `/dev/serial/by-id/`, not
+  `/dev/ttyUSB0`, which can change between boots; see
+  [gateways.md](./gateways.md#the-actisense-ngt-1-on-linux-and-macos). A user
+  service needs the user in the `dialout` group.
+- **A network gateway.** A user service can't wait for `network-online.target`;
+  `Restart=on-failure` brings it back once the gateway can be reached.
+- **SocketCAN.** `--bitrate` needs root or CAP_NET_ADMIN. For a user service, set
+  the bit rate when the interface comes up instead (with systemd-networkd, a
+  `.network` file with `[CAN] BitRate=250K`), and leave `--bitrate` out.
+- **Its state.** The NMEA 0183 filter and the rate overrides are kept in
+  `--config-dir`: `/etc/default/canboat` for a system service, `~/.local/canboat`
+  for a user's.
+
+### From `n2kd_monitor`
+
+`n2kd_monitor`, the perl script that restarted the C `n2kd` and its gateway
+driver, was removed in v8. What its `/etc/default/n2kd` set is now given to
+`canboat server`:
+
+| `/etc/default/n2kd` | `canboat server` |
+| --- | --- |
+| `INTERFACE_PROGRAM`, `INTERFACE_DEVICE` | `--kind` and `--device` |
+| `INTERFACE_OPTIONS` | the gateway's options, such as `--baud` |
+| `ANALYZER_OPTIONS` | `--id`, `--units`; it decodes internally, so most no longer apply |
+| `N2KD_OPTIONS` | the port options |
+| `MONITOR` | your init system's restart policy |
+
 ## Device quirks
 
 Some devices misbehave in ways CANboat can cover for. Each workaround is a

@@ -56,6 +56,45 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 </tbody>
 </table>
 <p>The state the filter and override ports set is kept in <code>--config-dir</code>: <code>/etc/default/canboat</code> if it is writable (the systemd/root case), otherwise <code>~/.local/canboat</code>. <code>canboat server --help</code> has the rest of the options.</p>
+<h2 id="running-it-as-a-service">Running it as a service</h2>
+<p><code>canboat server</code> is one process with nothing else to supervise, so any init system with a restart policy will do. With systemd, as a system service in <code>/etc/systemd/system/canboat.service</code>:</p>
+<pre><code class="language-ini">[Unit]
+Description=CANboat server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/canboat server --kind actisense --device /dev/serial/by-id/usb-Actisense_NGT-1_XXXX-if00-port0
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>then <code>sudo systemctl enable --now canboat</code>, and <code>journalctl -u canboat -f</code> for its log. Or as a user service, in <code>~/.config/systemd/user/canboat.service</code>, with <code>ExecStart=%h/.cargo/bin/canboat …</code> and <code>WantedBy=default.target</code>:</p>
+<pre><code class="language-sh">systemctl --user enable --now canboat
+sudo loginctl enable-linger $USER    # start at boot, and keep running after you log out
+journalctl --user -u canboat -f</code></pre>
+<ul>
+<li><strong>The device name.</strong> Use the stable name under <code>/dev/serial/by-id/</code>, not <code>/dev/ttyUSB0</code>, which can change between boots; see <a href="gateways.html#the-actisense-ngt-1-on-linux-and-macos">gateways.md</a>. A user service needs the user in the <code>dialout</code> group.</li>
+<li><strong>A network gateway.</strong> A user service can't wait for <code>network-online.target</code>; <code>Restart=on-failure</code> brings it back once the gateway can be reached.</li>
+<li><strong>SocketCAN.</strong> <code>--bitrate</code> needs root or CAP_NET_ADMIN. For a user service, set the bit rate when the interface comes up instead (with systemd-networkd, a <code>.network</code> file with <code>[CAN] BitRate=250K</code>), and leave <code>--bitrate</code> out.</li>
+<li><strong>Its state.</strong> The NMEA 0183 filter and the rate overrides are kept in <code>--config-dir</code>: <code>/etc/default/canboat</code> for a system service, <code>~/.local/canboat</code> for a user's.</li>
+</ul>
+<h3 id="from-n2kd-monitor">From <code>n2kd_monitor</code></h3>
+<p><code>n2kd_monitor</code>, the perl script that restarted the C <code>n2kd</code> and its gateway driver, was removed in v8. What its <code>/etc/default/n2kd</code> set is now given to <code>canboat server</code>:</p>
+<table>
+<thead><tr>
+<th><code>/etc/default/n2kd</code></th>
+<th><code>canboat server</code></th>
+</tr></thead>
+<tbody>
+<tr><td><code>INTERFACE_PROGRAM</code>, <code>INTERFACE_DEVICE</code></td><td><code>--kind</code> and <code>--device</code></td></tr>
+<tr><td><code>INTERFACE_OPTIONS</code></td><td>the gateway's options, such as <code>--baud</code></td></tr>
+<tr><td><code>ANALYZER_OPTIONS</code></td><td><code>--id</code>, <code>--units</code>; it decodes internally, so most no longer apply</td></tr>
+<tr><td><code>N2KD_OPTIONS</code></td><td>the port options</td></tr>
+<tr><td><code>MONITOR</code></td><td>your init system's restart policy</td></tr>
+</tbody>
+</table>
 <h2 id="device-quirks">Device quirks</h2>
 <p>Some devices misbehave in ways CANboat can cover for. Each workaround is a named <em>quirk</em>, and every one of them is <strong>off by default</strong> — they all rewrite or invent data, so you switch on the ones you need:</p>
 <table>

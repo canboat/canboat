@@ -105,6 +105,35 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
   `ydwg`, and `canboat server --actisense …`, `--ikonvert …`, `--maretron …`
   and `--socketcan …`.
 
+## The Actisense NGT-1 on Linux and macOS
+
+The NGT-1 is an FTDI USB serial device with its own USB ID, `0403:d9aa`.
+
+**Linux.** The standard `ftdi_sio` driver works once it knows that ID. Adding it
+after the module has loaded keeps the driver working for your other FTDI
+devices too:
+
+```sh
+sudo modprobe ftdi_sio
+echo 0403 d9aa | sudo tee /sys/bus/usb-serial/drivers/ftdi_sio/new_id
+```
+
+The device then shows up as `/dev/ttyUSB<n>` (see `dmesg`). That number can
+change between boots; use the stable name under `/dev/serial/by-id/`, or give
+it one of your own with a udev rule on its serial number, which `udevadm info
+-q all -n /dev/ttyUSB0` shows:
+
+```text
+# /etc/udev/rules.d/99-actisense.rules
+SUBSYSTEM=="tty", ACTION=="add", ENV{ID_SERIAL}=="Actisense_NGT-1_1FD34", SYMLINK+="actisense"
+```
+
+Your user needs to be in the `dialout` group to open it.
+
+**macOS.** No serial driver binds the NGT-1, so `canboat` opens it directly
+over USB: `--kind actisense usb`, or `usb:<serial>` with more than one. The C
+`actisense-serial` needs a serial device, so on macOS it can't read an NGT-1.
+
 ## Plain CAN adapters
 
 A plain USB CAN adapter works on every platform: a Linux SocketCAN

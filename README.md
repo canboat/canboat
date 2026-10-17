@@ -5,6 +5,8 @@ A small but effective set of command-line utilities to work with CAN networks on
 The NMEA 2000 database and implementation is copyrighted by the NMEA (National Marine Electronics Association). Access is restricted to members and parties that pay for it. If they do so they are not able to divulge the content of the database, thus making it impossible for open source developers to get access to it.
 
 For this reason we have reverse engineered the NMEA 2000 database by network observation and assembling data from public sources.
+Because we reverse engineer rather than license it, we also cover the proprietary PGNs of Navico, B&G, Airmar, Garmin,
+Raymarine, Furuno, Fusion, Maretron, Victron and others.
 
 ## Quick reference
 
@@ -55,18 +57,26 @@ The remaining C converters, the helper scripts in `util/` (PHP, perl and ksh)
 and the Python tooling will most likely move to Rust in time; the C `n2kd` and
 `n2kd_monitor` already have, and were removed in v8.
 
+Each program is described in [doc/programs.md](./doc/programs.md) and
+[doc/c/programs.md](./doc/c/programs.md).
+
 ## Documentation
 
 | | |
 | --- | --- |
-| [doc/gateways.md](./doc/gateways.md) | The supported gateways and CAN adapters: `--kind` and `--data-format`, what each reads and writes, J1939 and 11-bit, device notes, the AOS simulator, the CANalyst-II on Windows, the transmit and receive PGN lists and `--rx-filter` |
-| [doc/server.md](./doc/server.md) | `canboat server`: its ports, the device quirks, a capture as a live bus (`--replay`), performance |
+| [doc/using.md](./doc/using.md) | Worked examples, from decoding a capture to writing to the bus; [doc/c/using.md](./doc/c/using.md) with the C programs |
+| [doc/programs.md](./doc/programs.md) | The `canboat` binary and each of its subcommands, and which C program does the same |
+| [doc/c/programs.md](./doc/c/programs.md) | Each C program and helper script, with its options |
+| [doc/gateways.md](./doc/gateways.md) | The supported gateways and CAN adapters: `--kind` and `--data-format`, what each reads and writes, J1939 and 11-bit, device notes, the NGT-1's driver, the AOS simulator, the CANalyst-II on Windows, the transmit and receive PGN lists and `--rx-filter` |
+| [doc/server.md](./doc/server.md) | `canboat server`: its ports, running it as a service, the device quirks, a capture as a live bus (`--replay`), performance |
 | [doc/file-formats.md](./doc/file-formats.md) | The capture formats `analyzer` and `canboat convert` read |
+| [doc/definitions.md](./doc/definitions.md) | Using the XML and JSON definitions in your own project, and writing a decoder |
 | [crates/canboat/README.md](./crates/canboat/README.md) | The `canboat` Rust library: quick start and features. The API reference is on [docs.rs](https://docs.rs/canboat), its design in [doc/library-api-plan.md](./doc/library-api-plan.md) |
-| [BUILDING.md](./BUILDING.md) | Building the C tools and the Rust binary, and testing |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | Pull request titles, adding or fixing a PGN, the evidence a database change needs |
+| [BUILDING.md](./BUILDING.md) | Pre-built binaries; building the C tools and the Rust binary, and testing |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Pull request titles, adding or fixing a PGN, the evidence a database change needs, the public contract |
 
-For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
+The same documents, and the PGN documentation, are on the
+[documentation site](https://canboat.github.io/canboat).
 
 ## Contributing
 
@@ -77,9 +87,11 @@ instructions.
 
 ## Using the definitions in your own project
 
-If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json).
-We recommend that you pin your retrieval to a particular release. Semantic versioning is used to warn you of major (x.0.0) or minor (0.x.0) changes to the 
-definitions.
+The definitions are in `docs/`, as [canboat.json](./docs/canboat.json) and
+[canboat.xml](./docs/canboat.xml), with the J1939 and Quick PCS ones next to them.
+Pin your copy to a release: semantic versioning warns you of major (x.0.0) and
+minor (0.x.0) changes to the definitions. [doc/definitions.md](./doc/definitions.md)
+has the rest.
 
 ## Version history
 

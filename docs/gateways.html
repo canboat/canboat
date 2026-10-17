@@ -82,6 +82,16 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 <li>An option only some gateways have (<code>--bitrate</code>, <code>--channel</code>, <code>--password</code>, <code>--mode</code>, the ISO NAME options) says which in <code>--help</code>, and is refused for the others.</li>
 <li>The names of canboat 8.3.0 still work: <code>--kind ngt1</code>, <code>w2k-ascii</code> and <code>ydwg</code>, and <code>canboat server --actisense …</code>, <code>--ikonvert …</code>, <code>--maretron …</code> and <code>--socketcan …</code>.</li>
 </ul>
+<h2 id="the-actisense-ngt-1-on-linux-and-macos">The Actisense NGT-1 on Linux and macOS</h2>
+<p>The NGT-1 is an FTDI USB serial device with its own USB ID, <code>0403:d9aa</code>.</p>
+<p><strong>Linux.</strong> The standard <code>ftdi_sio</code> driver works once it knows that ID. Adding it after the module has loaded keeps the driver working for your other FTDI devices too:</p>
+<pre><code class="language-sh">sudo modprobe ftdi_sio
+echo 0403 d9aa | sudo tee /sys/bus/usb-serial/drivers/ftdi_sio/new_id</code></pre>
+<p>The device then shows up as <code>/dev/ttyUSB&lt;n&gt;</code> (see <code>dmesg</code>). That number can change between boots; use the stable name under <code>/dev/serial/by-id/</code>, or give it one of your own with a udev rule on its serial number, which <code>udevadm info -q all -n /dev/ttyUSB0</code> shows:</p>
+<pre><code class="language-text"># /etc/udev/rules.d/99-actisense.rules
+SUBSYSTEM==&quot;tty&quot;, ACTION==&quot;add&quot;, ENV{ID_SERIAL}==&quot;Actisense_NGT-1_1FD34&quot;, SYMLINK+=&quot;actisense&quot;</code></pre>
+<p>Your user needs to be in the <code>dialout</code> group to open it.</p>
+<p><strong>macOS.</strong> No serial driver binds the NGT-1, so <code>canboat</code> opens it directly over USB: <code>--kind actisense usb</code>, or <code>usb:&lt;serial&gt;</code> with more than one. The C <code>actisense-serial</code> needs a serial device, so on macOS it can't read an NGT-1.</p>
 <h2 id="plain-can-adapters">Plain CAN adapters</h2>
 <p>A plain USB CAN adapter works on every platform: a Linux SocketCAN interface, a CANalyst-II such as the Waveshare USB-CAN-B (<code>04d8:0053</code>), which <code>canboat</code> opens directly over USB — <code>canboat interface --kind canalyst usb</code> or <code>canboat server --kind canalyst --device usb</code> — or a Waveshare USB-CAN-A (<code>1a86:7523</code>) on its serial port, <code>canboat interface --kind usb-can-a /dev/ttyUSB0</code>. On each, canboat is a full NMEA 2000 node: it claims an address and answers ISO Requests.</p>
 <h3 id="the-canalyst-ii-on-windows">The CANalyst-II on Windows</h3>

@@ -127,17 +127,18 @@ generated: markdown-docs
 pr: generated
 	@tools/contract-pr.sh
 
-# The GitHub Pages site in docs/: doc/*.md (the guides) and research/*.md (the
-# explanation documents) -> docs/*.html, via a portable, dependency-free
-# converter (Python 3 standard library only). docs/index.html, which links
-# them all, is written by hand. The two directories share docs/, so a name
-# may be in only one of them.
-DOC_MD := $(wildcard doc/*.md)
+# The GitHub Pages site in docs/: doc/*.md (the guides; doc/c/ for the C
+# programs, as docs/c/) and research/*.md (the explanation documents) ->
+# docs/*.html, via a portable, dependency-free converter (Python 3 standard
+# library only). docs/index.html, which links them all, is written by hand.
+# doc/ and research/ share docs/, so a name may be in only one of them.
+DOC_MD := $(wildcard doc/*.md doc/c/*.md)
 RESEARCH_MD := $(wildcard research/*.md)
 $(if $(filter $(notdir $(DOC_MD)),$(notdir $(RESEARCH_MD))),$(error doc/ and research/ both have $(filter $(notdir $(DOC_MD)),$(notdir $(RESEARCH_MD)))))
 MARKDOWN_HTML := $(patsubst doc/%.md,docs/%.html,$(DOC_MD)) $(patsubst research/%.md,docs/%.html,$(RESEARCH_MD))
 
 docs/%.html: doc/%.md tools/md2html.py
+	@mkdir -p $(dir $@)
 	python3 tools/md2html.py $< -o $@
 
 docs/%.html: research/%.md tools/md2html.py

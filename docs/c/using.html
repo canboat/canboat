@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Using the C programs</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="../index.html">CANboat documentation</a></nav>
+<h1 id="using-the-c-programs">Using the C programs</h1>
+<p>The C programs (<a href="programs.html">programs.md</a>) are made to be put together with UNIX pipes: one reads the bus, one decodes, one serves or stores. This page works up from the simplest case; the same with the <code>canboat</code> binary is in <a href="../using.html">../using.md</a>, and the two mix: a C driver can feed <code>canboat convert</code>, and <code>canboat interface</code> can feed <code>analyzer</code>.</p>
+<h2 id="decode-a-capture-you-already-have">Decode a capture you already have</h2>
+<pre><code class="language-sh">analyzer &lt; capture.log           # for you to read
+analyzer -json &lt; capture.log     # for another program</code></pre>
+<p>The format is detected from the first line. A capture <code>analyzer</code> does not read itself goes through a helper first, such as <code>actisense-serial -r capture.ebl | analyzer</code>; see <a href="../file-formats.html">../file-formats.md</a>.</p>
+<h2 id="watch-a-live-bus">Watch a live bus</h2>
+<p>Read the gateway and pipe it into <code>analyzer</code>. For an Actisense NGT-1 on <code>/dev/ttyUSB0</code>:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer</code></pre>
+<p>The other drivers are <code>ikonvert-serial</code>, <code>socketcan-serial</code> and <code>maretron-ipg</code>.</p>
+<h2 id="watch-one-device-or-one-pgn">Watch one device, or one PGN</h2>
+<p>Only what source address 35 sends:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer -src 35</code></pre>
+<p>Once you know which PGN interests you, give it, and <code>-data</code> to see the bytes next to the decode, which is what you need when a field looks wrong:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer -data 130311</code></pre>
+<p><code>-debug</code> goes further and prints the raw value of every field.</p>
+<h2 id="serve-the-data-to-other-software">Serve the data to other software</h2>
+<p>End the pipeline with <code>canboat n2kd</code>, which serves the JSON to TCP clients (the C <code>n2kd</code> was removed in v8):</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer -json -nv | canboat n2kd</code></pre>
+<p><code>canboat server</code> does all three in one process, and is the better choice for a permanent installation; see <a href="../server.html">../server.md</a>.</p>
+<h2 id="replay-a-capture-at-its-own-pace">Replay a capture at its own pace</h2>
+<pre><code class="language-sh">replay &lt; capture.log | analyzer</code></pre>
+<h2 id="write-to-the-bus">Write to the bus</h2>
+<p>A driver sends what it reads on stdin to the bus. If nothing else has the gateway open:</p>
+<pre><code class="language-sh">echo 2012-06-17-15:02:11.000,6,59904,0,255,3,14,f0,01 | actisense-serial /dev/ttyUSB0</code></pre>
+<p>That is an ISO Request to every device for its Product Information. An NGT-1 transmits only the PGNs on its Transmit PGN Enable list, which <code>actisense-serial</code> does not change; see <a href="programs.html#actisense-serial">programs.md</a>.</p>
+<p>When a reader already has the gateway open, give the pipeline a way in: a fifo,</p>
+<pre><code class="language-sh">mkfifo /tmp/canbus-write
+actisense-serial /dev/ttyUSB0 &lt; /tmp/canbus-write | analyzer
+# then, from anywhere:
+echo 2012-06-17-15:02:11.000,6,59904,0,255,3,14,f0,01 &gt; /tmp/canbus-write</code></pre>
+<p>or a socket, with <code>nc</code>:</p>
+<pre><code class="language-sh">nc -lk localhost 5000 | actisense-serial /dev/ttyUSB0 | analyzer
+echo 2012-06-17-15:02:11.000,6,59904,0,255,3,14,f0,01 | nc localhost 5000</code></pre>
+<p>To build the line rather than write the hex, use <code>canboat format-message</code>, or <code>format-message</code> and the group-function programs. On SocketCAN there is also <code>socketcan-writer</code>.</p>
+<h2 id="two-buses">Two buses</h2>
+<p>A driver's output can be written to another gateway, while both are decoded:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyS1 | actisense-serial /dev/ttyS2 | analyzer
+ikonvert-serial -r /dev/ttyS1 | actisense-serial /dev/ttyS2 | analyzer</code></pre>
+<h2 id="tee-a-stage">Tee a stage</h2>
+<p><code>iptee</code> copies a stage of a pipeline to the network, without disturbing the pipe. With <code>-s</code> it is the TCP server, here on port 2610, so other programs can connect to the raw frames while <code>analyzer</code> decodes them:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | iptee -s 0.0.0.0 2610 | analyzer -json</code></pre>
+<p>With <code>-u</code> or <code>-t</code> it sends to a UDP address or a TCP server instead.</p>
+</body>
+</html>
