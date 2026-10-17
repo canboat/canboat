@@ -192,10 +192,7 @@ actisense-serial -r capture.ebl | analyzer</code></pre>
 <pre><code class="language-sh">format-message 255 request_pgn 126996</code></pre>
 <p><code>canboat format-message</code> builds any PGN.</p>
 <h2 id="list-product-information"><code>list-product-information</code></h2>
-<p>A PHP script in <code>util/</code> that lists the devices on the bus and their software versions. It needs a <code>canboat server</code>, or a pipeline ending in <code>canboat n2kd</code>: it sends ISO Requests for Product Information (126996) and Configuration Information (126998) to the input port, 2600, and reads the answers from the snapshot port,</p>
-<ol>
-<li><code>/etc/default/canboat</code> can set other ports or hosts (<code>N2K_WRITE_HOST</code>, <code>N2K_WRITE_PORT</code>, …).</li>
-</ol>
+<p>A PHP script in <code>util/</code> that lists the devices on the bus and their software versions. It needs a <code>canboat server</code>, or a pipeline ending in <code>canboat n2kd</code>: it sends ISO Requests for Product Information (126996) and Configuration Information (126998) to the input port, 2600, and reads the answers from the snapshot port, 2597. <code>/etc/default/canboat</code> can set other ports or hosts (<code>N2K_WRITE_HOST</code>, <code>N2K_WRITE_PORT</code>, …).</p>
 <pre><code class="language-text">$ list-product-information
 Product Information:
 60: MasterBus NMEA Interface         1.061.00

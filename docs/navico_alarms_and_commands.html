@@ -242,10 +242,7 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 </ul>
 <p>An accepted command does not mean the mode engaged: the autopilot refuses Heading/Wind/Nav when its sensor stack is incomplete (a Triton² logs "Reduced functionality" when a heading or wind source is missing), so confirm the mode actually changed rather than trusting the acknowledgement alone.</p>
 <blockquote>
-<p><strong>Frame length.</strong> Every 130850 AP command variant is modelled as the full 12 bytes, matching the fixed layout above. This was not always so: the mode commands carried a 24-bit trailing <code>Reserved</code> and so came to only 11, while the catch-all <code>simnetApCommand</code> carried two <code>Reserved</code> bytes too many and came to</p>
-<ol>
-<li>Both were corrected against the captured frames.</li>
-</ol>
+<p><strong>Frame length.</strong> Every 130850 AP command variant is modelled as the full 12 bytes, matching the fixed layout above. This was not always so: the mode commands carried a 24-bit trailing <code>Reserved</code> and so came to only 11, while the catch-all <code>simnetApCommand</code> carried two <code>Reserved</code> bytes too many and came to 14. Both were corrected against the captured frames.</p>
 </blockquote>
 <h2 id="propagation-why-an-alarm-sometimes-stays-local">Propagation — why an alarm sometimes stays local</h2>
 <p>An alarm is only network-wide if it is actually broadcast. The same alarm type can behave differently depending on where it is enabled:</p>

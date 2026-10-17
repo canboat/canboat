@@ -108,9 +108,16 @@ def relative(site, frm):
     return os.path.relpath(site, os.path.dirname(frm) or ".").replace(os.sep, "/")
 
 
+SCHEMES = ("http", "https", "mailto")
+
+
 def site_link(url):
-    """Where a link in a converted document goes on the site."""
-    if re.match(r"^[a-z][a-z0-9+.-]*:", url, re.I) or url.startswith(("#", "/")):
+    """Where a link in a converted document goes on the site, or None for a
+    scheme other than SCHEMES (such as javascript:), which is not linked."""
+    scheme = re.match(r"^([a-z][a-z0-9+.-]*):", url, re.I)
+    if scheme:
+        return url if scheme.group(1).lower() in SCHEMES else None
+    if url.startswith(("#", "/")):
         return url
     path, frag = (url.split("#", 1) + [""])[:2]
     frag = "#" + frag if frag else ""
@@ -137,10 +144,13 @@ def inline(text):
 
     text = re.sub(r"`([^`]+)`", stash, text)
     text = html.escape(text, quote=False)
-    # [text](url)
-    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)",
-                  lambda m: '<a href="%s">%s</a>' % (html.escape(site_link(m.group(2)), quote=True), m.group(1)),
-                  text)
+    # [text](url); the text is escaped already, so the url is unescaped
+    # before it is resolved, and escaped once for the attribute.
+    def link(m):
+        url = site_link(html.unescape(m.group(2)))
+        return m.group(1) if url is None else '<a href="%s">%s</a>' % (html.escape(url, quote=True), m.group(1))
+
+    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", link, text)
     # bare URLs
     text = re.sub(r"(?<![\"=>])(https?://[^\s<>()]+)",
                   lambda m: '<a href="%s">%s</a>' % (m.group(1), m.group(1)), text)
@@ -308,11 +318,13 @@ def convert(md, tight=False):
             html_list, i = render_list(lines, i)
             out.append(html_list)
             continue
-        # paragraph: gather until blank or block start
+        # paragraph: gather until blank or block start. As in CommonMark, only
+        # an ordered list that starts at 1 interrupts a paragraph, so a line
+        # that happens to begin "2597." goes on with the sentence.
         buf = [line]
         i += 1
         while i < n and lines[i].strip() and not re.match(
-                r"^(#{1,6}\s|```|\s*([-*+]|\d+\.)\s|\s*>|\s*([-*_])(\s*\3){2,}\s*$)", lines[i]) \
+                r"^(#{1,6}\s|```|\s*([-*+]|1\.)\s|\s*>|\s*([-*_])(\s*\3){2,}\s*$)", lines[i]) \
                 and not ("|" in lines[i] and i + 1 < n and is_table_sep(lines[i + 1])):
             buf.append(lines[i])
             i += 1

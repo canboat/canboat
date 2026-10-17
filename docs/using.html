@@ -55,8 +55,9 @@ canboat tui --host localhost</code></pre>
 <p><code>canboat tui</code> shows the PGNs on the bus, the devices sending them, and the decoded fields of the one you select. It also opens a capture: <code>canboat tui --log capture.log</code>.</p>
 <h2 id="serve-the-data-to-other-software">Serve the data to other software</h2>
 <p><code>canboat server</code> reads the gateway, decodes, and serves JSON, NMEA 0183 and the raw frames on TCP ports, all in one process:</p>
-<pre><code class="language-sh">canboat server --kind actisense --device /dev/ttyUSB0
-nc localhost 2598                       # every decoded message, as JSON
+<pre><code class="language-sh">canboat server --kind actisense --device /dev/ttyUSB0</code></pre>
+<p>It keeps running; in another terminal:</p>
+<pre><code class="language-sh">nc localhost 2598                       # every decoded message, as JSON
 nc localhost 2599                       # NMEA 0183, for a chart plotter program</code></pre>
 <p><a href="server.html">server.md</a> has the ports, and how to run it as a service.</p>
 <p>If the decoding happens elsewhere, <code>canboat n2kd</code> serves a JSON stream it reads on stdin on the same ports:</p>

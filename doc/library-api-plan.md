@@ -1,8 +1,11 @@
 # canboat as a library: API surface & implementation plan
 
-Status: **plan / not started.** Branch `feat/library-facade`, fresh from `main`
-(PR #34 and the rest merged). This is the work we complete **before** canboat-rs
-merges into canboat (v8 / the keel line).
+Status: **historical.** This was the plan for the library's public API, written
+in canboat-rs before it merged into canboat (v8). The status notes in §4 record
+what was done. The crates it describes have since been collapsed into the one
+`canboat` crate (8.2.1); for the API as it is, see
+[crates/canboat/README.md](../crates/canboat/README.md) and
+[docs.rs](https://docs.rs/canboat).
 
 ## 0. Goal & governing principles
 
@@ -385,13 +388,6 @@ green).
 >   A/B server parity stayed byte-identical on all six ports. The `env_logger::init` removal
 >   was already done in 5b. **Phase 5 is complete.**
 > Facade `bridge` module was a stub until 5c; it now re-exports the real `Bridge` API.
->
-> **5c is done (supervised).** It restructured the 330-line `run()` on the hot pipeline
-> path; local verification (unit tap test + stdin→NMEA + TCP serve smoke + green precommit)
-> passed, but **byte-for-byte parity still wants the Pi n2kd harness** (C-vs-Rust) before
-> the branch is trusted on the boat. 5d (`ServeHandle`/shutdown — today the accept threads
-> are still leaked) and 5e (config-dir injection — the `BridgeConfig.config_dir` field
-> exists but `resolve_config_dir` still auto-probes when it's `None`) remain.
 
 **Phase 6 — Prove it with `merrimac-rs`.** See §5.
 

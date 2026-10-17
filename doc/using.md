@@ -66,6 +66,11 @@ raw frames on TCP ports, all in one process:
 
 ```sh
 canboat server --kind actisense --device /dev/ttyUSB0
+```
+
+It keeps running; in another terminal:
+
+```sh
 nc localhost 2598                       # every decoded message, as JSON
 nc localhost 2599                       # NMEA 0183, for a chart plotter program
 ```
