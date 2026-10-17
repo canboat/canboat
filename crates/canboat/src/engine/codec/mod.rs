@@ -27,6 +27,7 @@ pub mod ikonvert;
 pub mod maretron;
 pub mod ngt1;
 pub mod ngt1_tx_list;
+pub mod raw;
 pub(crate) mod raw_can;
 pub mod usb_can_a;
 
@@ -58,6 +59,13 @@ pub enum Refused {
     NotOnTxList,
     /// The payload does not fit the gateway's framing.
     TooLarge,
+    /// The gateway does not transmit frames as they are given: it only
+    /// receives ([`raw`]).
+    ReceiveOnly,
+    /// The gateway cannot carry this kind of frame: an 11-bit standard
+    /// frame on one that carries 29-bit frames only, or an identifier that
+    /// does not fit its kind ([`raw`]).
+    Unsupported,
 }
 
 impl std::fmt::Display for Refused {
@@ -66,6 +74,8 @@ impl std::fmt::Display for Refused {
             Self::Synthetic => "synthetic PGN, never sent on the bus",
             Self::NotOnTxList => "PGN is not on the named transmit list",
             Self::TooLarge => "payload too large for the gateway",
+            Self::ReceiveOnly => "the gateway only receives",
+            Self::Unsupported => "the gateway cannot carry this kind of frame",
         })
     }
 }

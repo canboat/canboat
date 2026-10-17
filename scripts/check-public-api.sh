@@ -32,6 +32,7 @@ mkdir -p "$OUT_DIR"
 # the binary is not part of the public library contract.
 FEATURESETS=(
     "decode"
+    "raw,raw-usb"
     "decode,io,nmea0183,ais"
     "decode,io,node,bridge,nmea0183,ais"
 )

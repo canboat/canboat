@@ -277,6 +277,12 @@ pub fn write_ordered<W: fmt::Write>(
     write!(w, "${body}*{:02X}", nmea_checksum(&body))
 }
 
+/// What a ShipModul MiniPlex is sent when the link opens: options 30 and
+/// 31 set to mode 2, every PGN received sent on as `$MXPGN` (ShipModul,
+/// "MiniPlex-3 NMEA and Proprietary Sentences", `$PSMDNO`). Address
+/// Claims and Product Information still come as `$PSMDNC` and `$PSMDNP`.
+pub const MINIPLEX_MXPGN_ALL: &[u8] = b"$PSMDNO,C,30,0*57\r\n$PSMDNO,C,31,1*57\r\n";
+
 /// The NMEA 2000 network management a MiniPlex sends as its own `$PSMD…`
 /// sentences, never as `$MXPGN`, whatever it is set to (ShipModul,
 /// "MiniPlex-3 NMEA and Proprietary Sentences", FW V3.40.0, pp. 25–29):

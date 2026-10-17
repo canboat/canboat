@@ -11,26 +11,27 @@
 //! directly from these synchronous reads; only the [`device`] runners
 //! spawn threads.
 //!
-//! Feature gating: the `io` feature enables all of this; the `node`
-//! feature alone compiles just the transport-free ISO 11783-5 node
-//! pieces ([`address_claim`], [`name`], [`nmea_responder`]).
+//! Feature gating: the `io` feature enables all of this; the `raw`
+//! feature alone just the [`device`] runner, the raw links and what opens
+//! their ports; the `node` feature alone just the transport-free ISO
+//! 11783-5 node pieces ([`address_claim`], [`name`], [`nmea_responder`]).
 
 pub mod address_claim;
 #[cfg(feature = "io")]
 pub mod analyze;
-#[cfg(feature = "usb")]
+#[cfg(feature = "raw-usb")]
 pub mod canalyst;
 #[cfg(feature = "io")]
 pub mod container;
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 pub mod device;
 pub mod name;
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 pub(crate) mod net;
 pub mod nmea_responder;
 #[cfg(feature = "io")]
 pub mod stream;
-#[cfg(feature = "usb")]
+#[cfg(feature = "raw-usb")]
 pub mod usb;
 
 #[cfg(feature = "io")]
@@ -40,8 +41,10 @@ pub use stream::{
 };
 
 #[cfg(feature = "io")]
-use std::io::{self, BufRead, Read, Write};
-#[cfg(feature = "io")]
+use std::io::BufRead;
+#[cfg(feature = "raw")]
+use std::io::{self, Read, Write};
+#[cfg(feature = "raw")]
 use std::time::Duration;
 
 /// Read lines one at a time from a [`BufRead`] source.
@@ -95,7 +98,7 @@ impl<R: BufRead> LineReader<R> {
 ///
 /// `baud` is in bits per second. The Actisense NGT-1 uses 115200;
 /// iKonvert uses 230400.
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 pub fn open_serial(path: &str, baud: u32) -> io::Result<Box<dyn serialport::SerialPort>> {
     serialport::new(path, baud)
         .data_bits(serialport::DataBits::Eight)
@@ -111,7 +114,7 @@ pub fn open_serial(path: &str, baud: u32) -> io::Result<Box<dyn serialport::Seri
 /// went away without closing it (rebooted, or lost power) ends the read
 /// with an error instead of blocking it for good (canboat#1039): about
 /// 25 s after the last byte where the OS lets the probes be tuned.
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 pub(crate) fn set_tcp_keepalive(stream: &std::net::TcpStream) -> io::Result<()> {
     let keepalive = socket2::TcpKeepalive::new().with_time(Duration::from_secs(10));
     #[cfg(any(
@@ -139,7 +142,7 @@ pub(crate) fn set_tcp_keepalive(stream: &std::net::TcpStream) -> io::Result<()> 
 /// With the `usb` feature, a `path` of `usb[:SERIAL]` or
 /// `usb:VVVV:PPPP[:SERIAL]` opens an FTDI-based gateway directly over
 /// USB instead — see [`usb`].
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 pub fn open_serial_rw(
     path: &str,
     baud: u32,
@@ -160,17 +163,17 @@ pub fn open_serial_rw(
 
 /// Internal wrapper that adapts `Box<dyn SerialPort>` to a concrete
 /// type implementing both `Read` and `Write`.
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 struct SerialIo(Box<dyn serialport::SerialPort>);
 
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 impl Read for SerialIo {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         self.0.read(buf)
     }
 }
 
-#[cfg(feature = "io")]
+#[cfg(feature = "raw")]
 impl Write for SerialIo {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         self.0.write(buf)

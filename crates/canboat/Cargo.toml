@@ -19,7 +19,7 @@ exclude     = ["parity/"]
 # docs.rs documents the whole library surface and none of the CLI.
 [package.metadata.docs.rs]
 no-default-features = true
-features = ["decode", "io", "node", "bridge", "nmea0183", "ais", "json-input"]
+features = ["decode", "io", "raw", "raw-usb", "node", "bridge", "nmea0183", "ais", "json-input"]
 
 # The one crate. The library's public surface is curated (see
 # doc/library-api-plan.md) and gated behind the `decode` / `io` /
@@ -45,10 +45,16 @@ default = ["cli"]
 # sans-I/O engine: schema, decode, encode, formatters
 decode   = ["dep:thiserror", "dep:smallvec", "dep:indexmap", "dep:itoa"]
 # byte-source readers (read::*Reader) and the bus::open_* gateway drivers
-io       = ["decode", "dep:serialport", "dep:flate2", "dep:tar", "dep:socketcan", "dep:libc", "dep:socket2"]
+io       = ["raw", "dep:flate2", "dep:tar", "dep:libc"]
+# bus::raw: single CAN frames to and from the gateways that pass them
+# (YDWG RAW, BST-95, USB-CAN-A, $MXPGN, SocketCAN), with no NMEA 2000
+# framing and no node. Only what those links need.
+raw      = ["decode", "dep:serialport", "dep:socket2", "dep:socketcan"]
+# bus::raw::open_canalyst: the CANalyst-II over USB
+raw-usb  = ["raw", "dep:nusb"]
 # FTDI-based gateways (Actisense NGT-1, ...) opened straight over USB as
 # `usb:[serial]`, for hosts whose serial driver does not bind them (macOS)
-usb      = ["io", "dep:nusb"]
+usb      = ["io", "raw-usb"]
 # device::{Name, Claimer, Responder} — be a node without owning a transport
 node     = ["decode"]
 # live-bus: Bridge + BridgeConfig + serving
