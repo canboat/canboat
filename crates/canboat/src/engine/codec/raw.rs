@@ -295,26 +295,59 @@ impl RawCodec for UsbCanA {
     }
 }
 
+/// The longest line kept: far more than any frame's line, so a longer one
+/// is a stream that is no gateway's, or lost its line ends.
+const MAX_LINE: usize = 4096;
+
 /// Text lines out of a byte stream, `\n`-terminated, trimmed.
 #[derive(Debug, Default)]
 struct Lines {
     acc: Vec<u8>,
+    /// Skipping a line that grew past [`MAX_LINE`], up to its end.
+    dropping: bool,
 }
 
 impl Lines {
-    /// Call `each` for every non-empty line `bytes` completes.
-    fn push(&mut self, bytes: &[u8], mut each: impl FnMut(&str)) {
-        self.acc.extend_from_slice(bytes);
-        let mut start = 0;
-        while let Some(n) = self.acc[start..].iter().position(|&b| b == b'\n') {
-            let line = String::from_utf8_lossy(&self.acc[start..start + n]);
-            let line = line.trim();
-            if !line.is_empty() {
-                each(line);
+    /// Call `each` for every non-empty line `bytes` completes. Returns how
+    /// many lines grew past [`MAX_LINE`] and were dropped, so that a stream
+    /// without line ends cannot fill the memory.
+    fn push(&mut self, mut bytes: &[u8], mut each: impl FnMut(&str)) -> usize {
+        let mut dropped = 0;
+        loop {
+            let end = bytes.iter().position(|&b| b == b'\n');
+            let part = &bytes[..end.unwrap_or(bytes.len())];
+            if !self.dropping {
+                if self.acc.len() + part.len() > MAX_LINE {
+                    self.acc.clear();
+                    self.dropping = true;
+                    dropped += 1;
+                } else {
+                    self.acc.extend_from_slice(part);
+                }
             }
-            start += n + 1;
+            let Some(end) = end else {
+                return dropped;
+            };
+            if !self.dropping {
+                let line = String::from_utf8_lossy(&self.acc);
+                let line = line.trim();
+                if !line.is_empty() {
+                    each(line);
+                }
+            }
+            self.acc.clear();
+            self.dropping = false;
+            bytes = &bytes[end + 1..];
         }
-        self.acc.drain(..start);
+    }
+
+    /// The error for `dropped` lines that were too long, if any.
+    fn overflow(dropped: usize) -> Option<Event> {
+        (dropped > 0).then(|| {
+            Event::Error(format!(
+                "dropped {dropped} line(s) longer than {MAX_LINE} bytes"
+            ))
+        })
     }
 }
 
@@ -384,12 +417,13 @@ impl RawCodec for Ydwg {
     }
 
     fn receive(&mut self, bytes: &[u8], events: &mut Vec<Event>) {
-        self.lines.push(bytes, |line| {
+        let dropped = self.lines.push(bytes, |line| {
             events.push(match ydwg_line(line) {
                 Ok(f) => Event::Frame(f),
                 Err(e) => Event::Error(format!("{line}: {e}")),
             })
         });
+        events.extend(Lines::overflow(dropped));
     }
 
     fn send(&mut self, _frame: &CanFrame) -> Result<Vec<u8>, Refused> {
@@ -444,7 +478,7 @@ impl RawCodec for Mxpgn {
 
     fn receive(&mut self, bytes: &[u8], events: &mut Vec<Event>) {
         let order = self.order;
-        self.lines.push(bytes, |line| {
+        let dropped = self.lines.push(bytes, |line| {
             match mxpgn::parse_ordered(line, true, order) {
                 // The sentence names priority, PGN (with the destination of a
                 // PDU1 one) and source: the whole 29-bit identifier.
@@ -457,6 +491,7 @@ impl RawCodec for Mxpgn {
                 Err(e) => events.push(Event::Error(format!("{line}: {e}"))),
             }
         });
+        events.extend(Lines::overflow(dropped));
     }
 
     fn send(&mut self, _frame: &CanFrame) -> Result<Vec<u8>, Refused> {
@@ -602,6 +637,32 @@ mod tests {
             &mut events,
         );
         assert!(matches!(&events[..], [Event::Error(_)]), "{events:?}");
+    }
+
+    /// A stream without line ends does not grow without bound: the long
+    /// line is dropped up to its end, and the next one read.
+    #[test]
+    fn a_line_too_long_is_dropped_up_to_its_end() {
+        let mut codec = Ydwg::new();
+        let mut events = Vec::new();
+        for _ in 0..10 {
+            codec.receive(&[b'A'; 1000], &mut events);
+        }
+        assert!(codec.lines.acc.len() <= MAX_LINE);
+        codec.receive(b"AAA\n00:17:55.475 R 1F1F02A7 01\n", &mut events);
+        let [Event::Error(e), Event::Frame(f)] = &events[..] else {
+            panic!("{events:?}");
+        };
+        assert!(e.contains("longer than 4096"), "{e}");
+        assert_eq!(f, &ext(MASTERBUS_ID, &[1]));
+
+        // A line of exactly the most is kept.
+        let mut lines = Lines::default();
+        let mut got = 0;
+        let long = [b'x'; MAX_LINE];
+        assert_eq!(lines.push(&long, |_| got += 1), 0);
+        assert_eq!(lines.push(b"\n", |l| got += l.len()), 0);
+        assert_eq!(got, MAX_LINE);
     }
 
     #[test]

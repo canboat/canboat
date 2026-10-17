@@ -101,7 +101,7 @@ pub fn open_socketcan(_iface: &str) -> std::io::Result<DeviceHandle<CanFrame>> {
 #[cfg(target_os = "linux")]
 mod linux {
     use std::io;
-    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
     use std::sync::{Arc, mpsc};
     use std::thread;
     use std::time::{Duration, Instant};
@@ -131,15 +131,23 @@ mod linux {
         let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd<CanFrame>>();
         let progress = Arc::new(AtomicU64::new(0));
         let lost = DeviceFailure::default();
+        // Set by the writer when the application closes the link or lets go
+        // of it: the reader sees nothing of that on a quiet bus otherwise,
+        // and would keep the socket for ever.
+        let stop = Arc::new(AtomicBool::new(false));
 
-        let (rsock, rlost, name) = (sock.clone(), lost.clone(), iface.to_string());
+        let (rsock, rlost, rstop) = (sock.clone(), lost.clone(), stop.clone());
+        let name = iface.to_string();
         let reader = thread::Builder::new()
             .name("socketcan-raw-reader".into())
-            .spawn(move || read(&rsock, &name, &frames_tx, &rlost))?;
+            .spawn(move || read(&rsock, &name, &frames_tx, &rlost, &rstop))?;
         let (wprogress, name) = (progress.clone(), iface.to_string());
         let writer = thread::Builder::new()
             .name("socketcan-raw-writer".into())
-            .spawn(move || write(&sock, &name, &cmd_rx, &wprogress))?;
+            .spawn(move || {
+                write(&sock, &name, &cmd_rx, &wprogress);
+                stop.store(true, Ordering::Relaxed);
+            })?;
         Ok(from_parts(
             frames_rx,
             cmd_tx,
@@ -154,8 +162,9 @@ mod linux {
         iface: &str,
         frames_tx: &mpsc::Sender<CanFrame>,
         lost: &DeviceFailure,
+        stop: &AtomicBool,
     ) {
-        loop {
+        while !stop.load(Ordering::Relaxed) {
             let frame = match sock.read_frame() {
                 Ok(socketcan::CanFrame::Data(d)) => {
                     let (id, extended) = match d.id() {
