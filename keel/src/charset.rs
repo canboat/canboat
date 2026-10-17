@@ -60,7 +60,7 @@
 //! # Where it lives
 //!
 //! keel owns the table because keel already generates both consumers' tables
-//! and may not depend on either (MERGE-CANBOAT-RS.md §9). `keel generate`
+//! and may not depend on either. `keel generate`
 //! emits `crates/canboat/src/engine/charset_generated.rs` and
 //! `analyzer/charset-generated-data.h` from it, so the three decoders cannot
 //! drift.
@@ -127,8 +127,8 @@ pub fn decode(encoding: Option<&str>, bytes: &[u8]) -> String {
 
 // =====================================================================
 // Generators. The C analyzer and the Rust runtime each get a copy of the
-// table above so neither has to reach into keel, which they cannot do
-// (MERGE-CANBOAT-RS.md §9). Both are emitted by `keel generate` and
+// table above so neither has to reach into keel, which they cannot do.
+// Both are emitted by `keel generate` and
 // committed, exactly like the PGN and lookup tables.
 // =====================================================================
 

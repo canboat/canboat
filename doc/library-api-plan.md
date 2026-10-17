@@ -2,8 +2,7 @@
 
 Status: **plan / not started.** Branch `feat/library-facade`, fresh from `main`
 (PR #34 and the rest merged). This is the work we complete **before** canboat-rs
-merges into canboat (v8 / the keel line — see the companion
-`keel/MERGE-CANBOAT-RS.md` in that repo).
+merges into canboat (v8 / the keel line).
 
 ## 0. Goal & governing principles
 

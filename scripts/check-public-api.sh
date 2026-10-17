@@ -2,7 +2,7 @@
 # Gate the `canboat` facade's public API against a checked-in snapshot.
 #
 # The facade is the ONLY supported dependency for external consumers, so its
-# public surface is a contract (see docs/library-api-plan.md §3). This script
+# public surface is a contract (see doc/library-api-plan.md §3). This script
 # regenerates the surface for each library feature set and diffs it against
 # crates/doc/public-api/<featureset>.txt (commas spelled `+`). A diff means the public API changed — either
 # update the snapshot on purpose (--bless) or reconsider the change.

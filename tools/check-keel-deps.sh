@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #
-# Guard the keel dependency closure (MERGE-CANBOAT-RS.md §9).
+# Guard the keel dependency closure.
 #
 # keel is built by a cargo shim inside analyzer/Makefile, so it is on the path
 # of anyone regenerating the database. Its dependency closure therefore has to

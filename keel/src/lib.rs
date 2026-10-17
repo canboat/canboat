@@ -13,7 +13,7 @@
 //! Keep the dependency closure tiny: keel is cargo-shimmed from
 //! `analyzer/Makefile` and is now a build-dependency of the runtime, so
 //! anything added here is paid for by every build. See
-//! `tools/check-keel-deps.sh` and MERGE-CANBOAT-RS.md §9.
+//! `tools/check-keel-deps.sh`.
 
 pub mod bits;
 pub mod cformat;

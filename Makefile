@@ -43,12 +43,12 @@ tests:  compile
 # The Cargo workspace at the repo root (crates/*, keel/) is deliberately
 # OPT-IN and is NOT a dependency of all/compile/tests: a plain `make` of the C
 # tools must never invoke cargo, so C-only contributors and packagers need no
-# Rust toolchain (MERGE-CANBOAT-RS.md goal #1). Rust contributors just use
+# Rust toolchain. Rust contributors just use
 # cargo directly; these targets exist so `make` users have the same shortcuts.
 CARGO ?= cargo
 
-# The Rust schema tables are generated from database/ by keel and committed
-# (MERGE-CANBOAT-RS.md §5), so a `cargo build` alone will happily compile
+# The Rust schema tables are generated from database/ by keel and committed,
+# so a `cargo build` alone will happily compile
 # against a stale table after a database edit. Regenerate first.
 #
 # Deliberately NOT a dependency on `generated`: that additionally produces

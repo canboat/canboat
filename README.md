@@ -62,7 +62,7 @@ and the Python tooling will most likely move to Rust in time; the C `n2kd` and
 | [doc/gateways.md](./doc/gateways.md) | The supported gateways and CAN adapters: `--kind` and `--data-format`, what each reads and writes, J1939 and 11-bit, device notes, the AOS simulator, the CANalyst-II on Windows, the transmit and receive PGN lists and `--rx-filter` |
 | [doc/server.md](./doc/server.md) | `canboat server`: its ports, the device quirks, a capture as a live bus (`--replay`), performance |
 | [doc/file-formats.md](./doc/file-formats.md) | The capture formats `analyzer` and `canboat convert` read |
-| [crates/canboat/README.md](./crates/canboat/README.md) | The `canboat` Rust library: quick start and features. The API reference is on [docs.rs](https://docs.rs/canboat), its design in [crates/doc/library-api-plan.md](./crates/doc/library-api-plan.md) |
+| [crates/canboat/README.md](./crates/canboat/README.md) | The `canboat` Rust library: quick start and features. The API reference is on [docs.rs](https://docs.rs/canboat), its design in [doc/library-api-plan.md](./doc/library-api-plan.md) |
 | [BUILDING.md](./BUILDING.md) | Building the C tools and the Rust binary, and testing |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Pull request titles, adding or fixing a PGN, the evidence a database change needs |
 

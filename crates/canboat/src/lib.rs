@@ -5,7 +5,7 @@
 //! This is the single crate an external consumer depends on. Its public
 //! surface is deliberately small and feature-gated; think in terms of
 //! [`Frame`] ⇆ [`DecodedPgn`] (decode) and [`PgnBuilder`] → [`Frame`]
-//! (encode). See `docs/library-api-plan.md` for the full design.
+//! (encode). See `doc/library-api-plan.md` in the repository for the full design.
 //!
 //! canboat is the fruit of reverse-engineering NMEA 2000 — a closed,
 //! pay-to-read standard — out on the water since 2009. This crate embeds the
