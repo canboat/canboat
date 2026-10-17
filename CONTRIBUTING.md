@@ -90,7 +90,9 @@ chore: add real-world Fusion and Victron sample captures
 
 ## Adding or fixing a PGN
 
-The recommended path is the evidence-first editor:
+PGN definitions live as YAML under [`database/`](./database): one file per PGN
+variant in `pgns/`, one per enumeration in `lookups/`. The recommended path
+is the evidence-first editor:
 
 ```sh
 keel/keel edit          # local web editor, no network, no npm

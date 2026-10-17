@@ -11,124 +11,8 @@ For this reason we have reverse engineered the NMEA 2000 database by network obs
 If you just want to know how the NMEA 2000 protocol works, with an explanation of all reverse engineered data, please go to the
 [documentation](https://canboat.github.io/canboat) page.
 
-To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
-
-A plain USB CAN adapter works too, on every platform: a Linux SocketCAN
-interface, a CANalyst-II such as the Waveshare USB-CAN-B (`04d8:0053`),
-which `canboat` opens directly over USB — `canboat interface --kind canalyst usb`
-or `canboat server --kind canalyst --device usb` — or a Waveshare USB-CAN-A
-(`1a86:7523`) on its serial port, `canboat interface --kind usb-can-a
-/dev/ttyUSB0`. On each, canboat is a full NMEA 2000 node: it claims an
-address and answers ISO Requests.
-
-The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a
-gateway: `--kind aos`. It speaks the NGT-1's framing but claims no address
-of its own, so canboat is the node, as on a CANalyst-II: `--address` and the
-other node options apply, and `--no-claim` leaves it sending from its fixed,
-unclaimed address 75. Each kind refuses the other: `--kind aos` gives up on a
-gateway that turns out to be a real NGT-1 (it answers Actisense BEM
-commands), and `--kind actisense` on one that says it is the simulator.
-
-`canboat interface` and `canboat server` take the same gateways and options:
-`canboat interface --kind yachtd tcp://host` and `canboat server --kind yachtd
---device tcp://host`. An Actisense gateway also takes the data format it is
-set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
-
-| `--kind` | `--data-format` | Gateways | Device | Read/write | J1939 | 11-bit |
-| --- | --- | --- | --- | --- | --- | --- |
-| `actisense` | `ngt-actisense` | NGT-1 | serial, `usb`, `tcp://` (6001) | rw | – | – |
-| | `n2k-ascii` | W2K-1, PRO-NDC-1E2K | `tcp://` (60002), `udp://` | rw | – | – |
-| | `n2k-actisense` (BST-D0) | W2K-1, PRO-NDC-1E2K | `tcp://` (60002) | rw | – | – |
-| | `raw-ascii` | W2K-1, PRO-NDC-1E2K | `tcp://` (60002), `udp://` | rw | yes | – |
-| | `raw-actisense` (BST-95) | W2K-1, PRO-NDC-1E2K, NGX | `tcp://` (60002), NGX serial | rw | yes | – |
-| | `mxpgn` | W2K-2 (CANDIRECT, NMEA 0183) | `tcp://` (20000), `udp://` | rw | yes | – |
-| `yachtd` | `raw-ascii` | YDWG-02, YDEN-02, YDNR-02, YDNU-02 | `tcp://` (1457), `udp://`, YDNU-02 serial | rw | yes | – |
-| `miniplex` | | ShipModul MiniPlex-3 with NMEA 2000, in `$MXPGN` | `tcp://` (10110), `udp://`, serial | rw | yes | – |
-| `seasmart` | | Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode, in `$PCDIN` | `tcp://` (10001), `udp://`, serial | rw | – | – |
-| `ikonvert` | | iKonvert, NavLink2 | serial, `tcp://` (2000), `udp://` (2000) | rw | – | – |
-| `maretron` | | IPG100/200 | `host[:6543]` | rw | – | – |
-| `aos` | | AOS simulator | serial, `usb`, `tcp://` (6001) | rw | – | – |
-| `socketcan` | | Linux CAN interface | `can0` | rw | yes | yes |
-| `canalyst` | | CANalyst-II, Waveshare USB-CAN-B | `usb` | rw | yes | yes |
-| `usb-can-a` | | Waveshare USB-CAN-A | serial | rw | yes | yes |
-
-- **Read/write:** `udp://[bind:]port` only receives. A W2K-1 sends
-  `ngt-actisense` but does not take it; canboat does not handle that yet.
-- **J1939** (`--protocol j1939`): ISO TP messages are received wherever it says
-  yes, but sent only on SocketCAN, the CANalyst-II and the USB-CAN-A, where
-  canboat is the node. **11-bit** frames are Quick PCS (`--protocol
-  quick`). The rest carry NMEA 2000 only.
-- **ikonvert: use TCP for a NavLink2.** A NavLink2 serves the iKonvert
-  protocol on TCP *or* UDP, whichever its web page is set to, on port 2000
-  (canboat's default for both). Over `tcp://` canboat puts the gateway on the
-  bus, sets its PGN lists, and reads and writes; when it exits, it takes the
-  gateway off the bus again (`$PDGY,N2NET_OFFLINE`). Over `udp://[bind:][port]`
-  canboat only receives:
-  - **The gateway must already be active.** A NavLink2 passes no PGNs until a
-    client puts it on the bus (`$PDGY,N2NET_INIT`), and canboat can't send
-    that over UDP. canboat expects some other client to have done so since the
-    gateway started (it stays on the bus after that client leaves, until it
-    is power cycled or taken off), and never takes it off the bus itself. It
-    warns when the gateway reports that it is off the bus. A canboat session
-    over `tcp://` can't be that client: it takes the gateway off the bus when
-    it exits.
-  - **Nothing reaches the gateway:** `--tx-pgn`, `--rx-pgn` and
-    `--no-tx-rate-limit` are ignored with a warning. `--rx-filter` still works,
-    because canboat applies it. To send, use `tcp://`: Digital Yacht says TCP
-    is needed to drive an autopilot.
-
-  Use `udp://2000` rather than a local address, or the broadcast may be
-  missed. A ser2net bridge needs its own port given.
-- **miniplex:** when it connects, canboat sets the MiniPlex to send every
-  PGN it receives as `$MXPGN` (`$PSMDNO` options 30 and 31, mode 2), and asks
-  it for every device's Address Claim and Product Information (`$PSMDNR`).
-  Over a receive-only `udp://port` it can't, so set that on the MiniPlex
-  first, or give its address, `udp://miniplex:port`. The MiniPlex never sends
-  Address Claims (60928) and Product Information (126996) as `$MXPGN`, but as
-  its own `$PSMDNC` and `$PSMDNP`, and the latter only for a request it made:
-  canboat reads both as those PGNs, also in a capture (`canboat convert`,
-  `analyzer`), and sends an ISO Request for either as `$PSMDNR`.
-- **W2K-2:** each data server (60001–60003) takes one Tx Format, set on its
-  *Serial* page: `ngt-actisense`, `n2k-actisense`, `n2k-ascii`, or NMEA
-  0183, which holds only the sentences the W2K-2 converts, never a PGN.
-  Each needs a route from N2K on the *Routing* page, which a change of Tx
-  Format can clear; to send, a route to an enabled virtual device (N2KV1,
-  "Data1", by default; Data2 and Data3 start disabled, and what is routed
-  to them is dropped). It also has a hidden data server, CANDIRECT, on port
-  20000, which its web pages do not show: in BST-95 it is `raw-actisense`
-  (`tcp://w2k:20000`), in NMEA 0183 it sends every CAN frame as `$MXPGN`,
-  for `--data-format mxpgn`. canboat's NGT-1 code works with it: the W2K-2
-  refuses the NGT-1's Rx All mode, and canboat goes on in its mode. Seen on
-  firmware 3.025 and 3.095; what a W2K-1 does is not known.
-- **actisense mxpgn:** an Actisense gateway writes `$MXPGN`'s data in bus
-  order, first byte first, where a MiniPlex writes it as one number, last
-  byte first; both cite the same rule. Actisense's own example
-  (`$MXPGN,01F214,6842,00B004FF7FFFFFFF`, a battery at 12.00 V) and a
-  W2K-2 have it so, and a W2K-2 sends only what is written so. Nothing in a
-  stream says which, so a capture is read as ShipModul's unless told:
-  `canboat convert --from actisense-mxpgn`, `analyzer -format
-  ACTISENSE_MXPGN`.
-- **seasmart:** `$PCDIN` carries one whole message, with its source but no
-  priority or destination, so an addressed PGN goes where the gateway decides.
-  Not every gateway takes it to send: Yacht Devices gateways take only 59904,
-  127488, 127489, 127493, 127502, 127505 and 127508, and only on a server
-  port set to bidirectional; Quark-elec does not document taking it at all.
-  Chetco's port is 10001; give the port of the others (Quark-elec 2000, Yacht
-  Devices 1456 by default). Received messages get the host's time: the
-  sentence's own time stamp is no clock time.
-- **seasmart, miniplex:** a sentence whose checksum is wrong is dropped, with
-  an error. Some sources write wrong ones (the examples in Quark-elec's
-  manuals, Chetco's own switch page): `--ignore-checksum` takes them anyway,
-  as do `canboat convert --ignore-checksum` and `analyzer -ignore-checksum`
-  for a capture.
-- An option only some gateways have (`--bitrate`, `--channel`, `--password`,
-  `--mode`, the ISO NAME options) says which in `--help`, and is refused for
-  the others.
-- The names of canboat 8.3.0 still work: `--kind ngt1`, `w2k-ascii` and
-  `ydwg`, and `canboat server --actisense …`, `--ikonvert …`, `--maretron …`
-  and `--socketcan …`.
-
-For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
+To use the programs included in this project on a live bus you need a supported CAN interface: a marketed-as-such NMEA 2000
+gateway, or a plain CAN adapter. The [gateways](./doc/gateways.md) page lists the ones canboat drives.
 
 ## The programs
 
@@ -171,225 +55,25 @@ The remaining C converters, the helper scripts in `util/` (PHP, perl and ksh)
 and the Python tooling will most likely move to Rust in time; the C `n2kd` and
 `n2kd_monitor` already have, and were removed in v8.
 
-## Device quirks
+## Documentation
 
-Some devices misbehave in ways CANboat can cover for. Each workaround is a
-named *quirk*, and every one of them is **off by default** — they all rewrite
-or invent data, so you switch on the ones you need:
-
-| Quirk | What it does | Where |
-| --- | --- | --- |
-| `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
-| `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
-| `gps-relay` | Re-sends the data PGNs the devices listed in `gps-rollover=…` broadcast (not their network management, and not anything addressed), from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display. Needs a real device list — `gps-rollover=all` is refused here | `canboat server --quirk gps-rollover=<device> --quirk gps-relay` (needs a writable backend) |
-| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
-| `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
-| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
-
-`gps-rollover` is the odd one out: it corrects a decoded value rather than
-putting a frame on the bus, which is why it is available when decoding a
-capture file too. Do not use it on a capture made before April 2019 — it
-cannot tell a rolled-over date from a genuinely old one, and will move the
-whole log forward twenty years.
-
-Without a device list it only touches the dates a GNSS receiver produced,
-because those are the only ones whose origin the PGN itself tells us. Any
-other device that takes its clock from the bus repeats the wrong date, and
-nothing in its PGNs says so; that is what the device list is for. Naming a
-device by manufacturer and unique number, or by NAME, needs its PGN 60928
-Address Claim to have gone by — `canboat server` asks for those at startup,
-a capture has to contain one. The AIS reports (129793, 129794) relay another
-station's clock and 127258 carries the variation model's date, so those are
-never corrected.
-
-None of that helps a display that reads the broken GPS directly. `gps-relay`
-is the nearest thing to a fix short of replacing the receiver: `canboat
-server` re-sends every broadcast PGN from the listed devices — position,
-COG/SOG, satellites, not just the dated ones, or no display would accept it
-as a GPS — from its own address, byte for byte except for the corrected
-dates. The other devices then see a second GPS source, canboat, and you
-select it in each of them. That needs devices with real source selection,
-which not every brand gets right, and it leaves the old receiver on the bus,
-since it is where the data comes from.
-
-## The library
-
-The decoder is also a Rust crate, `canboat`, so you can embed NMEA 2000
-handling instead of parsing another program's output. One crate, a small
-public API, and features that gate the weight you pay for:
-
-| feature | |
+| | |
 | --- | --- |
-| `decode` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No threads, no sockets. The database is compiled in — nothing to load at runtime |
-| `io` | readers for captures and `bus::open_*` for a live NGT-1 / iKonvert / SocketCAN link |
-| `node` | be a compliant NMEA 2000 node: ISO NAME, address claim, the standard responses |
-| `bridge` | the whole `canboat server` pipeline as a library: device → decode → quirks → TCP serving |
-| `cli` | the `canboat` binary itself (the default; library users turn it off) |
+| [doc/gateways.md](./doc/gateways.md) | The supported gateways and CAN adapters: `--kind` and `--data-format`, what each reads and writes, J1939 and 11-bit, device notes, the AOS simulator, the CANalyst-II on Windows, the transmit and receive PGN lists and `--rx-filter` |
+| [doc/server.md](./doc/server.md) | `canboat server`: its ports, the device quirks, a capture as a live bus (`--replay`), performance |
+| [doc/file-formats.md](./doc/file-formats.md) | The capture formats `analyzer` and `canboat convert` read |
+| [crates/canboat/README.md](./crates/canboat/README.md) | The `canboat` Rust library: quick start and features. The API reference is on [docs.rs](https://docs.rs/canboat), its design in [crates/doc/library-api-plan.md](./crates/doc/library-api-plan.md) |
+| [BUILDING.md](./BUILDING.md) | Building the C tools and the Rust binary, and testing |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Pull request titles, adding or fixing a PGN, the evidence a database change needs |
 
-The crate's own [README](./crates/canboat/README.md) has the quick start and
-is what [crates.io](https://crates.io/crates/canboat) shows; the API reference
-is on [docs.rs](https://docs.rs/canboat) and its design in
-[`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md).
-
-## Performance
-
-Same decode work — `-json -nv` over 1.26 M PGN frames (canboat's
-`dirona-actisense-serial.raw` × 50) on an M4 Pro, release build:
-
-| Implementation         | Wall time | vs canboat  |
-|------------------------|----------:|--------------:|
-| canboatjs (Node 25)    |  27.8 s   |   **8.1 ×**   |
-| canboat C              |   9.1 s   |   **2.6 ×**   |
-| canboat `convert`      |   3.4 s   |       1.0 ×   |
-
-`canboat server` goes one step further and collapses the
-`canboat convert | canboat n2kd` pipeline into a single process with no
-JSON text serialisation between stages:
-
-| Pipeline                                          | Wall time | Throughput          |
-|---------------------------------------------------|----------:|---------------------|
-| `canboat convert` alone (PGN decode only)         |   3.3 s   | 380 k frames / s    |
-| `canboat convert \| canboat n2kd` (piped, 2 proc) |   6.5 s   | 194 k sentences / s |
-| `canboat server` (single proc)                    |   3.5 s   | 360 k sentences / s |
-
-That's 46 % less wall time than the piped setup while doing strictly more
-work (it's a long-running service with TCP fan-out); on CPU time the ratio
-is closer to 3.4 ×.
-
-## A capture as a live bus (`--replay`)
-
-`canboat server --replay <capture>` plays a capture as if it were a gateway,
-so you can test a consumer such as Signal K without a boat. It reads any
-format canboat reads, keeps the capture's pacing but stamps every frame with
-the current time, and starts over at the end. The TCP ports are the same as
-for a real gateway, the input port included: frames written to it go to
-`--replay-sent <file>` as PLAIN/FAST lines, or are dropped, and are not
-echoed back.
-
-```sh
-canboat server --replay samples/dirona-actisense-serial.raw --replay-sent sent.raw
-```
-
-## Transmit and receive PGN lists (`--tx-pgn`, `--rx-pgn`)
-
-Other devices ask a node which PGNs it sends and reads (PGN 126464).
-`--tx-pgn <pgn>[,…] --rx-pgn <pgn>[,…]` (on `canboat server` and `canboat
-interface` alike, or
-`BridgeConfig::pgn_lists` in the library) names the PGNs your application
-sends and reads, so the gateway can answer truthfully. What happens with
-them depends on the gateway:
-
-| Gateway | Transmit list | Receive list |
-|---|---|---|
-| SocketCAN, CANalyst-II, USB-CAN-A | Advertised by canboat itself. Nothing is filtered. | Advertised |
-| iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway, which answers PGN 126464 from it; a filter only with `--rx-filter` (`NORMAL` mode) |
-| NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
-| AOS simulator (`aos`) | Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered. | Advertised |
-| Others | Ignored, with a warning | Ignored, with a warning |
-
-> [!WARNING]
-> ## ON AN iKONVERT OR NGT-1, THE TRANSMIT LIST IS FINAL
->
-> **Once you name any transmit PGN (`--tx-pgn`, or
-> `pgn_lists.tx`), canboat REFUSES TO SEND EVERY PGN THAT IS NOT ON THE
-> LIST.** The gateway only transmits the PGNs in its list, and canboat
-> sets that list once, when it starts, so canboat drops the rest up front,
-> logging each refused PGN once, instead of handing the gateway frames it
-> will reject.
->
-> **Decide the complete list before you start.** Only the ISO/NMEA
-> network-management PGNs, and the PGNs of the quirks you enabled (such as
-> `wmm`'s 127258), are allowed without being named. With no transmit PGN
-> named, nothing is refused and the gateway's own list decides.
-
-The PGN lists only advertise; they never filter what you receive. To receive
-only some PGNs, use `--rx-filter <pgn>[,…]` (or `BridgeConfig::rx_filter`):
-an iKonvert filters in the gateway, and for every other gateway canboat drops
-the rest as they arrive. The network-management PGNs (address claims,
-requests, product information, …) and canboat's own gateway status always
-come through.
-
-## File formats
-
-`analyzer` reads NMEA 2000 data from a number of text formats on stdin and turns
-each message into human readable text or JSON. Some formats it understands
-directly; capture formats from specific gateways or CAN tools are first turned
-into the analyzer's `PLAIN` format by a small helper program that you pipe into
-`analyzer`:
-
-- **Directly by `analyzer`** — text logs that already contain decoded
-  CAN identifiers. The format is auto-detected, or can be forced with
-  `-format <NAME>`.
-- **Via `actisense-serial`** — Actisense NGT-1 binary streams and log files.
-  `actisense-serial -r <file> | analyzer`
-- **Via `candump2analyzer`** — Linux can-utils dumps and other raw CAN captures.
-  `candump2analyzer <file> | analyzer`
-
-The full list of understood formats:
-
-| Format | Origin | Example line | How to read |
-| --- | --- | --- | --- |
-| `PLAIN` | canboat native, one CAN frame per line | `2016-02-28T19:57:41.000Z,3,126208,40,72,8,01,0d,f2,01,f8,01,03,01` | `analyzer` (auto, or `-format PLAIN`) |
-| `FAST` | canboat native, a whole fast-packet message per line | `2021-01-18T01:23:06.960Z,6,129540,26,255,216,ec,ff,…` | `analyzer` (auto, or `-format FAST`) |
-| `AIRMAR` | Airmar weather/depth devices | `0123 -8 09F80 …` | `analyzer` (auto) |
-| `SEASMART` (or `CHETCO`) | `$PCDIN` sentences: Chetco SeaSmart.Net, Quark-elec (QK-A032, QK-A034, QK-A036), Yacht Devices in NMEA 0183 mode (YDWG-02, YDNG-03) | `$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*58` | `analyzer` (auto), `canboat convert --from seasmart` |
-| `GARMIN_CSV1` / `GARMIN_CSV2` | Garmin CSV export | `0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF` | `analyzer` (auto) |
-| `MXPGN` | ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each, and its `$PSMDNC` / `$PSMDNP` (Address Claim, Product Information), among other NMEA 0183 (`canboat convert --from mxpgn`) | `$MXPGN,01F112,2807,FC7FFF7FFF168012*11` | `analyzer` (auto) |
-| `ACTISENSE_MXPGN` | `$MXPGN` as an Actisense gateway sends it (a W2K-2's CANDIRECT in NMEA 0183): the data in bus order (`canboat convert --from actisense-mxpgn`) | `$MXPGN,01F214,6842,00B004FF7FFFFFFF*1F` | `analyzer -format ACTISENSE_MXPGN` |
-| `YDWG02` | RAW ASCII: Yacht Devices RAW (YDWG-02 / YDNU-02), an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode (`canboat convert --from raw-ascii`) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
-| `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII (`canboat convert --from n2k-ascii`) | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
-| Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |
-| Actisense EBL | Actisense `.ebl` log files | _(binary)_ | `actisense-serial -r <file.ebl> \| analyzer` |
-| Actisense W2K-1 | W2K-1 gateway capture | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |
-| Waveshare USB-CAN-A | The 20-byte frames the adapter sends on its serial port | _(binary)_ | `canboat convert --from usb-can-a <file>` |
-| candump (Angstrom) | Linux can-utils | `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0` | `candump2analyzer <file> \| analyzer` |
-| candump (Debian) | Linux can-utils | `can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
-| candump log | Linux can-utils (`candump -l`) | `(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF` | `candump2analyzer <file> \| analyzer` |
-| tshark / pcap | Wireshark text export of a CAN pcap | `… CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff` | `candump2analyzer <file> \| analyzer` |
-| Navico (TCP port 8086) | Navico raw dump | `0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d` | `candump2analyzer <file> \| analyzer` |
-| PCAN-View | PEAK PCAN-View v1.1 trace | `1)  2.7  Rx  09F11324  8  53 84 9E 01 00 FF FF FF` | `candump2analyzer <file> \| analyzer` |
-
-`pcap2candump` can additionally turn a raw `.pcap` capture into the candump log
-format for `candump2analyzer`. Example captures for many of these formats live in
-the [`samples/`](./samples) directory.
-
-## Building, Development and Testing
-
-`make` builds the C tools into `rel/<platform>/`; `make rust` builds `canboat`
-and `keel` into `target/release/`. Neither needs the other — you can build
-just the side you care about.
-
-Use `make rust` rather than a bare `cargo build` if you have edited
-`database/`: the Rust PGN tables are generated by `keel` and committed, so
-cargo alone will compile against the previous ones.
-
-Full instructions are in [BUILDING.md](./BUILDING.md), and the
-[Wiki](https://github.com/canboat/canboat/wiki) covers per-platform detail and
-how to start extending the PGN database.
-
-## Adding or fixing a PGN
-
-PGN definitions live as YAML under [`database/`](./database) (one file per PGN
-variant in `pgns/`, one per enumeration in `lookups/`). The easiest way to add
-a new message or correct an existing one is the built-in, evidence-first
-editor:
-
-```sh
-./keel/keel edit
-```
-
-Paste one or more real captures, and the local web editor stacks the bytes,
-decodes them live as you define fields, suggests an existing definition to
-clone when your frame nearly matches one, and lets you save your captures as
-regression tests — all rule-checked before it will write. See
-[AGENTS.md §9](./AGENTS.md) for the full workflow (editor and by-hand) and
-[CONTRIBUTING.md](./CONTRIBUTING.md) for the evidence and commit rules.
+For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
 ## Contributing
 
 Pull requests are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to write your PR title
-(it becomes the release changelog entry), the source/generated lockstep rule, and what evidence a
-database change needs.
+(it becomes the release changelog entry), the source/generated lockstep rule, how to add or fix a PGN with
+`keel edit`, and what evidence a database change needs. [BUILDING.md](./BUILDING.md) has the build and test
+instructions.
 
 ## Using the definitions in your own project
 
@@ -408,7 +92,7 @@ See [Changelog](CHANGELOG.md).
 - [canboatjs](https://github.com/canboat/canboatjs) — pure JavaScript NMEA 2000 decoder and encoder
 
 (The Rust library used to live separately as `canboat-rs`; it was merged into
-this repository in v8 and is the `canboat-*` crates described above.)
+this repository in v8 and is the [`canboat` crate](./crates/canboat/README.md).)
 
 ### Other projects using the CANboat PGN definitions
 
