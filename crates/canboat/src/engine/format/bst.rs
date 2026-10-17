@@ -210,6 +210,22 @@ fn bst94_frame(d: &[u8]) -> Option<RawFrame> {
 /// 2–4), the timestamp resolution (bits 5–6) and the direction (bit 7),
 /// then up to 8 bytes of data.
 fn bst95_frame(d: &[u8]) -> Option<(RawFrame, bool)> {
+    let (canid, data, to_bus) = bst95_can(d)?;
+    let (prio, pgn, src, dst) = iso11783_decompose(canid);
+    let frame = RawFrame {
+        timestamp: None,
+        prio,
+        pgn,
+        src,
+        dst,
+        data: SmallVec::from_slice(data),
+    };
+    Some((frame, to_bus))
+}
+
+/// [`bst95_frame`] as it is on the bus: the 29-bit identifier, the data
+/// and the direction.
+fn bst95_can(d: &[u8]) -> Option<(u32, &[u8], bool)> {
     if d.len() < 6 || d.len() > 14 {
         return None;
     }
@@ -218,16 +234,7 @@ fn bst95_frame(d: &[u8]) -> Option<(RawFrame, bool)> {
         | u32::from(d[3]) << 8
         | u32::from(d[4]) << 16
         | u32::from(d[5] & 0x1f) << 24;
-    let (prio, pgn, src, dst) = iso11783_decompose(canid);
-    let frame = RawFrame {
-        timestamp: None,
-        prio,
-        pgn,
-        src,
-        dst,
-        data: SmallVec::from_slice(&d[6..]),
-    };
-    Some((frame, to_bus))
+    Some((canid, &d[6..], to_bus))
 }
 
 /// BST-95's direction bit: the frame goes from the host to the bus (sent
@@ -240,6 +247,15 @@ const DPPC_TO_BUS: u8 = 0x80;
 pub fn bst95_message(m: &[u8]) -> Option<(RawFrame, bool)> {
     match message_body(m, false)? {
         (BST_95, data) => bst95_frame(data),
+        _ => None,
+    }
+}
+
+/// [`bst95_message`] as it is on the bus: the 29-bit identifier, the data,
+/// and whether it is on its way to the bus.
+pub(crate) fn bst95_can_message(m: &[u8]) -> Option<(u32, &[u8], bool)> {
+    match message_body(m, false)? {
+        (BST_95, data) => bst95_can(data),
         _ => None,
     }
 }
@@ -262,8 +278,15 @@ pub(crate) fn encode_bst95_message(
     to_bus: bool,
     out: &mut Vec<u8>,
 ) {
-    debug_assert!(data.len() <= 8);
     let canid = iso11783_compose(prio & 7, pgn, src, dst);
+    encode_bst95_can(canid, data, to_bus, out);
+}
+
+/// Append one CAN frame, `data` (at most 8 bytes) with the 29-bit
+/// identifier `canid`, as a BDTP-framed BST-95 message: `to_bus`, or
+/// (false) received from the bus.
+pub(crate) fn encode_bst95_can(canid: u32, data: &[u8], to_bus: bool, out: &mut Vec<u8>) {
+    debug_assert!(data.len() <= 8);
     let mut m = vec![
         BST_95,
         6 + data.len() as u8,

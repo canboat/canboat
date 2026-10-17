@@ -1,5 +1,14 @@
 pub mod canboat
 pub mod canboat::bus
+pub mod canboat::bus::raw
+pub fn canboat::bus::raw::capabilities(&str) -> core::option::Option<canboat::codec::raw::Capabilities>
+pub fn canboat::bus::raw::open_bst95(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
+pub fn canboat::bus::raw::open_mxpgn(&str, u32) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
+pub fn canboat::bus::raw::open_socketcan(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
+pub fn canboat::bus::raw::open_usb_can_a(&str, u32) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
+pub fn canboat::bus::raw::open_ydwg(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
+pub type canboat::bus::raw::RawDeviceHandle = canboat::bus::DeviceHandle<canboat::codec::raw::CanFrame>
+pub type canboat::bus::raw::RawFrameSender = canboat::bus::FrameSender<canboat::codec::raw::CanFrame>
 #[non_exhaustive] pub enum canboat::bus::BusProtocol
 pub canboat::bus::BusProtocol::J1939
 pub canboat::bus::BusProtocol::Nmea2000
@@ -41,11 +50,11 @@ impl core::fmt::Debug for canboat::bus::Closed
 pub fn canboat::bus::Closed::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::bus::Closed
 impl core::marker::StructuralPartialEq for canboat::bus::Closed
-pub struct canboat::bus::DeviceCloser
-impl canboat::bus::DeviceCloser
-pub fn canboat::bus::DeviceCloser::close(&self, core::time::Duration) -> canboat::bus::Closed
-impl core::clone::Clone for canboat::bus::DeviceCloser
-pub fn canboat::bus::DeviceCloser::clone(&self) -> Self
+pub struct canboat::bus::DeviceCloser<F>
+impl<F> canboat::bus::DeviceCloser<F>
+pub fn canboat::bus::DeviceCloser<F>::close(&self, core::time::Duration) -> canboat::bus::Closed
+impl<F> core::clone::Clone for canboat::bus::DeviceCloser<F>
+pub fn canboat::bus::DeviceCloser<F>::clone(&self) -> Self
 pub struct canboat::bus::DeviceFailure(_)
 impl canboat::bus::DeviceFailure
 pub fn canboat::bus::DeviceFailure::get(&self) -> core::option::Option<&str>
@@ -55,16 +64,16 @@ impl core::default::Default for canboat::bus::DeviceFailure
 pub fn canboat::bus::DeviceFailure::default() -> Self
 impl core::fmt::Debug for canboat::bus::DeviceFailure
 pub fn canboat::bus::DeviceFailure::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
-pub struct canboat::bus::DeviceHandle
-pub canboat::bus::DeviceHandle::frames_rx: std::sync::mpsc::Receiver<canboat::Frame>
-impl canboat::bus::DeviceHandle
-pub fn canboat::bus::DeviceHandle::close(self) -> canboat::bus::Closed
-pub fn canboat::bus::DeviceHandle::closer(&self) -> canboat::bus::DeviceCloser
-pub fn canboat::bus::DeviceHandle::failure(&self) -> canboat::bus::DeviceFailure
-pub fn canboat::bus::DeviceHandle::frame_sender(&self) -> canboat::bus::FrameSender
-pub fn canboat::bus::DeviceHandle::join(self)
-pub fn canboat::bus::DeviceHandle::lost(&self) -> canboat::bus::DeviceFailure
-pub fn canboat::bus::DeviceHandle::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
+pub struct canboat::bus::DeviceHandle<F>
+pub canboat::bus::DeviceHandle::frames_rx: std::sync::mpsc::Receiver<F>
+impl<F: core::marker::Send + 'static> canboat::bus::DeviceHandle<F>
+pub fn canboat::bus::DeviceHandle<F>::close(self) -> canboat::bus::Closed
+pub fn canboat::bus::DeviceHandle<F>::closer(&self) -> canboat::bus::DeviceCloser<F>
+pub fn canboat::bus::DeviceHandle<F>::failure(&self) -> canboat::bus::DeviceFailure
+pub fn canboat::bus::DeviceHandle<F>::frame_sender(&self) -> canboat::bus::FrameSender<F>
+pub fn canboat::bus::DeviceHandle<F>::join(self)
+pub fn canboat::bus::DeviceHandle<F>::lost(&self) -> canboat::bus::DeviceFailure
+pub fn canboat::bus::DeviceHandle<F>::send_frame(&self, F) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
 pub struct canboat::bus::DeviceWriterGone
 impl core::clone::Clone for canboat::bus::DeviceWriterGone
 pub fn canboat::bus::DeviceWriterGone::clone(&self) -> Self
@@ -78,11 +87,11 @@ impl core::fmt::Display for canboat::bus::DeviceWriterGone
 pub fn canboat::bus::DeviceWriterGone::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::bus::DeviceWriterGone
 impl core::marker::StructuralPartialEq for canboat::bus::DeviceWriterGone
-pub struct canboat::bus::FrameSender
-impl canboat::bus::FrameSender
-pub fn canboat::bus::FrameSender::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
-impl core::clone::Clone for canboat::bus::FrameSender
-pub fn canboat::bus::FrameSender::clone(&self) -> Self
+pub struct canboat::bus::FrameSender<F>
+impl<F> canboat::bus::FrameSender<F>
+pub fn canboat::bus::FrameSender<F>::send_frame(&self, F) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
+impl<F> core::clone::Clone for canboat::bus::FrameSender<F>
+pub fn canboat::bus::FrameSender<F>::clone(&self) -> Self
 pub struct canboat::bus::UnknownBusProtocol(pub alloc::string::String)
 impl core::clone::Clone for canboat::schema::UnknownBusProtocol
 pub fn canboat::schema::UnknownBusProtocol::clone(&self) -> Self
@@ -373,6 +382,158 @@ impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
 pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
 pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> core::option::Option<alloc::vec::Vec<u8>>
+pub mod canboat::codec::raw
+pub enum canboat::codec::raw::Event
+pub canboat::codec::raw::Event::Error(alloc::string::String)
+pub canboat::codec::raw::Event::Frame(canboat::codec::raw::CanFrame)
+impl core::clone::Clone for canboat::codec::raw::Event
+pub fn canboat::codec::raw::Event::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::raw::Event
+impl core::cmp::PartialEq for canboat::codec::raw::Event
+pub fn canboat::codec::raw::Event::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::raw::Event
+pub fn canboat::codec::raw::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::raw::Event
+pub struct canboat::codec::raw::Bst95
+impl canboat::codec::raw::Bst95
+pub fn canboat::codec::raw::Bst95::new() -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Bst95
+pub fn canboat::codec::raw::Bst95::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Bst95::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Bst95::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Bst95::write_gap(&self) -> core::time::Duration
+impl core::default::Default for canboat::codec::raw::Bst95
+pub fn canboat::codec::raw::Bst95::default() -> Self
+impl core::fmt::Debug for canboat::codec::raw::Bst95
+pub fn canboat::codec::raw::Bst95::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::raw::CanFrame
+pub canboat::codec::raw::CanFrame::data: smallvec::SmallVec<[u8; 8]>
+pub canboat::codec::raw::CanFrame::extended: bool
+pub canboat::codec::raw::CanFrame::id: u32
+impl canboat::codec::raw::CanFrame
+pub fn canboat::codec::raw::CanFrame::extended(u32, &[u8]) -> core::option::Option<Self>
+pub fn canboat::codec::raw::CanFrame::is_valid(&self) -> bool
+pub fn canboat::codec::raw::CanFrame::standard(u32, &[u8]) -> core::option::Option<Self>
+impl core::clone::Clone for canboat::codec::raw::CanFrame
+pub fn canboat::codec::raw::CanFrame::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::raw::CanFrame
+impl core::cmp::PartialEq for canboat::codec::raw::CanFrame
+pub fn canboat::codec::raw::CanFrame::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::raw::CanFrame
+pub fn canboat::codec::raw::CanFrame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::raw::CanFrame
+pub struct canboat::codec::raw::Canalyst
+impl canboat::codec::raw::Canalyst
+pub const canboat::codec::raw::Canalyst::PACKET_LEN: usize
+pub fn canboat::codec::raw::Canalyst::new() -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Canalyst
+pub fn canboat::codec::raw::Canalyst::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Canalyst::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Canalyst::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Canalyst::write_gap(&self) -> core::time::Duration
+impl core::default::Default for canboat::codec::raw::Canalyst
+pub fn canboat::codec::raw::Canalyst::default() -> Self
+impl core::fmt::Debug for canboat::codec::raw::Canalyst
+pub fn canboat::codec::raw::Canalyst::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+#[non_exhaustive] pub struct canboat::codec::raw::Capabilities
+pub canboat::codec::raw::Capabilities::sends: bool
+pub canboat::codec::raw::Capabilities::standard_frames: bool
+impl core::clone::Clone for canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Capabilities::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::raw::Capabilities
+impl core::cmp::PartialEq for canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Capabilities::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Capabilities::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::codec::raw::Capabilities
+impl core::marker::StructuralPartialEq for canboat::codec::raw::Capabilities
+pub struct canboat::codec::raw::Mxpgn
+impl canboat::codec::raw::Mxpgn
+pub fn canboat::codec::raw::Mxpgn::actisense() -> Self
+pub fn canboat::codec::raw::Mxpgn::miniplex() -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Mxpgn
+pub fn canboat::codec::raw::Mxpgn::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Mxpgn::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Mxpgn::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Mxpgn::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Mxpgn::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Mxpgn::write_gap(&self) -> core::time::Duration
+impl core::fmt::Debug for canboat::codec::raw::Mxpgn
+pub fn canboat::codec::raw::Mxpgn::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::raw::UsbCanA
+impl canboat::codec::raw::UsbCanA
+pub fn canboat::codec::raw::UsbCanA::bitrates() -> impl core::iter::traits::iterator::Iterator<Item = u32>
+pub fn canboat::codec::raw::UsbCanA::new(u32) -> core::option::Option<Self>
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::UsbCanA
+pub fn canboat::codec::raw::UsbCanA::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::UsbCanA::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::UsbCanA::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::UsbCanA::write_gap(&self) -> core::time::Duration
+impl core::fmt::Debug for canboat::codec::raw::UsbCanA
+pub fn canboat::codec::raw::UsbCanA::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::raw::Ydwg
+impl canboat::codec::raw::Ydwg
+pub fn canboat::codec::raw::Ydwg::new() -> Self
+pub fn canboat::codec::raw::Ydwg::ydnu() -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Ydwg
+pub fn canboat::codec::raw::Ydwg::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Ydwg::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Ydwg::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Ydwg::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Ydwg::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Ydwg::write_gap(&self) -> core::time::Duration
+impl core::default::Default for canboat::codec::raw::Ydwg
+pub fn canboat::codec::raw::Ydwg::default() -> Self
+impl core::fmt::Debug for canboat::codec::raw::Ydwg
+pub fn canboat::codec::raw::Ydwg::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub trait canboat::codec::raw::RawCodec
+pub fn canboat::codec::raw::RawCodec::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::RawCodec::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::RawCodec::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::RawCodec::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::RawCodec::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::RawCodec::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Bst95
+pub fn canboat::codec::raw::Bst95::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Bst95::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Bst95::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Bst95::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Canalyst
+pub fn canboat::codec::raw::Canalyst::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Canalyst::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Canalyst::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Canalyst::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Mxpgn
+pub fn canboat::codec::raw::Mxpgn::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Mxpgn::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Mxpgn::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Mxpgn::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Mxpgn::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Mxpgn::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::UsbCanA
+pub fn canboat::codec::raw::UsbCanA::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::UsbCanA::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::UsbCanA::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::UsbCanA::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Ydwg
+pub fn canboat::codec::raw::Ydwg::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Ydwg::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Ydwg::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Ydwg::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Ydwg::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Ydwg::write_gap(&self) -> core::time::Duration
 pub mod canboat::codec::usb_can_a
 pub struct canboat::codec::usb_can_a::UsbCanA
 impl canboat::codec::usb_can_a::UsbCanA
@@ -405,8 +566,10 @@ pub fn canboat::codec::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core:
 impl core::marker::StructuralPartialEq for canboat::codec::Event
 #[non_exhaustive] pub enum canboat::codec::Refused
 pub canboat::codec::Refused::NotOnTxList
+pub canboat::codec::Refused::ReceiveOnly
 pub canboat::codec::Refused::Synthetic
 pub canboat::codec::Refused::TooLarge
+pub canboat::codec::Refused::Unsupported
 impl core::clone::Clone for canboat::codec::Refused
 pub fn canboat::codec::Refused::clone(&self) -> Self
 impl core::cmp::Eq for canboat::codec::Refused

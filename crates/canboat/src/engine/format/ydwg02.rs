@@ -28,6 +28,11 @@ use crate::engine::format::plain::ParseError;
 use crate::engine::format::timestamp::{days_to_ymd, time_of_day};
 use crate::engine::frame::RawFrame;
 
+/// What a Yacht Devices USB gateway (YDNU-02) is sent when its serial
+/// port opens, to put it in RAW mode, as canboatjs does: `0` and a line
+/// feed.
+pub const YDNU_RAW_MODE: &[u8] = b"0\n";
+
 /// Encode `frame` as a YDWG-02 / YDEN *received* line (no trailing
 /// newline): `<HH:MM:SS.mmm> R <CANID:08X> <HH HH …>`, upper-case hex,
 /// one space-separated byte each. The inverse of [`parse_line`] for the

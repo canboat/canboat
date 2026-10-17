@@ -27,22 +27,41 @@
 //! # Ok::<(), std::io::Error>(())
 //! ```
 
+// The `raw` feature alone builds the runner here and the raw links; the
+// rest, NMEA 2000 gateways and nodes, is the `io` feature's.
+#[cfg(feature = "io")]
 pub mod bst95;
+#[cfg(feature = "io")]
 pub mod bst_d0;
+#[cfg(feature = "io")]
 mod can_link;
+#[cfg(feature = "io")]
 pub mod canalyst;
+#[cfg(feature = "io")]
 pub mod canboat_csv;
+#[cfg(feature = "io")]
 pub mod gateway;
+#[cfg(feature = "io")]
 pub mod ikonvert;
+#[cfg(feature = "io")]
 mod iso11783_node;
+#[cfg(feature = "io")]
 pub mod line_gateway;
+#[cfg(feature = "io")]
 pub mod maretron;
+#[cfg(feature = "io")]
 pub mod ngt1;
+pub mod raw;
+#[cfg(feature = "io")]
 pub mod replay;
+#[cfg(feature = "io")]
 pub mod socketcan;
+#[cfg(feature = "io")]
 pub mod supervisor;
+#[cfg(feature = "io")]
 pub mod usb_can_a;
 
+#[cfg(feature = "io")]
 pub use supervisor::{DeviceFactory, Supervisor};
 
 use std::io::{self, Read, Write};
@@ -56,9 +75,10 @@ use crate::engine::codec::{Codec, Event};
 
 /// Events emitted by a [`DeviceDecoder`] as bytes are pumped in.
 #[derive(Debug)]
-pub enum DeviceEvent {
-    /// A complete N2K frame received from the bus.
-    Frame(RawFrame),
+pub enum DeviceEvent<F = RawFrame> {
+    /// A complete N2K frame received from the bus (or, on a raw link, a
+    /// single CAN frame).
+    Frame(F),
     /// The codec needs the runner to write these bytes back to the
     /// device. Used by codecs whose handshake response depends on
     /// device output (e.g. Maretron `SET_MODE BINARY` after seeing
@@ -73,18 +93,18 @@ pub enum DeviceEvent {
 
 /// Decoder half of a device codec: pushes received bytes and emits
 /// [`DeviceEvent`]s.
-pub trait DeviceDecoder: Send + 'static {
-    fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>);
+pub trait DeviceDecoder<F = RawFrame>: Send + 'static {
+    fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent<F>>);
 
     /// Called when a read times out with nothing received (a serial port
     /// does every 250 ms), so a decoder's own deadlines advance on a quiet
     /// line too. Nothing by default.
-    fn tick(&mut self, _events: &mut Vec<DeviceEvent>) {}
+    fn tick(&mut self, _events: &mut Vec<DeviceEvent<F>>) {}
 }
 
 /// Encoder half: turns app-side [`RawFrame`]s into device bytes, plus
 /// optional init / keepalive sequences.
-pub trait DeviceEncoder: Send + Sync + 'static {
+pub trait DeviceEncoder<F = RawFrame>: Send + Sync + 'static {
     /// Bytes to write as soon as the connection opens (NGT-1 startup
     /// ping, iKonvert init handshake, Maretron CONNECT). Empty when
     /// the device needs no handshake.
@@ -100,7 +120,7 @@ pub trait DeviceEncoder: Send + Sync + 'static {
 
     /// Encode a [`RawFrame`] for transmission. `None` means "silently
     /// drop" — used to skip synthetic PGNs that never hit the bus.
-    fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>>;
+    fn encode_frame(&self, frame: &F) -> Option<Vec<u8>>;
 
     /// Bytes to write when the application closes the device on purpose
     /// ([`DeviceHandle::close`]), e.g. to take a gateway off the bus.
@@ -108,24 +128,32 @@ pub trait DeviceEncoder: Send + Sync + 'static {
     fn shutdown_bytes(&self) -> Vec<u8> {
         Vec::new()
     }
+
+    /// The least time from one frame written to the next, for a device
+    /// that loses frames written faster than it sends them. Zero by
+    /// default.
+    fn write_gap(&self) -> Duration {
+        Duration::ZERO
+    }
 }
 
 /// Commands accepted by the writer thread.
-pub(crate) enum WriterCmd {
+pub(crate) enum WriterCmd<F = RawFrame> {
     Bytes(Vec<u8>),
-    Frame(RawFrame),
+    Frame(F),
     /// Write the encoder's [`DeviceEncoder::shutdown_bytes`] and stop,
     /// then tell the sender, if any, whether that succeeded.
     Shutdown(Option<mpsc::Sender<bool>>),
 }
 
 /// Returned by [`run`]. Owns the reader/writer threads' join handles
-/// and the channels used to talk to them.
-pub struct DeviceHandle {
+/// and the channels used to talk to them. `F` is what goes in and out:
+/// whole NMEA 2000 messages, or single CAN frames on a raw link.
+pub struct DeviceHandle<F = RawFrame> {
     /// Frames received from the device. The reader thread drops the
     /// sender on EOF / fatal error, which closes this channel.
-    pub frames_rx: mpsc::Receiver<RawFrame>,
-    cmd_tx: mpsc::Sender<WriterCmd>,
+    pub frames_rx: mpsc::Receiver<F>,
+    cmd_tx: mpsc::Sender<WriterCmd<F>>,
     joins: Vec<JoinHandle<()>>,
     /// The writer thread, joined apart from the others by [`Self::close`].
     /// `None` for a codec that has no separate writer (SocketCAN).
@@ -171,7 +199,7 @@ impl std::fmt::Display for DeviceWriterGone {
 
 impl std::error::Error for DeviceWriterGone {}
 
-impl DeviceHandle {
+impl<F: Send + 'static> DeviceHandle<F> {
     /// Why the device was given up on, if it is: its frames stop then.
     /// Clone it to ask once they have.
     pub fn failure(&self) -> DeviceFailure {
@@ -187,14 +215,14 @@ impl DeviceHandle {
     }
 
     /// Queue a frame to be encoded and written to the device.
-    pub fn send_frame(&self, frame: RawFrame) -> Result<(), DeviceWriterGone> {
+    pub fn send_frame(&self, frame: F) -> Result<(), DeviceWriterGone> {
         self.cmd_tx
             .send(WriterCmd::Frame(frame))
             .map_err(|_| DeviceWriterGone)
     }
 
     /// Clone-able sender, for handing off to a producer thread.
-    pub fn frame_sender(&self) -> FrameSender {
+    pub fn frame_sender(&self) -> FrameSender<F> {
         FrameSender {
             cmd_tx: self.cmd_tx.clone(),
         }
@@ -236,7 +264,7 @@ impl DeviceHandle {
     /// A handle another thread can [`close`](DeviceCloser::close) the
     /// device with — for a signal handler while this thread is busy
     /// reading.
-    pub fn closer(&self) -> DeviceCloser {
+    pub fn closer(&self) -> DeviceCloser<F> {
         DeviceCloser {
             cmd_tx: self.cmd_tx.clone(),
             progress: self.progress.clone(),
@@ -263,13 +291,21 @@ pub enum Closed {
 }
 
 /// Closes a device from another thread; see [`DeviceHandle::closer`].
-#[derive(Clone)]
-pub struct DeviceCloser {
-    cmd_tx: mpsc::Sender<WriterCmd>,
+pub struct DeviceCloser<F = RawFrame> {
+    cmd_tx: mpsc::Sender<WriterCmd<F>>,
     progress: Arc<AtomicU64>,
 }
 
-impl DeviceCloser {
+impl<F> Clone for DeviceCloser<F> {
+    fn clone(&self) -> Self {
+        Self {
+            cmd_tx: self.cmd_tx.clone(),
+            progress: self.progress.clone(),
+        }
+    }
+}
+
+impl<F> DeviceCloser<F> {
     /// [`DeviceHandle::close`] from elsewhere: the writer finishes what is
     /// queued, sends the encoder's shutdown bytes and stops. Waits for that
     /// as long as the writer keeps completing writes, giving up only after
@@ -301,13 +337,20 @@ impl DeviceCloser {
 }
 
 /// Clone-able sender for [`DeviceHandle::send_frame`].
-#[derive(Clone)]
-pub struct FrameSender {
-    cmd_tx: mpsc::Sender<WriterCmd>,
+pub struct FrameSender<F = RawFrame> {
+    cmd_tx: mpsc::Sender<WriterCmd<F>>,
 }
 
-impl FrameSender {
-    pub fn send_frame(&self, frame: RawFrame) -> Result<(), DeviceWriterGone> {
+impl<F> Clone for FrameSender<F> {
+    fn clone(&self) -> Self {
+        Self {
+            cmd_tx: self.cmd_tx.clone(),
+        }
+    }
+}
+
+impl<F> FrameSender<F> {
+    pub fn send_frame(&self, frame: F) -> Result<(), DeviceWriterGone> {
         self.cmd_tx
             .send(WriterCmd::Frame(frame))
             .map_err(|_| DeviceWriterGone)
@@ -316,7 +359,7 @@ impl FrameSender {
     /// Crate-internal constructor used by [`supervisor::Supervisor`]
     /// so it can hand out a stable `FrameSender` backed by its own
     /// outer cmd channel.
-    pub(crate) fn from_cmd_tx(cmd_tx: mpsc::Sender<WriterCmd>) -> Self {
+    pub(crate) fn from_cmd_tx(cmd_tx: mpsc::Sender<WriterCmd<F>>) -> Self {
         Self { cmd_tx }
     }
 }
@@ -329,13 +372,13 @@ impl FrameSender {
 /// `progress` counts the device's completed writes, as the generic
 /// writer's does, so a close can tell a draining backlog from a stuck one.
 /// `lost` is the codec's to set when the device goes away.
-pub(crate) fn from_parts(
-    frames_rx: mpsc::Receiver<RawFrame>,
-    cmd_tx: mpsc::Sender<WriterCmd>,
+pub(crate) fn from_parts<F>(
+    frames_rx: mpsc::Receiver<F>,
+    cmd_tx: mpsc::Sender<WriterCmd<F>>,
     joins: Vec<JoinHandle<()>>,
     progress: Arc<AtomicU64>,
     lost: DeviceFailure,
-) -> DeviceHandle {
+) -> DeviceHandle<F> {
     DeviceHandle {
         frames_rx,
         cmd_tx,
@@ -349,14 +392,14 @@ pub(crate) fn from_parts(
 
 /// Generic two-thread runner. Each codec module wraps this with its
 /// own [`DeviceDecoder`] / [`DeviceEncoder`] impls.
-pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
+pub fn run<F: Send + 'static, D: DeviceDecoder<F>, E: DeviceEncoder<F>>(
     decoder: D,
     encoder: E,
     mut reader: Box<dyn Read + Send>,
     mut writer: Box<dyn Write + Send>,
-) -> DeviceHandle {
-    let (frames_tx, frames_rx) = mpsc::channel::<RawFrame>();
-    let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd>();
+) -> DeviceHandle<F> {
+    let (frames_tx, frames_rx) = mpsc::channel::<F>();
+    let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd<F>>();
     let cmd_tx_for_reader = cmd_tx.clone();
 
     let init = encoder.init_bytes();
@@ -508,18 +551,18 @@ impl<C: Codec + Send + 'static> DeviceEncoder for CodecEncoder<C> {
     }
 }
 
-fn reader_thread<D: DeviceDecoder>(
+fn reader_thread<F, D: DeviceDecoder<F>>(
     reader: &mut dyn Read,
     mut decoder: D,
-    frames_tx: mpsc::Sender<RawFrame>,
-    cmd_tx: mpsc::Sender<WriterCmd>,
+    frames_tx: mpsc::Sender<F>,
+    cmd_tx: mpsc::Sender<WriterCmd<F>>,
     failure: &DeviceFailure,
     lost: &DeviceFailure,
 ) {
     let mut buf = [0u8; 4096];
-    let mut events: Vec<DeviceEvent> = Vec::with_capacity(8);
+    let mut events: Vec<DeviceEvent<F>> = Vec::with_capacity(8);
     // Hand the decoder's events on; `false` once a channel is gone.
-    let deliver = |events: &mut Vec<DeviceEvent>| -> bool {
+    let deliver = |events: &mut Vec<DeviceEvent<F>>| -> bool {
         for ev in events.drain(..) {
             match ev {
                 DeviceEvent::Frame(f) => {
@@ -586,14 +629,16 @@ fn is_read_timeout(e: &io::Error) -> bool {
     }
 }
 
-fn writer_thread<E: DeviceEncoder>(
+fn writer_thread<F, E: DeviceEncoder<F>>(
     writer: &mut dyn Write,
     encoder: E,
     init: Vec<u8>,
     keepalive: Option<(Duration, Vec<u8>)>,
-    rx: mpsc::Receiver<WriterCmd>,
+    rx: mpsc::Receiver<WriterCmd<F>>,
     progress: &AtomicU64,
 ) {
+    let gap = encoder.write_gap();
+    let mut last_frame: Option<Instant> = None;
     if !init.is_empty() {
         if let Err(e) = writer.write_all(&init) {
             log::error!("device init write failed: {e}");
@@ -632,7 +677,19 @@ fn writer_thread<E: DeviceEncoder>(
         let bytes = match cmd {
             WriterCmd::Bytes(b) => b,
             WriterCmd::Frame(f) => match encoder.encode_frame(&f) {
-                Some(b) => b,
+                Some(b) => {
+                    // Space frames for a device that loses them otherwise.
+                    if let Some(last) = last_frame {
+                        let wait = (last + gap).saturating_duration_since(Instant::now());
+                        if !wait.is_zero() {
+                            thread::sleep(wait);
+                        }
+                    }
+                    if !gap.is_zero() {
+                        last_frame = Some(Instant::now());
+                    }
+                    b
+                }
                 None => continue,
             },
             WriterCmd::Shutdown(done) => {
@@ -840,7 +897,7 @@ mod tests {
     /// A TCP keepalive that got no answer ends the read with ETIMEDOUT:
     /// the gateway is gone, though the error is TimedOut like a serial
     /// port's read timeout (canboat#1039).
-    #[cfg(unix)]
+    #[cfg(all(unix, feature = "io"))]
     #[test]
     fn a_connection_timing_out_loses_the_device() {
         struct KeepaliveGaveUp;
@@ -871,7 +928,7 @@ mod tests {
             "Operation timed out"
         )));
         assert!(!is_read_timeout(&io::ErrorKind::ConnectionReset.into()));
-        #[cfg(unix)]
+        #[cfg(all(unix, feature = "io"))]
         assert!(!is_read_timeout(&io::Error::from_raw_os_error(
             libc::ETIMEDOUT
         )));
