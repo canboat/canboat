@@ -1,7 +1,75 @@
-<html>
-  <meta http-equiv="Refresh" content="0; url='canboat.html'" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CANboat documentation</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
 <body>
-  The documentation can be found here: <a href='canboat.html' />.
+<h1 id="canboat-documentation">CANboat documentation</h1>
+<p>CANboat decodes and encodes the CAN networks on boats: NMEA 2000 above all, and the SAE J1939 and Quick PCS buses some engines and windlasses speak. The NMEA 2000 database is closed, so CANboat's has been reverse engineered from observation and public sources since 2009. The source is on <a href="https://github.com/canboat/canboat">GitHub</a>.</p>
+
+<h2 id="pgn-documentation">PGN documentation</h2>
+<p>Every message CANboat knows, field by field, with the enumerations they use:</p>
+<ul>
+<li><a href="canboat.html">NMEA 2000</a></li>
+<li><a href="canboat-j1939.html">SAE J1939</a>: engines, gensets and transmissions</li>
+<li><a href="canboat-quick.html">Quick PCS</a>: Quick's windlasses and thrusters</li>
+</ul>
+<p>The same definitions, for use in your own project (pin a release; semantic versioning flags changes to them):</p>
+<table>
+<thead><tr><th></th><th>JSON</th><th>XML</th></tr></thead>
+<tbody>
+<tr><td>NMEA 2000</td><td><a href="canboat.json">canboat.json</a></td><td><a href="canboat.xml">canboat.xml</a>, schema <a href="canboat.xsd">canboat.xsd</a></td></tr>
+<tr><td>SAE J1939</td><td><a href="canboat-j1939.json">canboat-j1939.json</a></td><td><a href="canboat-j1939.xml">canboat-j1939.xml</a></td></tr>
+<tr><td>Quick PCS</td><td><a href="canboat-quick.json">canboat-quick.json</a></td><td><a href="canboat-quick.xml">canboat-quick.xml</a></td></tr>
+<tr><td>canboat's own pseudo-PGNs</td><td><a href="canboat-pseudo.json">canboat-pseudo.json</a></td><td><a href="canboat-pseudo.xml">canboat-pseudo.xml</a></td></tr>
+</tbody>
+</table>
+<p>NMEA 2000 as a CAN database for CAN tools: <a href="canboat.dbc">canboat.dbc</a>.</p>
+
+<h2 id="using-canboat">Using CANboat</h2>
+<ul>
+<li><a href="gateways.html">Gateways</a>: the NMEA 2000 gateways and CAN adapters CANboat reads and writes, and how to name them</li>
+<li><a href="server.html"><code>canboat server</code></a>: its ports, the device quirks, a capture as a live bus</li>
+<li><a href="file-formats.html">File formats</a>: the captures <code>analyzer</code> and <code>canboat convert</code> read</li>
+<li>The <code>canboat</code> Rust library: <a href="https://github.com/canboat/canboat/blob/master/crates/canboat/README.md">quick start</a>, <a href="https://docs.rs/canboat">API reference</a>, <a href="library-api-plan.html">design</a></li>
+<li><a href="https://github.com/canboat/canboat/blob/master/README.md">The programs</a>, <a href="https://github.com/canboat/canboat/blob/master/BUILDING.md">building them</a>, and <a href="https://github.com/canboat/canboat/blob/master/CONTRIBUTING.md">contributing</a>, on GitHub</li>
+</ul>
+
+<h2 id="research">Research</h2>
+<p>How some proprietary PGNs work, worked out on the bus:</p>
+<ul>
+<li><a href="navico_udb.html">Navico UDB database and source selection</a></li>
+<li><a href="navico_alarms_and_commands.html">Navico / Simrad alarms and commands over NMEA 2000</a></li>
+<li><a href="maretron_alm100.html">Maretron ALM100 annunciator: which PGN actually drives it</a></li>
+</ul>
+<p>And the projects that use CANboat's definitions: <a href="downstream-survey-2026-10.html">the downstream survey of October 2026</a>.</p>
 </body>
 </html>
-

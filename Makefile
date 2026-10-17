@@ -115,7 +115,7 @@ rust-clean:
 # database; only afterwards do we rebuild the analyzer from those fresh
 # headers and run the golden-file suite. Running tests before regeneration
 # would validate the stale committed tables and never exercise the new output.
-generated: research-docs
+generated: markdown-docs
 	$(MAKE) -C analyzer generated
 	$(MAKE) tests
 	$(MAKE) -C dbc-exporter
@@ -127,16 +127,26 @@ generated: research-docs
 pr: generated
 	@tools/contract-pr.sh
 
-# Explanation documents: research/*.md -> docs/*.html via a portable,
-# dependency-free converter (Python 3 standard library only).
+# The GitHub Pages site in docs/: doc/*.md (the guides) and research/*.md (the
+# explanation documents) -> docs/*.html, via a portable, dependency-free
+# converter (Python 3 standard library only). docs/index.html, which links
+# them all, is written by hand. The two directories share docs/, so a name
+# may be in only one of them.
+DOC_MD := $(wildcard doc/*.md)
 RESEARCH_MD := $(wildcard research/*.md)
-RESEARCH_HTML := $(patsubst research/%.md,docs/%.html,$(RESEARCH_MD))
+$(if $(filter $(notdir $(DOC_MD)),$(notdir $(RESEARCH_MD))),$(error doc/ and research/ both have $(filter $(notdir $(DOC_MD)),$(notdir $(RESEARCH_MD)))))
+MARKDOWN_HTML := $(patsubst doc/%.md,docs/%.html,$(DOC_MD)) $(patsubst research/%.md,docs/%.html,$(RESEARCH_MD))
+
+docs/%.html: doc/%.md tools/md2html.py
+	python3 tools/md2html.py $< -o $@
 
 docs/%.html: research/%.md tools/md2html.py
 	python3 tools/md2html.py $< -o $@
 
-research-docs: $(RESEARCH_HTML)
-	@echo "Research docs generated: $(RESEARCH_HTML)"
+markdown-docs: $(MARKDOWN_HTML)
+	@echo "Markdown docs generated: $(MARKDOWN_HTML)"
+
+research-docs: markdown-docs
 
 # Builder image can be removed with `docker image rm canboat-builder`
 docker-build: ## runs `make clean generated` in `ubuntu:22.04` Docker image
@@ -197,7 +207,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-features rust-fmt rust-public-api rust-precommit rust-clean keel-generate
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated markdown-docs research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-features rust-fmt rust-public-api rust-precommit rust-clean keel-generate
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

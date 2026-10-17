@@ -723,6 +723,7 @@
 
         <div id="sidenav" class="sidenav">
           <a class="closebtn" onclick="closeNav(event)">&#215;</a>
+          <a href="index.html">CANboat documentation</a>
           <a href="#main">Top</a>
           <a href="#pgn-list">PGN list</a>
           <a href="#physical-quantities">Physical Quantities</a>

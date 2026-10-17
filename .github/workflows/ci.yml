@@ -53,6 +53,11 @@ jobs:
             git --no-pager diff --stat
             exit 1
           fi
+          new=$(git ls-files --others --exclude-standard docs)
+          if [ -n "$new" ]; then
+            echo "::error::make generated wrote files that are not committed: $new"
+            exit 1
+          fi
 
   build-armv7-musl:
     runs-on: ubuntu-latest
