@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>canboat as a library: API surface &amp; implementation plan</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="canboat-as-a-library-api-surface-implementation-plan">canboat as a library: API surface &amp; implementation plan</h1>
+<p>Status: <strong>historical.</strong> This was the plan for the library's public API, written in canboat-rs before it merged into canboat (v8). The status notes in §4 record what was done. The crates it describes have since been collapsed into the one <code>canboat</code> crate (8.2.1); for the API as it is, see <a href="https://github.com/canboat/canboat/blob/master/crates/canboat/README.md">crates/canboat/README.md</a> and <a href="https://docs.rs/canboat">docs.rs</a>.</p>
+<h2 id="0-goal-governing-principles">0. Goal &amp; governing principles</h2>
+<p>Turn the workspace into <strong>one library with a deliberately tiny public API</strong>, so an external party adds <em>one</em> crate with <em>one</em> feature flag and thinks only in terms of <code>Frame</code> ⇆ <code>DecodedPgn</code>. <code>merrimac-rs</code> is rebuilt on top of it — <strong>including re-serving all the existing TCP ports</strong> — as the proof it works.</p>
+<p>Principles (in priority order):</p>
+<ol>
+<li><strong>Smallest surface wins.</strong> Every <code>pub</code> is a liability. Default to private. The current <code>canboat-core</code> exposes 15 wide-open <code>pub mod</code>s (<code>analyzer_json</code>, <code>bits</code>, <code>db</code>, <code>decode</code>, <code>encode</code>, <code>format</code>, <code>frame</code>, <code>from_json</code>, <code>os</code>, <code>output</code>, <code>reassembly</code>, <code>snapshot</code>, <code>startup</code>, <code>types</code>, <code>units</code>) — treat <em>all</em> of that as internal until proven otherwise. Nothing is public because it happens to be public today.</li>
+<li><strong>Rename freely.</strong> No compatibility obligation to the current names. Pick the names the <em>external</em> reader wants — <code>RawFrame</code>→<code>Frame</code>, <code>PgnDatabase</code>→<code>Database</code>, <code>FieldRef</code>→<code>FieldId</code> (and <code>FieldHandle</code> goes private); <code>DecodedPgn</code> stays. We control every consumer, so incidental helper types get renamed or hidden at will.</li>
+<li><strong>One entry crate.</strong> External parties depend on <strong><code>canboat</code></strong> only. The sub-crates (<code>canboat-core</code>, <code>-io</code>, <code>-wire</code>, <code>-bridge</code>) become implementation detail — their incidental <code>pub</code>s are demoted to <code>pub(crate)</code> or <code>#[doc(hidden)]</code>. Depending on a sub-crate directly is unsupported.</li>
+<li><strong>The facade <em>is</em> the contract.</strong> Its public API is locked by a <code>cargo public-api</code> snapshot test and <code>#![deny(missing_docs)]</code>. A PR that widens the surface must change the snapshot on purpose.</li>
+<li><strong>Features gate weight, not correctness.</strong> <code>decode</code> (default) is thread-free, async-free, I/O-free. You only pay for threads/sockets when you ask for <code>io</code> or <code>bridge</code>.</li>
+</ol>
+<h2 id="1-crate-topology">1. Crate topology</h2>
+<blockquote>
+<p><strong>Superseded (2026-09):</strong> ahead of the first crates.io release the workspace crates below were folded into the single <code>canboat</code> crate as private modules (<code>src/engine/</code> ← canboat-core + canboat-schema, <code>src/io/</code> ← canboat-io, <code>src/server/</code> + <code>src/n2kd/</code> ← canboat-bridge, <code>src/cli/</code> ← canboat-cli + the binary; canboat-tokio deleted). The feature names and the facade are unchanged; only the facade is public, now enforced by module privacy rather than convention. The rest of this section is kept as the historical design.</p>
+</blockquote>
+<p>Keep the focused workspace crates (the sans-I/O core is worth keeping separate for compile time and discipline), but front them with a single facade:</p>
+<pre><code>canboat            ← the ONLY crate an external party names. Facade + curated re-exports.
+  │                  (also hosts the CLI bin target; lib and bin share the workspace)
+  ├─ canboat-core    sans-I/O: schema, decode, encode, reassembly, formatters   [feature: decode]
+  ├─ canboat-io      byte sources: serial, container, text/ngt1/ikonvert readers [feature: io]
+  ├─ canboat-wire    postcard WirePgn + Hello handshake                          [feature: wire]
+  └─ canboat-bridge  live bus: source→decode→quirks→transmit + optional serving  [feature: bridge]
+                       (absorbs today&#x27;s crates/canboat/src/{server,n2kd})</code></pre>
+<p><code>canboat-tokio</code> and <code>canboat-cli</code> fold in or stay bin-only; they are <strong>not</strong> part of the public library surface.</p>
+<h2 id="2-the-complete-public-api-surface-grand-strokes">2. The complete public API surface (grand strokes)</h2>
+<p>This is the entire intended <code>pub</code> surface of <code>canboat</code>. If it isn't here, it's private. Organized by feature; each maps to a persona from the design discussion.</p>
+<p><strong>Names locked 2026-07-11:</strong> <code>Frame</code> (was <code>RawFrame</code>), <code>Database</code> (was <code>PgnDatabase</code>), <code>FieldId</code> (was <code>FieldRef</code>; <code>FieldHandle</code> now private), transport seam <code>read::FrameSource</code> with <code>*Reader</code> impls, network-management module <code>device::{Name, Claimer, Responder}</code> (feature flag still <code>node</code>), bridge input enum <code>Input</code> (named off the <code>FrameSource</code> trait), analyzer-JSON entry <code>read::from_analyzer_json</code> (was free fn <code>json_to_decoded</code>).</p>
+<pre><code>canboat
+│  #![deny(missing_docs)]   public API locked by a cargo-public-api snapshot test
+│
+├── prelude                 // one glob import covers the 90% path
+│     Database, Units, Frame,
+│     DecodedPgn, DecodedField, FieldValue, FieldId, DecodeError
+│
+├── ─────────── feature `decode` (default): sans-I/O core ───────────
+│
+│   // schema &amp; database
+│   Database               // was PgnDatabase. ::embedded(Units) -&gt; &amp;&#x27;static; .decode(&amp;Frame),
+│                          //   .encode(pgn), .field(pgn,field)-&gt;FieldId, .lookup(..)
+│   Units { Si, Metric }
+│   FieldId                // was FieldRef. THE single field-addressing type: carries the
+│                          //   &amp;&#x27;static schema refs, so it drives decode-access, encode,
+│                          //   AND introspection. FieldHandle is now private. O(1) decode
+│                          //   access with the id-hash baked into PgnInfo at build time.
+│   SCHEMA_HASH, CANBOAT_VERSION, SCHEMA_VERSION
+│
+│   schema::               // introspection (persona: schema-as-data / codegen)
+│     PgnInfo, FieldInfo, FieldType, PacketType,
+│     LookupTable, BitLookupTable, IndirectLookupTable   // only the read-facing shape
+│   ids::{ pgn, field }    // generated compile-time FieldId/PgnInfo constants: ids::pgn::WIND_DATA, …
+│
+│   // frames — the wire-side pivot
+│   Frame                  // was RawFrame. + consts ADDR_GLOBAL, ADDR_NULL, FRAME_MAX_SIZE, FASTPACKET_MAX_SIZE
+│   Reassembler, Reassembled   // fast-packet; ReassemblyError, FramePacketType
+│
+│   // decode (inbound) — persona #1/#2, the DecodedPgn seam
+│   DecodedPgn             // .field(FieldId) [O(1)], .field_by_name,
+│                          //   .pgn/.src/.dst/.prio/.timestamp/.id/.description
+│   DecodedField           // .value, .name(), .as_f64_in(Units)
+│   FieldValue { Number, Integer, Float, String, Lookup, BitField, Mmsi, … }
+│   DecodeError
+│
+│   // encode (outbound) — persona #4
+│   PgnBuilder             // db.encode(pgn).set(FieldId, EncodeValue).build() -&gt; Frame
+│   EncodeValue, EncodeError
+│
+│   // formatters — persona #3 (DecodedPgn -&gt; bytes/text)
+│   output::
+│     write_json, JsonOptions, CamelCase
+│     write_text
+│     write_nmea0183        [sub-feature `nmea0183`]
+│     write_ais / Aivdm     [sub-feature `ais`]
+│
+├── ─────────── `read` trait + json under `decode`; the `*Reader` impls under `io` ───────────
+│
+│   read::
+│     trait FrameSource     // the ONE abstraction: -&gt; Option&lt;Frame&gt;. BYO-transport
+│                           //   consumers implement this over their own CAN driver.
+│     Decoder               // FrameSource + Reassembler + &amp;Database -&gt; Iterator&lt;DecodedPgn&gt;
+│     PlainReader           // canboat &quot;PLAIN&quot;/&quot;FAST&quot; text
+│     Ngt1Reader            // Actisense NGT-1 / W2K-1
+│     IkonvertReader
+│     MaretronReader
+│     ContainerReader       // .pcap / .pcap.gz / .nif
+│     from_analyzer_json    // analyzer-JSON text -&gt; DecodedPgn (was the free fn json_to_decoded)
+│   // low-level byte helpers stay private unless a consumer proves a need.
+│
+│   codec::                 // the gateways&#x27; wire protocols, sans-I/O (#921: canboat-wasm
+│                           //   proved the need — a browser has bytes, not a serial port)
+│     trait Codec           // open / receive(bytes, now_ms) / tick / send(&amp;Frame) / close
+│     Event, Refused, PgnLists
+│     ngt1::Ngt1, ikonvert::Ikonvert, maretron::Maretron   // + each gateway&#x27;s Config
+│     can_id::{compose, decompose}                        // 29-bit CAN id &lt;-&gt; prio/pgn/src/dst
+│     fastpacket::{fragment, packet_type}                 // outgoing message -&gt; CAN frames
+│   // bus::open_* (feature `io`) are these codecs on a reader + writer thread.
+│
+├── ─────────── feature `wire`: cross-process transport ───────────
+│
+│   wire::
+│     Hello, WirePgn, PgnIndex, pgn_id_hash,
+│     append_frame, try_read_frame, decode_frame, MAX_FRAME_LEN
+│
+├── ─────────── feature `node`: be a compliant N2K device (no transport) ───────────
+│
+│   device::                // (module `device`; feature flag stays `node`)
+│     Name                  // 64-bit NMEA NAME builder (mfr, function, instance, …)
+│     Claimer               // NAME-arbitration address-claim state machine, Frame in/out
+│     Responder             // answers ISO request (59904), product (126996), config (126998)
+│                           //   caller owns the bus; feeds Frame in, gets Frame out
+│
+└── ─────────── feature `bridge`: the live bus, fully assembled ───────────
+│
+    bridge::
+      Bridge                // the handle an embedder holds
+      BridgeBuilder         // Bridge::builder()
+      BridgeConfig          // plain struct (NO clap) — the config type
+      Input { SocketCan(String), Custom(Box&lt;dyn FrameSource + Send&gt;) }  // named off `read::FrameSource`
+      Quirk { Motion, Wmm, Scx20 }
+      Ports, ServeConfig    // the optional half-#2 serving layer
+      ServeHandle           // shutdown handle for the served ports
+
+      // methods on Bridge:
+      //   builder() -&gt; BridgeBuilder            (.input/.quirks/.units/.config_dir/.build)
+      //   decoded() -&gt; Receiver&lt;DecodedPgn&gt;     in-process stream (persona #1)
+      //   raw()     -&gt; Receiver&lt;Frame&gt;          (optional, for BYO-decode)
+      //   transmit(Frame)                       inject with the claimed src
+      //   encode(pgn) -&gt; PgnBuilder             convenience for transmit
+      //   serve(Ports) -&gt; io::Result&lt;ServeHandle&gt;   spawn 2597..2606 for other consumers
+      //   shutdown()                            stop reader + listeners cleanly</code></pre>
+<p>That's it. Everything else — <code>bits</code>, <code>os</code>, <code>startup</code>, <code>analyzer_json</code>, the raw <code>format::*</code> parsers, the internal <code>db</code> helpers, <code>FieldHandle</code>, <code>FieldOverrides</code>, the socketcan plumbing, the address-claim internals — is <strong>private</strong>.</p>
+<h3 id="notes-on-deliberate-exclusions">Notes on deliberate exclusions</h3>
+<ul>
+<li><strong>Field addressing is ONE type (<code>FieldId</code>).</strong> <code>FieldHandle</code> is demoted to a private impl detail. The current per-access <code>djb2_hash_str(pgn.id)</code> in <code>field_ref</code> is removed by baking the id-hash into <code>PgnInfo</code> at build time, so <code>DecodedPgn::field(FieldId)</code> is a pure O(1) array index in release — equal-or-faster than today, never slower.</li>
+<li><strong><code>snapshot</code></strong> (current-value cache) is <em>not</em> top-level. It rides inside <code>bridge</code> (a <code>Bridge::snapshot()</code> accessor) and stays out of the sans-I/O core surface until a consumer needs it standalone. Smaller is better.</li>
+<li><strong><code>Frame</code> fields</strong>: expose the constructor (<code>Frame::new</code>) and accessors; keep the <code>SmallVec</code> data representation private (return <code>&amp;[u8]</code>), so the internal storage type isn't part of the contract.</li>
+<li><strong>Lookup/<code>schema</code> types</strong> expose only what an introspecting consumer reads; the build-time emission shape stays hidden.</li>
+<li><strong>No <code>os</code>, no <code>startup</code></strong> in public — those are binary concerns.</li>
+</ul>
+<h2 id="3-enforcing-this-is-the-only-pub">3. Enforcing "this is the only pub"</h2>
+<ol>
+<li><code>#![deny(missing_docs)]</code> on <code>canboat</code> — forces intent on every public item.</li>
+<li>A <code>cargo public-api</code> snapshot test (checked-in <code>public-api.txt</code>) in CI; a diff fails the build. This is the mechanical guarantee the surface can't creep.</li>
+<li>Sub-crates: run <code>cargo public-api</code> on each and drive their surface toward "only what the facade re-exports." Everything else → <code>pub(crate)</code> / <code>#[doc(hidden)]</code>.</li>
+<li>Grep gate: no workspace-external <code>Cargo.toml</code> may name a <code>canboat-*</code> sub-crate. The facade is the only supported dependency.</li>
+</ol>
+<h2 id="4-implementation-phases-each-independently-shippable">4. Implementation phases (each independently shippable)</h2>
+<p><strong>Phase 0 — Facade skeleton.</strong> Add the <code>canboat</code> library target + feature flags (<code>decode</code> default, <code>io</code>, <code>wire</code>, <code>node</code>, <code>bridge</code>, <code>nmea0183</code>, <code>ais</code>). Empty re-export modules. Wire up the <code>cargo public-api</code> snapshot test. No behaviour change.</p>
+<p><strong>Phase 1 — Curate the core (<code>decode</code>).</strong> The big <em>subtractive</em> pass. Re-export the curated set from the facade under the names in §2; introspection under <code>schema::</code>, id constants under <code>ids::</code>, the prelude landed. Collapse <code>FieldHandle</code> into <code>FieldId</code> (one public field-addressing type) and drop the per-access <code>djb2</code> hashing — decode access is now a pure <code>O(1)</code> array index by schema order with a debug-only <code>&amp;str</code> PGN check. Verify: facade compiles on <code>decode</code> alone (no threads/socket deps) and <code>cargo public-api</code> matches §2's core block.</p>
+<blockquote>
+<p><strong>Status (done):</strong> <code>FieldHandle</code>/<code>djb2</code> removed; <code>DecodedPgn::field(FieldId)</code> is the sole accessor; <code>PgnDatabase::field()</code> returns <code>FieldId</code>; the n2kd struct-path (<code>decoded.rs</code>) retyped to hold the generated constants directly. Snapshots blessed for all three library feature-sets. All tests green except one <strong>pre-existing</strong> golden failure (<code>mixed_format_text_debug</code>, fails identically on <code>main</code>). Root cause: a <strong>schema-pin skew</strong>, not a code bug — the golden fixtures come from the sibling <code>../canboat</code> at HEAD, which is ahead of the vendored <code>CANBOAT_REF</code> pin, so the 130824 B&amp;G roll/pitch/yaw-rate key definitions (canboat commits <code>8f737e9</code>/<code>c34bd38</code>, after the pin) exist in the fixture but not in the Rust schema. CI aligns the two and is green; a local <code>../canboat</code> at HEAD is not. Fix when wanted: bump <code>CANBOAT_REF</code>. See the <code>project-golden-130824-schema-skew</code> memory.</p>
+<p><strong>Deferred to Phase 5:</strong> demoting <code>canboat-core</code>'s 15 wide-open <code>pub mod</code>s to <code>pub(crate)</code>. They can't shrink while the bin modules (<code>server</code>/<code>n2kd</code>/<code>tui</code>) and the sibling crates import <code>canboat_core::{decode,encode,output,reassembly,frame,…}</code> directly. That lockdown happens when those modules move into <code>canboat-bridge</code>. Until then the <em>facade's</em> surface is the enforced contract (§3), and it is already minimal.</p>
+</blockquote>
+<p><strong>Phase 2 — <code>read</code> + BYO-transport.</strong> Define <code>trait FrameSource</code> and the <code>Decoder</code> convenience. Document "bring your own CAN driver → implement <code>FrameSource</code>" as a first-class path. Expose the ready-made readers under <code>io</code>.</p>
+<blockquote>
+<p><strong>Status (done):</strong> <code>FrameSource</code> + <code>Decoder</code> live in <strong>canboat-core</strong> (under <code>decode</code>, not <code>io</code>), so a BYO-transport consumer implements the trait and drives the decoder with zero I/O deps — the one <code>std::io</code> touchpoint in core, documented as such. canboat-io's old <code>FrameReader</code> trait is now a re-export alias of <code>canboat_core::FrameSource</code> (its <code>mpsc::Receiver&lt;RawFrame&gt;</code> impl moved to core to satisfy the orphan rule; all 13 call sites and the bins keep compiling). Facade <code>read</code> exposes <code>FrameSource</code>, <code>Decoder</code>, <code>from_analyzer_json</code> (decode) and <code>PlainReader</code> (= <code>LineFrameReader</code>), <code>EblReader</code>, <code>open_capture(path)</code> (io). Tests: a custom <code>FrameSource</code>, the <code>mpsc::Receiver</code> path, and an <code>open_capture</code> PLAIN-file round-trip (which caught a real bug — <code>container::plain_reader</code> only handles actual <code>.pcap</code>/<code>.nif</code>, so <code>open_capture</code> branches on <code>is_container</code>). Snapshots re-blessed.</p>
+<p><strong>Deferred:</strong> distinct <code>Ngt1Reader</code>/<code>IkonvertReader</code>/<code>MaretronReader</code> types are <em>not</em> needed — live gateways flow through the device supervisor as an <code>mpsc::Receiver&lt;RawFrame&gt;</code>, which already <em>is</em> a <code>FrameSource</code>. If a consumer ever wants a standalone push-decoder wrapper for those, add it then. <code>output::write_nmea0183</code> / <code>write_ais</code> still pending the <code>nmea0183</code>/<code>ais</code> feature wiring.</p>
+</blockquote>
+<blockquote>
+<p><strong>Superseded (2026-07-27):</strong> <code>canboat-wire</code>, the <code>wire</code> feature and the <code>--analyzer-binary-port</code> server were removed. The cross-process transport existed for a separate-process pipeline; <code>canboat server</code> collapsed that into one process and merrimac moved to the in-process <code>Bridge</code>, leaving a producer with no consumers. Phases 3 and 5's wire steps are history, not plan.</p>
+</blockquote>
+<p><strong>Phase 3 — <code>wire</code>.</strong> Mostly re-export; <code>canboat-wire</code> is already clean. Rename into <code>wire::</code> namespace; hide anything not in §2.</p>
+<blockquote>
+<p><strong>Status (done — no new code):</strong> satisfied by the Phase 0 curation. <code>canboat::wire</code> exposes exactly <code>Hello</code>, <code>HelloError</code>, <code>WirePgn</code>, <code>PgnIndex</code>, <code>pgn_id_hash</code>, <code>append_frame</code>, <code>decode_frame</code>, <code>try_read_frame</code>, <code>MAX_FRAME_LEN</code>, <code>FrameError</code> — the §2 set plus the two error types the fns return. It hides <code>canboat-wire</code>'s <code>MAGIC</code>, <code>WIRE_VERSION</code>, and the <code>WireField</code>/<code>WireValue</code>/<code>WireOverrides</code> inner structure. The only in-repo consumers (<code>Hello</code>, <code>WirePgn</code>, <code>append_frame</code>) are all in the exposed set. Verified against the blessed <code>+wire</code> snapshot.</p>
+<p><strong>Deferred:</strong> tightening <code>canboat-wire</code>'s own surface (e.g. <code>MAGIC</code>/<code>WIRE_VERSION</code> → <code>pub(crate)</code>) with the other sub-crate lockdowns — <code>WireField</code> can't shrink while <code>WirePgn.fields</code> is public, and merrimac (separate repo) isn't built here to catch a break. Done at migration time.</p>
+</blockquote>
+<p><strong>Phase 4 — <code>node</code> (module <code>device</code>).</strong> Promote the already-extracted <code>address_claim</code> + <code>nmea_responder</code> (from the motion-quirk work) into the <code>device::</code> API: <code>Name</code>, <code>Claimer</code>, <code>Responder</code>, all <code>Frame</code>-in/<code>Frame</code>-out, transport-agnostic. Hide the internals. (Feature flag is <code>node</code>; the module is <code>device</code> per the naming decision.)</p>
+<blockquote>
+<p><strong>Status (done):</strong> <code>device::{Name, Claimer, ClaimState, ProductInfo, pgn_list_frames, iso_ack_frame, heartbeat_frame}</code>.</p>
+<ul>
+<li><strong><code>Name</code></strong> is a NEW builder for the 64-bit ISO 11783-5 NAME (<code>canboat-io::name</code>). It consolidates the <strong>two</strong> hand-rolled <code>build_name</code> bit-packers (the socketcan gateway and the motion quirk), both now refactored onto it — the duplication is gone. An equivalence test locks <code>Name::to_u64()</code> byte-identical to both original packings so no device's on-bus NAME (hence its claim arbitration) shifts.</li>
+<li><strong><code>Claimer</code></strong> = re-export of <code>AddressClaim</code> (+ <code>ClaimState</code>); added <code>AddressClaim::for_name(&amp;Name, preferred)</code> as the ergonomic Name↔claimer bridge.</li>
+<li><strong><code>Responder</code>: dropped as a <em>type</em>.</strong> The responder is a set of frame builders (<code>ProductInfo</code> for 126996, plus <code>pgn_list_frames</code>/<code>iso_ack_frame</code>/<code>heartbeat_frame</code>), and both real callers drive them from their own event loop — a stateful <code>Responder</code> struct would be speculative API nobody uses. Exposed the primitives instead. No 126998 config-info builder exists yet; add one with a real consumer. Smaller surface, honest. Snapshots re-blessed; all green except the pre-existing golden.</li>
+</ul>
+</blockquote>
+<p><strong>Phase 5 — <code>bridge</code> (the big one).</strong> Move <code>crates/canboat/src/{server,n2kd}</code> into <code>canboat-bridge</code>. Untangle the binary plumbing identified in the feasibility pass:</p>
+<ul>
+<li>replace the <code>clap::Args</code> config with a plain <code>BridgeConfig</code>;</li>
+<li>delete the in-lib <code>env_logger::init()</code> / <code>log_startup</code> (host owns logging);</li>
+<li>make the config-dir injectable (explicit path or disabled) instead of the <code>/etc/default/canboat</code> probe;</li>
+<li>split the pipeline core (source→decode→quirks→transmit→<code>Receiver&lt;DecodedPgn&gt;</code>) from the serving layer (the <code>Hub</code> fan-out + TCP ports), so <code>serve()</code> is optional;</li>
+<li>return a <code>ServeHandle</code>/<code>Bridge::shutdown()</code> that closes listeners instead of leaking accept threads. Keep the CLI <code>canboat server</code> working by having the bin build a <code>BridgeConfig</code> from clap and call the same API. Verify: <code>canboat server</code> behaves identically (n2kd parity harness green).</li>
+</ul>
+<blockquote>
+<p><strong>Status — Phase 5 is decomposed; sub-step 5a done.</strong> At 8,807 lines across 21 files this phase can't be one commit. Sub-steps:</p>
+<ul>
+<li><strong>5a — the move (DONE).</strong> New <code>canboat-bridge</code> crate; <code>git mv</code>'d <code>server/</code>, <code>n2kd/</code>, <code>build_info.rs</code>, and the vergen <code>build.rs</code> into it. <code>server</code>/<code>n2kd</code> reference each other and <code>build_info</code> via <code>crate::</code> (all stayed valid inside the new crate); the bin's ~20 refs into <code>n2kd::{overrides,nmea_filter,app}</code> / <code>server::{Args,run}</code> and the legacy analyzer's <code>build_info</code> were repointed at <code>canboat_bridge::…</code>. Deps <code>world_magnetic_model</code>
+<ul>
+<li>vergen moved off the bin onto the new crate; the bin's <code>cli</code> feature now pulls <code>canboat-bridge</code>. <strong>Behaviour-preserving:</strong> no logic touched. Verified — clean build, clippy <code>-D warnings</code>, tests green (core 198 / io 44 / <strong>bridge 81</strong> / bin 54 + integration), <code>canboat server --help</code> works, facade public API unchanged (bridge module still a stub). The <code>canboat-bridge</code> crate still carries <code>clap</code> (the <code>Args</code>) — removed in 5b.</li>
+</ul></li>
+<li><strong>5b — <code>BridgeConfig</code> (DONE).</strong> Plain 33-field <code>pub struct BridgeConfig</code> + <code>Default</code> (clap-free), and <code>run(BridgeConfig)</code>. The clap <code>Args</code> is kept <strong>untouched</strong> behind a <code>cli</code> feature with <code>impl From&lt;Args&gt; for BridgeConfig</code>, so clap parsing is 100% preserved. <code>QuirkKind</code>'s <code>ValueEnum</code> derive and the whole <code>n2kd::app</code> daemon CLI are also <code>cli</code>-gated; <code>clap</code>/<code>canboat-cli</code>/<code>env_logger</code> became optional. <strong>canboat-bridge is now clap-free as a library</strong> (verified: <code>cargo tree</code> shows no clap without <code>cli</code>). The <code>env_logger::init</code> moved out of <code>run</code> into the bin's <code>Server</code> handler (host owns logging). Verified: clap-free lib build, <code>canboat server --help</code> intact, clippy clean, tests green (bridge 72 lib / 81 with <code>cli</code>; only the pre-existing golden fails).</li>
+<li><strong>5c — split core / serving + the <code>Bridge</code> type (DONE).</strong> The tap point landed exactly as scoped: <code>Hubs</code> gained <code>decoded_tx: Option&lt;mpsc::Sender&lt;Arc&lt;DecodedPgn&gt;&gt;&gt;</code>, and <code>pipeline::run</code> sends an <code>Arc::clone</code> there right after <code>let decoded = Arc::new(decoded)</code> (before quirk synthesis, so every record — synthetics included on loop-back — is tapped exactly once; <code>None</code> costs one <code>is_some</code> per record). <code>server::run</code>'s 330-line body moved into a new <code>server/bridge.rs</code> <code>Bridge</code> type: <code>Bridge::new(config)</code> builds the core (open source, stdin loopback, config-dir filter/overrides load, request engine) and starts nothing; <code>decoded()</code> installs the tap and returns the <code>Receiver</code>; <code>serve()</code> spawns the 2597–2606 listeners (verbatim move of the inline spawns); <code>transmit()</code>/<code>message()</code> inject via <code>device_sender</code> (stamping the claimed src); <code>spawn()</code> runs the pipeline on a thread (Bridge stays alive to transmit/<code>wait()</code>), <code>run()</code> drives it in place. The CLI <code>run(config)</code> is now <code>Bridge::new(config)?.serve()?; bridge.run()</code> — <strong>one code path</strong>. The helper fns (<code>open_source</code>, <code>install_stdin_loopback</code>, <code>resolve_config_dir</code>, <code>OpenedSource</code>) stayed in <code>server/mod.rs</code>, reached from the <code>bridge</code> submodule as ancestor-private items. Facade <code>bridge</code> feature now pulls <code>dep:canboat-bridge</code> (verified: no clap/tokio/ratatui) and re-exports <code>bridge::{Bridge, BridgeConfig, Quirk}</code>. Verified: pipeline tap unit test; stdin→NMEA (<code>$BBHDM</code>); TCP analyzer-port serve (banner + streamed JSON); <code>no_run</code> facade doctest; public-api snapshot re-blessed (+3 re-export lines — the method/field surface is in canboat-bridge, locked separately in P7); <code>make precommit</code> fully green. <strong>Still open in 5c-scope but deferred:</strong> the richer <code>Input</code>/<code>Ports</code>/<code>ServeConfig</code> builder sugar (today the whole <code>BridgeConfig</code> drives both <code>new</code> and <code>serve</code>); add when merrimac (P6) shows the need.</li>
+<li><strong>5d — shutdown / port release (DONE).</strong> The leaked accept threads are gone. A shared <code>accept_until(name, listener, stop: Option&lt;Arc&lt;AtomicBool&gt;&gt;, on_accept)</code> helper (in <code>n2kd/serving/tcp.rs</code>) replaces the seven hand-rolled <code>loop { listener.accept() }</code> bodies: with <code>stop = Some(flag)</code> it sets the listener non-blocking and polls every 200 ms, and on the flag it returns — dropping the listener, so the port frees immediately. <code>stop = None</code> keeps the exact old blocking-accept behaviour, which the standalone <code>n2kd</code> daemon passes (it runs to process exit). <code>Bridge</code> holds one <code>serve_stop</code> flag wired into every <code>serve()</code> listener; <code>Bridge::shutdown()</code> (also run on <code>Drop</code>, idempotent) stops the supervisor, trips the flag, and joins the accept threads; <code>run()</code>/<code>wait()</code> call it on teardown. <strong>Deliberately NOT a returned <code>ServeHandle</code> type</strong> — the <code>Bridge</code> owns its serving and tears it down, which is what an embedder (merrimac) wants; a standalone handle would be surface nobody holds (governing principle #1). Verified: a unit test binds a stream server, connects, trips the flag, and asserts the port re-binds; the A/B server parity re-ran byte-identical on all six ports (the non-blocking poll is transparent to output).</li>
+<li><strong>5e — inject the config-dir (DONE).</strong> The <code>/etc/default/canboat</code> → <code>~/.local/canboat</code> write-probe moved <em>out</em> of the library into the <code>canboat</code> binary's <code>server</code> handler (<code>resolve_config_dir</code>/<code>dir_is_writable</code> now live in <code>crates/canboat/src/main.rs</code>): probing the filesystem to <em>find</em> a dir is a binary concern. The library takes an explicit <code>BridgeConfig.config_dir</code> — <code>Some(path)</code> uses it, <code>None</code> disables persistence (no overrides; no filter unless <code>nmea0183_filter</code> gives an explicit path). Path selection is a pure <code>state_file_paths(config_dir, explicit_filter)</code> helper (unit-tested for all three cases). CLI behaviour is unchanged: the bin probes when <code>--config-dir</code> is absent, so <code>canboat server</code> still resolves <code>~/.local/canboat</code> by default (verified by log), and the A/B server parity stayed byte-identical on all six ports. The <code>env_logger::init</code> removal was already done in 5b. <strong>Phase 5 is complete.</strong> Facade <code>bridge</code> module was a stub until 5c; it now re-exports the real <code>Bridge</code> API.</li>
+</ul>
+</blockquote>
+<p><strong>Phase 6 — Prove it with <code>merrimac-rs</code>.</strong> See §5.</p>
+<p><strong>Phase 7 — Lock &amp; document.</strong> Finalize the <code>public-api.txt</code> snapshot, <code>deny(missing_docs)</code>, the sub-crate demotions, and the CI grep gate. Cross-link the keel merge doc. Now canboat-rs is ready to fold into canboat.</p>
+<h2 id="5-the-proof-merrimac-rs-on-the-facade-all-ports-intact">5. The proof: <code>merrimac-rs</code> on the facade (all ports intact)</h2>
+<p>merrimac already links <code>canboat-core</code> + <code>canboat-wire</code> and works in <code>DecodedPgn</code>, so the port is mostly <em>deletion</em>:</p>
+<ol>
+<li><strong>Swap deps</strong> → <code>canboat = { features = [&quot;bridge&quot;, &quot;wire&quot;, &quot;nmea0183&quot;, &quot;ais&quot;] }</code>. Drop the direct <code>canboat-core</code>/<code>canboat-wire</code> path deps (facade re-exports them).</li>
+<li><strong>Replace ingestion.</strong> <code>src/n2k/client.rs:1630-1831</code> (<code>receive_binary_data</code> / <code>handle_binary_connection</code>: TCP connect, <code>Hello</code> handshake, <code>WirePgn</code> decode, <code>rehydrate</code>) collapses to <code>let rx = bridge.decoded();</code>. The postcard codec, the schema-hash handshake, and the whole reconnect/alarm retry loop are deleted — no wire, no possible mismatch. merrimac's <code>Message</code>/interest-index/<code>Accumulator</code> layer downstream is source-agnostic and unchanged.</li>
+<li><strong>Replace outbound.</strong> <code>src/n2k/builder.rs</code> <code>RawN2K::build()</code> PLAIN-text path → <code>bridge.encode(pgn).set(..).build()</code> + <code>bridge.transmit(..)</code>. merrimac stops stamping <code>src = 0xFF</code>: as the real bridge it is address-claimed, so its transmits (and the MasterBus→N2K bridge in <code>src/masterbus/mod.rs:1170</code>) carry a proper source.</li>
+<li><strong>Collapse the duplicate schema.</strong> Delete merrimac's hand-rolled <code>N2kDefinitions</code> JSON loader (<code>src/n2k/mod.rs:30-351</code>) and the shipped <code>canboat.json</code> (2.3 MB); use the facade's embedded schema. <code>build.rs</code>'s compile-time field resolution keeps working, now via <code>canboat::ids</code> / <code>Database::field(pgn, field) -&gt; FieldId</code>.</li>
+<li><strong>merrimac becomes the CAN owner</strong> — <code>Bridge::builder().source(Source::SocketCan(&quot;can0&quot;)) .quirks([Motion, Wmm]).build()</code>. It already manages a CAN interface for MasterBus (<code>ensure_can_device</code>, <code>CAP_NET_ADMIN</code>), so this is familiar.</li>
+<li><strong>Re-serve every existing port</strong> — the load-bearing part of the proof, because the Pi has <em>several</em> other consumers (Signal K, TUI, NMEA0183 devices) on 2597–2606. merrimac calls <code>bridge.serve(Ports::default())</code> so it <em>replaces</em> the standalone <code>canboat server</code> while those consumers keep working unchanged. One binary, one systemd unit, no localhost TCP hops for merrimac itself — but the ports are still there for everyone else.</li>
+</ol>
+<p><strong>Success = merrimac runs as a single process that (a) reads N2K in-process, (b) transmits address-claimed, and (c) still serves 2597–2606 identically</strong> — verified against the n2kd parity harness and the live boat. That exercises decode, encode, node (claim), bridge, and serve — i.e. every feature except the file readers — which is exactly the coverage we want before merging into canboat.</p>
+<h3 id="second-consumer-canboat-wasm">Second consumer: canboat-wasm</h3>
+<p><a href="https://github.com/canboat/canboat-wasm">canboat-wasm</a> (<code>@canboat/wasm</code>) builds <code>canboat</code> with <code>default-features = false</code> and the <code>decode</code> (+ <code>json-input</code>) features for <code>wasm32-unknown-unknown</code>. Besides the decode/encode surface it uses <code>codec::</code> to talk to an NGT-1, iKonvert or Maretron IPG from the browser, over WebSerial or a WebSocket. The collapse into one crate (#907) broke it because it still depended on the old sub-crates (#921), so: the <code>wasm</code> job in <code>rust-ci.yml</code> runs clippy for that target and those features on every PR, and nothing on the <code>codec</code> path may read the clock, spawn a thread or touch <code>std::io</code>. The job covers <code>node</code> as well: canboat-wasm does not use it today, but it is transport-free by design (<code>Claimer</code> takes <code>now</code> from its caller), so a browser can be a node too.</p>
+<h2 id="6-risks-open-questions">6. Risks &amp; open questions</h2>
+<ul>
+<li><strong>Surface creep during extraction.</strong> The temptation in Phase 5 is to re-expose server internals "just in case." The <code>public-api.txt</code> gate is the discipline; if <code>merrimac</code> needs something not in §2, add it deliberately with a doc comment, don't leak a module.</li>
+<li><strong><code>serve()</code> reuse vs. rebind.</strong> The current listeners are leaked and can't rebind. The <code>ServeHandle</code> must genuinely close sockets so a restart (or a second <code>Bridge</code>) works — the one piece needing real design, not mechanical moves.</li>
+<li><strong>Two-worker tokio + a blocking CAN reader.</strong> The bridge core is <code>std::thread</code>+<code>mpsc</code>; merrimac is 2-worker tokio. merrimac already bridges exactly this for MasterBus, so the pattern is proven — but the <code>bridge.decoded()</code> receiver must have a tokio-friendly form (an <code>mpsc</code> the async side can poll, or a <code>canboat-tokio</code> adapter behind the <code>tokio</code> feature).</li>
+<li><strong>Naming.</strong> With rename freedom, settle the <code>read</code>/<code>FrameSource</code>, <code>node</code>, and <code>bridge</code> names <em>before</em> Phase 1 so the snapshot isn't churned. (Bridge/keel/helm metaphor already chosen for the crate.)</li>
+<li><strong>AIS/0183 as sub-features.</strong> Confirm they compile out cleanly when a consumer wants bare decode — no accidental always-on dependency.</li>
+</ul>
+</body>
+</html>

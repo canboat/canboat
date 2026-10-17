@@ -4,7 +4,7 @@ members = [
     # keel: the database tool. A member so `cargo build` at the repo root
     # builds it too, and so the whole tree shares one lockfile and one
     # target/. Its dependency closure is guarded by tools/check-keel-deps.sh
-    # — it must never gain the runtime's tree (MERGE-CANBOAT-RS.md §9).
+    # — it must never gain the runtime's tree.
     "keel",
     "crates/canboat",
 ]

@@ -53,6 +53,11 @@ jobs:
             git --no-pager diff --stat
             exit 1
           fi
+          new=$(git ls-files --others --exclude-standard docs)
+          if [ -n "$new" ]; then
+            echo "::error::make generated wrote files that are not committed: $new"
+            exit 1
+          fi
 
   build-armv7-musl:
     runs-on: ubuntu-latest
@@ -129,7 +134,6 @@ jobs:
       # keel is on the path of anyone regenerating the database (it is
       # cargo-shimmed from analyzer/Makefile), so its dependency closure must
       # stay tiny — the runtime crates in crates/ must never leak into it.
-      # MERGE-CANBOAT-RS.md §9.
       - name: keel must not pull in the runtime dependency tree
         run: tools/check-keel-deps.sh
 

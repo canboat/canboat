@@ -9,6 +9,18 @@ side you need, or both.
 
 Both are tier 1. Neither is required to build the other.
 
+### Pre-built binaries
+
+You may not need to build at all. Each
+[release](https://github.com/canboat/canboat/releases) has:
+
+* `canboat-rust-<platform>`: the `canboat` binary, for Linux (x86_64, aarch64,
+  armv7l), macOS (arm64, x86_64) and Windows (x86_64);
+* `canboat-<platform>-<version>.tar.gz`: the C programs and `canboat`, for
+  Linux and macOS;
+* `canboat-windows-x86_64-<version>.zip`: the C programs built with Cygwin, with
+  the `cygwin1.dll` they need; no helper scripts.
+
 ### Compiler dependencies
 
 For the C tools:

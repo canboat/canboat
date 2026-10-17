@@ -22,7 +22,7 @@ no-default-features = true
 features = ["decode", "io", "node", "bridge", "nmea0183", "ais", "json-input"]
 
 # The one crate. The library's public surface is curated (see
-# crates/doc/library-api-plan.md) and gated behind the `decode` / `io` /
+# doc/library-api-plan.md) and gated behind the `decode` / `io` /
 # `node` / `bridge` features; everything else in src/ is a private module.
 [lib]
 name = "canboat"

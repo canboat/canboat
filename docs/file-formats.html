@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File formats</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="file-formats">File formats</h1>
+<p><code>analyzer</code> reads NMEA 2000 data from a number of text formats on stdin and turns each message into human readable text or JSON. Some formats it understands directly; capture formats from specific gateways or CAN tools are first turned into the analyzer's <code>PLAIN</code> format by a small helper program that you pipe into <code>analyzer</code>:</p>
+<ul>
+<li><strong>Directly by <code>analyzer</code></strong> — text logs that already contain decoded CAN identifiers. The format is auto-detected, or can be forced with <code>-format &lt;NAME&gt;</code>.</li>
+<li><strong>Via <code>actisense-serial</code></strong> — Actisense NGT-1 binary streams and log files. <code>actisense-serial -r &lt;file&gt; | analyzer</code></li>
+<li><strong>Via <code>candump2analyzer</code></strong> — Linux can-utils dumps and other raw CAN captures. <code>candump2analyzer &lt;file&gt; | analyzer</code></li>
+</ul>
+<p>The full list of understood formats:</p>
+<table>
+<thead><tr>
+<th>Format</th>
+<th>Origin</th>
+<th>Example line</th>
+<th>How to read</th>
+</tr></thead>
+<tbody>
+<tr><td><code>PLAIN</code></td><td>canboat native, one CAN frame per line</td><td><code>2016-02-28T19:57:41.000Z,3,126208,40,72,8,01,0d,f2,01,f8,01,03,01</code></td><td><code>analyzer</code> (auto, or <code>-format PLAIN</code>)</td></tr>
+<tr><td><code>FAST</code></td><td>canboat native, a whole fast-packet message per line</td><td><code>2021-01-18T01:23:06.960Z,6,129540,26,255,216,ec,ff,…</code></td><td><code>analyzer</code> (auto, or <code>-format FAST</code>)</td></tr>
+<tr><td><code>AIRMAR</code></td><td>Airmar weather/depth devices</td><td><code>0123 -8 09F80 …</code></td><td><code>analyzer</code> (auto)</td></tr>
+<tr><td><code>SEASMART</code> (or <code>CHETCO</code>)</td><td><code>$PCDIN</code> sentences: Chetco SeaSmart.Net, Quark-elec (QK-A032, QK-A034, QK-A036), Yacht Devices in NMEA 0183 mode (YDWG-02, YDNG-03)</td><td><code>$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*58</code></td><td><code>analyzer</code> (auto), <code>canboat convert --from seasmart</code></td></tr>
+<tr><td><code>GARMIN_CSV1</code> / <code>GARMIN_CSV2</code></td><td>Garmin CSV export</td><td><code>0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF</code></td><td><code>analyzer</code> (auto)</td></tr>
+<tr><td><code>MXPGN</code></td><td>ShipModul MiniPlex <code>$MXPGN</code> sentences, one CAN frame each, and its <code>$PSMDNC</code> / <code>$PSMDNP</code> (Address Claim, Product Information), among other NMEA 0183 (<code>canboat convert --from mxpgn</code>)</td><td><code>$MXPGN,01F112,2807,FC7FFF7FFF168012*11</code></td><td><code>analyzer</code> (auto)</td></tr>
+<tr><td><code>ACTISENSE_MXPGN</code></td><td><code>$MXPGN</code> as an Actisense gateway sends it (a W2K-2's CANDIRECT in NMEA 0183): the data in bus order (<code>canboat convert --from actisense-mxpgn</code>)</td><td><code>$MXPGN,01F214,6842,00B004FF7FFFFFFF*1F</code></td><td><code>analyzer -format ACTISENSE_MXPGN</code></td></tr>
+<tr><td><code>YDWG02</code></td><td>RAW ASCII: Yacht Devices RAW (YDWG-02 / YDNU-02), an Actisense W2K-1 or PRO-NDC-1E2K in RAW ASCII mode (<code>canboat convert --from raw-ascii</code>)</td><td><code>19:07:21.014 R 09F8017F 50 C3 …</code></td><td><code>analyzer</code> (auto)</td></tr>
+<tr><td><code>ACTISENSE_N2K_ASCII</code></td><td>Actisense N2K ASCII (<code>canboat convert --from n2k-ascii</code>)</td><td><code>A173321.107 23FF7 1F513 012F…</code></td><td><code>analyzer</code> (auto)</td></tr>
+<tr><td>Actisense NGT-1 binary</td><td>Actisense NGT-1 USB / serial / TCP gateway</td><td><em>(binary)</em></td><td><code>actisense-serial -r &lt;dev&gt; | analyzer</code></td></tr>
+<tr><td>Actisense EBL</td><td>Actisense <code>.ebl</code> log files</td><td><em>(binary)</em></td><td><code>actisense-serial -r &lt;file.ebl&gt; | analyzer</code></td></tr>
+<tr><td>Actisense W2K-1</td><td>W2K-1 gateway capture</td><td><code>{&quot;pgn&quot;:60928,&quot;payload&quot;:[147,19,6,0,238,…]}</code></td><td><code>actisense-serial -r &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>Waveshare USB-CAN-A</td><td>The 20-byte frames the adapter sends on its serial port</td><td><em>(binary)</em></td><td><code>canboat convert --from usb-can-a &lt;file&gt;</code></td></tr>
+<tr><td>candump (Angstrom)</td><td>Linux can-utils</td><td><code>&lt;0x18eeff01&gt; [8] 05 a0 be 1c 00 a0 a0 c0</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>candump (Debian)</td><td>Linux can-utils</td><td><code>can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>candump log</td><td>Linux can-utils (<code>candump -l</code>)</td><td><code>(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>tshark / pcap</td><td>Wireshark text export of a CAN pcap</td><td><code>… CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>Navico (TCP port 8086)</td><td>Navico raw dump</td><td><code>0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>PCAN-View</td><td>PEAK PCAN-View v1.1 trace</td><td><code>1)  2.7  Rx  09F11324  8  53 84 9E 01 00 FF FF FF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+</tbody>
+</table>
+<p><code>pcap2candump</code> can additionally turn a raw <code>.pcap</code> capture into the candump log format for <code>candump2analyzer</code>. Example captures for many of these formats live in the <a href="https://github.com/canboat/canboat/tree/master/samples"><code>samples/</code></a> directory.</p>
+</body>
+</html>

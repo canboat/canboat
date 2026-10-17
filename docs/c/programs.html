@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The C programs</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="../index.html">CANboat documentation</a></nav>
+<h1 id="the-c-programs">The C programs</h1>
+<p>The C programs are CANboat's originals, and stay <strong>tier 1</strong> next to the <code>canboat</code> binary (<a href="../programs.html">programs.md</a>): supported, tested and released together. They are small and need no more than <code>make</code> and a C compiler, which suits a small machine. <a href="using.html">using.md</a> puts them together into pipelines.</p>
+<p><code>make</code> builds them into <code>rel/&lt;platform&gt;/</code>; see <a href="https://github.com/canboat/canboat/blob/master/BUILDING.md">BUILDING.md</a>. The gateway drivers write canboat's FAST format to stdout and send what they read on stdin, in PLAIN or FAST, to the bus.</p>
+<h2 id="analyzer"><code>analyzer</code></h2>
+<p>Reads NMEA 2000 messages as text on stdin, and writes them as human-readable text or JSON. The format is detected from the first line, or set with <code>-format</code>; <a href="../file-formats.html">file-formats.md</a> lists the formats, and the helper programs for the ones it does not read itself.</p>
+<pre><code class="language-text">$ analyzer -q &lt; small.log
+2011-11-24T22:42:04.388Z 2  36 255 127251 Rate of Turn:  SID = 125; Rate = 0.29199899 deg/s
+2011-11-24T22:42:04.390Z 2  36 255 127250 Vessel Heading:  SID = 0; Heading = 182.4 deg; Deviation = 0.0 deg; Variation = 0.0 deg; Reference = Magnetic
+
+$ analyzer -q -json &lt; small.log
+{&quot;version&quot;:&quot;8.3.0&quot;,&quot;units&quot;:&quot;std&quot;,&quot;protocol&quot;:&quot;nmea2000&quot;,&quot;showLookupValues&quot;:false}
+{&quot;timestamp&quot;:&quot;2011-11-24T22:42:04.388Z&quot;,&quot;prio&quot;:2,&quot;src&quot;:36,&quot;dst&quot;:255,&quot;pgn&quot;:127251,&quot;description&quot;:&quot;Rate of Turn&quot;,&quot;fields&quot;:{&quot;SID&quot;:125,&quot;Rate&quot;:0.29199899}}
+{&quot;timestamp&quot;:&quot;2011-11-24T22:42:04.390Z&quot;,&quot;prio&quot;:2,&quot;src&quot;:36,&quot;dst&quot;:255,&quot;pgn&quot;:127250,&quot;description&quot;:&quot;Vessel Heading&quot;,&quot;fields&quot;:{&quot;SID&quot;:0,&quot;Heading&quot;:182.4,&quot;Deviation&quot;:0.0,&quot;Variation&quot;:0.0,&quot;Reference&quot;:&quot;Magnetic&quot;}}</code></pre>
+<p>The first JSON line is a header, not a message: the database version, the units, the protocol, and whether lookups are written as value and name. A consumer should read and skip it. Numbers are JSON numbers, and a field without a value is left out.</p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th></th>
+</tr></thead>
+<tbody>
+<tr><td><code>-json</code></td><td>JSON output; empty values are left out</td></tr>
+<tr><td><code>-empty</code></td><td>JSON, with empty values as <code>null</code></td></tr>
+<tr><td><code>-nv</code></td><td>JSON, with a lookup as <code>{&quot;value&quot;:N,&quot;name&quot;:&quot;…&quot;}</code></td></tr>
+<tr><td><code>-camel</code></td><td>field names in lowerCamelCase</td></tr>
+<tr><td><code>-si</code></td><td>strict SI units: kelvin, radians per second, Hz for rpm, m³ for litres, ratios for percentages</td></tr>
+<tr><td><code>-geo dd</code>, <code>dm</code>, <code>dms</code></td><td>how to write a latitude and longitude</td></tr>
+<tr><td><code>-format &lt;fmt&gt;</code></td><td>the input format, instead of detecting it</td></tr>
+<tr><td><code>-ignore-checksum</code></td><td>accept <code>$PCDIN</code> and <code>$MXPGN</code> sentences whose checksum is wrong</td></tr>
+<tr><td><code>-quirk gps-rollover[=&lt;device&gt;,…]</code></td><td>correct dates from a GPS that missed the week rollover; see <a href="../server.html#device-quirks">server.md</a></td></tr>
+<tr><td><code>-src &lt;src&gt;</code>, <code>-dst &lt;dst&gt;</code>, <code>&lt;pgn&gt;</code></td><td>only messages from this source, to this destination, or of this PGN</td></tr>
+<tr><td><code>-clocksrc &lt;src&gt;</code></td><td>set the system clock from this source's time messages</td></tr>
+<tr><td><code>-q</code>, <code>-d</code></td><td>log only errors; log debug messages too</td></tr>
+<tr><td><code>-version</code></td><td>print the version</td></tr>
+</tbody>
+</table>
+<p>To debug a decode:</p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th></th>
+</tr></thead>
+<tbody>
+<tr><td><code>-raw</code></td><td>print each message as PLAIN, to feed to <code>analyzer</code> again</td></tr>
+<tr><td><code>-data</code></td><td>print each message three times: hex, ASCII and decoded</td></tr>
+<tr><td><code>-debug</code></td><td>print the raw value of every field</td></tr>
+<tr><td><code>-debugdata</code></td><td>print the raw value of every PGN</td></tr>
+<tr><td><code>-fixtime &lt;str&gt;</code></td><td>write <code>&lt;str&gt;</code> as the time stamp in the log, for reproducible test output</td></tr>
+</tbody>
+</table>
+<p><code>analyzer-j1939</code> is the same program for SAE J1939 buses.</p>
+<h2 id="actisense-serial"><code>actisense-serial</code></h2>
+<p>The driver for an Actisense NGT-1, over USB or serial, or at <code>tcp://&lt;host&gt;[:&lt;port&gt;]</code>. It also reads an Actisense capture: a raw log file, an <code>.ebl</code> log or a W2K-1 JSON capture.</p>
+<pre><code class="language-text">Usage: actisense-serial [-w] [-p] [-r] [-v] [-d] [-s &lt;n&gt;] [-t &lt;n&gt;] [--mode rx-all|normal] device
+
+  -w      writeonly mode, no data is read from device
+  -r      readonly mode, no data is sent to device
+  -p      passthru mode, data on stdin is also sent to stdout (in addition to the device)
+  -v      verbose
+  -d      debug
+  -s &lt;n&gt;  set baudrate to 38400, 57600, 115200, 230400
+  -t &lt;n&gt;  timeout, if no message is received after &lt;n&gt; seconds the program quits
+  --mode rx-all|normal  the NGT-1&#x27;s operating mode: rx-all (default) forwards every
+          PGN received, normal only those on its Receive PGN Enable list</code></pre>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyUSB0 | analyzer
+actisense-serial -r capture.ebl | analyzer</code></pre>
+<ul>
+<li><strong>Baud rate.</strong> The default is 115200. An NGT-1 with firmware 2.500 or later, or one set to it, needs <code>-s 230400</code>. With the wrong rate there is no output, or only errors such as <code>DLE followed by unexpected char 21, ignore message</code>.</li>
+<li><strong>What it sends.</strong> An NGT-1 transmits only the PGNs on its Transmit PGN Enable list, and <code>actisense-serial</code> does not change that list. <code>canboat interface --kind actisense --tx-pgn …</code> does; see <a href="../gateways.html#transmit-and-receive-pgn-lists---tx-pgn---rx-pgn">gateways.md</a>.</li>
+<li><p><strong>Two buses.</strong> One gateway's output can be written to another, while both are decoded:</p>
+<pre><code class="language-sh">actisense-serial -r /dev/ttyS1 | actisense-serial /dev/ttyS2 | analyzer</code></pre></li>
+</ul>
+<p>The Linux driver for an NGT-1 is in <a href="../gateways.html#the-actisense-ngt-1-on-linux-and-macos">gateways.md</a>.</p>
+<h2 id="ikonvert-serial"><code>ikonvert-serial</code></h2>
+<p>The driver for a Digital Yacht iKonvert, over USB or at <code>tcp://&lt;host&gt;[:&lt;port&gt;]</code>.</p>
+<pre><code class="language-text">Usage: ikonvert-serial [-w] [-p] [-r] [-v] [-d] [-s &lt;n&gt;] [-t &lt;n&gt;] device
+
+  -w                    writeonly mode, data from device is not sent to stdout
+  -r                    readonly mode, data from stdin is not sent to device
+  -p                    passthru mode, data from stdin is also sent to stdout
+  -v                    verbose
+  -d                    debug
+  -rx &lt;list&gt;            Set PGN receive list
+  -tx &lt;list&gt;            Set PGN transmit list
+  -l | --rate-limit-off Disable TX rate limits (use at own risk)
+  -s &lt;n&gt;                set baudrate to 38400, 57600, 115200, 230400 (default 230400)
+  -t &lt;n&gt;                timeout, if no message is received after &lt;n&gt; seconds the program quits
+  -x                    hex instead of base64 mode</code></pre>
+<pre><code class="language-sh">ikonvert-serial -r /dev/ttyUSB0 | analyzer</code></pre>
+<p>The iKonvert drops what is sent too fast; <code>--rate-limit-off</code> turns that off. It uses a standard FTDI USB ID, so the standard driver works on Linux and macOS; on Windows you may need to install FTDI's.</p>
+<h2 id="socketcan-serial"><code>socketcan-serial</code></h2>
+<p>Bridges a Linux SocketCAN interface. It claims an address, announces an ISO NAME and sends a Heartbeat, unless <code>-n</code> makes it a passive bridge. Linux only.</p>
+<pre><code class="language-text">Usage: socketcan-serial [-w] [-r] [-p] [-v] [-d] [-n] [-t &lt;n&gt;] [-a &lt;addr&gt;] [-u &lt;n&gt;] [-m &lt;n&gt;] [-si &lt;n&gt;] [-hb &lt;ms&gt;] &lt;can-device&gt;
+
+  -w        writeonly mode, received frames are not sent to stdout
+  -r        readonly mode, data from stdin is not sent to the device
+  -p        passthru mode, data from stdin is also echoed to stdout
+  -v        verbose
+  -d        debug
+  -n        do not claim an address (passive bridge only)
+  -t &lt;n&gt;    timeout, quit if no frame is received for &lt;n&gt; seconds
+  -a &lt;addr&gt; preferred source address to claim (default 0)
+  -u &lt;n&gt;    unique number for the ISO NAME (default derived from pid)
+  -m &lt;n&gt;    manufacturer code for the ISO NAME
+  -si &lt;n&gt;   ISO NAME System Instance, 0..15 (default 15 = yield to other devices)
+  -hb &lt;ms&gt;  heartbeat (PGN 126993) interval in ms, 0 disables</code></pre>
+<pre><code class="language-sh">socketcan-serial can0 | analyzer</code></pre>
+<h2 id="maretron-ipg"><code>maretron-ipg</code></h2>
+<p>The driver for a Maretron IPG100, over TCP.</p>
+<pre><code class="language-text">Usage: maretron-ipg [-w] [-p] [-r] [-v] [-d] [-q] [-t &lt;n&gt;] [--password=&lt;str&gt;] tcp://&lt;host&gt;[:&lt;port&gt;]
+
+  -w                    writeonly mode, data from device is not sent to stdout
+  -r                    readonly mode, data from stdin is not sent to device
+  -p                    passthru mode, data from stdin is also sent to stdout
+  -v                    verbose
+  -d                    debug
+  -q                    quiet, suppress INFO logs
+  -t &lt;n&gt;                timeout, if no message is received after &lt;n&gt; seconds the program quits
+  --password=&lt;str&gt;      IPG login password (default empty)</code></pre>
+<p>The default port, 6543, is bus 0; <code>:6553</code> is bus 1.</p>
+<pre><code class="language-sh">maretron-ipg tcp://ipg100.local | analyzer</code></pre>
+<h2 id="socketcan-writer"><code>socketcan-writer</code></h2>
+<p>Writes the FAST messages it reads on stdin to a SocketCAN interface, and does nothing else: no address claim, no reading. Linux only.</p>
+<pre><code class="language-sh">replay &lt; capture.log | socketcan-writer vcan0</code></pre>
+<h2 id="candump2analyzer"><code>candump2analyzer</code></h2>
+<p>Turns a raw CAN capture into PLAIN, for <code>analyzer</code>: the outputs of Linux <code>candump</code> in its several flavours, a Wireshark text export, a Navico dump and a PCAN-View trace (examples in <a href="../file-formats.html">file-formats.md</a>). It reads the file it is given, or stdin.</p>
+<pre><code class="language-sh">candump can0 | candump2analyzer | analyzer</code></pre>
+<h2 id="pcap2candump"><code>pcap2candump</code></h2>
+<p>A Python script that turns a raw <code>.pcap</code> CAN capture into a candump log, for <code>candump2analyzer</code>: <code>pcap2candump/pcap2candump.py capture.pcap</code>.</p>
+<h2 id="replay"><code>replay</code></h2>
+<p>Writes a PLAIN or FAST capture from stdin to stdout at the pace it was recorded, from each line's time stamp. A gap of more than 10 seconds, or a time stamp that goes back, is not waited for. <code>-d</code> debugs.</p>
+<pre><code class="language-sh">replay &lt; capture.log | analyzer</code></pre>
+<h2 id="request-group-function-and-command-group-function"><code>request-group-function</code> and <code>command-group-function</code></h2>
+<p>Build a Group Function (PGN 126208) in PLAIN, for a gateway driver to send.</p>
+<ul>
+<li><code>request-group-function &lt;dest&gt; &lt;prio&gt; &lt;pgn&gt; &lt;interval&gt; &lt;field&gt;=&lt;value&gt; ...</code> asks a device to report a PGN at an interval in milliseconds, optionally only when fields have the given values.</li>
+<li><code>command-group-function &lt;dest&gt; &lt;prio&gt; &lt;pgn&gt; &lt;field&gt;=&lt;value&gt; ...</code> tells a device to set fields.</li>
+</ul>
+<p>Note that the <em>request</em> takes the interval, not the command. A <code>&lt;field&gt;</code> is the decimal field number in the PGN; a <code>&lt;value&gt;</code> is hexadecimal, and its length is the number of bytes written. At most 20 fields. What a device accepts is up to the device.</p>
+<pre><code class="language-sh">request-group-function 35 6 126996 2000 | socketcan-writer can0</code></pre>
+<h2 id="nmea0183-serial"><code>nmea0183-serial</code></h2>
+<p>Reads an NMEA 0183 serial port, at 38400 baud, and writes it to stdout, along with what it reads on stdin unless given <code>-r</code>; <code>-d</code> debugs. With <a href="#iptee"><code>iptee</code></a> it feeds, for instance, AIS to online services:</p>
+<pre><code class="language-sh">nmea0183-serial -r /dev/ttyUSB0 | iptee -u 195.251.168.18 6047 -u 87.121.76.11 2112</code></pre>
+<p>and it can merge two ports:</p>
+<pre><code class="language-sh">nmea0183-serial -r /dev/serial-0 | nmea0183-serial /dev/serial-1 &gt; combined.log</code></pre>
+<h2 id="iptee"><code>iptee</code></h2>
+<p>Copies stdin to up to 256 TCP and UDP listeners, reconnecting to those that go away, and to stdout unless given <code>-w</code>. It suits UDP listeners best: a TCP connect blocks the stream while it waits.</p>
+<pre><code class="language-text">Usage: iptee [-w] [-d] [-q] [-s|-t|-u] host port [host port ...] | -version
+
+-w - writeonly - only write to network clients/servers, not stdout
+-d - debug     - log debug information
+-q - quiet     - do not log status information
+-s - server    - host and port are a TCP server
+-u - udp       - host and port are a UDP address that data is sent to
+-t - tcp       - host and port are a TCP server that data is sent to</code></pre>
+<h2 id="format-message"><code>format-message</code></h2>
+<p>A PHP script in <code>util/</code> that builds one of a few messages, as PLAIN (or YDWG RAW with <code>--format YDWG</code>), for a gateway driver to send: <code>format-message [--format YDWG|CANBOAT] &lt;dst&gt; &lt;command&gt; &lt;args&gt;</code>. Without arguments it lists the commands, among them <code>request_pgn</code>, <code>request_interval</code>, <code>command_address</code> and <code>setvolume</code>. A request for every device's Product Information:</p>
+<pre><code class="language-sh">format-message 255 request_pgn 126996</code></pre>
+<p><code>canboat format-message</code> builds any PGN.</p>
+<h2 id="list-product-information"><code>list-product-information</code></h2>
+<p>A PHP script in <code>util/</code> that lists the devices on the bus and their software versions. It needs a <code>canboat server</code>, or a pipeline ending in <code>canboat n2kd</code>: it sends ISO Requests for Product Information (126996) and Configuration Information (126998) to the input port, 2600, and reads the answers from the snapshot port, 2597. <code>/etc/default/canboat</code> can set other ports or hosts (<code>N2K_WRITE_HOST</code>, <code>N2K_WRITE_PORT</code>, …).</p>
+<pre><code class="language-text">$ list-product-information
+Product Information:
+60: MasterBus NMEA Interface         1.061.00
+36: PB200 WeatherStation             1.600,1.611,1.001,1.611,00044-802-2-01,HW6,OEM0
+ 0: NMEA 2000 PC Interface (NGT-1)   1.090, 2.190NGT-1-USB  hv1.03
+35: DST200                           1.002,1.02244-127-3-01,HW9,OEM0</code></pre>
+<h2 id="removed-in-v8">Removed in v8</h2>
+<ul>
+<li><strong>The C <code>n2kd</code>.</strong> <code>canboat n2kd</code> replaces it, with the same ports; <code>canboat install-shims</code> keeps the name working.</li>
+<li><strong><code>n2kd_monitor</code></strong>, the perl script that restarted <code>n2kd</code> and its gateway driver, configured in <code>/etc/default/n2kd</code>. <code>canboat server</code> replaces the whole arrangement, run by your init system; see <a href="../server.html#running-it-as-a-service">server.md</a>.</li>
+<li><strong><code>analyzer -explain</code> and <code>-explain-xml</code>.</strong> The PGN documentation is generated from the database; see <a href="../definitions.html">definitions.md</a>.</li>
+</ul>
+</body>
+</html>

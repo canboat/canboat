@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gateways</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="gateways">Gateways</h1>
+<p>To read or write a live NMEA 2000 bus, canboat needs a CAN interface: a marketed-as-such NMEA 2000 gateway, or a plain CAN adapter. This page lists the ones canboat drives, how to name them, and what each can and cannot do.</p>
+<h2 id="gateways-and-their-options">Gateways and their options</h2>
+<p><code>canboat interface</code> and <code>canboat server</code> take the same gateways and options: <code>canboat interface --kind yachtd tcp://host</code> and <code>canboat server --kind yachtd --device tcp://host</code>. An Actisense gateway also takes the data format it is set to, by Actisense's names (<code>--data-format</code>, default <code>ngt-actisense</code>):</p>
+<table>
+<thead><tr>
+<th><code>--kind</code></th>
+<th><code>--data-format</code></th>
+<th>Gateways</th>
+<th>Device</th>
+<th>Read/write</th>
+<th>J1939</th>
+<th>11-bit</th>
+</tr></thead>
+<tbody>
+<tr><td><code>actisense</code></td><td><code>ngt-actisense</code></td><td>NGT-1</td><td>serial, <code>usb</code>, <code>tcp://</code> (6001)</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td></td><td><code>n2k-ascii</code></td><td>W2K-1, PRO-NDC-1E2K</td><td><code>tcp://</code> (60002), <code>udp://</code></td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td></td><td><code>n2k-actisense</code> (BST-D0)</td><td>W2K-1, PRO-NDC-1E2K</td><td><code>tcp://</code> (60002)</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td></td><td><code>raw-ascii</code></td><td>W2K-1, PRO-NDC-1E2K</td><td><code>tcp://</code> (60002), <code>udp://</code></td><td>rw</td><td>yes</td><td>–</td></tr>
+<tr><td></td><td><code>raw-actisense</code> (BST-95)</td><td>W2K-1, PRO-NDC-1E2K, NGX</td><td><code>tcp://</code> (60002), NGX serial</td><td>rw</td><td>yes</td><td>–</td></tr>
+<tr><td></td><td><code>mxpgn</code></td><td>W2K-2 (CANDIRECT, NMEA 0183)</td><td><code>tcp://</code> (20000), <code>udp://</code></td><td>rw</td><td>yes</td><td>–</td></tr>
+<tr><td><code>yachtd</code></td><td><code>raw-ascii</code></td><td>YDWG-02, YDEN-02, YDNR-02, YDNU-02</td><td><code>tcp://</code> (1457), <code>udp://</code>, YDNU-02 serial</td><td>rw</td><td>yes</td><td>–</td></tr>
+<tr><td><code>miniplex</code></td><td></td><td>ShipModul MiniPlex-3 with NMEA 2000, in <code>$MXPGN</code></td><td><code>tcp://</code> (10110), <code>udp://</code>, serial</td><td>rw</td><td>yes</td><td>–</td></tr>
+<tr><td><code>seasmart</code></td><td></td><td>Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode, in <code>$PCDIN</code></td><td><code>tcp://</code> (10001), <code>udp://</code>, serial</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td><code>ikonvert</code></td><td></td><td>iKonvert, NavLink2</td><td>serial, <code>tcp://</code> (2000), <code>udp://</code> (2000)</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td><code>maretron</code></td><td></td><td>IPG100/200</td><td><code>host[:6543]</code></td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td><code>aos</code></td><td></td><td>AOS simulator</td><td>serial, <code>usb</code>, <code>tcp://</code> (6001)</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td><code>socketcan</code></td><td></td><td>Linux CAN interface</td><td><code>can0</code></td><td>rw</td><td>yes</td><td>yes</td></tr>
+<tr><td><code>canalyst</code></td><td></td><td>CANalyst-II, Waveshare USB-CAN-B</td><td><code>usb</code></td><td>rw</td><td>yes</td><td>yes</td></tr>
+<tr><td><code>usb-can-a</code></td><td></td><td>Waveshare USB-CAN-A</td><td>serial</td><td>rw</td><td>yes</td><td>yes</td></tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Read/write:</strong> <code>udp://[bind:]port</code> only receives. A W2K-1 sends <code>ngt-actisense</code> but does not take it; canboat does not handle that yet.</li>
+<li><strong>J1939</strong> (<code>--protocol j1939</code>): ISO TP messages are received wherever it says yes, but sent only on SocketCAN, the CANalyst-II and the USB-CAN-A, where canboat is the node. <strong>11-bit</strong> frames are Quick PCS (<code>--protocol quick</code>). The rest carry NMEA 2000 only.</li>
+<li><p><strong>ikonvert: use TCP for a NavLink2.</strong> A NavLink2 serves the iKonvert protocol on TCP <em>or</em> UDP, whichever its web page is set to, on port 2000 (canboat's default for both). Over <code>tcp://</code> canboat puts the gateway on the bus, sets its PGN lists, and reads and writes; when it exits, it takes the gateway off the bus again (<code>$PDGY,N2NET_OFFLINE</code>). Over <code>udp://[bind:][port]</code> canboat only receives:</p>
+<ul>
+<li><strong>The gateway must already be active.</strong> A NavLink2 passes no PGNs until a client puts it on the bus (<code>$PDGY,N2NET_INIT</code>), and canboat can't send that over UDP. canboat expects some other client to have done so since the gateway started (it stays on the bus after that client leaves, until it is power cycled or taken off), and never takes it off the bus itself. It warns when the gateway reports that it is off the bus. A canboat session over <code>tcp://</code> can't be that client: it takes the gateway off the bus when it exits.</li>
+<li><strong>Nothing reaches the gateway:</strong> <code>--tx-pgn</code>, <code>--rx-pgn</code> and <code>--no-tx-rate-limit</code> are ignored with a warning. <code>--rx-filter</code> still works, because canboat applies it. To send, use <code>tcp://</code>: Digital Yacht says TCP is needed to drive an autopilot.</li>
+</ul>
+<p>Use <code>udp://2000</code> rather than a local address, or the broadcast may be missed. A ser2net bridge needs its own port given.</p></li>
+<li><strong>miniplex:</strong> when it connects, canboat sets the MiniPlex to send every PGN it receives as <code>$MXPGN</code> (<code>$PSMDNO</code> options 30 and 31, mode 2), and asks it for every device's Address Claim and Product Information (<code>$PSMDNR</code>). Over a receive-only <code>udp://port</code> it can't, so set that on the MiniPlex first, or give its address, <code>udp://miniplex:port</code>. The MiniPlex never sends Address Claims (60928) and Product Information (126996) as <code>$MXPGN</code>, but as its own <code>$PSMDNC</code> and <code>$PSMDNP</code>, and the latter only for a request it made: canboat reads both as those PGNs, also in a capture (<code>canboat convert</code>, <code>analyzer</code>), and sends an ISO Request for either as <code>$PSMDNR</code>.</li>
+<li><strong>W2K-2:</strong> each data server (60001–60003) takes one Tx Format, set on its <em>Serial</em> page: <code>ngt-actisense</code>, <code>n2k-actisense</code>, <code>n2k-ascii</code>, or NMEA 0183, which holds only the sentences the W2K-2 converts, never a PGN. Each needs a route from N2K on the <em>Routing</em> page, which a change of Tx Format can clear; to send, a route to an enabled virtual device (N2KV1, "Data1", by default; Data2 and Data3 start disabled, and what is routed to them is dropped). It also has a hidden data server, CANDIRECT, on port 20000, which its web pages do not show: in BST-95 it is <code>raw-actisense</code> (<code>tcp://w2k:20000</code>), in NMEA 0183 it sends every CAN frame as <code>$MXPGN</code>, for <code>--data-format mxpgn</code>. canboat's NGT-1 code works with it: the W2K-2 refuses the NGT-1's Rx All mode, and canboat goes on in its mode. Seen on firmware 3.025 and 3.095; what a W2K-1 does is not known.</li>
+<li><strong>actisense mxpgn:</strong> an Actisense gateway writes <code>$MXPGN</code>'s data in bus order, first byte first, where a MiniPlex writes it as one number, last byte first; both cite the same rule. Actisense's own example (<code>$MXPGN,01F214,6842,00B004FF7FFFFFFF</code>, a battery at 12.00 V) and a W2K-2 have it so, and a W2K-2 sends only what is written so. Nothing in a stream says which, so a capture is read as ShipModul's unless told: <code>canboat convert --from actisense-mxpgn</code>, <code>analyzer -format ACTISENSE_MXPGN</code>.</li>
+<li><strong>seasmart:</strong> <code>$PCDIN</code> carries one whole message, with its source but no priority or destination, so an addressed PGN goes where the gateway decides. Not every gateway takes it to send: Yacht Devices gateways take only 59904, 127488, 127489, 127493, 127502, 127505 and 127508, and only on a server port set to bidirectional; Quark-elec does not document taking it at all. Chetco's port is 10001; give the port of the others (Quark-elec 2000, Yacht Devices 1456 by default). Received messages get the host's time: the sentence's own time stamp is no clock time.</li>
+<li><strong>seasmart, miniplex:</strong> a sentence whose checksum is wrong is dropped, with an error. Some sources write wrong ones (the examples in Quark-elec's manuals, Chetco's own switch page): <code>--ignore-checksum</code> takes them anyway, as do <code>canboat convert --ignore-checksum</code> and <code>analyzer -ignore-checksum</code> for a capture.</li>
+<li>An option only some gateways have (<code>--bitrate</code>, <code>--channel</code>, <code>--password</code>, <code>--mode</code>, the ISO NAME options) says which in <code>--help</code>, and is refused for the others.</li>
+<li>The names of canboat 8.3.0 still work: <code>--kind ngt1</code>, <code>w2k-ascii</code> and <code>ydwg</code>, and <code>canboat server --actisense …</code>, <code>--ikonvert …</code>, <code>--maretron …</code> and <code>--socketcan …</code>.</li>
+</ul>
+<h2 id="the-actisense-ngt-1-on-linux-and-macos">The Actisense NGT-1 on Linux and macOS</h2>
+<p>The NGT-1 is an FTDI USB serial device with its own USB ID, <code>0403:d9aa</code>.</p>
+<p><strong>Linux.</strong> The standard <code>ftdi_sio</code> driver works once it knows that ID. Adding it after the module has loaded keeps the driver working for your other FTDI devices too:</p>
+<pre><code class="language-sh">sudo modprobe ftdi_sio
+echo 0403 d9aa | sudo tee /sys/bus/usb-serial/drivers/ftdi_sio/new_id</code></pre>
+<p>The device then shows up as <code>/dev/ttyUSB&lt;n&gt;</code> (see <code>dmesg</code>). That number can change between boots; use the stable name under <code>/dev/serial/by-id/</code>, or give it one of your own with a udev rule on its serial number, which <code>udevadm info -q all -n /dev/ttyUSB0</code> shows:</p>
+<pre><code class="language-text"># /etc/udev/rules.d/99-actisense.rules
+SUBSYSTEM==&quot;tty&quot;, ACTION==&quot;add&quot;, ENV{ID_SERIAL}==&quot;Actisense_NGT-1_1FD34&quot;, SYMLINK+=&quot;actisense&quot;</code></pre>
+<p>Your user needs to be in the <code>dialout</code> group to open it.</p>
+<p><strong>macOS.</strong> No serial driver binds the NGT-1, so <code>canboat</code> opens it directly over USB: <code>--kind actisense usb</code>, or <code>usb:&lt;serial&gt;</code> with more than one. The C <code>actisense-serial</code> needs a serial device, so on macOS it can't read an NGT-1.</p>
+<h2 id="plain-can-adapters">Plain CAN adapters</h2>
+<p>A plain USB CAN adapter works on every platform: a Linux SocketCAN interface, a CANalyst-II such as the Waveshare USB-CAN-B (<code>04d8:0053</code>), which <code>canboat</code> opens directly over USB — <code>canboat interface --kind canalyst usb</code> or <code>canboat server --kind canalyst --device usb</code> — or a Waveshare USB-CAN-A (<code>1a86:7523</code>) on its serial port, <code>canboat interface --kind usb-can-a /dev/ttyUSB0</code>. On each, canboat is a full NMEA 2000 node: it claims an address and answers ISO Requests.</p>
+<h3 id="the-canalyst-ii-on-windows">The CANalyst-II on Windows</h3>
+<p>canboat opens a CANalyst-II (Waveshare USB-CAN-B) directly over USB, and on Windows that only works when the adapter is bound to Microsoft's <strong>WinUSB</strong> driver. It does not get WinUSB by itself, and the vendor's software installs its own driver. So:</p>
+<ol>
+<li>Run <a href="https://zadig.akeo.ie/">Zadig</a>, select the USB-CAN-B (<code>04D8 0053</code>; use <em>Options → List All Devices</em> if it is not shown), choose <strong>WinUSB</strong> and click <em>Replace Driver</em>.</li>
+<li><code>canboat interface --kind canalyst usb</code> and <code>canboat server --kind canalyst --device usb</code> then work as on Linux and macOS.</li>
+</ol>
+<p>With WinUSB bound, the vendor's own tools (USB-CAN Tool, ControlCAN.dll) no longer see the adapter until its original driver is restored (Device Manager → <em>Roll back driver</em> or <em>Update driver</em>). canboat checks the driver, and says so when it is not WinUSB. This has not yet been tried on real Windows hardware.</p>
+<h2 id="the-aos-simulator">The AOS simulator</h2>
+<p>The Across Ocean Systems NMEA 2000 / NMEA 0183 Simulator also works as a gateway: <code>--kind aos</code>. It speaks the NGT-1's framing but claims no address of its own, so canboat is the node, as on a CANalyst-II: <code>--address</code> and the other node options apply, and <code>--no-claim</code> leaves it sending from its fixed, unclaimed address 75. Each kind refuses the other: <code>--kind aos</code> gives up on a gateway that turns out to be a real NGT-1 (it answers Actisense BEM commands), and <code>--kind actisense</code> on one that says it is the simulator.</p>
+<h2 id="transmit-and-receive-pgn-lists---tx-pgn---rx-pgn">Transmit and receive PGN lists (<code>--tx-pgn</code>, <code>--rx-pgn</code>)</h2>
+<p>Other devices ask a node which PGNs it sends and reads (PGN 126464). <code>--tx-pgn &lt;pgn&gt;[,…] --rx-pgn &lt;pgn&gt;[,…]</code> (on <code>canboat server</code> and <code>canboat interface</code> alike, or <code>BridgeConfig::pgn_lists</code> in the library) names the PGNs your application sends and reads, so the gateway can answer truthfully. What happens with them depends on the gateway:</p>
+<table>
+<thead><tr>
+<th>Gateway</th>
+<th>Transmit list</th>
+<th>Receive list</th>
+</tr></thead>
+<tbody>
+<tr><td>SocketCAN, CANalyst-II, USB-CAN-A</td><td>Advertised by canboat itself. Nothing is filtered.</td><td>Advertised</td></tr>
+<tr><td>iKonvert</td><td>Written into the gateway, which only transmits what is on it</td><td>Written into the gateway, which answers PGN 126464 from it; a filter only with <code>--rx-filter</code> (<code>NORMAL</code> mode)</td></tr>
+<tr><td>NGT-1</td><td>Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it</td><td>Not supported</td></tr>
+<tr><td>AOS simulator (<code>aos</code>)</td><td>Advertised by canboat itself, as for a CANalyst-II. Nothing is filtered.</td><td>Advertised</td></tr>
+<tr><td>Others</td><td>Ignored, with a warning</td><td>Ignored, with a warning</td></tr>
+</tbody>
+</table>
+<blockquote class="alert alert-warning">
+<p class="alert-title">Warning</p>
+<h2 id="on-an-ikonvert-or-ngt-1-the-transmit-list-is-final">ON AN iKONVERT OR NGT-1, THE TRANSMIT LIST IS FINAL</h2>
+<p><strong>Once you name any transmit PGN (<code>--tx-pgn</code>, or <code>pgn_lists.tx</code>), canboat REFUSES TO SEND EVERY PGN THAT IS NOT ON THE LIST.</strong> The gateway only transmits the PGNs in its list, and canboat sets that list once, when it starts, so canboat drops the rest up front, logging each refused PGN once, instead of handing the gateway frames it will reject.</p>
+<p><strong>Decide the complete list before you start.</strong> Only the ISO/NMEA network-management PGNs, and the PGNs of the quirks you enabled (such as <code>wmm</code>'s 127258), are allowed without being named. With no transmit PGN named, nothing is refused and the gateway's own list decides.</p>
+</blockquote>
+<p>The PGN lists only advertise; they never filter what you receive. To receive only some PGNs, use <code>--rx-filter &lt;pgn&gt;[,…]</code> (or <code>BridgeConfig::rx_filter</code>): an iKonvert filters in the gateway, and for every other gateway canboat drops the rest as they arrive. The network-management PGNs (address claims, requests, product information, …) and canboat's own gateway status always come through.</p>
+</body>
+</html>

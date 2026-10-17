@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Downstream survey: who uses CANboat (October 2026)</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="downstream-survey-who-uses-canboat-october-2026">Downstream survey: who uses CANboat (October 2026)</h1>
+<p>A survey of public GitHub projects for NMEA 2000, made on 7 October 2026 to find the projects that build on CANboat: which part they use, which CANboat version, whether they credit it, and how actively they are maintained.</p>
+<blockquote>
+<p><strong>This is a snapshot.</strong> Versions, star counts and dates are as of 7 October 2026 and will drift. The current CANboat release at the time was <strong>v8.3.0</strong> (schema 2.7.0). <code>analyzer/pgns.xml</code> and <code>analyzer/pgns.json</code> were removed in May 2025, before v6.0.0, so anything still built from those files is older than v6.</p>
+</blockquote>
+<p>The README's table of <a href="https://github.com/canboat/canboat/blob/master/README.md#other-projects-using-the-canboat-pgn-definitions">other projects using the CANboat PGN definitions</a> is the maintained, short version of this survey.</p>
+<h2 id="summary">Summary</h2>
+<ul>
+<li>About <strong>450 repositories</strong> screened.</li>
+<li>About <strong>20 projects</strong> outside the README list generate their code from canboat.json or canboat.xml, or vendor it. About 8 more use canboatjs or ts-pgns outside the Signal K core, and about 15 run or package the CANboat tools.</li>
+<li><strong>Credit</strong> is missing, or only in a file header, in ioBroker.nmea, antipole2/JavaScript_pi, jpilet/anemomind, phobicdotno/actuisense, si6n/UCANLAB and MENIER/RaymarineAutoPilot (and the fgorina copies of it). sergei/sailvue added an acknowledgement on 7 October 2026, the day it was asked.</li>
+<li><strong>Old data</strong> (pre-v6, or not updated for years): jpilet/anemomind (regenerated in June 2026 from a pre-v6 <code>pgns.xml</code>), sergei/sailvue (fork last synced 2023), MO-RISE/marulc (2021), technocreatives/n2k-gen (2022), jxltom/nmea2000 (frozen at v6.0.0-alpha) and Sterwen-Technology/navigation_server (2012 XML base). mbj4668/n2k, in the README list, vendors <strong>v4.12.0</strong>. Several active Signal K plugins pin canboatjs 1.x or 2.x.</li>
+<li><strong>A suspicious copy:</strong> one repository re-uploads open-ships/n2k with a README that pushes a "Download" badge for a zip file kept in the repository, a pattern often used to spread malware. The zip was not downloaded or inspected, so this is not confirmed. It is not named or linked here.</li>
+</ul>
+<h2 id="1-projects-that-use-canboat">1. Projects that use CANboat</h2>
+<p>"Credit" is whether the README or docs credit CANboat: <strong>yes</strong>, <strong>header only</strong> (only in a file header, a data folder or a NOTICE file), or <strong>no</strong>. "Last push" is the repository's, as of 7 October 2026.</p>
+<h3 id="1a-generated-from-or-vendoring-canboatjson-canboatxml">1a. Generated from, or vendoring, canboat.json / canboat.xml</h3>
+<table>
+<thead><tr>
+<th>Repository</th>
+<th>Language</th>
+<th>★</th>
+<th>Last push</th>
+<th>How</th>
+<th>CANboat version</th>
+<th>Credit</th>
+<th>Evidence</th>
+</tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/boatkit-io/n2k">boatkit-io/n2k</a></td><td>Go</td><td>9</td><td>2026-10-05</td><td><code>cmd/pgngen</code> downloads canboat.json at a pinned commit and generates Go decoders and encoders</td><td><strong>v8.1.0</strong>; has a <code>-check-canboat-update</code> flag</td><td>yes</td><td><code>main.go</code>: <code>const canboatRelease = &quot;v8.1.0&quot;</code>; README "based on CANboat data"</td></tr>
+<tr><td><a href="https://github.com/open-ships/n2k">open-ships/n2k</a></td><td>Go</td><td>3</td><td>2026-09-30</td><td>Vendored canboat.json (<code>cmd/pgngen/schema.json</code>), about 600 typed PGNs, and a full bus node</td><td><strong>v7.1.0</strong>, schema 2.5.0 (updated 2026-09-05)</td><td>yes</td><td>README "generated from the community-maintained canboat schema", plus an acknowledgements section. The vendored JSON has "canboat" unicode-escaped, so code search misses it. Inspired by boatkit.</td></tr>
+<tr><td><a href="https://github.com/herostrat/nmea2000-rs">herostrat/nmea2000-rs</a></td><td>Rust</td><td>0</td><td>2026-02-28</td><td>Build-time code generation from <code>data/canboat.json</code>; uses CANboat's test vectors</td><td><strong>v6.1.3</strong></td><td>yes</td><td>README "Built on the canboat project…"</td></tr>
+<tr><td><a href="https://github.com/Sherin-SEF-AI/CanLab">Sherin-SEF-AI/CanLab</a></td><td>Python</td><td>84</td><td>2026-09-23</td><td><code>n2k_pgns.json</code> built from canboat.json by <code>tools/build_n2k_table.py --tag</code></td><td><strong>v8.2.1</strong></td><td>yes</td><td>README licence section and <code>CANBOAT-NOTICE.txt</code></td></tr>
+<tr><td><a href="https://github.com/phobicdotno/pgntui">phobicdotno/pgntui</a></td><td>Python</td><td>2</td><td>2026-06-11</td><td>Vendored canboat.json as <code>decode/pgns.json</code></td><td><strong>v6.2.0</strong></td><td>yes</td><td>README "TUI for NMEA 2000 with canboat decoding"</td></tr>
+<tr><td><a href="https://github.com/phobicdotno/actuisense">phobicdotno/actuisense</a></td><td>Python</td><td>1</td><td>2026-10-06</td><td><code>data/pgns.json</code> (PGN, name, fast-packet flag) generated from canboat master</td><td><strong>v6.2.0</strong></td><td>header only</td><td><code>&quot;_source&quot;: &quot;canboat docs/canboat.json (Apache-2.0)&quot;</code>; README silent</td></tr>
+<tr><td><a href="https://github.com/knifter/canboat_explorer">knifter/canboat_explorer</a></td><td>Python</td><td>0</td><td>2026-06-26</td><td>Vendored canboat.json, GUI explorer</td><td><strong>v6.1.8</strong></td><td>yes</td><td>README credits "CANboat Project PGN database"</td></tr>
+<tr><td><a href="https://github.com/wdantuma/signalk-server-go">wdantuma/signalk-server-go</a></td><td>Go</td><td>3</td><td>2026-09-29</td><td>Vendored <code>canboat/canboat.xml</code>, Go types generated from <code>canboat.xsd</code></td><td><strong>v6.2.2</strong> (updated 2026-06-27)</td><td>yes, but the README's "canboat" link points to the Signal K specification</td><td><code>canboat/canboatgenerated.go</code></td></tr>
+<tr><td><a href="https://github.com/si6n/UCANLAB">si6n/UCANLAB</a></td><td>Python</td><td>0</td><td>2026-10-07</td><td>Vendored canboat.json and canboat.xml, and a CANboat-derived DBC in <code>data/dbc/marine/canboat_refs/</code></td><td><strong>v8.1.0</strong></td><td>header only (the data folder's README; the repository has no licence)</td><td>data README "canboat PGN Reference Definitions (v8.1.0)"</td></tr>
+<tr><td><a href="https://github.com/ajsb85/nmea2000-pgn-reference">ajsb85/nmea2000-pgn-reference</a></td><td>JavaScript</td><td>1</td><td>2026-06-22</td><td>Web PGN reference built from canboat.json</td><td><strong>v6.2.0</strong></td><td>yes</td><td>README states schema 2.3.0 / v6.2.0</td></tr>
+<tr><td><a href="https://github.com/antipole2/JavaScript_pi">antipole2/JavaScript_pi</a></td><td>C++ (OpenCPN plugin)</td><td>4</td><td>2026-09-08</td><td>Ships <code>data/scripts/canboat.json</code>; <code>canboatAnalyzer.js</code> pipes frames through <code>analyzer -json</code></td><td><strong>v6.1.3</strong></td><td>not in the README (the user guide was not checked)</td><td><code>canboatAnalyzer.js</code></td></tr>
+<tr><td><a href="https://github.com/fkie-cad/maritime-dissector">fkie-cad/maritime-dissector</a></td><td>Lua</td><td>22</td><td>2026-03-24</td><td>Wireshark dissector generated from canboat.json, downloaded at generation time</td><td>not pinned</td><td>yes</td><td>README "based on … CANBoat Documentation"</td></tr>
+<tr><td><a href="https://github.com/Maps-Messaging/canbus_interface">Maps-Messaging/canbus_interface</a> (and Maps-Messaging/n2k)</td><td>Java</td><td>0 / 1</td><td>2026-09-28 / 2026-04</td><td>Parses <code>NMEA_database_1_300.xml</code>, CANboat's <code>sources/</code> file contributed by @elmue (in CANboat from 2025-05 to 2026-06)</td><td>the NMEA v1.300 subset, not canboat.json</td><td>in the docs ("derived from public CANboat XML metadata"), not the README</td><td>the XML file</td></tr>
+<tr><td><a href="https://github.com/jpilet/anemomind">jpilet/anemomind</a></td><td>C++</td><td>16</td><td>2026-07-14</td><td><code>PgnClasses.*</code> generated from a local CANboat checkout's <code>analyzer/pgns.xml</code></td><td><strong>pre-v6</strong> (regenerated 2026-06-17)</td><td>header only</td><td>generated header "index.js ../canboat/analyzer/pgns.xml"</td></tr>
+<tr><td><a href="https://github.com/sergei/sailvue">sergei/sailvue</a></td><td>C++</td><td>14</td><td>2026-09-24</td><td>Submodule <code>n2k/canboat</code> from fork sergei/canboat (last push 2023-12); <code>InitCanBoat.c</code></td><td><strong>≤ v5</strong> (the submodule commit is not on the fork's default branch, so uncertain)</td><td>yes, since 2026-10-07 (<a href="https://github.com/sergei/sailvue/issues/3">sailvue#3</a>)</td><td><code>.gitmodules</code></td></tr>
+<tr><td><a href="https://github.com/Sterwen-Technology/navigation_server">Sterwen-Technology/navigation_server</a></td><td>Python</td><td>3</td><td>2026-10-02</td><td><code>PGNDefns.N2kDfn.xml</code> "derived from Keversoft NMEA2000 Analyzer" (the 2012 XML, via OpenSkipper), heavily modified</td><td>2012 base</td><td>in <code>doc/NMEA2000.md</code> only</td><td>doc: "XML … initially published by Keversoft … moved into canboat"</td></tr>
+<tr><td><a href="https://github.com/jxltom/nmea2000">jxltom/nmea2000</a></td><td>Python</td><td>0</td><td>2025-12-08</td><td>A non-fork copy of tomer-w/nmea2000</td><td><strong>v6.0.0-alpha</strong> (2025-05); its copied sync workflow does not run</td><td>yes</td><td><code>nmea2000/canboat.json</code></td></tr>
+<tr><td><a href="https://github.com/OpenSkipper/OpenSkipper">OpenSkipper</a></td><td>C#</td><td>71</td><td>2023-04-03</td><td>The 2012 Keversoft/CANboat PGN XML</td><td>2012</td><td>yes</td><td>inactive since 2023</td></tr>
+<tr><td><a href="https://github.com/MO-RISE/marulc">MO-RISE/marulc</a></td><td>Python</td><td>11</td><td>2023-09-14</td><td>Vendored CANboat JSON</td><td><strong>2.0.0</strong> (2021)</td><td>yes</td><td>README "identical to … CANBOAT"</td></tr>
+<tr><td><a href="https://github.com/technocreatives/n2k-gen">technocreatives/n2k-gen</a></td><td>Rust</td><td>1</td><td>2024-08-08</td><td>Code generation from CANboat's <code>pgns.xml</code></td><td>2022 (pre-v6)</td><td>yes</td><td>README</td></tr>
+<tr><td><a href="https://github.com/MENIER/RaymarineAutoPilot">MENIER/RaymarineAutoPilot</a> (and fgorina/Autopilot2000, MeteoGNSS, Test_NMEA_2000)</td><td>C / C++</td><td>4 / 0</td><td>2023-04 / 2026-07</td><td>CANboat PGN id strings in <code>pgnsToString.h</code></td><td>about 2021–2023</td><td>header only (<code>pgns_def.h</code>: "base of works: CANboat"); the fgorina copies keep only MENIER's header</td><td><code>case 126208L: return PSTR(&quot;nmeaRequestGroupFunction&quot;)</code></td></tr>
+</tbody>
+</table>
+<p>Already in the README list before this survey:</p>
+<table>
+<thead><tr>
+<th>Repository</th>
+<th>★</th>
+<th>Last push</th>
+<th>How</th>
+<th>CANboat version</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/aldas/go-nmea-client">aldas/go-nmea-client</a></td><td>16</td><td>2023-07-18</td><td>canboat.json loaded at runtime</td><td>whichever file is supplied</td><td>inactive since 2023; newer schema fields may not be handled (uncertain)</td></tr>
+<tr><td><a href="https://github.com/fard-draf/korri-n2k">fard-draf/korri-n2k</a></td><td>5</td><td>2026-09-23</td><td>code generated from canboat.json</td><td><strong>v7.1.0</strong></td><td>credited</td></tr>
+<tr><td><a href="https://github.com/mbj4668/n2k">mbj4668/n2k</a></td><td>7</td><td>2026-04-30</td><td>vendored CANboat definitions</td><td><strong>v4.12.0</strong> (last synced 2023-06; a 2026-04 commit only added local Maretron PGNs)</td><td>credited</td></tr>
+<tr><td><a href="https://github.com/negrusti/NMEA2000-Analyzer">negrusti/NMEA2000-Analyzer</a></td><td>13</td><td>2026-07-10</td><td>downloads <code>master/docs/canboat.json</code> at runtime</td><td>latest</td><td>credited</td></tr>
+<tr><td><a href="https://github.com/tomer-w/nmea2000">tomer-w/nmea2000</a></td><td>21</td><td>2026-10-06</td><td>vendored canboat.json, weekly sync workflow</td><td><strong>v8.1.0</strong></td><td>credited; also credits Smart Boat Innovations</td></tr>
+<tr><td><a href="https://github.com/tomer-w/ha-nmea2000">tomer-w/ha-nmea2000</a></td><td>17</td><td>2026-10-05</td><td>through nmea2000</td><td>v8.1.0</td><td>credited</td></tr>
+<tr><td><a href="https://github.com/SmartBoatInnovations">SmartBoatInnovations</a> ha-smart2000usb / ha-smart2000esp</td><td>10 / 5</td><td>2026-04-06 / 2025-11-15</td><td>decoders generated from canboat.json</td><td><strong>v5.0.3</strong></td><td>credited only in <code>pgn_type.json</code>; asked in <a href="https://github.com/SmartBoatInnovations/ha-smart2000usb/issues/10">ha-smart2000usb#10</a></td></tr>
+</tbody>
+</table>
+<h3 id="1b-using-canboatjs-or-ts-pgns-outside-the-signal-k-core">1b. Using canboatjs or ts-pgns outside the Signal K core</h3>
+<table>
+<thead><tr>
+<th>Repository</th>
+<th>★</th>
+<th>Last push</th>
+<th>Dependency</th>
+<th>Credit</th>
+</tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/ioBroker/ioBroker.nmea">ioBroker/ioBroker.nmea</a></td><td>3</td><td>2026-10-06</td><td>canboatjs ^3.20.0</td><td><strong>no</strong></td></tr>
+<tr><td><a href="https://github.com/NearlCrews/signalk-nmea2000-emitter-cannon">NearlCrews/signalk-nmea2000-emitter-cannon</a></td><td>1</td><td>2026-10-05</td><td>canboatjs ^3.20, ts-pgns</td><td>yes</td></tr>
+<tr><td><a href="https://github.com/jonaswitt/yacht-data-streams">jonaswitt/yacht-data-streams</a></td><td>1</td><td>2026-08-29</td><td>canboatjs ^2.4.2, @canboat/pgns ^3</td><td>yes</td></tr>
+<tr><td><a href="https://github.com/MarcusWun/n2k-race-logger">MarcusWun/n2k-race-logger</a></td><td>0</td><td>2026-08-23</td><td>canboatjs</td><td>yes</td></tr>
+<tr><td><a href="https://github.com/BigaOSTeam/BigaOS">BigaOSTeam/BigaOS</a> (plugin)</td><td>0</td><td>2026-07-11</td><td>canboatjs ^2.0.0</td><td>not found</td></tr>
+<tr><td><a href="https://github.com/nparcher24/OpenHelm">nparcher24/OpenHelm</a></td><td>0</td><td>2026-05-15</td><td>canboatjs ^3.14</td><td>no</td></tr>
+<tr><td><a href="https://github.com/twigmarine/nori-can">twigmarine/nori-can</a></td><td>2</td><td>2023-06</td><td>@canboat/pgns ^2</td><td>yes</td></tr>
+<tr><td><a href="https://github.com/dirkwa/sensesp-n2k-gateway">dirkwa/sensesp-n2k-gateway</a></td><td>3</td><td>2026-08</td><td>interoperates only: speaks canboatjs's <code>candump3</code> to <code>N2kIpGateway</code></td><td>yes</td></tr>
+</tbody>
+</table>
+<p>Signal K plugins that use canboatjs or ts-pgns, listed for completeness: sbender9/\<em>, htool/\</em>, mairas/signalk-dst800-calibration-plugin, johansolve/signalk-navico-autopilot-bridge, afds/\*, openwatersio/aiscast, meri-imperiumi/signalk-autostate and others.</p>
+<h3 id="1c-running-the-canboat-tools-or-packaging-them">1c. Running the CANboat tools, or packaging them</h3>
+<ul>
+<li><a href="https://github.com/wellenvogel/avnav">wellenvogel/avnav</a> (113★, active): a plugin reads the <code>n2kd</code> JSON stream on port 2598; documentation page "Canboat and SignalK". Credited.</li>
+<li><a href="https://github.com/openplotter/openplotter-can">openplotter/openplotter-can</a>: clones and builds CANboat.</li>
+<li><a href="https://github.com/robotic-esp/canboat_vendor">robotic-esp/canboat_vendor</a>: ROS 2 wrapper, pinned to a CANboat commit of 2026-08-10 (just before v8.0.0-beta3); also published as ros2-gbp/canboat_vendor-release in the ROS 2 Jazzy distribution.</li>
+<li><a href="https://github.com/RISE-Maritime/porla-nmea">RISE-Maritime/porla-nmea</a> and <a href="https://github.com/MO-RISE/porla-pontos">MO-RISE/porla-pontos</a>: <code>analyzer --json</code> in pipelines.</li>
+<li><a href="https://github.com/RISE-Maritime/keelson">RISE-Maritime/keelson</a>: re-implements the <code>actisense-serial</code> framing and the BASIC_STRING format; credited in code comments only.</li>
+<li><a href="https://github.com/mjcumming/cobalt-r6-surf">mjcumming/cobalt-r6-surf</a>, <a href="https://github.com/johba37/canboat-nmea2000-bridge">johba37/canboat-nmea2000-bridge</a>, <a href="https://github.com/lanceberc/polarize">lanceberc/polarize</a> (20★): use the analyzer.</li>
+<li>Packaging: MarkWalters-dev/aur and taotieren/aur-repo (AUR), opencpn-fedora-packaging/canboat (RPM spec, 2017), shantanoo-desai/meta-canboat (Yocto, CANboat 1.2.1, 2019).</li>
+<li>Older: iotfablab/n2kparser, violapaul/RegattaAnalysis, mglonnro/canboat-\*, sbender9/boat-scripts (archived), lkilpatrick/viamboat, chrismetcalf/canboat-ansible, Soups71/NEMO.</li>
+</ul>
+<h3 id="1d-old-or-abandoned-repositories-that-vendor-canboat-data">1d. Old or abandoned repositories that vendor CANboat data</h3>
+<ul>
+<li>philmay57/N2KLib: pgns.xml v1.2.0, 2018.</li>
+<li>sbender9/N2KEncoder: 2016.</li>
+<li>sbender9/pgns: v6.0.1, deprecated in favour of ts-pgns.</li>
+<li>cbatson/nmea2k: Ruby, 2021.</li>
+<li>alexphredorg/nmea2000: its update script downloads <code>analyzer/pgns.json</code>, which no longer exists.</li>
+<li>timmathews/argo: 12★, 2022.</li>
+<li>yhmtmt/aws and yhmtmt/n2k_ngt1: vendored the C analyzer, about 2019.</li>
+<li>nowpor/canboat-clone: a 2019 copy of the CANboat repository.</li>
+<li>htool/RaymarineAPtoFakeNavicoAutoPilot: 28★, vendors canboatjs with @canboat/pgns ^1.0.4.</li>
+<li>cape-ookb/canboat-web: 2018.</li>
+<li>pkg40/greenboat-homeassistant: contains a copy of Smart Boat Innovations' smart2000esp.</li>
+</ul>
+<h3 id="1e-hand-written-decoders-that-cite-canboat-as-their-reference">1e. Hand-written decoders that cite CANboat as their reference</h3>
+<p>AlexAsplund/Vanchor (120★), csakos1/sailing-assistant (strong README credit), Ranman86/NauticPinnace, sankeysoft/nmea_dashboard, frye/N2k-simulator, constantineau/Agent_C4, erh/viam-chartplotter, sdoque/systems, gjk4all/NMEA2000-Relay-Controller, taerugh/can-cpp, skrewby/nmea, auvents-brave/BoatTools, lnx13/Actisense-Emulator.</p>
+<h2 id="2-notable-nmea-2000-projects-that-do-not-use-canboats-definitions">2. Notable NMEA 2000 projects that do not use CANboat's definitions</h2>
+<table>
+<thead><tr>
+<th>Repository</th>
+<th>★</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr><td>ttlappalainen/NMEA2000 (and its _esp32, _mcp, _Teensyx, … drivers)</td><td>682</td><td>Own hand-written PGN code; one comment links a CANboat PR</td></tr>
+<tr><td>OpenCPN/OpenCPN</td><td>1493</td><td>Own NMEA 2000 handling, but copies CANboat's fast-packet PGN list (<code>comm_can_util.cpp</code>) and the NGT-1 startup command (<code>comm_drv_n2k_serial.cpp</code>: "Copied from canboat Project"); credited in the source</td></tr>
+<tr><td>jvde-github/AIS-catcher</td><td>788</td><td>Own code; cites CANboat as a source</td></tr>
+<tr><td>Wireshark <code>packet-nmea2000.c</code></td><td>—</td><td>Hand-written dissector (2025); cites the CANboat docs and fkie-cad</td></tr>
+<tr><td>ntpsec/gpsd <code>driver_nmea2000.c</code></td><td>—</td><td>Hand-written; cites CANboat</td></tr>
+<tr><td>wellenvogel/esp32-nmea2000</td><td>98</td><td>Built on ttlappalainen</td></tr>
+<tr><td>AK-Homberger/\*</td><td>92</td><td>Built on ttlappalainen</td></tr>
+<tr><td>hatlabs/SH-ESP32-nmea2000-gateway</td><td>33</td><td>Built on ttlappalainen</td></tr>
+<tr><td>TwoCanPlugIn</td><td>10</td><td>Own decoders, "inspired by Canboat"; supports the CANboat log format</td></tr>
+<tr><td>digitalyacht/iKonvert</td><td>—</td><td>Own SDK</td></tr>
+<tr><td>sankeysoft/nmea_dashboard</td><td>—</td><td>Own Dart parsers</td></tr>
+</tbody>
+</table>
+<h2 id="3-method-and-limits">3. Method and limits</h2>
+<ul>
+<li><strong>Repository search:</strong> nmea2000, nmea-2000, n2k, "NMEA 2000", canboat, actisense, ngt-1, nmea2k, "pgn decoder", "n2k gateway", "home assistant nmea", "n2k rust", "canboat python", and the topics nmea2000, nmea-2000, n2k, canboat and nmea2k. Each of the roughly 450 repositories found was checked for a README mention of canboat or Verruijt and for CANboat-like paths in its git tree.</li>
+<li><strong>Code search</strong>, paced for GitHub's rate limit:
+<ul>
+<li>files and manifests: <code>filename:canboat.json</code>, and <code>canboat</code> in Cargo.toml, go.mod, pyproject.toml, package.json, READMEs, CMakeLists and Dockerfiles;</li>
+<li>schema strings: <code>&quot;CreatorCode&quot; &quot;SchemaVersion&quot;</code>, <code>&quot;Canboat NMEA2000 Analyzer&quot;</code>, the <code>Lookup*Enumerations</code> names, <code>&quot;docs/canboat.json&quot;</code>, <code>&quot;actisense-serial&quot;</code>;</li>
+<li>names and packages: <code>&quot;Kees Verruijt&quot;</code>, <code>@canboat/canboatjs</code>, <code>@canboat/ts-pgns</code>;</li>
+<li><code>canboat</code> and <code>&quot;canboat.json&quot;</code> per language;</li>
+<li>distinctive PGN ids such as <code>nmeaRequestGroupFunction</code>, <code>seatalk1PilotMode</code> and <code>airmarAttitudeOffset</code>.</li>
+</ul></li>
+<li><strong>Verification:</strong> versions come from the headers of vendored files, and update dates from those files' commit history.</li>
+<li><strong>Limits:</strong>
+<ul>
+<li>GitHub code search does not index files over about 384 KB, so most vendored copies of canboat.json are invisible to it. Projects were found mainly through repository search and tree scans, so a renamed file in an uncredited repository can be missed. The unicode-escaped "canboat" in open-ships/n2k is another blind spot.</li>
+<li>Code search covers default branches only, and the per-language "canboat" queries were noisy.</li>
+<li>GitLab, Codeberg, and projects published only on PyPI or crates.io are not covered. In the crates.io index only canboat-rs and korri-n2k turned up.</li>
+<li>Still uncertain: the JavaScript_pi user guide, the sailvue submodule commit, whether the Maps-Messaging server pulls in its NMEA 2000 module, and how well aldas/go-nmea-client handles the current schema.</li>
+</ul></li>
+</ul>
+</body>
+</html>

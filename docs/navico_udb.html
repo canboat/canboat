@@ -22,9 +22,17 @@ th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
 th { background: #8882; }
 blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
 a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
 </style>
 </head>
 <body>
+<nav><a href="index.html">CANboat documentation</a></nav>
 <h1 id="navico-udb-database-and-source-selection">Navico UDB database and source selection</h1>
 <p>Navico-family devices share configuration and settings across the network with a group of proprietary key/value PGNs. The central one, <strong>PGN 130822</strong>, is a general database / table-sharing transport (the "UDB" database). <em>Source selection</em> — which device provides each data type — is a related but <strong>separate</strong> mechanism, carried by <strong>PGN 130840</strong>.</p>
 <p>This note covers both, because they are easy to confuse: 130822 carries a <em>table</em> of source selections among many other tables, but it is a periodic dump that <strong>lags</strong> live changes; the actual change-driven selection is 130840.</p>

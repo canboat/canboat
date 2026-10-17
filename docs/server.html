@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>`canboat server`</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="canboat-server"><code>canboat server</code></h1>
+<p><code>canboat server</code> is the whole device → analyzer → n2kd pipeline in one process: it reads a gateway (see <a href="gateways.html">gateways.md</a>), decodes every message, applies the device quirks you switch on, and serves the result over TCP. It replaces <code>actisense-serial | analyzer | n2kd</code> and its siblings.</p>
+<pre><code class="language-sh">canboat server --kind actisense --device /dev/ttyUSB0</code></pre>
+<h2 id="ports">Ports</h2>
+<p>Every port is a TCP port, listening on all interfaces unless <code>--bind 127.0.0.1</code> keeps it to this host. The first five are the C <code>n2kd</code>'s (<code>-p</code> and the ports after it), so its clients work unchanged. <code>0</code> turns a port off.</p>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Default</th>
+<th>What it serves</th>
+</tr></thead>
+<tbody>
+<tr><td><code>--snapshot-port</code></td><td>2597</td><td>On connect, the latest JSON record of every PGN (one per PGN, source and instance), then close. AIS PGNs are on <code>--ais-port</code> instead, apart from 129026 and 129029, which are on both</td></tr>
+<tr><td><code>--analyzer-port</code></td><td>2598</td><td>Decoded JSON, one record per line; read-only</td></tr>
+<tr><td><code>--nmea0183-port</code></td><td>2599</td><td>NMEA 0183 sentences, AIVDM included; read-only</td></tr>
+<tr><td><code>--input-port</code></td><td>2600</td><td>Write-only: PLAIN/FAST lines written here are sent onto the bus</td></tr>
+<tr><td><code>--ais-port</code></td><td>2601</td><td>On connect, the latest record of every AIS PGN, plus 129026 and 129029, then close</td></tr>
+<tr><td><code>--raw-port</code></td><td>2603</td><td>Raw frames as <code># format=FAST</code> PLAIN lines, fast-packets already joined; read-only</td></tr>
+<tr><td><code>--nmea0183-filter-port</code></td><td>2605</td><td>NMEA 0183 filter control (PGN 262657), for <code>canboat tui</code>; read and write</td></tr>
+<tr><td><code>--overrides-port</code></td><td>2606</td><td>PGN rate override control (PGN 262658), for <code>canboat tui</code>; read and write</td></tr>
+</tbody>
+</table>
+<p>The state the filter and override ports set is kept in <code>--config-dir</code>: <code>/etc/default/canboat</code> if it is writable (the systemd/root case), otherwise <code>~/.local/canboat</code>. <code>canboat server --help</code> has the rest of the options.</p>
+<h2 id="running-it-as-a-service">Running it as a service</h2>
+<p><code>canboat server</code> is one process with nothing else to supervise, so any init system with a restart policy will do. With systemd, as a system service in <code>/etc/systemd/system/canboat.service</code>:</p>
+<pre><code class="language-ini">[Unit]
+Description=CANboat server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/canboat server --kind actisense --device /dev/serial/by-id/usb-Actisense_NGT-1_XXXX-if00-port0
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>then <code>sudo systemctl enable --now canboat</code>, and <code>journalctl -u canboat -f</code> for its log. Or as a user service, in <code>~/.config/systemd/user/canboat.service</code>, with <code>ExecStart=%h/.cargo/bin/canboat …</code> and <code>WantedBy=default.target</code>:</p>
+<pre><code class="language-sh">systemctl --user enable --now canboat
+sudo loginctl enable-linger $USER    # start at boot, and keep running after you log out
+journalctl --user -u canboat -f</code></pre>
+<ul>
+<li><strong>The device name.</strong> Use the stable name under <code>/dev/serial/by-id/</code>, not <code>/dev/ttyUSB0</code>, which can change between boots; see <a href="gateways.html#the-actisense-ngt-1-on-linux-and-macos">gateways.md</a>. A user service needs the user in the <code>dialout</code> group.</li>
+<li><strong>A network gateway.</strong> A user service can't wait for <code>network-online.target</code>; <code>Restart=on-failure</code> brings it back once the gateway can be reached.</li>
+<li><strong>SocketCAN.</strong> <code>--bitrate</code> needs root or CAP_NET_ADMIN. For a user service, set the bit rate when the interface comes up instead (with systemd-networkd, a <code>.network</code> file with <code>[CAN] BitRate=250K</code>), and leave <code>--bitrate</code> out.</li>
+<li><strong>Its state.</strong> The NMEA 0183 filter and the rate overrides are kept in <code>--config-dir</code>: <code>/etc/default/canboat</code> for a system service, <code>~/.local/canboat</code> for a user's.</li>
+</ul>
+<h3 id="from-n2kd-monitor">From <code>n2kd_monitor</code></h3>
+<p><code>n2kd_monitor</code>, the perl script that restarted the C <code>n2kd</code> and its gateway driver, was removed in v8. What its <code>/etc/default/n2kd</code> set is now given to <code>canboat server</code>:</p>
+<table>
+<thead><tr>
+<th><code>/etc/default/n2kd</code></th>
+<th><code>canboat server</code></th>
+</tr></thead>
+<tbody>
+<tr><td><code>INTERFACE_PROGRAM</code>, <code>INTERFACE_DEVICE</code></td><td><code>--kind</code> and <code>--device</code></td></tr>
+<tr><td><code>INTERFACE_OPTIONS</code></td><td>the gateway's options, such as <code>--baud</code></td></tr>
+<tr><td><code>ANALYZER_OPTIONS</code></td><td><code>--id</code>, <code>--units</code>; it decodes internally, so most no longer apply</td></tr>
+<tr><td><code>N2KD_OPTIONS</code></td><td>the port options</td></tr>
+<tr><td><code>MONITOR</code></td><td>your init system's restart policy</td></tr>
+</tbody>
+</table>
+<h2 id="device-quirks">Device quirks</h2>
+<p>Some devices misbehave in ways CANboat can cover for. Each workaround is a named <em>quirk</em>, and every one of them is <strong>off by default</strong> — they all rewrite or invent data, so you switch on the ones you need:</p>
+<table>
+<thead><tr>
+<th>Quirk</th>
+<th>What it does</th>
+<th>Where</th>
+</tr></thead>
+<tbody>
+<tr><td><code>gps-rollover</code></td><td>Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS)</td><td><code>analyzer -quirk gps-rollover</code>, <code>canboat convert --quirk gps-rollover</code>, <code>canboat server --quirk gps-rollover</code></td></tr>
+<tr><td><code>gps-rollover=&lt;device&gt;,…</code></td><td>The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (<code>4</code>), its manufacturer code and unique number (<code>1851:491603</code>), or its ISO NAME in hex (<code>0x…</code>); <code>all</code> means every device on the bus</td><td>same three commands</td></tr>
+<tr><td><code>gps-relay</code></td><td>Re-sends the data PGNs the devices listed in <code>gps-rollover=…</code> broadcast (not their network management, and not anything addressed), from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display. Needs a real device list — <code>gps-rollover=all</code> is refused here</td><td><code>canboat server --quirk gps-rollover=&lt;device&gt; --quirk gps-relay</code> (needs a writable backend)</td></tr>
+<tr><td><code>scx20</code></td><td>Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it</td><td><code>canboat server --quirk scx20</code> (needs <code>--kind socketcan</code>, <code>canalyst</code> or <code>usb-can-a</code>)</td></tr>
+<tr><td><code>wmm</code></td><td>Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop</td><td><code>canboat server --quirk wmm</code></td></tr>
+<tr><td><code>motion</code></td><td>Impersonates a B&amp;G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20</td><td><code>canboat server --quirk motion</code> (needs <code>--kind socketcan</code>, <code>canalyst</code> or <code>usb-can-a</code>)</td></tr>
+</tbody>
+</table>
+<p><code>gps-rollover</code> is the odd one out: it corrects a decoded value rather than putting a frame on the bus, which is why it is available when decoding a capture file too. Do not use it on a capture made before April 2019 — it cannot tell a rolled-over date from a genuinely old one, and will move the whole log forward twenty years.</p>
+<p>Without a device list it only touches the dates a GNSS receiver produced, because those are the only ones whose origin the PGN itself tells us. Any other device that takes its clock from the bus repeats the wrong date, and nothing in its PGNs says so; that is what the device list is for. Naming a device by manufacturer and unique number, or by NAME, needs its PGN 60928 Address Claim to have gone by — <code>canboat server</code> asks for those at startup, a capture has to contain one. The AIS reports (129793, 129794) relay another station's clock and 127258 carries the variation model's date, so those are never corrected.</p>
+<p>None of that helps a display that reads the broken GPS directly. <code>gps-relay</code> is the nearest thing to a fix short of replacing the receiver: <code>canboat server</code> re-sends every broadcast PGN from the listed devices — position, COG/SOG, satellites, not just the dated ones, or no display would accept it as a GPS — from its own address, byte for byte except for the corrected dates. The other devices then see a second GPS source, canboat, and you select it in each of them. That needs devices with real source selection, which not every brand gets right, and it leaves the old receiver on the bus, since it is where the data comes from.</p>
+<h2 id="a-capture-as-a-live-bus---replay">A capture as a live bus (<code>--replay</code>)</h2>
+<p><code>canboat server --replay &lt;capture&gt;</code> plays a capture as if it were a gateway, so you can test a consumer such as Signal K without a boat. It reads any format canboat reads, keeps the capture's pacing but stamps every frame with the current time, and starts over at the end. The TCP ports are the same as for a real gateway, the input port included: frames written to it go to <code>--replay-sent &lt;file&gt;</code> as PLAIN/FAST lines, or are dropped, and are not echoed back.</p>
+<pre><code class="language-sh">canboat server --replay samples/dirona-actisense-serial.raw --replay-sent sent.raw</code></pre>
+<h2 id="performance">Performance</h2>
+<p>Same decode work — <code>-json -nv</code> over 1.26 M PGN frames (canboat's <code>dirona-actisense-serial.raw</code> × 50) on an M4 Pro, release build:</p>
+<table>
+<thead><tr>
+<th>Implementation</th>
+<th>Wall time</th>
+<th>vs canboat</th>
+</tr></thead>
+<tbody>
+<tr><td>canboatjs (Node 25)</td><td>27.8 s</td><td><strong>8.1 ×</strong></td></tr>
+<tr><td>canboat C</td><td>9.1 s</td><td><strong>2.6 ×</strong></td></tr>
+<tr><td>canboat <code>convert</code></td><td>3.4 s</td><td>1.0 ×</td></tr>
+</tbody>
+</table>
+<p><code>canboat server</code> goes one step further and collapses the <code>canboat convert | canboat n2kd</code> pipeline into a single process with no JSON text serialisation between stages:</p>
+<table>
+<thead><tr>
+<th>Pipeline</th>
+<th>Wall time</th>
+<th>Throughput</th>
+</tr></thead>
+<tbody>
+<tr><td><code>canboat convert</code> alone (PGN decode only)</td><td>3.3 s</td><td>380 k frames / s</td></tr>
+<tr><td><code>canboat convert | canboat n2kd</code> (piped, 2 proc)</td><td>6.5 s</td><td>194 k sentences / s</td></tr>
+<tr><td><code>canboat server</code> (single proc)</td><td>3.5 s</td><td>360 k sentences / s</td></tr>
+</tbody>
+</table>
+<p>That's 46 % less wall time than the piped setup while doing strictly more work (it's a long-running service with TCP fan-out); on CPU time the ratio is closer to 3.4 ×.</p>
+</body>
+</html>

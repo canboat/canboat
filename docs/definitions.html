@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Using the definitions in your own project</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+nav { font-size: .9em; margin-bottom: 1rem; }
+.alert { color: inherit; }
+.alert-title { font-weight: bold; margin-bottom: .3em; }
+.alert-note, .alert-tip { border-left-color: #1a73e8; }
+.alert-important { border-left-color: #8250df; }
+.alert-warning { border-left-color: #bf8700; }
+.alert-caution { border-left-color: #cf222e; }
+</style>
+</head>
+<body>
+<nav><a href="index.html">CANboat documentation</a></nav>
+<h1 id="using-the-definitions-in-your-own-project">Using the definitions in your own project</h1>
+<p>CANboat's PGN database is YAML in <a href="https://github.com/canboat/canboat/tree/master/database"><code>database/</code></a>, from which <code>keel</code> generates everything else. For use in your own software it is published in <code>docs/</code>, which is also the <a href="https://canboat.github.io/canboat">documentation site</a>:</p>
+<table>
+<thead><tr>
+<th></th>
+<th>JSON</th>
+<th>XML</th>
+<th>Documentation</th>
+</tr></thead>
+<tbody>
+<tr><td>NMEA 2000</td><td><code>canboat.json</code></td><td><code>canboat.xml</code></td><td><code>canboat.html</code></td></tr>
+<tr><td>SAE J1939</td><td><code>canboat-j1939.json</code></td><td><code>canboat-j1939.xml</code></td><td><code>canboat-j1939.html</code></td></tr>
+<tr><td>Quick PCS</td><td><code>canboat-quick.json</code></td><td><code>canboat-quick.xml</code></td><td><code>canboat-quick.html</code></td></tr>
+<tr><td>canboat's own pseudo-PGNs</td><td><code>canboat-pseudo.json</code></td><td><code>canboat-pseudo.xml</code></td><td></td></tr>
+</tbody>
+</table>
+<p>and NMEA 2000 as a CAN database, <code>canboat.dbc</code>. Pin your copy to a release: semantic versioning tells you of major (x.0.0) and minor (0.x.0) changes to the definitions.</p>
+<p>You may not need the files at all: the <code>canboat</code> Rust crate has the database compiled in (<a href="https://github.com/canboat/canboat/blob/master/crates/canboat/README.md">crates/canboat/README.md</a>), and <a href="https://github.com/canboat/canboatjs">canboatjs</a> is CANboat for JavaScript. The C tables in <code>analyzer/</code> are generated for the analyzer, and their form may change; do not build on them. The old v1 files, <code>pgns.xml</code> and <code>pgns.json</code>, were removed; pin an older release if you still need them.</p>
+<h2 id="xml">XML</h2>
+<p><code>canboat.xsd</code> is the schema of <code>canboat.xml</code>, and documents almost every element in it: what each attribute means, which are required and which you can skip. Start with the PGNs and their fields, and add the other definitions as you need them: if you do not show the names of lookup values, you need no <code>LookupEnumerations</code>.</p>
+<h2 id="json">JSON</h2>
+<p>The JSON is generated from the XML by an XSLT transformation, so it has the same elements and attributes. There is no JSON schema, but <code>canboat.xsd</code> documents the JSON just as well: read it.</p>
+<h2 id="writing-your-own-decoder">Writing your own decoder</h2>
+<p>All the data is in the definitions, but each <code>FieldType</code> needs its own conversion code; the C <code>analyzer</code> (<code>analyzer/</code>) and the Rust crate (<code>crates/canboat/src/engine/</code>) show how.</p>
+<p>Plan for <strong>repeating field sets</strong> from the start. Some PGNs carry zero or more repetitions of a group of fields, a <em>field set</em>, and a PGN can have two. They are given by <code>RepeatingFieldSet1Size</code>, <code>RepeatingFieldSet1StartField</code> and <code>RepeatingFieldSet1CountField</code>, and the same for set 2; in the <a href="https://canboat.github.io/canboat/canboat.html">documentation</a>, search for "set 1" and "set 2". Any field after a field set has no fixed position, so for those PGNs a decoder has to track where in the data it is. If it does that for these, it may as well do it for every PGN, instead of relying on each field's <code>BitStart</code> and <code>BitOffset</code>. If you skip the PGNs with field sets, every field you decode has a <code>BitStart</code> and <code>BitOffset</code>.</p>
+<h2 id="the-definitions-are-a-public-contract">The definitions are a public contract</h2>
+<p>Other projects generate their types and decoders from <code>canboat.json</code>, and key on its names, units and resolutions, so a change to a definition can break them. Every change to it is classified, and a release's version follows:</p>
+<table>
+<thead><tr>
+<th>Change to <code>canboat.json</code></th>
+<th>Release</th>
+</tr></thead>
+<tbody>
+<tr><td>A new PGN, field, lookup or lookup value</td><td>minor (0.x.0)</td></tr>
+<tr><td>A field, PGN, lookup or lookup value removed or renamed; a field's type, lookup, bits, sign, resolution or offset changed; a PGN's type or match changed</td><td>minor (0.x.0)</td></tr>
+<tr><td>A description or unit text</td><td>patch (0.0.x)</td></tr>
+</tbody>
+</table>
+<p>So read the release notes of a minor release before you take it. <a href="https://github.com/canboat/canboat/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> says how a change is checked.</p>
+</body>
+</html>

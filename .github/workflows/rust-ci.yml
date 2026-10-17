@@ -1,11 +1,11 @@
 # CI for the Cargo workspace at the repo root (crates/* and keel/).
 #
-# Ported from canboat-rs's own ci.yml when the crates moved in
-# (MERGE-CANBOAT-RS.md step 1). One deliberate difference from that original:
-# the jobs are path-filtered. A C-only PR should not pay for a three-OS Rust
-# build, so these run only when the Rust tree or this workflow changes. That
-# means they are NOT suitable as *required* status checks — on a PR that
-# touches no Rust they will not run at all.
+# Ported from canboat-rs's own ci.yml when the crates moved in. One
+# deliberate difference from that original: the jobs are path-filtered. A
+# C-only PR should not pay for a three-OS Rust build, so these run only when
+# the Rust tree or this workflow changes. That means they are NOT suitable as
+# *required* status checks — on a PR that touches no Rust they will not run at
+# all.
 #
 # database/** is in the filter on purpose: the crates' build scripts read the
 # schema, so a database change can break the Rust build.

@@ -58,7 +58,7 @@ setup(
         'Private :: Do Not Upload',
     ],
     project_urls={
-        'Documentation': 'https://github.com/canboat/canboat/wiki',
+        'Documentation': 'https://canboat.github.io/canboat',
         'Issue Tracker': 'https://github.com/canboat/canboat/issues',
     },
     keywords=[
