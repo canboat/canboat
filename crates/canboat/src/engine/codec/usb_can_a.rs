@@ -60,6 +60,18 @@ pub fn bitrates() -> impl Iterator<Item = u32> {
     BITRATES.iter().map(|&(rate, _)| rate)
 }
 
+/// The least time from one frame written to the next on a bus at
+/// `bitrate`: the adapter loses frames written faster than it sends them.
+/// A frame's time on the bus and a margin: 175 bit times, and never less
+/// than 0.7 ms. Written back to back at 250 kbit/s, 100 messages of 29
+/// frames each came through 100 times at 0.7 ms, 97 times at 0.5 ms and 12
+/// times with no gap at all.
+pub(crate) fn write_gap(bitrate: u32) -> std::time::Duration {
+    use std::time::Duration;
+    let bits = Duration::from_micros(175_000_000 / u64::from(bitrate.max(1)));
+    bits.max(Duration::from_micros(700))
+}
+
 /// The low byte of the sum of bytes 2 to 18.
 fn checksum(packet: &[u8]) -> u8 {
     packet[2..19]

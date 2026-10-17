@@ -224,7 +224,7 @@ jobs:
       # Same list as `make rust-features`.
       - name: Clippy per library feature set
         run: |
-          for set in decode io node bridge json-input nmea0183,ais \
+          for set in decode raw raw-usb io node bridge json-input nmea0183,ais \
                      decode,io,node,bridge,nmea0183,ais,json-input; do
             echo "::group::--features $set"
             cargo clippy -p canboat --no-default-features --features "$set" --locked -- -D warnings
@@ -269,6 +269,7 @@ jobs:
         run: |
           for set in \
             "decode" \
+            "raw,raw-usb" \
             "decode,io,nmea0183,ais" \
             "decode,io,node,bridge,nmea0183,ais"; do
             echo "::group::cargo doc --features $set"

@@ -17,13 +17,46 @@ use crate::engine::{BusProtocol, FramePacketType, RawFrame, fastpacket, format_i
 
 use super::{Event, Refused, SYNTHETIC_PGN_START};
 
-/// One CAN data frame.
+/// One CAN data frame, as it is on the bus: the whole identifier and up to
+/// 8 data bytes, with nothing taken from it or added.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct CanFrame {
+pub struct CanFrame {
     /// 29 bits when `extended`, else 11.
     pub id: u32,
+    /// A 29-bit extended frame, rather than an 11-bit standard one.
     pub extended: bool,
+    /// At most 8 bytes.
     pub data: SmallVec<[u8; 8]>,
+}
+
+impl CanFrame {
+    /// A 29-bit extended frame, or `None` when `id` does not fit 29 bits or
+    /// `data` is more than 8 bytes.
+    pub fn extended(id: u32, data: &[u8]) -> Option<Self> {
+        (id <= 0x1fff_ffff && data.len() <= 8).then(|| Self {
+            id,
+            extended: true,
+            data: SmallVec::from_slice(data),
+        })
+    }
+
+    /// An 11-bit standard frame, or `None` when `id` does not fit 11 bits or
+    /// `data` is more than 8 bytes.
+    pub fn standard(id: u32, data: &[u8]) -> Option<Self> {
+        (id <= 0x7ff && data.len() <= 8).then(|| Self {
+            id,
+            extended: false,
+            data: SmallVec::from_slice(data),
+        })
+    }
+
+    /// Whether the identifier fits its kind and the data a CAN frame: what
+    /// [`extended`](Self::extended) and [`standard`](Self::standard) check,
+    /// for a frame built from its fields.
+    pub fn is_valid(&self) -> bool {
+        let max = if self.extended { 0x1fff_ffff } else { 0x7ff };
+        self.id <= max && self.data.len() <= 8
+    }
 }
 
 /// Hand the application what `id`, `extended` and `data` carry, received

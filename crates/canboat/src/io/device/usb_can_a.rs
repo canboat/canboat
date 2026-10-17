@@ -33,13 +33,8 @@ impl Link for UsbCanA {
     const READ_LEN: usize = 64 * FRAME_LEN;
     type Decoder = Frames;
 
-    /// A frame's time on the bus and a margin: 175 bit times, and never
-    /// less than 0.7 ms. Written back to back at 250 kbit/s, 100 messages
-    /// of 29 frames each came through 100 times at 0.7 ms, 97 times at
-    /// 0.5 ms and 12 times with no gap at all.
     fn write_gap(bitrate: u32) -> Duration {
-        let bits = Duration::from_micros(175_000_000 / u64::from(bitrate.max(1)));
-        bits.max(Duration::from_micros(700))
+        crate::engine::codec::usb_can_a::write_gap(bitrate)
     }
 
     fn decode(decoder: &mut Frames, bytes: &[u8], frames: &mut Vec<CanFrame>) {
