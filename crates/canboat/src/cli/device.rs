@@ -14,6 +14,8 @@ use crate::engine::format::ngt1::OperatingMode;
 use crate::io::device::kind::{ActisenseFormat, Kind, Setting};
 use crate::io::device::open::Device;
 
+use super::help;
+
 /// What `--kind` takes: a kind's name, the first of its kinds standing
 /// for them all (an Actisense gateway is `actisense`, whatever its
 /// `--data-format`), or one of canboat 8.3.0's names.
@@ -148,143 +150,110 @@ impl From<Ngt1Mode> for OperatingMode {
     }
 }
 
-/// Help headings, in the order they appear.
+/// Help headings, in the order they appear. Those that name gateways are
+/// [`crate::cli::help`]'s, written from what each kind takes.
 pub const GATEWAY: &str = "Gateway";
-pub const CAN: &str = "CAN controller (socketcan, canalyst, usb-can-a)";
 pub const SPECIFIC: &str = "Gateway-specific";
 pub const LISTS: &str = "PGN lists";
-pub const NODE: &str = "canboat's node (socketcan, canalyst, usb-can-a, aos)";
 pub const BUS: &str = "Bus";
-
-/// The end of `--help` for both commands: the gateways and their data
-/// formats, what canboat does with each, which options only some take,
-/// and what each does with the PGN lists. Kept under 80 columns.
-pub const GATEWAY_HELP: &str = "\
-Gateways (--kind) and their data formats (--data-format):
-
-  KIND       --data-format   DEVICE                       R/W  J1939  11-bit
-  actisense  ngt-actisense*  /dev/ttyUSB0, usb, tcp:6001  rw   -      -
-             n2k-ascii       tcp:60002, udp               rw   -      -
-             n2k-actisense   tcp:60002                    rw   -      -
-             raw-ascii       tcp:60002, udp               rw   yes    -
-             raw-actisense   tcp:60002, /dev/tty… (NGX)   rw   yes    -
-             mxpgn           tcp:20000, udp               rw   yes    -
-  yachtd     raw-ascii*      tcp:1457, udp, /dev/tty…     rw   yes    -
-  miniplex                   tcp:10110, udp, /dev/tty…    rw   yes    -
-  seasmart                   tcp:10001, udp, /dev/tty…    rw   -      -
-  ikonvert                   /dev/ttyUSB0, tcp:2000, udp  rw   -      -
-  maretron                   host[:6543]                  rw   -      -
-  aos                        /dev/ttyUSB0, usb, tcp:6001  rw   -      -
-  socketcan                  can0                         rw   yes    yes
-  canalyst                   usb[:VVVV:PPPP]              rw   yes    yes
-  usb-can-a                  /dev/ttyUSB0                 rw   yes    yes
-
-  * the default. rw: canboat reads from and writes to the bus; a
-  udp://[bind:]port only reads. J1939 (--protocol j1939): where it says
-  yes; ISO TP messages are received there, but sent only on socketcan,
-  canalyst and usb-can-a, where canboat is the node.
-  11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 only.
-  A W2K-1 sends ngt-actisense but does not take it; canboat does not
-  know that yet. seasmart ($PCDIN) has no priority or destination, and
-  not every gateway takes it to send: Yacht Devices only a few PGNs.
-  actisense mxpgn: $MXPGN with the data in bus order, unlike a
-  MiniPlex's (--kind miniplex). A W2K-2 sends it only on its hidden
-  CANDIRECT data server (port 20000) set to NMEA 0183; its own data
-  servers' NMEA 0183 has no $MXPGN. A W2K-1 is not known to send it.
-  ikonvert: tcp:// is the better mode for a NavLink2. Over
-  udp://[bind:][port] (its UDP output, port 2000) canboat only
-  receives: it expects the gateway to be on the bus already, put there
-  by another client, and never takes it off. Its PGN lists and rate
-  limit stay as they are.
-
-  aos is the Across Ocean Systems simulator, which speaks the NGT-1's
-  format but is no node: canboat claims an address for it. actisense
-  (ngt-actisense) and aos each give up on a gateway that turns out to be
-  the other. The names of canboat 8.3.0 still work: --kind ngt1,
-  w2k-ascii, ydwg.
-
-Options only some gateways take:
-
-  --baud              a gateway on a serial port
-  --mode              actisense (ngt-actisense)
-  --password          maretron
-  --no-tx-rate-limit  ikonvert
-  --ignore-checksum   seasmart, miniplex
-  --bitrate           socketcan, canalyst, usb-can-a
-  --channel           canalyst
-  node options        socketcan, canalyst, usb-can-a, aos
-
-What each gateway does with the PGN lists:
-
-                   --rx-pgn             --tx-pgn
-  ikonvert         stored, advertised   stored, advertised; only these
-                                        are sent
-  actisense        ignored              Transmit PGN Enable list; only
-  (ngt-actisense)                       these are sent
-  aos, socketcan,  advertised           advertised
-  canalyst,
-  usb-can-a
-  others           ignored              ignored
-
-  --rx-pgn never filters; --rx-filter does, in the gateway on ikonvert
-  and in canboat elsewhere. Network management PGNs always pass, and are
-  always sent.";
 
 /// How to run the gateway. Options that have a default show it in their
 /// help but are `None` when not given, so one given for a gateway that
 /// does not have it can be refused.
 #[derive(Debug, Clone, clap::Args)]
 pub struct DeviceArgs {
-    /// actisense: the data format it is set to [default: ngt-actisense].
-    ///
-    /// By Actisense's names; see the table at the end. A Yacht Devices
-    /// gateway speaks raw-ascii.
-    #[arg(long, value_enum, value_name = "FORMAT", help_heading = GATEWAY)]
+    /// The data format an Actisense gateway is set to, by Actisense's
+    /// names; see the table at the end. A Yacht Devices gateway speaks
+    /// raw-ascii.
+    #[arg(
+        long,
+        value_enum,
+        value_name = "FORMAT",
+        help = help::data_format_help(),
+        help_heading = GATEWAY
+    )]
     pub data_format: Option<DataFormat>,
 
-    /// Serial baud rate [default: 115200, ikonvert 230400, YDNU-02 38400].
+    /// The serial speed, for a gateway on a serial port.
     // `-s` is the C actisense-serial/ikonvert-serial spelling; the argv[0]
     // shims must stay drop-in compatible with it.
-    #[arg(short = 'b', long, short_alias = 's', value_name = "BAUD", help_heading = GATEWAY)]
+    #[arg(
+        short = 'b',
+        long,
+        short_alias = 's',
+        value_name = "BAUD",
+        help = help::baud_help(),
+        help_heading = GATEWAY
+    )]
     pub baud: Option<u32>,
 
-    /// The CAN bus bit rate [default: canalyst, usb-can-a 250000; socketcan as configured].
-    ///
-    /// On socketcan this brings the interface down, sets the rate and brings
-    /// it up again, which needs root or CAP_NET_ADMIN. 250000 for NMEA 2000,
-    /// 500000 for a J1939-14 bus. Not the serial speed to a gateway such as
-    /// the NGT-1: that is --baud.
-    #[arg(long, value_name = "BIT/S", help_heading = CAN)]
+    /// The CAN bus bit rate, where canboat is the CAN controller.
+    #[arg(
+        long,
+        value_name = "BIT/S",
+        help = help::bitrate_help(),
+        long_help = help::bitrate_long_help(),
+        help_heading = help::can_heading()
+    )]
     pub bitrate: Option<u32>,
 
-    /// canalyst: the CAN channel, 0 or 1 [default: 0].
-    #[arg(long, value_name = "N", help_heading = CAN)]
+    /// The CAN channel of a two-channel adapter.
+    #[arg(
+        long,
+        value_name = "N",
+        help = help::only_help(Setting::Channel, "the CAN channel, 0 or 1 [default: 0]."),
+        help_heading = help::can_heading()
+    )]
     pub channel: Option<u8>,
 
-    /// maretron: the IPG login password [default: empty].
-    #[arg(long, alias = "maretron-password", value_name = "PASSWORD", help_heading = SPECIFIC)]
+    /// The gateway's login password.
+    #[arg(
+        long,
+        alias = "maretron-password",
+        value_name = "PASSWORD",
+        help = help::only_help(Setting::Password, "the login password [default: empty]."),
+        help_heading = SPECIFIC
+    )]
     pub password: Option<String>,
 
-    /// ngt1: the operating mode [default: rx-all].
-    ///
-    /// `rx-all` ("NGT Transfer Rx All Mode") passes on every PGN received;
-    /// `normal` ("NGT Transfer Normal Mode") only those on the Receive PGN
-    /// Enable list the gateway holds.
-    #[arg(long, value_enum, help_heading = SPECIFIC)]
+    /// The NGT-1's operating mode.
+    #[arg(
+        long,
+        value_enum,
+        help = help::only_help(Setting::Mode, "the operating mode [default: rx-all]."),
+        long_help = format!(
+            "{}\n\n`rx-all` (\"NGT Transfer Rx All Mode\") passes on every PGN received; \
+             `normal` (\"NGT Transfer Normal Mode\") only those on the Receive PGN Enable \
+             list the gateway holds.",
+            help::only_help(Setting::Mode, "the operating mode [default: rx-all].")
+        ),
+        help_heading = SPECIFIC
+    )]
     pub mode: Option<Ngt1Mode>,
 
-    /// ikonvert: turn off the gateway's transmit rate limit, at your own risk.
+    /// Turn off the gateway's transmit rate limit.
     #[arg(
         long,
         visible_alias = "rate-limit-off",
         alias = "ikonvert-rate-limit-off",
+        help = help::only_help(
+            Setting::NoTxRateLimit,
+            "turn off the gateway's transmit rate limit, at your own risk."
+        ),
         help_heading = SPECIFIC
     )]
     pub no_tx_rate_limit: bool,
 
-    /// seasmart, miniplex: accept $PCDIN or $MXPGN sentences whose checksum
-    /// is wrong, as some gateways may send them.
-    #[arg(long, help_heading = SPECIFIC)]
+    /// Accept sentences whose checksum is wrong.
+    #[arg(
+        long,
+        help = help::only_help(
+            Setting::IgnoreChecksum,
+            "accept $PCDIN or $MXPGN sentences whose checksum is wrong, as some gateways \
+             may send them."
+        ),
+        help_heading = SPECIFIC
+    )]
     pub ignore_checksum: bool,
 
     /// PGNs the application receives, to advertise; never a filter.
@@ -295,41 +264,32 @@ pub struct DeviceArgs {
     pub rx_pgn: Vec<u32>,
 
     /// Pass on only these PGNs (and network management); drop the rest.
-    ///
-    /// Repeatable, or comma-separated. An iKonvert filters itself (it runs
-    /// in `NORMAL` mode, and the list is advertised as with --rx-pgn); for
-    /// every other gateway canboat drops the rest as they arrive. The
-    /// network-management PGNs (address claims, requests, product
-    /// information, …) and canboat's own gateway status always pass.
     #[arg(
         long = "rx-filter",
         alias = "rx",
         alias = "ikonvert-rx",
         value_name = "PGN",
         value_delimiter = ',',
+        long_help = help::rx_filter_long_help(),
         help_heading = LISTS
     )]
     pub rx_filter: Vec<u32>,
 
-    /// PGNs the application transmits; on ikonvert and ngt1 the only ones sent.
-    ///
-    /// Repeatable, or comma-separated. See the table at the end.
-    ///
-    /// WARNING — WITH ikonvert OR ngt1, THIS IS THE WHOLE TRANSMIT
-    /// LIST: ONCE ANY --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT
-    /// SENT), apart from network management. List every PGN you will send.
+    /// PGNs the application transmits.
     #[arg(
         long = "tx-pgn",
         alias = "tx",
         alias = "ikonvert-tx",
         value_name = "PGN",
         value_delimiter = ',',
+        help = help::tx_pgn_help(),
+        long_help = help::tx_pgn_long_help(),
         help_heading = LISTS
     )]
     pub tx_pgn: Vec<u32>,
 
     /// The source address to claim; a free one if it is taken [default: 0].
-    #[arg(short = 'a', long, alias = "socketcan-address", value_name = "ADDR", help_heading = NODE)]
+    #[arg(short = 'a', long, alias = "socketcan-address", value_name = "ADDR", help_heading = help::node_heading())]
     pub address: Option<u8>,
 
     /// Claim no address: listen only, or on aos send from the simulator's own.
@@ -337,18 +297,18 @@ pub struct DeviceArgs {
     /// On socketcan and canalyst a passive sniff. On aos canboat runs no
     /// node, and the simulator sends from its fixed address without
     /// claiming it.
-    #[arg(short = 'n', long, help_heading = NODE)]
+    #[arg(short = 'n', long, help_heading = help::node_heading())]
     pub no_claim: bool,
 
     /// ISO NAME unique number [default: derived from the machine id].
     ///
     /// The default is stable across restarts; on a machine that can't be
     /// identified it is a random one, stored with the state files.
-    #[arg(short = 'u', long, value_name = "N", help_heading = NODE)]
+    #[arg(short = 'u', long, value_name = "N", help_heading = help::node_heading())]
     pub unique: Option<u32>,
 
     /// ISO NAME manufacturer code [default: 999, Signal K].
-    #[arg(short = 'm', long, value_name = "N", help_heading = NODE)]
+    #[arg(short = 'm', long, value_name = "N", help_heading = help::node_heading())]
     pub manufacturer: Option<u16>,
 
     /// ISO NAME System Instance, 0..15 [default: 15].
@@ -359,7 +319,7 @@ pub struct DeviceArgs {
         long,
         value_name = "N",
         value_parser = clap::value_parser!(u8).range(0..=15),
-        help_heading = NODE
+        help_heading = help::node_heading()
     )]
     pub system_instance: Option<u8>,
 
@@ -369,12 +329,12 @@ pub struct DeviceArgs {
         alias = "hb",
         value_name = "MS",
         value_parser = clap::value_parser!(u64).range(0..=65_532),
-        help_heading = NODE
+        help_heading = help::node_heading()
     )]
     pub heartbeat: Option<u64>,
 
     /// Do not add PGNs to the advertised Transmit list as they are first sent.
-    #[arg(long, help_heading = NODE)]
+    #[arg(long, help_heading = help::node_heading())]
     pub no_learn_tx_pgns: bool,
 
     #[command(flatten, next_help_heading = BUS)]

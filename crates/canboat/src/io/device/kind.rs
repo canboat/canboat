@@ -215,6 +215,21 @@ pub enum ListUse {
 }
 
 impl ListUse {
+    /// What it is, in words.
+    pub fn describe(self) -> &'static str {
+        match self {
+            ListUse::Ignored => "ignored",
+            ListUse::Advertised => "advertised by canboat's node",
+            ListUse::Stored => "stored in the gateway, which advertises it",
+            ListUse::StoredExclusive => {
+                "stored in the gateway, which advertises it and sends only these"
+            }
+            ListUse::TransmitEnable => {
+                "the gateway's Transmit PGN Enable list: it sends only these"
+            }
+        }
+    }
+
     /// Whether, once the list names a PGN, every PGN not on it is
     /// refused (network management apart).
     pub fn exclusive(self) -> bool {

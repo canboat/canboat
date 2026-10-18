@@ -89,7 +89,7 @@ use crate::io::device::{self, DeviceHandle, FrameSender};
 #[command(after_help = crate::cli::help_footer())]
 #[command(after_long_help = format!(
     "{}\n\n{}",
-    crate::cli::device::GATEWAY_HELP,
+    crate::cli::help::gateway_help(),
     crate::cli::help_footer()
 ))]
 #[command(group(clap::ArgGroup::new("source").multiple(false)))]

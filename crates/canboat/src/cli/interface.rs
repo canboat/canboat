@@ -53,7 +53,7 @@ fn producer(kind: Kind) -> &'static str {
 }
 
 #[derive(Debug, clap::Args)]
-#[command(after_long_help = gateway_args::GATEWAY_HELP)]
+#[command(after_long_help = super::help::gateway_help())]
 pub struct Args {
     /// The kind of gateway.
     #[arg(long = "kind", value_enum, value_name = "KIND", help_heading = gateway_args::GATEWAY)]
