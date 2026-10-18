@@ -45,6 +45,7 @@ pub mod gateway;
 pub mod ikonvert;
 #[cfg(feature = "io")]
 mod iso11783_node;
+pub mod kind;
 #[cfg(feature = "io")]
 pub mod line_gateway;
 #[cfg(feature = "io")]

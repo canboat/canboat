@@ -366,6 +366,10 @@ pub mod bus {
 
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
+    pub use crate::io::device::kind::{
+        ActisenseFormat, Bitrates, Capabilities, Kind, ListUse, PgnListUse, Setting, Transport,
+        UnknownKind,
+    };
     pub use crate::io::device::{
         Closed, DeviceCloser, DeviceFailure, DeviceHandle, DeviceWriterGone, FrameSender,
     };

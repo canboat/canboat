@@ -55,6 +55,17 @@ const BITRATES: [(u32, u8); 12] = [
     (5_000, 0x0c),
 ];
 
+/// [`BITRATES`]' rates alone, for the gateway's capabilities.
+pub(crate) const RATES: [u32; BITRATES.len()] = {
+    let mut rates = [0; BITRATES.len()];
+    let mut i = 0;
+    while i < rates.len() {
+        rates[i] = BITRATES[i].0;
+        i += 1;
+    }
+    rates
+};
+
 /// The CAN bit rates the adapter runs at.
 pub fn bitrates() -> impl Iterator<Item = u32> {
     BITRATES.iter().map(|&(rate, _)| rate)
