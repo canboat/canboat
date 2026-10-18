@@ -385,11 +385,7 @@ impl DeviceEncoder for Encoder {
     }
 }
 
-/// What a ShipModul MiniPlex is sent when the link opens: options 30 and
-/// 31 set to mode 2, every PGN received sent on as `$MXPGN` (ShipModul,
-/// "MiniPlex-3 NMEA and Proprietary Sentences", `$PSMDNO`). Address
-/// Claims and Product Information still come as `$PSMDNC` and `$PSMDNP`.
-pub const MINIPLEX_MXPGN_ALL: &[u8] = b"$PSMDNO,C,30,0*57\r\n$PSMDNO,C,31,1*57\r\n";
+pub use crate::engine::format::mxpgn::MINIPLEX_MXPGN_ALL;
 
 /// [`MINIPLEX_MXPGN_ALL`], then a request for every device's Address Claim
 /// and Product Information (`$PSMDNR`), so that the devices on the bus are
@@ -416,10 +412,7 @@ fn miniplex_request(frame: &RawFrame) -> Option<u32> {
     (frame.pgn == 59904 && MINIPLEX_REQUESTED.contains(&pgn)).then_some(pgn)
 }
 
-/// What a Yacht Devices USB gateway (YDNU-02) is sent when its serial
-/// port opens, to put it in RAW mode, as canboatjs does: `0` and a line
-/// feed.
-pub const YDNU_RAW_MODE: &[u8] = b"0\n";
+pub use crate::engine::format::ydwg02::YDNU_RAW_MODE;
 
 /// Start the gateway reader/writer threads over any byte transport,
 /// writing `init` as soon as the link opens. `ignore_checksum` accepts
