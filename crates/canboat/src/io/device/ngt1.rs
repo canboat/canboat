@@ -10,8 +10,7 @@
 //! answers the network-management requests, and everything goes out from
 //! that address, in 0x93 messages; it gives up on a gateway that turns out
 //! to be an NGT-1. [`run_ngt1`] runs an NGT-1, which is a node itself, and
-//! gives up on a gateway that turns out to be the simulator. [`run`] and
-//! [`run_with_config`] take either, and run no node.
+//! gives up on a gateway that turns out to be the simulator.
 
 use std::io::{Read, Write};
 use std::sync::atomic::{AtomicU8, Ordering};
@@ -30,20 +29,6 @@ use super::{DeviceHandle, WriterCmd};
 /// The synthetic `NMEA 2000 gateway: network status`, which the node
 /// emits in place of the codec once it runs.
 const PGN_NETWORK_STATUS: u32 = 262400;
-
-/// Start the NGT-1 reader/writer threads. See [`super::run`].
-pub fn run(reader: Box<dyn Read + Send>, writer: Box<dyn Write + Send>) -> DeviceHandle {
-    run_with_config(reader, writer, Config::default())
-}
-
-/// [`run`], with [`Config`].
-pub fn run_with_config(
-    reader: Box<dyn Read + Send>,
-    writer: Box<dyn Write + Send>,
-    config: Config,
-) -> DeviceHandle {
-    super::run_codec(Ngt1::new(config), None, reader, writer)
-}
 
 /// Run an AOS simulator, with a node set up by `node` (its `no_claim`
 /// leaves the simulator as it is). `claim_addr` follows the address the
@@ -66,8 +51,8 @@ pub fn run_aos(
     super::run_codec(codec, None, reader, writer)
 }
 
-/// [`run_with_config`] for an Actisense NGT-1 only: a gateway that says it
-/// is an AOS simulator is given up on ([`DeviceHandle::failure`]).
+/// Run an Actisense NGT-1 with `config`: a gateway that says it is an AOS
+/// simulator is given up on ([`DeviceHandle::failure`]).
 pub fn run_ngt1(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,

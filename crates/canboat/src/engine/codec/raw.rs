@@ -65,13 +65,6 @@ pub struct Capabilities {
     pub standard_frames: bool,
 }
 
-/// What SocketCAN carries: both kinds of frame, both ways. It needs no
-/// codec, but is a raw link all the same.
-pub(crate) const SOCKETCAN: Capabilities = Capabilities {
-    sends: true,
-    standard_frames: true,
-};
-
 /// A gateway's raw CAN framing, driven by its caller. See the [module
 /// docs](self).
 pub trait RawCodec {

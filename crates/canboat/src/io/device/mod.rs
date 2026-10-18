@@ -16,11 +16,12 @@
 //! run through [`run_codec`], which shares the one codec between both
 //! threads and supplies the clock.
 //!
-//! A typical use, through the public `bus::open_*` wrappers (which open
-//! the serial port and call the runner, e.g. `ngt1::run(reader, writer)`):
+//! A typical use, through the public [`Device`](open::Device), which
+//! opens the port and calls the runner:
 //!
 //! ```no_run
-//! let handle = canboat::bus::open_ngt1("/dev/ttyUSB0", 115_200)?;
+//! use canboat::bus::{BusProtocol, Device, Kind};
+//! let handle = Device::new(Kind::NGT1, "/dev/ttyUSB0").open(BusProtocol::Nmea2000)?;
 //! while let Ok(frame) = handle.frames_rx.recv() {
 //!     println!("got pgn {}", frame.pgn);
 //! }

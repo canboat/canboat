@@ -426,6 +426,13 @@ pub fn canboat::codec::raw::Ydwg::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::raw::Ydwg::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
 pub fn canboat::codec::raw::Ydwg::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::raw::Ydwg::write_gap(&self) -> core::time::Duration
+impl<C: canboat::codec::raw::RawCodec + ?core::marker::Sized> canboat::codec::raw::RawCodec for alloc::boxed::Box<C>
+pub fn alloc::boxed::Box<C>::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn alloc::boxed::Box<C>::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn alloc::boxed::Box<C>::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn alloc::boxed::Box<C>::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn alloc::boxed::Box<C>::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn alloc::boxed::Box<C>::write_gap(&self) -> core::time::Duration
 pub mod canboat::codec::usb_can_a
 pub struct canboat::codec::usb_can_a::UsbCanA
 impl canboat::codec::usb_can_a::UsbCanA

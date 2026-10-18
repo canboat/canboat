@@ -115,9 +115,10 @@
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
 //!
-//! For a live bus, add the `io` feature: `bus::open_ngt1` / `bus::open_ikonvert`
-//! / `bus::open_socketcan` (Linux) open a gateway and hand back a bidirectional
-//! `bus::DeviceHandle` (a [`read::FrameSource`] plus a `bus::FrameSender`). To
+//! For a live bus, add the `io` feature: `bus::Device::new(kind, address)`
+//! opens any gateway canboat drives (`bus::Kind::ALL`) and hands back a
+//! bidirectional `bus::DeviceHandle` (a [`read::FrameSource`] plus a
+//! `bus::FrameSender`). To
 //! own the bus with the address-claim, quirks, and the 2597–2606 TCP serving
 //! layer already assembled, add the `bridge` feature and drive a
 //! `bridge::Bridge` instead.
@@ -128,7 +129,9 @@
 //!   and `codec`: the NGT-1 / iKonvert / Maretron wire protocols without a port.
 //!   No threads, no async, no sockets.
 //! * `io` — byte-source readers (`read::*Reader`) for files / text, plus
-//!   `bus::open_*` to read+write a live NGT-1 / iKonvert / SocketCAN link.
+//!   `bus::Device` to read+write a live bus through any gateway.
+//! * `raw` — `bus::Device::open_raw` alone: single CAN frames to and from
+//!   the gateways that pass them, with no NMEA 2000 in between.
 //! * `node` — `device`: be a compliant N2K node (address claim + responder).
 //! * `bridge` — `bridge`: the live CAN bus, fully assembled.
 //! * `nmea0183`, `ais` — output-formatter sub-features.
@@ -316,15 +319,21 @@ pub mod read {
 
 // ──────────────────────────────── bus ────────────────────────────────────
 
-/// Talk to a live NMEA 2000 link directly — an Actisense **NGT-1**, a Digital
-/// Yacht **iKonvert**, or a Linux **SocketCAN** interface — reading a stream of
-/// frames while writing frames back, without the full `bridge` pipeline or its
-/// TCP serving layer. This is the middle rung between bring-your-own
-/// [`read::FrameSource`] and the fully-assembled `bridge::Bridge`.
+/// Talk to a live bus through a gateway: an Actisense NGT-1 or W2K-1, a
+/// Yacht Devices gateway, an iKonvert, a MiniPlex, a SocketCAN interface,
+/// and the rest of [`Kind::ALL`](bus::Kind::ALL). Reading a stream of
+/// frames while writing frames back, without the full `bridge` pipeline or
+/// its TCP serving layer. This is the middle rung between
+/// bring-your-own [`read::FrameSource`] and the fully-assembled
+/// `bridge::Bridge`.
 ///
-/// Each opener spawns the device's reader/writer threads and returns a
-/// [`DeviceHandle`](bus::DeviceHandle) that is bidirectional and composes with
-/// the rest of the crate:
+/// Every gateway is opened the one way: name its [`Kind`](bus::Kind) and
+/// where it is with [`Device::new`](bus::Device::new), set what it needs,
+/// and [`open`](bus::Device::open) it. [`Kind`](bus::Kind) and
+/// [`capabilities`](bus::Device::capabilities) say what a gateway can do,
+/// and a setting it does not have is refused rather than ignored. The
+/// handle that comes back, a [`DeviceHandle`](bus::DeviceHandle), is
+/// bidirectional and composes with the rest of the crate:
 ///
 /// * **read** — `handle.frames_rx` is an `mpsc::Receiver<Frame>`, hence a
 ///   [`read::FrameSource`]; feed it to a [`read::Decoder`] for decoded records
@@ -335,12 +344,13 @@ pub mod read {
 ///   [`send_frame`](bus::DeviceHandle::send_frame) them onto the bus.
 ///
 /// ```no_run
+/// use canboat::bus::{BusProtocol, Device, Kind};
 /// use canboat::{Database, Units};
 /// use canboat::ids::field::iso_request;
 ///
 /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// let db = Database::embedded(Units::Metric);
-/// let link = canboat::bus::open_ngt1("/dev/ttyUSB0", 115_200)?;
+/// let link = Device::new(Kind::NGT1, "/dev/ttyUSB0").open(BusProtocol::Nmea2000)?;
 ///
 /// // Write: ask every device for its Product Information (PGN 126996).
 /// let tx = link.frame_sender();
@@ -359,13 +369,16 @@ pub mod read {
 /// # Ok(())
 /// # }
 /// ```
+///
+/// [`open`](bus::Device::open) needs the `io` feature;
+/// [`open_raw`](bus::Device::open_raw), single CAN frames with nothing of
+/// NMEA 2000 in between, only `raw` (and `raw-usb` for the CANalyst-II).
 #[cfg(feature = "raw")]
 pub mod bus {
-    #[cfg(feature = "io")]
-    use std::io;
-
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
+    /// The NGT-1's operating modes, for [`Device::mode`].
+    pub use crate::engine::format::ngt1::OperatingMode;
     pub use crate::io::device::kind::{
         ActisenseFormat, Bitrates, Capabilities, Kind, ListUse, PgnListUse, Setting, Transport,
         UnknownKind,
@@ -381,20 +394,26 @@ pub mod bus {
     /// NMEA 2000 or J1939, such as Mastervolt MasterBus. Needs only the
     /// `raw` feature (`raw-usb` for the CANalyst-II).
     ///
-    /// Each opener runs the gateway's [`RawCodec`](crate::codec::raw::RawCodec)
-    /// on a reader and a writer thread and returns a [`RawDeviceHandle`](raw::RawDeviceHandle):
-    /// frames received come out of its `frames_rx`, frames to send go in
-    /// through [`send_frame`](DeviceHandle::send_frame) or a cloned
-    /// [`frame_sender`](DeviceHandle::frame_sender), and either half may
-    /// live on its own thread. [`capabilities`](raw::capabilities) says what a gateway can
-    /// carry; a frame it cannot is logged and dropped.
+    /// [`Device::open_raw`](super::Device::open_raw) runs the gateway's
+    /// [`RawCodec`](crate::codec::raw::RawCodec) on a reader and a writer
+    /// thread and returns a [`RawDeviceHandle`]: frames received come out
+    /// of its `frames_rx`, frames to send go in through
+    /// [`send_frame`](super::DeviceHandle::send_frame) or a cloned
+    /// [`frame_sender`](super::DeviceHandle::frame_sender), and either half
+    /// may live on its own thread.
+    /// [`capabilities`](super::Device::capabilities) says what a gateway can
+    /// carry ([`raw`](super::Capabilities::raw),
+    /// [`raw_sends`](super::Capabilities::raw_sends),
+    /// [`standard_frames`](super::Capabilities::standard_frames)); a frame
+    /// it cannot is logged and dropped.
     ///
     /// ```no_run
     /// use std::time::Duration;
-    /// use canboat::bus::raw;
+    /// use canboat::bus::{ActisenseFormat, Device, Kind};
     /// use canboat::codec::raw::CanFrame;
     ///
-    /// let link = raw::open_bst95("tcp://w2k-1:60002")?;
+    /// let link = Device::new(Kind::Actisense(ActisenseFormat::RawActisense), "tcp://w2k-1")
+    ///     .open_raw()?;
     /// let tx = link.frame_sender();
     /// tx.send_frame(CanFrame::extended(0x1F1F_02A7, &[1, 2, 3]).unwrap())?;
     /// while let Ok(frame) = link.frames_rx.recv_timeout(Duration::from_secs(1)) {
@@ -403,163 +422,17 @@ pub mod bus {
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     ///
-    /// No opener reconnects: when the gateway goes away, `frames_rx`
-    /// closes and [`lost`](DeviceHandle::lost) says why; open it again.
+    /// When the gateway goes away, `frames_rx` closes and
+    /// [`lost`](super::DeviceHandle::lost) says why; open it again, or
+    /// open it with [`reconnect`](super::Device::reconnect).
     pub mod raw {
-        use std::io;
-
-        use crate::engine::codec::raw::{self as codec, CanFrame, Capabilities, RawCodec};
-        use crate::io::device::raw::run;
+        use crate::engine::codec::raw::CanFrame;
 
         /// A raw link: [`DeviceHandle`](super::DeviceHandle) carrying
         /// single [`CanFrame`]s.
         pub type RawDeviceHandle = super::DeviceHandle<CanFrame>;
         /// A clone-able sender of [`CanFrame`]s to a raw link.
         pub type RawFrameSender = super::FrameSender<CanFrame>;
-
-        /// What the gateways that [`open`](self) opens can carry, by name:
-        /// `bst95`, `canalyst`, `usb-can-a`, `ydwg`, `mxpgn`, `socketcan`.
-        pub fn capabilities(gateway: &str) -> Option<Capabilities> {
-            Some(match gateway {
-                "bst95" => codec::Bst95::new().capabilities(),
-                "canalyst" => codec::Canalyst::new().capabilities(),
-                "usb-can-a" => codec::UsbCanA::new(250_000)?.capabilities(),
-                "ydwg" => codec::Ydwg::new().capabilities(),
-                "mxpgn" => codec::Mxpgn::miniplex().capabilities(),
-                "socketcan" => codec::SOCKETCAN,
-                _ => return None,
-            })
-        }
-
-        fn is_network(device: &str) -> bool {
-            device.starts_with("tcp://") || device.starts_with("udp://")
-        }
-
-        /// Open a Yacht Devices RAW gateway: a YDWG-02 or YDEN-02 at
-        /// `tcp://host[:port]` (port 1457 by default) or `udp://[host:]port`,
-        /// or the serial port of a YDNU-02 (38 400 baud), which is put in
-        /// RAW mode.
-        /// Receive only: these gateways transmit with their own source
-        /// address.
-        pub fn open_ydwg(device: &str) -> io::Result<RawDeviceHandle> {
-            if is_network(device) {
-                let (reader, writer) = crate::io::net::open_line_endpoint(device, 1457)?;
-                Ok(run(codec::Ydwg::new(), reader, writer))
-            } else {
-                let (reader, writer) = crate::io::open_serial_rw(device, 38_400)?;
-                Ok(run(codec::Ydwg::ydnu(), reader, writer))
-            }
-        }
-
-        /// Open an Actisense BST-95 raw CAN gateway: a PRO-NDC-1E2K or
-        /// W2K-1 in "CAN Actisense" mode at `tcp://host[:port]` (port 60002
-        /// by default), or an NGX in CAN Packet mode on a serial port
-        /// (115 200 baud). 29-bit frames only; the gateway's echoes of what
-        /// is sent are skipped.
-        pub fn open_bst95(device: &str) -> io::Result<RawDeviceHandle> {
-            let (reader, writer) = if is_network(device) {
-                crate::io::net::open_tcp(device, 60002)?
-            } else {
-                crate::io::open_serial_rw(device, 115_200)?
-            };
-            Ok(run(codec::Bst95::new(), reader, writer))
-        }
-
-        /// Open a Waveshare USB-CAN-A on serial port `path` and configure
-        /// it for a bus at `bitrate` (one of
-        /// [`UsbCanA::bitrates`](codec::UsbCanA::bitrates)). Writes are
-        /// spaced so the adapter loses none.
-        pub fn open_usb_can_a(path: &str, bitrate: u32) -> io::Result<RawDeviceHandle> {
-            let codec = codec::UsbCanA::new(bitrate).ok_or_else(|| {
-                let rates: Vec<String> =
-                    codec::UsbCanA::bitrates().map(|r| r.to_string()).collect();
-                io::Error::new(
-                    io::ErrorKind::InvalidInput,
-                    format!(
-                        "a USB-CAN-A runs at {}, not {bitrate} bit/s",
-                        rates.join(", ")
-                    ),
-                )
-            })?;
-            let (reader, writer) =
-                crate::io::open_serial_rw(path, crate::engine::codec::usb_can_a::BAUD)?;
-            Ok(run(codec, reader, writer))
-        }
-
-        /// Open CAN `channel` (0 or 1) of a CANalyst-II (Waveshare
-        /// USB-CAN-B) over USB at `bitrate`. `device` is `usb`, or
-        /// `usb:SERIAL` to pick one adapter of several.
-        #[cfg(feature = "raw-usb")]
-        pub fn open_canalyst(
-            device: &str,
-            channel: u8,
-            bitrate: u32,
-        ) -> io::Result<RawDeviceHandle> {
-            let selector = crate::io::usb::Selector::parse(device).unwrap_or_else(|| {
-                Err(io::Error::new(
-                    io::ErrorKind::InvalidInput,
-                    format!("{device}: a CANalyst-II is usb or usb:SERIAL"),
-                ))
-            })?;
-            let (reader, writer) = crate::io::canalyst::open_rw(&selector, channel, bitrate)?;
-            Ok(run(codec::Canalyst::new(), reader, writer))
-        }
-
-        /// Open a ShipModul MiniPlex sending `$MXPGN`, at
-        /// `tcp://host[:port]` (port 10110 by default), `udp://[host:]port`
-        /// or on a serial port at `baud` (a MiniPlex-3 USB runs at 460 800),
-        /// and set it to pass on every frame.
-        /// Receive only: the MiniPlex transmits with its own source address.
-        /// Frames that look like an NMEA 2000 Address Claim or Product
-        /// Information it passes on only as `$PSMD` sentences, which carry
-        /// no frame.
-        pub fn open_mxpgn(device: &str, baud: u32) -> io::Result<RawDeviceHandle> {
-            let (reader, writer) = if is_network(device) {
-                crate::io::net::open_line_endpoint(device, 10110)?
-            } else {
-                crate::io::open_serial_rw(device, baud)?
-            };
-            Ok(run(codec::Mxpgn::miniplex(), reader, writer))
-        }
-
-        /// Open SocketCAN interface `iface` (Linux only) as it is: bring the
-        /// link up with its bit rate first. Both kinds of frame, both ways;
-        /// the kernel does not hand this socket back what it sends.
-        pub fn open_socketcan(iface: &str) -> io::Result<RawDeviceHandle> {
-            crate::io::device::raw::open_socketcan(iface)
-        }
-    }
-
-    /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically
-    /// `115_200` baud), speaking the Actisense binary protocol.
-    #[cfg(feature = "io")]
-    pub fn open_ngt1(path: &str, baud: u32) -> io::Result<DeviceHandle> {
-        let (reader, writer) = crate::io::open_serial_rw(path, baud)?;
-        Ok(crate::io::device::ngt1::run(reader, writer))
-    }
-
-    /// Open a Digital Yacht iKonvert on a serial port (typically `230_400`
-    /// baud). Runs the iKonvert init handshake in all-PGN receive mode.
-    #[cfg(feature = "io")]
-    pub fn open_ikonvert(path: &str, baud: u32) -> io::Result<DeviceHandle> {
-        let (reader, writer) = crate::io::open_serial_rw(path, baud)?;
-        let config = crate::io::device::ikonvert::Config::default();
-        Ok(crate::io::device::ikonvert::run(reader, writer, config))
-    }
-
-    /// Open a Linux SocketCAN interface (e.g. `"can0"`), claiming ISO source
-    /// `address` (the ISO 11783-5 address-claim handshake runs in the
-    /// background). SocketCAN is Linux only — on other platforms this returns
-    /// an [`io::ErrorKind::Unsupported`] error.
-    #[cfg(feature = "io")]
-    pub fn open_socketcan(iface: &str, address: u8) -> io::Result<DeviceHandle> {
-        use std::sync::Arc;
-        use std::sync::atomic::AtomicU8;
-        let config = crate::io::device::socketcan::Config {
-            address,
-            ..Default::default()
-        };
-        crate::io::device::socketcan::run(iface, config, Arc::new(AtomicU8::new(address)))
     }
 }
 
@@ -575,7 +448,7 @@ pub mod bus {
 /// protocol needs: the partial message between reads, the init handshake,
 /// the transmit list. It never touches a port, a thread or the clock; the
 /// caller writes what it returns and passes the time in. The `io` feature's
-/// `bus::open_*` openers are these same codecs on a pair of threads.
+/// `bus::Device` runs these same codecs on a pair of threads.
 ///
 /// ```
 /// use canboat::codec::{Codec, Event};
