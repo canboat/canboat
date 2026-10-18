@@ -70,15 +70,16 @@ use std::thread;
 use anyhow::{Context, Result, bail};
 
 #[cfg(feature = "cli")]
-use crate::cli::device::{self as device_args, DeviceArgs, Kind, KindArg};
+use crate::cli::device::{self as device_args, DeviceArgs, KindArg};
 use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
-use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
-pub use crate::io::device::gateway::{ActisenseFormat, Gateway, GatewayKind};
-use crate::io::device::{self, FrameSender, Supervisor};
-use crate::io::open_serial_rw;
+use crate::engine::pgn_list::{PgnListStatus, PgnListSupport};
+pub use crate::io::device::kind::{ActisenseFormat, Kind};
+pub use crate::io::device::open::Device;
+use crate::io::device::supervisor::{Named, supervise};
+use crate::io::device::{self, DeviceHandle, FrameSender};
 
 /// Clap front-end for the `canboat server` CLI. Gated behind the `cli` feature
 /// so the library path ([`BridgeConfig`] + [`Bridge`]) stays clap-free; convert
@@ -317,55 +318,14 @@ const LOGGING: &str = "Logging";
 /// server` flags one-for-one.
 #[derive(Debug, Clone)]
 pub struct BridgeConfig {
-    /// An Actisense NGT-1 (`--kind ngt1`); a gateway that turns out to be
-    /// an AOS simulator is given up on (that is `aos`).
-    pub actisense: Option<String>,
-    /// An AOS NMEA 2000/0183 Simulator (`--kind aos`), opened as
-    /// `actisense` is, with canboat's node on it; a gateway that turns out
-    /// to be an NGT-1 is given up on.
-    pub aos: Option<String>,
-    pub ikonvert: Option<String>,
-    pub maretron: Option<String>,
-    pub socketcan: Option<String>,
-    /// A CANalyst-II USB adapter (`usb` or `usb:VVVV:PPPP`), run as a node
-    /// like `socketcan`, claiming `address` at
-    /// `socketcan_bitrate`.
-    pub canalyst: Option<String>,
-    /// The CANalyst-II CAN channel, 0 or 1.
-    pub canalyst_channel: u8,
-    /// A Waveshare USB-CAN-A on this serial port, run as a node like
-    /// `socketcan`, claiming `address` at `socketcan_bitrate`. `baud` is the
-    /// serial speed, if it is not the adapter's 2 000 000.
-    pub usb_can_a: Option<String>,
-    /// A Yacht Devices gateway, or an Actisense in a data format other than
-    /// NGT Actisense (`--kind yachtd`, or `actisense` with `--data-format`
-    /// n2k-ascii, n2k-actisense, raw-ascii or raw-actisense).
-    pub gateway: Option<Gateway>,
-    /// The address to claim with `socketcan`, `canalyst` or `usb-can-a`, or with
-    /// `actisense` when that is an AOS simulator.
-    pub address: u8,
-    /// The rest of that node's ISO NAME and behaviour: the unique number
-    /// (0: derived from the machine id), manufacturer code, System
-    /// Instance, Heartbeat interval in ms (0: none), and whether to skip
-    /// the address claim. Defaults 0, 999 (Signal K), 15, 60 000, `false`.
-    pub unique: u32,
-    pub manufacturer: u16,
-    pub system_instance: u8,
-    pub heartbeat_ms: u64,
-    pub no_claim: bool,
-    /// The operating mode `actisense` puts the NGT-1 in. Defaults to
-    /// [`OperatingMode::NgTransferRxAll`](crate::engine::format::ngt1::OperatingMode).
-    pub ngt1_mode: crate::engine::format::ngt1::OperatingMode,
-    /// When `true`, the SocketCAN driver brings the interface up itself (at
-    /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
-    /// external `ip link set … up` unit being ordered first.
-    pub socketcan_configure_link: bool,
-    /// Bit rate `socketcan_configure_link` sets, and the bit rate the
-    /// `canalyst` and `usb_can_a` adapters run at: 250 000 (the default, and always right
-    /// for NMEA 2000) or 500 000 for a J1939-14 bus.
-    pub socketcan_bitrate: u32,
-    /// What the bus carries (`--protocol`): picks the decode table and, with
-    /// `socketcan`, whether the gateway is an NMEA 2000 or a J1939 node.
+    /// The gateway, and how to run it: see [`Device`]. The bridge opens
+    /// it with [`reconnect`](Device::reconnect), so a gateway that goes
+    /// away is opened again. `None` for one of the other sources below, or
+    /// stdin.
+    pub device: Option<Device>,
+    /// What the bus carries (`--protocol`): picks the decode table and, on a
+    /// gateway where canboat is the node, whether that is an NMEA 2000 or a
+    /// J1939 node.
     /// Defaults to [`BusProtocol::Nmea2000`](crate::engine::BusProtocol).
     pub protocol: crate::engine::BusProtocol,
     pub canboat_csv: Option<String>,
@@ -376,36 +336,11 @@ pub struct BridgeConfig {
     /// Where frames written to a `replay` bus go (`--replay-sent`);
     /// `None` drops them.
     pub replay_sent: Option<PathBuf>,
-    pub baud: Option<u32>,
-    pub maretron_password: String,
-    pub ikonvert_rx: Option<String>,
-    pub ikonvert_tx: Option<String>,
-    pub ikonvert_rate_limit_off: bool,
-    /// A `seasmart` or `miniplex` gateway: accept `$PCDIN` or `$MXPGN`
-    /// sentences whose checksum is wrong (`--ignore-checksum`).
-    pub ignore_checksum: bool,
     /// Pass on only these PGNs (`--rx-filter`), and always the
-    /// network-management PGNs and canboat's own. An iKonvert also gets
-    /// them as its own filter (`ikonvert_rx`); for every other source
-    /// canboat drops the rest itself. Empty: nothing is filtered.
+    /// network-management PGNs and canboat's own: canboat drops the rest
+    /// itself, whatever the source. (An iKonvert can also filter in the
+    /// gateway: [`Device::rx_filter`].) Empty: nothing is filtered.
     pub rx_filter: Vec<u32>,
-    /// PGNs the application sends and receives, advertised in the
-    /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
-    /// transmits from the gateway's address (`wmm`: 127258) are added
-    /// without being named here. SocketCAN advertises both lists, the
-    /// iKonvert stores both, and the NGT-1 enables the transmit PGNs in its
-    /// Transmit PGN Enable list;
-    /// the other backends log a warning.
-    /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
-    /// the outcome.
-    ///
-    /// **⚠️ ON AN iKONVERT OR NGT-1, `pgn_lists.tx` IS THE WHOLE TRANSMIT LIST: ONCE
-    /// IT NAMES ANY PGN, EVERY OTHER PGN IS REFUSED — NOT SENT** (network
-    /// management and the quirks' own PGNs excepted). See [`PgnLists`].
-    pub pgn_lists: PgnLists,
-    /// Add each PGN the gateway transmits as itself to the advertised
-    /// Transmit list when it is first sent (SocketCAN only). On by default.
-    pub learn_tx_pgns: bool,
     pub no_request_claims: bool,
     pub quirk: Vec<quirks::QuirkKind>,
     pub bind: Ipv4Addr,
@@ -444,48 +379,26 @@ pub struct BridgeConfig {
 
 impl BridgeConfig {
     /// Whether the backend runs canboat's own node on a raw CAN link
-    /// (`socketcan`, `canalyst` or `usb_can_a`): it claims an address and
+    /// (`socketcan`, `canalyst` or `usb-can-a`): it claims an address and
     /// sends a frame from the source it names.
     pub(crate) fn is_node(&self) -> bool {
-        self.socketcan.is_some() || self.canalyst.is_some() || self.usb_can_a.is_some()
+        self.device.as_ref().is_some_and(|dev| {
+            let caps = dev.capabilities();
+            caps.node && caps.raw
+        })
     }
 }
 
 impl Default for BridgeConfig {
     fn default() -> Self {
         Self {
-            actisense: None,
-            aos: None,
-            ikonvert: None,
-            maretron: None,
-            socketcan: None,
-            canalyst: None,
-            canalyst_channel: 0,
-            usb_can_a: None,
-            gateway: None,
-            address: 0,
-            unique: 0,
-            manufacturer: 999,
-            system_instance: 15,
-            heartbeat_ms: 60_000,
-            no_claim: false,
-            ngt1_mode: crate::engine::format::ngt1::OperatingMode::NgTransferRxAll,
-            socketcan_configure_link: false,
-            socketcan_bitrate: 250_000,
+            device: None,
             protocol: crate::engine::BusProtocol::Nmea2000,
             canboat_csv: None,
             canboat_csv_write: None,
             replay: None,
             replay_sent: None,
-            baud: None,
-            maretron_password: String::new(),
-            ikonvert_rx: None,
-            ikonvert_tx: None,
-            ikonvert_rate_limit_off: false,
-            ignore_checksum: false,
             rx_filter: Vec::new(),
-            pgn_lists: PgnLists::default(),
-            learn_tx_pgns: true,
             no_request_claims: false,
             quirk: Vec::new(),
             bind: Ipv4Addr::new(0, 0, 0, 0),
@@ -532,10 +445,10 @@ impl Args {
             anyhow::bail!("--data-format {} goes with --kind", format.name());
         }
         Ok([
-            (Kind::Ngt1, &self.actisense),
+            (Kind::NGT1, &self.actisense),
             (Kind::Ikonvert, &self.ikonvert),
             (Kind::Maretron, &self.maretron),
-            (Kind::Socketcan, &self.socketcan),
+            (Kind::SocketCan, &self.socketcan),
         ]
         .into_iter()
         .find_map(|(kind, device)| Some((kind, device.clone()?))))
@@ -560,61 +473,15 @@ impl From<Args> for BridgeConfig {
         let source = a
             .source()
             .expect("Args::check rejects a --kind this cannot resolve");
-        let device = |want: Kind| {
-            source
-                .as_ref()
-                .filter(|(kind, _)| *kind == want)
-                .map(|(_, device)| device.clone())
-        };
         let g = &a.gateway;
-        let node = g.node_config();
-        let pgn_lists = g.pgn_lists();
-        // `--rx-filter`: Args::check allows it on the iKonvert only.
-        let is_ikonvert = matches!(source, Some((Kind::Ikonvert, _)));
         Self {
-            actisense: device(Kind::Ngt1),
-            aos: device(Kind::Aos),
-            ikonvert: device(Kind::Ikonvert),
-            maretron: device(Kind::Maretron),
-            socketcan: device(Kind::Socketcan),
-            canalyst: device(Kind::Canalyst),
-            canalyst_channel: g.channel.unwrap_or(0),
-            usb_can_a: device(Kind::UsbCanA),
-            gateway: source.as_ref().and_then(|(kind, device)| {
-                Some(Gateway {
-                    kind: kind.gateway()?,
-                    device: device.clone(),
-                })
-            }),
-            address: node.address,
-            unique: node.unique,
-            manufacturer: node.manufacturer,
-            system_instance: node.system_instance,
-            heartbeat_ms: node.heartbeat_ms,
-            no_claim: node.no_claim,
-            ngt1_mode: g.operating_mode(),
-            // The CLI uses a SocketCAN interface as it was configured,
-            // unless --bitrate asks canboat to configure it.
-            socketcan_configure_link: g.bitrate.is_some(),
-            socketcan_bitrate: g.bitrate.unwrap_or(250_000),
+            device: source.map(|(kind, address)| g.device(kind, &address)),
             protocol: g.protocol(),
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
             replay: a.replay,
             replay_sent: a.replay_sent,
-            baud: g.baud,
-            maretron_password: g.password.clone().unwrap_or_default(),
-            ikonvert_rx: if is_ikonvert {
-                g.ikonvert_rx_list()
-            } else {
-                None
-            },
-            ikonvert_tx: None,
-            ikonvert_rate_limit_off: g.no_tx_rate_limit,
-            ignore_checksum: g.ignore_checksum,
             rx_filter: g.rx_filter.clone(),
-            pgn_lists,
-            learn_tx_pgns: node.learn_tx_pgns,
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,
@@ -659,7 +526,7 @@ impl From<Args> for BridgeConfig {
 /// clippy's `type_complexity` lint will tolerate.
 struct OpenedSource {
     frames_rx: mpsc::Receiver<RawFrame>,
-    supervisor: Option<Supervisor>,
+    supervisor: Option<DeviceHandle>,
     pre_coalesced: Arc<AtomicBool>,
     /// Live claim address of the device backend, when known
     /// (`--socketcan` and `--canalyst` expose one). Read by the CSV-port
@@ -675,224 +542,49 @@ struct OpenedSource {
 // lives in the `canboat` bin's `server` handler. The library takes an
 // explicit `BridgeConfig.config_dir` (or `None` to disable persistence).
 
-/// The node `config` names (`socketcan`, `canalyst`, or an AOS simulator
-/// on `actisense`): its address and ISO NAME.
-fn node_identity(config: &BridgeConfig) -> device::socketcan::Config {
-    device::socketcan::Config {
-        address: config.address,
-        unique: config.unique,
-        manufacturer: config.manufacturer,
-        system_instance: config.system_instance,
-        heartbeat_ms: config.heartbeat_ms,
-        no_claim: config.no_claim,
-        ..device::socketcan::Config::default()
-    }
-}
-
 fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
-    let frames_gateway = config
-        .gateway
-        .as_ref()
-        .is_some_and(|g| !g.kind.passes_raw_frames());
-    if config.protocol != crate::engine::BusProtocol::Nmea2000
-        && (config.actisense.is_some()
-            || config.aos.is_some()
-            || config.ikonvert.is_some()
-            || config.maretron.is_some()
-            || frames_gateway)
-    {
-        anyhow::bail!(
-            "--protocol {}: the NGT-1, AOS simulator, iKonvert, Maretron, W2K-1 ASCII and BST-D0 do NMEA 2000 \
-             framing themselves; use --kind socketcan, canalyst, usb-can-a, yachtd, miniplex, or actisense in raw-ascii or raw-actisense, --canboat-csv or stdin",
-            config.protocol
-        );
-    }
-    // An NGT-1, or an AOS simulator, which speaks its framing.
-    let actisense = (config.actisense.as_deref().map(|path| (path, false)))
-        .or_else(|| config.aos.as_deref().map(|path| (path, true)));
-    if let Some((path, aos)) = actisense {
-        let baud = config.baud.unwrap_or(115_200);
-        let path = path.to_string();
-        // What the embedder named — which, once it names a transmit PGN,
-        // is all the driver will send — and the quirks' own PGNs apart.
-        let pgn_lists = config.pgn_lists.clone();
-        let extra_tx_pgns = quirk_tx_pgns(config);
-        let effective = effective_pgn_lists(config);
-        if !aos && !config.pgn_lists.rx.is_empty() {
-            log::warn!(
-                "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
-                config.pgn_lists.rx
-            );
-        }
-        // The simulator's lists are the node's.
-        let pgn_list_status = (!effective.is_empty()).then(|| {
-            if aos {
-                device::socketcan::pgn_list_status(&effective)
-            } else {
-                device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns)
-            }
-        });
-        // Shared by every session: a PGN written once this run is not
-        // written again after a reconnect.
-        let tx_list_record = Arc::default();
-        let operating_mode = config.ngt1_mode;
-        // With `aos`: the simulator claims no address, so it gets a node,
-        // as a CANalyst-II does.
-        let node = device::ngt1::NodeConfig {
-            model_version: Some("canboat-pipeline-rs"),
-            pgn_lists: effective.clone(),
-            learn_tx_pgns: config.learn_tx_pgns,
-            state_dir: config.config_dir.clone(),
-            ..node_identity(config)
-        };
-        // Shared across reconnects, as for SocketCAN.
-        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
-            device::socketcan::CLAIM_UNCLAIMED,
-        ));
-        let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new(if aos { "aos" } else { "ngt1" }, move || {
-            let (reader, writer) = open_serial_or_tcp(&path, baud)?;
-            if aos {
-                return Ok(device::ngt1::run_aos(
-                    reader,
-                    writer,
-                    node.clone(),
-                    Arc::clone(&claim_for_factory),
-                ));
-            }
-            let config = device::ngt1::Config {
-                operating_mode,
-                pgn_lists: pgn_lists.clone(),
-                extra_tx_pgns: extra_tx_pgns.clone(),
-                tx_list_record: Arc::clone(&tx_list_record),
-            };
-            // A simulator is `aos`: this gives up on one.
-            Ok(device::ngt1::run_ngt1(reader, writer, config))
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // NGT-1's `N2K_MSG_RECEIVED` (0x93) frames carry full PGN
-        // payloads — fast-packet coalescing happens inside the
-        // device, not on the wire we receive. Skip the reassembler.
+    if let Some(dev) = &config.device {
+        let dev = dev
+            .clone()
+            // What the quirks send from the gateway's own address.
+            .extra_tx_pgns(quirk_tx_pgns(config))
+            .node_defaults("canboat-pipeline-rs", config.config_dir.clone())
+            .reconnect(true);
+        let pgn_list_status = dev.pgn_list_status();
+        // What the gateway lacks says which, already; and the bridge
+        // reconnects, so nothing else fails here.
+        let handle = dev.open(config.protocol)?;
+        let claim_addr = handle.claim_atom();
+        let (rx, handle) = split_supervisor(handle);
+        // Every gateway hands over whole messages: it joins fast-packets
+        // itself, or canboat's node or codec does. Skip the reassembler.
         return Ok(OpenedSource {
             frames_rx: rx,
-            supervisor: Some(sup),
+            supervisor: Some(handle),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: Some(claim_addr),
+            claim_addr,
             pgn_list_status,
-        });
-    }
-    if let Some(path) = config.ikonvert.as_deref() {
-        let baud = config.baud.unwrap_or(230_400);
-        let path = path.to_string();
-        let rx_list = config.ikonvert_rx.clone();
-        let tx_list = config.ikonvert_tx.clone();
-        // What the embedder named — which, once it names a transmit PGN,
-        // is all the driver will send — and the quirks' own PGNs apart.
-        let pgn_lists = config.pgn_lists.clone();
-        let extra_tx_pgns = quirk_tx_pgns(config);
-        let effective = effective_pgn_lists(config);
-        let pgn_list_status =
-            (!effective.is_empty()).then(|| device::ikonvert::pgn_list_status(&effective));
-        let rate_limit_off = config.ikonvert_rate_limit_off;
-        // A NavLink2's UDP output only receives: nothing reaches the
-        // gateway, so its lists are not written.
-        let receive_only = path.starts_with("udp://");
-        if receive_only && rate_limit_off {
-            log::warn!("--no-tx-rate-limit: canboat sends nothing over udp://");
-        }
-        let pgn_list_status = if receive_only {
-            unsupported_pgn_lists(config)
-        } else {
-            pgn_list_status
-        };
-        let factory = NamedFactory::new("ikonvert", move || {
-            let (reader, writer, receive_only) = device::ikonvert::open(&path, baud)?;
-            let config = if receive_only {
-                device::ikonvert::Config {
-                    skip_init: true,
-                    ..Default::default()
-                }
-            } else {
-                device::ikonvert::Config {
-                    rx_list: rx_list.clone(),
-                    tx_list: tx_list.clone(),
-                    pgn_lists: pgn_lists.clone(),
-                    extra_tx_pgns: extra_tx_pgns.clone(),
-                    rate_limit_off,
-                    ..Default::default()
-                }
-            };
-            Ok(device::ikonvert::run(reader, writer, config))
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // iKonvert coalesces fast-packets internally; skip the
-        // reassembler entirely.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: None,
-            pgn_list_status,
-        });
-    }
-    if let Some(url) = config.maretron.as_deref() {
-        let url = url.to_string();
-        let password = config.maretron_password.clone();
-        let factory = NamedFactory::new("maretron", move || {
-            let (reader, writer) = open_maretron_pair(&url)?;
-            let cfg = device::maretron::Config {
-                password: password.clone(),
-                fixtime: None,
-            };
-            Ok(device::maretron::run(reader, writer, cfg))
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // Maretron IPG ships full PGN payloads per 0xA5 frame.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: None,
-            pgn_list_status: unsupported_pgn_lists(config),
-        });
-    }
-    if let Some(gateway) = config.gateway.clone() {
-        let (baud, protocol, ignore_checksum) =
-            (config.baud, config.protocol, config.ignore_checksum);
-        let factory = NamedFactory::new(gateway.kind.name(), move || {
-            device::gateway::open(&gateway, baud, protocol, ignore_checksum)
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // Each codec joins fast-packets itself.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: None,
-            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(read_url) = config.canboat_csv.as_deref() {
         let read_url = read_url.to_string();
         let write_url = config.canboat_csv_write.clone();
-        let factory = NamedFactory::new("canboat-csv", move || {
-            let (reader, writer) = match &write_url {
-                Some(w) => open_canboat_csv_split(&read_url, w)?,
-                None => open_canboat_csv_pair(&read_url)?,
-            };
-            Ok(device::canboat_csv::run(reader, writer))
+        let handle = supervise(Named {
+            name: "canboat-csv".into(),
+            open: move || {
+                let (reader, writer) = match &write_url {
+                    Some(w) => open_canboat_csv_split(&read_url, w)?,
+                    None => open_canboat_csv_pair(&read_url)?,
+                };
+                Ok(device::canboat_csv::run(reader, writer))
+            },
         });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
+        let (rx, handle) = split_supervisor(handle);
         // Wire format is canboat PLAIN/FAST — each line is already
         // a complete PGN payload, so skip the reassembler.
         return Ok(OpenedSource {
             frames_rx: rx,
-            supervisor: Some(sup),
+            supervisor: Some(handle),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
             pgn_list_status: unsupported_pgn_lists(config),
@@ -907,147 +599,17 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             sent: config.replay_sent.clone(),
             ..device::replay::Config::new(path)
         };
-        let factory = NamedFactory::new("replay", move || device::replay::run(replay.clone()));
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
+        let handle = supervise(Named {
+            name: "replay".into(),
+            open: move || device::replay::run(replay.clone()),
+        });
+        let (rx, handle) = split_supervisor(handle);
         return Ok(OpenedSource {
             frames_rx: rx,
-            supervisor: Some(sup),
+            supervisor: Some(handle),
             pre_coalesced: Arc::new(AtomicBool::new(scan.coalesced)),
             claim_addr: None,
             pgn_list_status: unsupported_pgn_lists(config),
-        });
-    }
-    if let Some(iface) = config.socketcan.as_deref() {
-        let iface = iface.to_string();
-        let pgn_lists = effective_pgn_lists(config);
-        let config = device::socketcan::Config {
-            model_version: Some("canboat-pipeline-rs"),
-            configure_link: config.socketcan_configure_link,
-            pgn_lists: pgn_lists.clone(),
-            learn_tx_pgns: config.learn_tx_pgns,
-            protocol: config.protocol,
-            bitrate: config.socketcan_bitrate,
-            state_dir: config.config_dir.clone(),
-            ..node_identity(config)
-        };
-        // Shared across factory reconnects so the live claim address
-        // survives supervisor-driven device-session restarts.
-        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
-            device::socketcan::CLAIM_UNCLAIMED,
-        ));
-        let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new("socketcan", move || {
-            device::socketcan::run(&iface, config.clone(), Arc::clone(&claim_for_factory))
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // The SocketCAN adapter reassembles internally (driven by the
-        // `io::fastpacket` table) and hands us coalesced
-        // `RawFrame`s, matching the NGT-1 / iKonvert contract — skip
-        // the pipeline's own reassembler.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: Some(claim_addr),
-            pgn_list_status: (!pgn_lists.is_empty())
-                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
-        });
-    }
-    // The CANalyst-II is a USB device: without the `usb` feature (a
-    // library build with `bridge` alone) there is nothing to open it with.
-    #[cfg(not(feature = "usb"))]
-    if config.canalyst.is_some() {
-        anyhow::bail!("--kind canalyst needs canboat built with the `usb` feature");
-    }
-    #[cfg(feature = "usb")]
-    if let Some(device) = config.canalyst.as_deref() {
-        let selector = crate::io::usb::Selector::parse(device).ok_or_else(|| {
-            anyhow::anyhow!("--kind canalyst takes `usb` or `usb:VVVV:PPPP`, not {device}")
-        })??;
-        let channel = config.canalyst_channel;
-        let pgn_lists = effective_pgn_lists(config);
-        let config = device::socketcan::Config {
-            model_version: Some("canboat-pipeline-rs"),
-            pgn_lists: pgn_lists.clone(),
-            learn_tx_pgns: config.learn_tx_pgns,
-            protocol: config.protocol,
-            bitrate: config.socketcan_bitrate,
-            state_dir: config.config_dir.clone(),
-            ..node_identity(config)
-        };
-        // Shared across factory reconnects so the live claim address
-        // survives supervisor-driven device-session restarts.
-        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
-            device::socketcan::CLAIM_UNCLAIMED,
-        ));
-        let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new("canalyst", move || {
-            let (reader, writer) =
-                crate::io::canalyst::open_rw(&selector, channel, config.bitrate)?;
-            device::canalyst::run(
-                reader,
-                writer,
-                config.clone(),
-                Arc::clone(&claim_for_factory),
-            )
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // Coalesced by the node, as for SocketCAN.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: Some(claim_addr),
-            pgn_list_status: (!pgn_lists.is_empty())
-                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
-        });
-    }
-    if let Some(path) = config.usb_can_a.as_deref() {
-        let path = path.to_string();
-        let baud = config.baud;
-        let pgn_lists = effective_pgn_lists(config);
-        let config = device::socketcan::Config {
-            model_version: Some("canboat-pipeline-rs"),
-            pgn_lists: pgn_lists.clone(),
-            learn_tx_pgns: config.learn_tx_pgns,
-            protocol: config.protocol,
-            bitrate: config.socketcan_bitrate,
-            state_dir: config.config_dir.clone(),
-            ..node_identity(config)
-        };
-        // A bit rate the adapter lacks is refused now, not at every
-        // reconnect.
-        if crate::engine::codec::usb_can_a::config_packet(config.bitrate, config.protocol).is_none()
-        {
-            anyhow::bail!("--kind usb-can-a does not run at {} bit/s", config.bitrate);
-        }
-        // Shared across factory reconnects, as for SocketCAN.
-        let claim_addr = Arc::new(std::sync::atomic::AtomicU8::new(
-            device::socketcan::CLAIM_UNCLAIMED,
-        ));
-        let claim_for_factory = Arc::clone(&claim_addr);
-        let factory = NamedFactory::new("usb-can-a", move || {
-            let (reader, writer) = device::usb_can_a::open_rw(&path, baud)?;
-            device::usb_can_a::run(
-                reader,
-                writer,
-                config.clone(),
-                Arc::clone(&claim_for_factory),
-            )
-        });
-        let sup = Supervisor::new(factory);
-        let (rx, sup) = split_supervisor(sup);
-        // Coalesced by the node, as for SocketCAN.
-        return Ok(OpenedSource {
-            frames_rx: rx,
-            supervisor: Some(sup),
-            pre_coalesced: Arc::new(AtomicBool::new(true)),
-            claim_addr: Some(claim_addr),
-            pgn_list_status: (!pgn_lists.is_empty())
-                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
         });
     }
     // stdin fallback — no device, no reconnect logic needed. We
@@ -1075,19 +637,6 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     })
 }
 
-/// The PGN lists a backend advertises: the embedder's, plus what a quirk
-/// transmits from the gateway's own address (`wmm`: 127258), so the
-/// embedder does not have to name those.
-fn effective_pgn_lists(config: &BridgeConfig) -> PgnLists {
-    let mut lists = config.pgn_lists.clone();
-    for pgn in quirk_tx_pgns(config) {
-        if !lists.tx.contains(&pgn) {
-            lists.tx.push(pgn);
-        }
-    }
-    lists
-}
-
 /// The PGNs the configured quirks transmit from the gateway's own address.
 fn quirk_tx_pgns(config: &BridgeConfig) -> Vec<u32> {
     let mut pgns = Vec::new();
@@ -1097,27 +646,17 @@ fn quirk_tx_pgns(config: &BridgeConfig) -> Vec<u32> {
     pgns
 }
 
-/// The status for a backend that cannot advertise PGN lists, warning when
-/// the embedder asked for some.
+/// The status for a source that is not a gateway, which advertises no PGN
+/// lists: `None` unless a quirk transmits from its own address.
 fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
-    let effective = effective_pgn_lists(config);
-    if !config.pgn_lists.is_empty() {
-        log::warn!(
-            "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
-            config.pgn_lists.tx,
-            config.pgn_lists.rx
-        );
-    } else if !effective.is_empty() {
-        // Only a quirk's PGN (wmm's 127258): the user asked for no lists,
-        // so say so without a warning.
-        log::info!(
-            "this backend cannot advertise PGN lists; the quirks' transmit PGNs {:?} are not advertised",
-            effective.tx
-        );
-    }
-    if effective.is_empty() {
+    let pgns = quirk_tx_pgns(config);
+    if pgns.is_empty() {
         return None;
     }
+    // The user asked for no lists, so say so without a warning.
+    log::info!(
+        "this source cannot advertise PGN lists; the quirks' transmit PGNs {pgns:?} are not advertised"
+    );
     Some(PgnListStatus {
         tx: PgnListSupport::Unsupported,
         rx: PgnListSupport::Unsupported,
@@ -1125,58 +664,12 @@ fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
     })
 }
 
-/// Swap the `Supervisor::frames_rx` out so the pipeline can own it
-/// while we keep the supervisor for shutdown / frame_sender access.
-fn split_supervisor(mut sup: Supervisor) -> (mpsc::Receiver<RawFrame>, Supervisor) {
+/// Swap the supervised handle's `frames_rx` out so the pipeline can own
+/// it while we keep the handle for shutdown / frame_sender access.
+fn split_supervisor(mut sup: DeviceHandle) -> (mpsc::Receiver<RawFrame>, DeviceHandle) {
     let (_dummy_tx, dummy_rx) = mpsc::channel::<RawFrame>();
     let rx = std::mem::replace(&mut sup.frames_rx, dummy_rx);
     (rx, sup)
-}
-
-/// A [`device::DeviceFactory`] that carries a static name and a
-/// closure. We can't `impl DeviceFactory for FnMut()` directly because
-/// the blanket name() default returns `"device"`; this wrapper plumbs
-/// the device-kind label through to the supervisor's log lines.
-struct NamedFactory<F> {
-    name: &'static str,
-    open: F,
-}
-
-impl<F> NamedFactory<F>
-where
-    F: FnMut() -> io::Result<device::DeviceHandle> + Send + 'static,
-{
-    fn new(name: &'static str, open: F) -> Self {
-        Self { name, open }
-    }
-}
-
-impl<F> device::DeviceFactory for NamedFactory<F>
-where
-    F: FnMut() -> io::Result<device::DeviceHandle> + Send + 'static,
-{
-    fn open(&mut self) -> io::Result<device::DeviceHandle> {
-        (self.open)()
-    }
-    fn name(&self) -> &str {
-        self.name
-    }
-}
-
-/// A serial port, or `tcp://host[:port]` (port 6001 if not given) for a
-/// serial gateway behind a network bridge.
-fn open_serial_or_tcp(
-    path: &str,
-    baud: u32,
-) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    if path.starts_with("tcp://") {
-        return crate::io::net::open_tcp(path, 6001);
-    }
-    open_serial_rw(path, baud)
-}
-
-fn open_maretron_pair(url: &str) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    open_tcp_pair(url, 6543, "maretron")
 }
 
 fn open_canboat_csv_pair(url: &str) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {

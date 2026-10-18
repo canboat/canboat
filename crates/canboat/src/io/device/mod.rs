@@ -40,8 +40,6 @@ pub mod canalyst;
 #[cfg(feature = "io")]
 pub mod canboat_csv;
 #[cfg(feature = "io")]
-pub mod gateway;
-#[cfg(feature = "io")]
 pub mod ikonvert;
 #[cfg(feature = "io")]
 mod iso11783_node;
@@ -62,7 +60,7 @@ pub mod supervisor;
 #[cfg(feature = "io")]
 pub mod usb_can_a;
 
-pub use supervisor::{DeviceFactory, Supervisor};
+pub use supervisor::DeviceFactory;
 
 use std::io::{self, Read, Write};
 use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU64, Ordering};
@@ -407,13 +405,6 @@ impl<F> FrameSender<F> {
         self.cmd_tx
             .send(WriterCmd::Frame(frame))
             .map_err(|_| DeviceWriterGone)
-    }
-
-    /// Crate-internal constructor used by [`supervisor::Supervisor`]
-    /// so it can hand out a stable `FrameSender` backed by its own
-    /// outer cmd channel.
-    pub(crate) fn from_cmd_tx(cmd_tx: mpsc::Sender<WriterCmd<F>>) -> Self {
-        Self { cmd_tx }
     }
 }
 

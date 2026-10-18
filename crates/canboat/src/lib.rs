@@ -763,37 +763,36 @@ pub mod device {
 /// [`BridgeConfig`](bridge::BridgeConfig) is the plain, clap-free config;
 /// [`Quirk`](bridge::Quirk) selects a bus value-add.
 ///
-/// **Backend selection.** The bus source is whichever
-/// [`BridgeConfig`](bridge::BridgeConfig) field is set, in precedence order:
-/// `actisense` (an Actisense NGT-1 serial gateway),
-/// `ikonvert` (a Digital Yacht iKonvert), `maretron`, `canboat_csv`, then
-/// `socketcan` — each a device path or interface name, with `baud` setting the
-/// serial rate. So to run off an NGT-1 instead of SocketCAN, set
-/// `config.actisense = Some("/dev/ttyUSB0".into())` (baud `Some(115_200)`) and
-/// leave `socketcan` `None`:
+/// **Backend selection.** The bus source is the gateway in
+/// [`BridgeConfig::device`](bridge::BridgeConfig::device), a
+/// [`Device`](crate::bus::Device) like any other, which the bridge opens with
+/// reconnect; or, without one, `canboat_csv`, `replay` or stdin. So to run
+/// off an NGT-1:
 ///
 /// ```
-/// # use canboat::bridge::BridgeConfig;
+/// # use canboat::bridge::{BridgeConfig, Device, Kind};
 /// let config = BridgeConfig {
-///     actisense: Some("/dev/ttyUSB0".into()), // NGT-1 instead of socketcan
-///     baud: Some(115_200),
+///     device: Some(Device::new(Kind::NGT1, "/dev/ttyUSB0")),
 ///     ..BridgeConfig::default()
 /// };
 /// ```
 ///
-/// The `scx20` and `motion` quirks need SocketCAN specifically — they preserve
-/// a frame's source address, which the serial gateways rewrite on write — so
+/// The `scx20` and `motion` quirks need a gateway where canboat is the node
+/// (SocketCAN, a CANalyst-II, a USB-CAN-A) — they preserve a frame's source
+/// address, which the other gateways rewrite on write — so
 /// [`Bridge::new`](bridge::Bridge::new) rejects them on other backends; `wmm`
 /// works on any writable backend.
 ///
 /// ```no_run
-/// use canboat::bridge::{Bridge, BridgeConfig};
+/// use canboat::bridge::{Bridge, BridgeConfig, Device, Kind};
 ///
 /// # fn main() -> anyhow::Result<()> {
 /// // Own a SocketCAN interface, tap the decoded stream, and re-serve the
 /// // 2597–2606 TCP ports so other LAN consumers keep working.
-/// let mut config = BridgeConfig::default();
-/// config.socketcan = Some("can0".into());
+/// let config = BridgeConfig {
+///     device: Some(Device::new(Kind::SocketCan, "can0")),
+///     ..BridgeConfig::default()
+/// };
 ///
 /// let mut bridge = Bridge::new(config)?;
 /// let decoded = bridge.decoded(); // Receiver<Arc<DecodedPgn>>
@@ -809,14 +808,15 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
-    /// [`BridgeConfig::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
+    /// [`Device::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
     pub use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
     /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
+    /// The gateway a [`BridgeConfig`] names: [`crate::bus::Device`] and its
+    /// [`Kind`], here too.
     pub use crate::server::{
-        ActisenseFormat, Bridge, BridgeConfig, Gateway, GatewayKind, QuirkKind as Quirk,
-        Transmitter,
+        ActisenseFormat, Bridge, BridgeConfig, Device, Kind, QuirkKind as Quirk, Transmitter,
     };
 }
 

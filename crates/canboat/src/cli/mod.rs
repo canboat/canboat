@@ -27,6 +27,7 @@ pub mod shape;
 mod convert;
 pub mod device;
 mod format_message;
+pub mod help;
 mod interface;
 mod legacy;
 mod replay;

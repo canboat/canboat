@@ -76,6 +76,25 @@ impl ActisenseFormat {
         ActisenseFormat::Mxpgn,
     ];
 
+    /// What it is, in a line.
+    pub fn describe(self) -> &'static str {
+        match self {
+            ActisenseFormat::NgtActisense => "NGT Actisense: the NGT-1's binary format (BST-93/94)",
+            ActisenseFormat::N2kAscii => "N2K ASCII: one reassembled NMEA 2000 message per line",
+            ActisenseFormat::N2kActisense => {
+                "N2K Actisense (BST-D0): reassembled NMEA 2000 messages, binary"
+            }
+            ActisenseFormat::RawAscii => {
+                "RAW ASCII: one CAN frame per line, as Yacht Devices sends it"
+            }
+            ActisenseFormat::RawActisense => "RAW Actisense (BST-95): CAN frames, binary",
+            ActisenseFormat::Mxpgn => {
+                "NMEA 0183 with $MXPGN: CAN frames, the data in bus order, as a W2K-2's \
+                 CANDIRECT data server sends them"
+            }
+        }
+    }
+
     /// The name `--data-format` takes.
     pub fn name(self) -> &'static str {
         match self {

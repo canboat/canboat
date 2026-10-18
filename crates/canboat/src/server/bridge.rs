@@ -37,7 +37,7 @@ use anyhow::{Result, anyhow};
 use crate::engine::output::JsonOptions;
 use crate::engine::pgn_list::{PgnListStatus, RxFilter};
 use crate::engine::{DecodedPgn, PgnDatabase, RawFrame};
-use crate::io::device::{FrameSender, Supervisor};
+use crate::io::device::{DeviceHandle, FrameSender};
 
 use crate::n2kd::request_engine::{self, RequestEngine};
 use crate::n2kd::serving::Hub;
@@ -58,7 +58,7 @@ pub struct Bridge {
     /// The pipeline's frame source. Taken (`Option::take`) when the
     /// pipeline starts, so `new`→`spawn` is a one-shot.
     frames_rx: Option<mpsc::Receiver<RawFrame>>,
-    supervisor: Option<Supervisor>,
+    supervisor: Option<DeviceHandle>,
     /// Why the supervisor gave up on the device, kept past `shutdown`.
     failure: Option<crate::io::device::DeviceFailure>,
     pre_coalesced: Arc<AtomicBool>,
@@ -304,7 +304,7 @@ impl Bridge {
             json_opts,
             banner,
             frames_rx: Some(frames_rx),
-            failure: supervisor.as_ref().map(Supervisor::failure),
+            failure: supervisor.as_ref().map(DeviceHandle::failure),
             supervisor,
             pre_coalesced,
             device_sender,
@@ -618,7 +618,8 @@ impl Bridge {
     /// for that.
     pub fn shutdown(&mut self) {
         if let Some(s) = self.supervisor.take() {
-            s.shutdown();
+            // Stops the reconnecting, and lets the gateway say goodbye.
+            let _ = s.close();
         }
         self.serve_stop
             .store(true, std::sync::atomic::Ordering::Relaxed);

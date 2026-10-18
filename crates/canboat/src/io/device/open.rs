@@ -325,6 +325,16 @@ impl Device {
         self
     }
 
+    /// [`model_version`](Self::model_version) and
+    /// [`state_dir`](Self::state_dir), where none was given: `canboat
+    /// server`'s.
+    #[cfg_attr(not(feature = "bridge"), allow(dead_code))]
+    pub(crate) fn node_defaults(mut self, version: &'static str, dir: Option<PathBuf>) -> Self {
+        self.node.model_version = self.node.model_version.or(Some(version));
+        self.node.state_dir = self.node.state_dir.or(dir);
+        self
+    }
+
     /// Open the gateway again whenever it goes, with backoff, behind one
     /// long-lived handle. Defaults to false.
     pub fn reconnect(mut self, reconnect: bool) -> Self {
@@ -376,7 +386,7 @@ impl Device {
 
     /// Refuse what the kind does not have: a setting, a bit rate, an
     /// address it cannot be reached at, and `protocol`, when given.
-    fn check(&self, protocol: Option<BusProtocol>) -> io::Result<()> {
+    pub(crate) fn check(&self, protocol: Option<BusProtocol>) -> io::Result<()> {
         let kind = self.kind;
         let caps = kind.capabilities();
         if let Some(&setting) = self.given.iter().find(|&&s| !kind.takes(s)) {
