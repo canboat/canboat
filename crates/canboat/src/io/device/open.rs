@@ -50,7 +50,7 @@ use super::{CLAIM_UNCLAIMED, DeviceHandle};
 /// session: when the gateway goes, its `frames_rx` closes and
 /// [`lost`](DeviceHandle::lost) says why. With it, canboat opens the
 /// gateway again whenever it goes, behind the same handle.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Device {
     kind: Kind,
     address: String,
@@ -71,6 +71,30 @@ pub struct Device {
     reconnect: bool,
     /// What every session of this device shares, also across clones.
     shared: Shared,
+}
+
+/// Everything but the password.
+impl std::fmt::Debug for Device {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Device")
+            .field("kind", &self.kind)
+            .field("address", &self.address)
+            .field("given", &self.given)
+            .field("baud", &self.baud)
+            .field("bitrate", &self.bitrate)
+            .field("configure_link", &self.configure_link)
+            .field("channel", &self.channel)
+            .field("password", &"…")
+            .field("mode", &self.mode)
+            .field("no_tx_rate_limit", &self.no_tx_rate_limit)
+            .field("ignore_checksum", &self.ignore_checksum)
+            .field("rx_filter", &self.rx_filter)
+            .field("pgn_lists", &self.pgn_lists)
+            .field("extra_tx_pgns", &self.extra_tx_pgns)
+            .field("node", &self.node)
+            .field("reconnect", &self.reconnect)
+            .finish_non_exhaustive()
+    }
 }
 
 /// canboat's node, where it runs one.
@@ -428,10 +452,13 @@ impl Device {
             has(|t| matches!(t, Transport::Tcp { .. }))
         } else if self.address == "usb" || self.address.starts_with("usb:") {
             has(|t| matches!(t, Transport::Usb))
+        } else if has(|t| matches!(t, Transport::Serial { .. } | Transport::Interface)) {
+            // A serial port, or an interface.
+            true
         } else {
-            // A serial port or an interface, or a host for a gateway
-            // reached only over TCP.
-            !has(|t| matches!(t, Transport::Usb)) || transports.len() > 1
+            // A host, for a gateway reached over the network: not a serial
+            // port, which it has none of.
+            has(|t| matches!(t, Transport::Tcp { .. })) && !looks_like_serial(&self.address)
         };
         if !fits {
             return Err(invalid(format!(
@@ -567,7 +594,8 @@ impl Device {
     /// The network endpoint or serial port of a line gateway, and whether
     /// what is written reaches it.
     fn line_endpoint(&self) -> io::Result<(crate::io::net::Pair, bool)> {
-        if self.is_network() {
+        // A bare host, for a gateway with no serial port, is TCP.
+        if self.is_network() || self.kind.default_baud().is_none() {
             crate::io::net::open_line_endpoint_sends(&self.address, self.tcp_port())
         } else {
             let pair = crate::io::open_serial_rw(&self.address, self.serial_baud())?;
@@ -827,6 +855,14 @@ impl Device {
     }
 }
 
+/// Whether `address` names a serial port: `/dev/ttyUSB0`, `COM3`.
+fn looks_like_serial(address: &str) -> bool {
+    address.starts_with('/')
+        || address
+            .strip_prefix("COM")
+            .is_some_and(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
+}
+
 /// `tcp://host[:port] (port 1457), udp://…, a serial port (38400 baud)`.
 fn describe_transports(transports: &[Transport]) -> String {
     transports
@@ -1006,6 +1042,19 @@ mod tests {
         );
         assert!(Device::new(Kind::SocketCan, "tcp://x").check(None).is_err());
         assert!(Device::new(Kind::Maretron, "ipg:6543").check(None).is_ok());
+        // A gateway with no serial port: a bare host is TCP, a serial port
+        // is refused.
+        let n2k_ascii = Kind::Actisense(ActisenseFormat::N2kAscii);
+        assert!(Device::new(n2k_ascii, "w2k-1").check(None).is_ok());
+        assert!(Device::new(n2k_ascii, "/dev/ttyUSB0").check(None).is_err());
+        assert!(Device::new(n2k_ascii, "COM3").check(None).is_err());
+        assert!(Device::new(Kind::YachtDevices, "COM3").check(None).is_ok());
+    }
+
+    #[test]
+    fn debug_leaves_the_password_out() {
+        let dev = Device::new(Kind::Maretron, "ipg").password("hunter2");
+        assert!(!format!("{dev:?}").contains("hunter2"));
     }
 
     #[test]

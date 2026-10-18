@@ -308,17 +308,50 @@ fn run_session<F: Send + 'static>(
     // which (together with our `drop(handle)` below) closes the
     // device's writer cmd_rx and lets the writer thread exit.
     session_done.store(true, Ordering::Relaxed);
-    // Wait for the forwarder to finish so we can recover cmd_rx, and
-    // learn whether a close is waiting to hear how it went.
+    // Wait for the forwarder to finish so we can recover cmd_rx.
     let _ = cmd_join.join();
+    let cmd_rx = return_rx
+        .recv()
+        .expect("cmd forwarder always returns cmd_rx");
     if stop.load(Ordering::Relaxed) {
+        // What the forwarder left: a closer sets `stop` before it queues
+        // its Shutdown, so the forwarder may have stopped first. Frames
+        // queued before it go out first; the closer waits to hear.
+        while let Ok(cmd) = cmd_rx.try_recv() {
+            match cmd {
+                WriterCmd::Frame(f) => {
+                    let _ = handle.send_frame(f);
+                }
+                WriterCmd::Shutdown(Some(tx)) => *super::lock(done) = Some(tx),
+                WriterCmd::Bytes(_) | WriterCmd::Shutdown(None) => {}
+            }
+        }
         // Closing on purpose: let the device say goodbye (an iKonvert
         // goes off the bus) and wait until it has. A device that just
         // died, or one about to be reconnected, is left alone.
         log::info!("{name}: closing the device");
-        // The close has begun: the handle's closer waits on.
+        // The close has begun: the handle's closer waits on, and goes on
+        // waiting as long as the session's writer makes progress, as it
+        // would for the session's own handle.
         progress.fetch_add(1, Ordering::Relaxed);
-        let closed = handle.close();
+        let inner = handle.progress.clone();
+        let closing = AtomicBool::new(true);
+        let closed = thread::scope(|scope| {
+            scope.spawn(|| {
+                let mut seen = inner.load(Ordering::Relaxed);
+                while closing.load(Ordering::Relaxed) {
+                    thread::sleep(Duration::from_millis(50));
+                    let now = inner.load(Ordering::Relaxed);
+                    if now != seen {
+                        progress.fetch_add(now.wrapping_sub(seen), Ordering::Relaxed);
+                        seen = now;
+                    }
+                }
+            });
+            let closed = handle.close();
+            closing.store(false, Ordering::Relaxed);
+            closed
+        });
         if let Some(tx) = super::lock(done).take() {
             match closed {
                 Closed::Confirmed => drop(tx.send(true)),
@@ -330,9 +363,7 @@ fn run_session<F: Send + 'static>(
     } else {
         drop(handle);
     }
-    return_rx
-        .recv()
-        .expect("cmd forwarder always returns cmd_rx")
+    cmd_rx
 }
 
 #[cfg(test)]
@@ -730,6 +761,33 @@ mod tests {
             Box::new(SlowWriter(Some(Duration::from_millis(20)), written.clone())),
         );
         for _ in 0..30 {
+            handle.send_frame(frame()).unwrap();
+        }
+        let closer = handle.closer();
+        assert_eq!(closer.close(Duration::from_millis(500)), Closed::Confirmed);
+        assert!(written.lock().unwrap().ends_with(b"BYE"));
+    }
+
+    /// So it does behind a supervised handle: its closer sees the session's
+    /// writer make progress. The backlog (60 writes of 20 ms, ~1.2 s) is
+    /// more than twice the timeout.
+    #[test]
+    fn a_long_backlog_drains_behind_a_supervised_handle() {
+        let written = Arc::new(Mutex::new(Vec::new()));
+        let for_factory = written.clone();
+        let handle = supervise(move || {
+            Ok(run_device(
+                TestDecoder,
+                ByteEncoder,
+                Box::new(QuietReader),
+                Box::new(SlowWriter(
+                    Some(Duration::from_millis(20)),
+                    for_factory.clone(),
+                )),
+            ))
+        });
+        thread::sleep(Duration::from_millis(300)); // let the session open
+        for _ in 0..60 {
             handle.send_frame(frame()).unwrap();
         }
         let closer = handle.closer();

@@ -384,6 +384,7 @@ pub canboat::bus::ListUse::Stored
 pub canboat::bus::ListUse::StoredExclusive
 pub canboat::bus::ListUse::TransmitEnable
 impl canboat::bus::ListUse
+pub fn canboat::bus::ListUse::describe(self) -> &'static str
 pub fn canboat::bus::ListUse::exclusive(self) -> bool
 impl core::clone::Clone for canboat::bus::ListUse
 pub fn canboat::bus::ListUse::clone(&self) -> Self
