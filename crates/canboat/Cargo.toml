@@ -49,7 +49,7 @@ io       = ["raw", "dep:flate2", "dep:tar", "dep:libc"]
 # bus::raw: single CAN frames to and from the gateways that pass them
 # (YDWG RAW, BST-95, USB-CAN-A, $MXPGN, SocketCAN), with no NMEA 2000
 # framing and no node. Only what those links need.
-raw      = ["decode", "dep:serialport", "dep:socket2", "dep:socketcan"]
+raw      = ["decode", "dep:serialport", "dep:socket2", "dep:socketcan", "dep:libc"]
 # bus::raw::open_canalyst: the CANalyst-II over USB
 raw-usb  = ["raw", "dep:nusb"]
 # FTDI-based gateways (Actisense NGT-1, ...) opened straight over USB as

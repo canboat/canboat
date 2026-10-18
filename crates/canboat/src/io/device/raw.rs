@@ -240,7 +240,7 @@ mod linux {
                         progress.fetch_add(1, Ordering::Relaxed);
                         break;
                     }
-                    Err(e) if e.raw_os_error() == Some(libc_enobufs()) => {
+                    Err(e) if e.raw_os_error() == Some(libc::ENOBUFS) => {
                         if Instant::now() >= deadline {
                             log::warn!(
                                 "CAN {iface}: transmit queue stays full, dropping frame {:08X}",
@@ -259,11 +259,6 @@ mod linux {
                 }
             }
         }
-    }
-
-    /// ENOBUFS, without the `libc` crate the `raw` feature does not need.
-    const fn libc_enobufs() -> i32 {
-        105
     }
 
     fn to_socketcan(f: &CanFrame) -> Option<socketcan::CanFrame> {
