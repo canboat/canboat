@@ -180,6 +180,8 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
         progress,
         failure: Default::default(),
         lost,
+        stop: None,
+        claim: None,
     })
 }
 

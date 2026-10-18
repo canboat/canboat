@@ -17,19 +17,18 @@
 //! per-kind producer name is preserved so the n2kd parity harness keeps
 //! comparing like with like).
 
-use std::io::{self, BufRead, BufWriter, Read, Write};
-use std::sync::Arc;
-use std::sync::atomic::AtomicU8;
+use std::io::{self, BufRead, BufWriter, Write};
 use std::thread;
+use std::time::Duration;
 
 use anyhow::{Context, Result};
 
-use crate::cli::device::{self as gateway_args, DeviceArgs, Kind, KindArg};
+use crate::cli::device::{self as gateway_args, DeviceArgs, KindArg};
 use crate::engine::pgn_list::RxFilter;
 use crate::engine::{BusProtocol, RawFrame};
-use crate::io::device::gateway::GatewayKind;
+use crate::io::device::kind::{ActisenseFormat, Kind, Setting};
 use crate::io::device::{self, DeviceHandle};
-use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
+use crate::io::{FrameWriter, PlainWriter, copy};
 
 /// `# format=FAST` tag every canboat reader prepends to its PLAIN
 /// stream so a downstream analyzer knows the frames are coalesced.
@@ -39,29 +38,29 @@ const FORMAT_FAST_HEADER: &[u8] = b"# format=FAST\n";
 /// retired standalone binary so parity output is unchanged.
 fn producer(kind: Kind) -> &'static str {
     match kind {
-        Kind::Ngt1 => "actisense-serial",
+        Kind::Actisense(ActisenseFormat::NgtActisense) => "actisense-serial",
+        Kind::Actisense(_) => "w2k-gateway",
         Kind::Aos => "aos",
         Kind::Ikonvert => "ikonvert-serial",
         Kind::Maretron => "maretron-ipg",
-        Kind::Socketcan => "socketcan-serial",
-        Kind::Gateway(GatewayKind::YachtDevices) => "ydwg-gateway",
-        Kind::Gateway(GatewayKind::Miniplex) => "miniplex",
-        Kind::Gateway(GatewayKind::SeaSmart) => "seasmart",
-        Kind::Gateway(_) => "w2k-gateway",
+        Kind::SocketCan => "socketcan-serial",
+        Kind::YachtDevices => "ydwg-gateway",
+        Kind::Miniplex => "miniplex",
+        Kind::SeaSmart => "seasmart",
         Kind::Canalyst => "canalyst",
         Kind::UsbCanA => "usb-can-a",
     }
 }
 
 #[derive(Debug, clap::Args)]
-#[command(after_long_help = gateway_args::GATEWAY_HELP)]
+#[command(after_long_help = super::help::gateway_help())]
 pub struct Args {
     /// The kind of gateway.
     #[arg(long = "kind", value_enum, value_name = "KIND", help_heading = gateway_args::GATEWAY)]
     kind_arg: KindArg,
 
     /// The gateway `--kind` and `--data-format` name, resolved by `run`.
-    #[arg(skip = Kind::Ngt1)]
+    #[arg(skip = Kind::NGT1)]
     kind: Kind,
 
     /// Where it is: a serial port, `usb`, `tcp://host[:port]`,
@@ -335,187 +334,36 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 
 /// Open the selected transport and start its device codec.
 fn open_device(args: &Args) -> Result<DeviceHandle> {
-    let gateway = &args.gateway;
-    gateway.check(Some(args.kind))?;
-    if args.si.is_some()
-        && !matches!(
-            args.kind,
-            Kind::Socketcan | Kind::Canalyst | Kind::UsbCanA | Kind::Aos
-        )
-    {
-        anyhow::bail!("--si: --kind {} does not have it", args.kind.name());
+    let (gateway, kind) = (&args.gateway, args.kind);
+    gateway.check(Some(kind))?;
+    if args.si.is_some() && !kind.takes(Setting::Node) {
+        anyhow::bail!("--si: --kind {kind} does not have it");
     }
-    let protocol = gateway.protocol();
-    let lists = gateway.pgn_lists();
-    let unsupported = |what: &str, pgns: &[u32]| {
-        if !pgns.is_empty() {
-            log::warn!(
-                "--kind {} has no {what} list; ignoring {pgns:?}",
-                args.kind.name()
-            );
+    let mut dev = gateway.device(kind, &args.device);
+    if kind.takes(Setting::Node) {
+        if let Some(instance) = args.si {
+            dev = dev.system_instance(instance);
         }
-    };
-    match args.kind {
-        Kind::Ngt1 => {
-            unsupported("receive PGN", &lists.rx);
-            let (r, w) = open_stream(args)?;
-            let config = device::ngt1::Config {
-                operating_mode: gateway.operating_mode(),
-                pgn_lists: crate::engine::pgn_list::PgnLists {
-                    tx: lists.tx.clone(),
-                    rx: Vec::new(),
-                },
-                ..Default::default()
-            };
-            // An AOS simulator is --kind aos: this one gives up on it.
-            Ok(device::ngt1::run_ngt1(r, w, config))
-        }
-        Kind::Aos => {
-            let (r, w) = open_stream(args)?;
-            let node = device::ngt1::NodeConfig {
-                model_version: Some("canboat-aos"),
-                ..node_config(args)
-            };
-            let claim = Arc::new(AtomicU8::new(device::socketcan::CLAIM_UNCLAIMED));
-            Ok(device::ngt1::run_aos(r, w, node, claim))
-        }
-        Kind::Ikonvert => {
-            let baud = gateway.baud.unwrap_or_else(|| args.kind.default_baud());
-            let (r, w, receive_only) = device::ikonvert::open(&args.device, baud)?;
-            if receive_only && args.write_only {
-                anyhow::bail!(
-                    "--write-only: ikonvert over udp:// only receives; use tcp:// to send"
-                );
-            }
-            let config = if receive_only {
-                // Nothing reaches the gateway: its lists and rate limit
-                // stay as they are. --rx-filter still filters, in canboat.
-                unsupported("receive PGN", &lists.rx);
-                unsupported("transmit PGN", &lists.tx);
-                if gateway.no_tx_rate_limit {
-                    log::warn!("--no-tx-rate-limit: canboat sends nothing over udp://");
-                }
-                device::ikonvert::Config {
-                    skip_init: true,
-                    ..Default::default()
-                }
-            } else {
-                device::ikonvert::Config {
-                    rx_list: gateway.ikonvert_rx_list(),
-                    pgn_lists: lists,
-                    rate_limit_off: gateway.no_tx_rate_limit,
-                    skip_init: false,
-                    ..Default::default()
-                }
-            };
-            Ok(device::ikonvert::run(r, w, config))
-        }
-        Kind::Maretron => {
-            unsupported("receive PGN", &lists.rx);
-            unsupported("transmit PGN", &lists.tx);
-            // The C maretron-ipg takes `tcp://<host>[:<port>]` with the
-            // port defaulting to 6543; the argv[0] shim must stay
-            // drop-in compatible with that syntax (signalk-server
-            // spawns it exactly so), and the bare `host:port` form
-            // keeps working.
-            let (reader, writer) = crate::io::net::open_tcp(&args.device, 6543)?;
-            let config = device::maretron::Config {
-                password: gateway.password.clone().unwrap_or_default(),
-                fixtime: None,
-            };
-            Ok(device::maretron::run(reader, writer, config))
-        }
-        Kind::Gateway(gateway_kind) => {
-            unsupported("receive PGN", &lists.rx);
-            unsupported("transmit PGN", &lists.tx);
-            let target = device::gateway::Gateway {
-                kind: gateway_kind,
-                device: args.device.clone(),
-            };
-            Ok(device::gateway::open(
-                &target,
-                gateway.baud,
-                protocol,
-                gateway.ignore_checksum,
-            )?)
-        }
-        Kind::Canalyst => open_canalyst(args),
-        Kind::UsbCanA => open_usb_can_a(args),
-        Kind::Socketcan => {
-            let config = device::socketcan::Config {
-                // Configure the link only when asked to; otherwise use the
-                // interface as it was set up.
-                configure_link: gateway.bitrate.is_some(),
-                bitrate: gateway.bitrate.unwrap_or(250_000),
-                ..node_config(args)
-            };
-            let claim = Arc::new(AtomicU8::new(config.address));
-            // On non-Linux this returns ErrorKind::Unsupported.
-            device::socketcan::run(&args.device, config, claim)
-                .with_context(|| format!("opening SocketCAN interface {}", args.device))
-        }
-    }
-}
-
-/// The node configuration of a raw CAN gateway (socketcan, canalyst,
-/// usb-can-a), or
-/// of an AOS simulator (`aos`).
-fn node_config(args: &Args) -> device::socketcan::Config {
-    let node = args.gateway.node_config();
-    device::socketcan::Config {
-        system_instance: args.si.unwrap_or(node.system_instance),
-        timeout_secs: args.timeout,
+        dev = dev.timeout(Duration::from_secs(args.timeout));
         // Probing creates the dir, so only when it may be needed.
-        state_dir: (node.unique == 0).then(super::app::resolve_config_dir),
-        ..node
+        if gateway.unique.is_none() {
+            dev = dev.state_dir(super::app::resolve_config_dir());
+        }
     }
-}
-
-/// Open a CANalyst-II over USB and run a node on it, as for SocketCAN.
-fn open_canalyst(args: &Args) -> Result<DeviceHandle> {
-    let selector = crate::io::usb::Selector::parse(&args.device)
-        .ok_or_else(|| anyhow::anyhow!("a CANalyst-II is named `usb` or `usb:VVVV:PPPP`"))??;
-    let config = device::socketcan::Config {
-        model_version: Some("canboat-canalyst"),
-        bitrate: args.gateway.bitrate.unwrap_or(250_000),
-        ..node_config(args)
-    };
-    let channel = args.gateway.channel.unwrap_or(0);
-    let (reader, writer) = crate::io::canalyst::open_rw(&selector, channel, config.bitrate)
-        .with_context(|| format!("opening CANalyst-II {}", args.device))?;
-    let claim = Arc::new(AtomicU8::new(config.address));
-    Ok(device::canalyst::run(reader, writer, config, claim)?)
-}
-
-/// Open a Waveshare USB-CAN-A on its serial port and run a node on it, as
-/// for SocketCAN.
-fn open_usb_can_a(args: &Args) -> Result<DeviceHandle> {
-    let config = device::socketcan::Config {
-        model_version: Some("canboat-usb-can-a"),
-        bitrate: args.gateway.bitrate.unwrap_or(250_000),
-        ..node_config(args)
-    };
-    let (reader, writer) = device::usb_can_a::open_rw(&args.device, args.gateway.baud)
-        .with_context(|| format!("opening USB-CAN-A {}", args.device))?;
-    let claim = Arc::new(AtomicU8::new(config.address));
-    Ok(device::usb_can_a::run(reader, writer, config, claim)?)
-}
-
-/// Open the serial transport as an independent `(reader, writer)` pair.
-/// `interface` is live-device only — captured byte streams are decoded
-/// with `canboat convert`, not here.
-fn open_stream(args: &Args) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    // A serial-protocol gateway reached over the network (ser2net
-    // setups do this for an NGT-1): same codec, different transport.
-    if args.device.starts_with("tcp://") {
-        return Ok(crate::io::net::open_tcp(&args.device, 6001)?);
+    if args.write_only && !dev.capabilities().sends {
+        anyhow::bail!(
+            "--write-only: --kind {kind} at {} only receives; use tcp:// to send",
+            args.device
+        );
     }
-    let baud = args
-        .gateway
-        .baud
-        .unwrap_or_else(|| args.kind.default_baud());
-    open_serial_rw(&args.device, baud)
-        .with_context(|| format!("opening serial port {}", args.device))
+    dev.open(gateway.protocol()).map_err(|e| {
+        // What the gateway lacks says which, already.
+        if e.kind() == io::ErrorKind::InvalidInput {
+            anyhow::Error::new(e)
+        } else {
+            anyhow::Error::new(e).context(format!("opening --kind {kind} {}", args.device))
+        }
+    })
 }
 
 #[cfg(test)]

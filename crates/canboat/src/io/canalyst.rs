@@ -308,6 +308,12 @@ mod tests {
     use super::*;
 
     #[test]
+    fn every_bit_rate_the_codec_offers_has_a_timing() {
+        let rates: Vec<u32> = TIMINGS.iter().map(|&(rate, _, _)| rate).collect();
+        assert_eq!(rates, crate::engine::codec::canalyst::BITRATES);
+    }
+
+    #[test]
     fn init_for_nmea_2000_matches_python_canalystii() {
         let packet = init_command(250_000).unwrap();
         assert_eq!(packet.len(), 64);

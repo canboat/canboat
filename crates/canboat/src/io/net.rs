@@ -58,12 +58,9 @@ pub(crate) fn open_tcp(device: &str, default_port: u16) -> io::Result<Pair> {
 /// gateway's address, `udp://gateway:port` also sends, a datagram per
 /// line, to that port (a YDEN-02 with its UDP server set to
 /// Bidirectional, canboat#1039), and takes only the gateway's datagrams.
-pub(crate) fn open_line_endpoint(device: &str, default_tcp_port: u16) -> io::Result<Pair> {
-    open_line_endpoint_sends(device, default_tcp_port).map(|(pair, _)| pair)
-}
-
-/// [`open_line_endpoint`], and whether what is written reaches the
-/// gateway: not for a receive-only `udp://`.
+///
+/// Also says whether what is written reaches the gateway: not for a
+/// receive-only `udp://`.
 pub(crate) fn open_line_endpoint_sends(
     device: &str,
     default_tcp_port: u16,
@@ -234,7 +231,8 @@ mod tests {
     /// An address of this host is one to bind to: receive only.
     #[test]
     fn a_local_address_only_receives() {
-        let (_r, mut w) = open_line_endpoint("udp://127.0.0.1:0", 1457).unwrap();
+        let ((_r, mut w), sends) = open_line_endpoint_sends("udp://127.0.0.1:0", 1457).unwrap();
+        assert!(!sends);
         // io::sink takes anything.
         w.write_all(b"09F80100 01\r\n").unwrap();
     }

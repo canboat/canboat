@@ -6,35 +6,30 @@
 //! serial port disconnects or the TCP socket dies, the reader thread
 //! returns and the `frames_rx` channel closes. That's fine for a
 //! one-shot command-line tool but unacceptable for a long-running
-//! service like `n2kd-pipeline`.
+//! service like `canboat server`.
 //!
-//! `Supervisor` wraps a [`DeviceFactory`] (a thunk that knows how to
-//! open the device) and provides a stable `frames_rx` /
-//! [`FrameSender`] pair that survives any number of disconnects. On
-//! failure it logs, backs off exponentially, and reopens the device.
-//! Frames produced while the device is down get dropped on the floor
-//! — the writer's command channel buffers a small queue, and any
-//! commands that don't drain within one session are discarded when
-//! that session ends. This matches what canboat C's reader binaries
-//! do on EOF (exit and let systemd restart) while keeping the
-//! pipeline alive.
+//! [`supervise`] wraps a [`DeviceFactory`] (a thunk that knows how to
+//! open the device) in a `DeviceHandle` whose `frames_rx` and
+//! [`FrameSender`](super::FrameSender) survive any number of disconnects. On failure it logs,
+//! backs off exponentially, and reopens the device. Frames sent while the
+//! device is down wait in the handle's command channel, and go to the
+//! next session's writer once it is up.
 
 use std::io;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc;
-use std::thread::{self, JoinHandle};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::{Arc, Mutex, mpsc};
+use std::thread;
 use std::time::Duration;
 
 use crate::engine::RawFrame;
 
-use super::{DeviceFailure, DeviceHandle, FrameSender, WriterCmd};
+use super::{Closed, DeviceFailure, DeviceHandle, StopOnDrop, WriterCmd};
 
-/// Factory thunk handed to [`Supervisor::new`]. Each call to `open`
-/// must produce a *fresh* `DeviceHandle` — the supervisor never reuses
-/// one across sessions.
-pub trait DeviceFactory: Send + 'static {
-    fn open(&mut self) -> io::Result<DeviceHandle>;
+/// Factory thunk handed to [`supervise`]. Each call to `open` must
+/// produce a *fresh* `DeviceHandle` — the supervisor never reuses one
+/// across sessions.
+pub trait DeviceFactory<F = RawFrame>: Send + 'static {
+    fn open(&mut self) -> io::Result<DeviceHandle<F>>;
 
     /// Short label for log output (e.g. `"ngt1"` / `"maretron"`).
     fn name(&self) -> &str {
@@ -43,12 +38,31 @@ pub trait DeviceFactory: Send + 'static {
 }
 
 /// Convenient blanket impl so callers can pass an `FnMut() -> io::Result<DeviceHandle>`.
-impl<F> DeviceFactory for F
+impl<F, T> DeviceFactory<F> for T
 where
-    F: FnMut() -> io::Result<DeviceHandle> + Send + 'static,
+    T: FnMut() -> io::Result<DeviceHandle<F>> + Send + 'static,
 {
-    fn open(&mut self) -> io::Result<DeviceHandle> {
+    fn open(&mut self) -> io::Result<DeviceHandle<F>> {
         (self)()
+    }
+}
+
+/// A [`DeviceFactory`] with a name for the log lines.
+pub(crate) struct Named<T> {
+    pub(crate) name: String,
+    pub(crate) open: T,
+}
+
+impl<F, T> DeviceFactory<F> for Named<T>
+where
+    T: FnMut() -> io::Result<DeviceHandle<F>> + Send + 'static,
+{
+    fn open(&mut self) -> io::Result<DeviceHandle<F>> {
+        (self.open)()
+    }
+
+    fn name(&self) -> &str {
+        &self.name
     }
 }
 
@@ -59,99 +73,56 @@ pub const INITIAL_BACKOFF: Duration = Duration::from_millis(500);
 /// stretch reconnect attempts past 30 s.
 pub const MAX_BACKOFF: Duration = Duration::from_secs(30);
 
-/// A supervised device connection.
-///
-/// Owns a manager thread that loops `open → run session → wait →
-/// reconnect`. The `frames_rx` channel is stable across reconnects:
-/// clients of the supervisor see one long-lived stream of `RawFrame`s
-/// interleaved with reconnect log messages. The [`FrameSender`]
-/// returned by [`Supervisor::frame_sender`] is similarly stable.
-pub struct Supervisor {
-    /// Stable receiver: frames from whichever device session is
-    /// currently active.
-    pub frames_rx: mpsc::Receiver<RawFrame>,
-    sender: FrameSender,
-    stop: Arc<AtomicBool>,
-    join: Option<JoinHandle<()>>,
-    failure: DeviceFailure,
-}
+/// The [`DeviceCloser`](super::DeviceCloser) of a supervised handle
+/// waiting for the session to close: told whether it did.
+type Done = Arc<Mutex<Option<mpsc::Sender<bool>>>>;
 
-impl Supervisor {
-    /// Spawn the manager. Returns immediately; the first device-open
-    /// attempt happens on the manager thread.
-    pub fn new<F: DeviceFactory>(factory: F) -> Self {
-        let (frames_tx, frames_rx) = mpsc::channel::<RawFrame>();
-        let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd>();
-        let stop = Arc::new(AtomicBool::new(false));
-        let stop_for_thread = stop.clone();
-        let failure = DeviceFailure::default();
-        let failure_for_thread = failure.clone();
-
-        let join = thread::Builder::new()
+/// Run `factory`'s device sessions one after another, reconnecting
+/// whenever one ends, behind one long-lived [`DeviceHandle`]: its
+/// `frames_rx` and [`frame_sender`](DeviceHandle::frame_sender) carry on
+/// across reconnects, its [`failure`](DeviceHandle::failure) is set when
+/// a session found the wrong device (and the frames end), and
+/// [`close`](DeviceHandle::close) closes the current session and stops.
+/// So does letting go of the handle.
+pub(crate) fn supervise<F: Send + 'static>(factory: impl DeviceFactory<F>) -> DeviceHandle<F> {
+    let (frames_tx, frames_rx) = mpsc::channel::<F>();
+    let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd<F>>();
+    let stop = Arc::new(AtomicBool::new(false));
+    let failure = DeviceFailure::default();
+    let progress = Arc::new(AtomicU64::new(0));
+    let join = {
+        let (stop, failure, progress) = (stop.clone(), failure.clone(), progress.clone());
+        thread::Builder::new()
             .name("device-supervisor".into())
-            .spawn(move || {
-                supervisor_loop(
-                    factory,
-                    frames_tx,
-                    cmd_rx,
-                    stop_for_thread,
-                    &failure_for_thread,
-                )
-            })
-            .expect("spawn device supervisor");
-
-        Self {
-            frames_rx,
-            sender: FrameSender::from_cmd_tx(cmd_tx),
-            stop,
-            join: Some(join),
-            failure,
-        }
-    }
-
-    /// Why the supervisor gave up: a session ended because the device is
-    /// the wrong one ([`DeviceHandle::failure`]), which reconnecting does
-    /// not mend. The frames end then.
-    pub fn failure(&self) -> DeviceFailure {
-        self.failure.clone()
-    }
-
-    /// Clone of the stable frame sender. Use this to queue outbound
-    /// frames; it routes through the active session, or drops on the
-    /// floor while the device is disconnected.
-    pub fn frame_sender(&self) -> FrameSender {
-        self.sender.clone()
-    }
-
-    /// Signal the manager to stop reconnecting and tear down the
-    /// current session.
-    pub fn shutdown(&self) {
-        self.stop.store(true, Ordering::Relaxed);
+            .spawn(move || supervisor_loop(factory, frames_tx, cmd_rx, &stop, &failure, &progress))
+            .expect("spawn device supervisor")
+    };
+    DeviceHandle {
+        frames_rx,
+        cmd_tx,
+        joins: vec![join],
+        writer: None,
+        progress,
+        failure,
+        lost: DeviceFailure::default(),
+        stop: Some(StopOnDrop(stop)),
+        claim: None,
     }
 }
 
-impl Drop for Supervisor {
-    fn drop(&mut self) {
-        self.stop.store(true, Ordering::Relaxed);
-        if let Some(j) = self.join.take() {
-            // Best-effort wait; if the manager is stuck in a long
-            // recv_timeout we accept a brief tear-down delay.
-            let _ = j.join();
-        }
-    }
-}
-
-fn supervisor_loop<F: DeviceFactory>(
-    mut factory: F,
-    frames_tx: mpsc::Sender<RawFrame>,
-    cmd_rx: mpsc::Receiver<WriterCmd>,
-    stop: Arc<AtomicBool>,
+fn supervisor_loop<F: Send + 'static>(
+    mut factory: impl DeviceFactory<F>,
+    frames_tx: mpsc::Sender<F>,
+    cmd_rx: mpsc::Receiver<WriterCmd<F>>,
+    stop: &Arc<AtomicBool>,
     failure: &DeviceFailure,
+    progress: &AtomicU64,
 ) {
     let mut backoff = INITIAL_BACKOFF;
     // Hold cmd_rx in an Option so we can move it into the per-session
     // forwarder and get it back via a one-shot return channel.
     let mut held_cmd_rx = Some(cmd_rx);
+    let done: Done = Arc::default();
 
     while !stop.load(Ordering::Relaxed) {
         let handle = match factory.open() {
@@ -166,7 +137,7 @@ fn supervisor_loop<F: DeviceFactory>(
                     factory.name(),
                     backoff
                 );
-                sleep_interruptible(backoff, &stop);
+                sleep_interruptible(backoff, stop);
                 backoff = (backoff * 2).min(MAX_BACKOFF);
                 continue;
             }
@@ -182,7 +153,9 @@ fn supervisor_loop<F: DeviceFactory>(
             handle,
             &frames_tx,
             cmd_rx,
-            &stop,
+            stop,
+            &done,
+            progress,
         ));
 
         if stop.load(Ordering::Relaxed) {
@@ -198,7 +171,7 @@ fn supervisor_loop<F: DeviceFactory>(
             Some(why) => log::warn!("{}: session ended: {why}; will reconnect", factory.name()),
             None => log::warn!("{}: session ended; will reconnect", factory.name()),
         }
-        sleep_interruptible(Duration::from_millis(500), &stop);
+        sleep_interruptible(Duration::from_millis(500), stop);
     }
     log::info!("{}: supervisor stopped", factory.name());
 }
@@ -221,22 +194,25 @@ fn sleep_interruptible(duration: Duration, stop: &Arc<AtomicBool>) {
 
 /// Run one device session. Returns the (still-live) `cmd_rx` so the
 /// caller can use it for the next session.
-fn run_session(
+fn run_session<F: Send + 'static>(
     name: &str,
-    handle: DeviceHandle,
-    frames_tx: &mpsc::Sender<RawFrame>,
-    cmd_rx: mpsc::Receiver<WriterCmd>,
+    handle: DeviceHandle<F>,
+    frames_tx: &mpsc::Sender<F>,
+    cmd_rx: mpsc::Receiver<WriterCmd<F>>,
     stop: &Arc<AtomicBool>,
-) -> mpsc::Receiver<WriterCmd> {
+    done: &Done,
+    progress: &AtomicU64,
+) -> mpsc::Receiver<WriterCmd<F>> {
     let device_sender = handle.frame_sender();
     let stop_for_fwd = stop.clone();
+    let done_for_fwd = done.clone();
     // Per-session shutdown flag. Set by the main thread once the
     // device read side dies; tells the cmd forwarder to drop its
     // device_sender clone and exit, which lets the writer thread
     // close and the next session start cleanly.
     let session_done = Arc::new(AtomicBool::new(false));
     let session_done_for_fwd = session_done.clone();
-    let (return_tx, return_rx) = mpsc::channel::<mpsc::Receiver<WriterCmd>>();
+    let (return_tx, return_rx) = mpsc::channel::<mpsc::Receiver<WriterCmd<F>>>();
     let fwd_name = format!("{name}-cmd-fwd");
 
     // Forwarder: stable cmd_rx -> current session's device sender.
@@ -260,10 +236,16 @@ fn run_session(
                             break;
                         }
                     }
-                    Ok(WriterCmd::Bytes(_) | WriterCmd::Shutdown(_)) => {
+                    // The handle is being closed (its closer set `stop`
+                    // too): the session closes below, and says so.
+                    Ok(WriterCmd::Shutdown(Some(tx))) => {
+                        *super::lock(&done_for_fwd) = Some(tx);
+                        stop_for_fwd.store(true, Ordering::Relaxed);
+                        break;
+                    }
+                    Ok(WriterCmd::Bytes(_) | WriterCmd::Shutdown(None)) => {
                         // SendBytes only comes from the device-side
-                        // decoder back to the device writer, and
-                        // Shutdown from `run_session` itself; neither
+                        // decoder back to the device writer; neither
                         // reaches the supervisor's stable channel.
                     }
                     Err(mpsc::RecvTimeoutError::Timeout) => continue,
@@ -302,13 +284,15 @@ fn run_session(
             break;
         }
         if frames_tx.send(frame).is_err() {
-            // Outer consumer is gone — supervisor will exit too.
+            // Outer consumer is gone: nobody wants another session.
+            stop.store(true, Ordering::Relaxed);
             break;
         }
         loop {
             match handle.frames_rx.try_recv() {
                 Ok(frame) => {
                     if frames_tx.send(frame).is_err() {
+                        stop.store(true, Ordering::Relaxed);
                         break 'pump;
                     }
                 }
@@ -324,21 +308,62 @@ fn run_session(
     // which (together with our `drop(handle)` below) closes the
     // device's writer cmd_rx and lets the writer thread exit.
     session_done.store(true, Ordering::Relaxed);
+    // Wait for the forwarder to finish so we can recover cmd_rx.
+    let _ = cmd_join.join();
+    let cmd_rx = return_rx
+        .recv()
+        .expect("cmd forwarder always returns cmd_rx");
     if stop.load(Ordering::Relaxed) {
+        // What the forwarder left: a closer sets `stop` before it queues
+        // its Shutdown, so the forwarder may have stopped first. Frames
+        // queued before it go out first; the closer waits to hear.
+        while let Ok(cmd) = cmd_rx.try_recv() {
+            match cmd {
+                WriterCmd::Frame(f) => {
+                    let _ = handle.send_frame(f);
+                }
+                WriterCmd::Shutdown(Some(tx)) => *super::lock(done) = Some(tx),
+                WriterCmd::Bytes(_) | WriterCmd::Shutdown(None) => {}
+            }
+        }
         // Closing on purpose: let the device say goodbye (an iKonvert
         // goes off the bus) and wait until it has. A device that just
         // died, or one about to be reconnected, is left alone.
         log::info!("{name}: closing the device");
-        let _ = handle.close();
+        // The close has begun: the handle's closer waits on, and goes on
+        // waiting as long as the session's writer makes progress, as it
+        // would for the session's own handle.
+        progress.fetch_add(1, Ordering::Relaxed);
+        let inner = handle.progress.clone();
+        let closing = AtomicBool::new(true);
+        let closed = thread::scope(|scope| {
+            scope.spawn(|| {
+                let mut seen = inner.load(Ordering::Relaxed);
+                while closing.load(Ordering::Relaxed) {
+                    thread::sleep(Duration::from_millis(50));
+                    let now = inner.load(Ordering::Relaxed);
+                    if now != seen {
+                        progress.fetch_add(now.wrapping_sub(seen), Ordering::Relaxed);
+                        seen = now;
+                    }
+                }
+            });
+            let closed = handle.close();
+            closing.store(false, Ordering::Relaxed);
+            closed
+        });
+        if let Some(tx) = super::lock(done).take() {
+            match closed {
+                Closed::Confirmed => drop(tx.send(true)),
+                Closed::Unconfirmed => drop(tx.send(false)),
+                // Dropped: the closer hears the device had gone.
+                Closed::Gone => {}
+            }
+        }
     } else {
         drop(handle);
     }
-
-    // Wait for the forwarder to finish so we can recover cmd_rx.
-    let _ = cmd_join.join();
-    return_rx
-        .recv()
-        .expect("cmd forwarder always returns cmd_rx")
+    cmd_rx
 }
 
 #[cfg(test)]
@@ -419,7 +444,7 @@ mod tests {
         }
         let opened = Arc::new(AtomicU32::new(0));
         let count = opened.clone();
-        let sup = Supervisor::new(move || {
+        let sup = supervise(move || {
             count.fetch_add(1, Ordering::Relaxed);
             Ok(super::super::run_codec(
                 Wrong,
@@ -476,7 +501,7 @@ mod tests {
             sessions: sessions.clone(),
             bytes_per_session: payloads,
         };
-        let sup = Supervisor::new(factory);
+        let sup = supervise(factory);
 
         // Collect frames until we've seen all the expected payloads
         // or we time out.
@@ -497,7 +522,7 @@ mod tests {
                 Err(_) => continue,
             }
         }
-        sup.shutdown();
+        drop(sup);
 
         assert_eq!(
             got,
@@ -510,6 +535,51 @@ mod tests {
             sessions.load(Ordering::Relaxed) >= 4,
             "expected ≥ 4 open attempts (3 successful + 1 transient failure)"
         );
+    }
+
+    #[test]
+    fn a_supervised_handle_carries_on_across_sessions() {
+        let factory = ReconnectFactory {
+            sessions: Arc::default(),
+            bytes_per_session: Arc::new(Mutex::new(vec![vec![1u8, 2], vec![3u8, 4]])),
+        };
+        let handle = supervise(factory);
+        let mut got = Vec::new();
+        let deadline = std::time::Instant::now() + Duration::from_secs(60);
+        while got.len() < 4 && std::time::Instant::now() < deadline {
+            if let Ok(f) = handle.frames_rx.recv_timeout(Duration::from_millis(500)) {
+                got.push(f.pgn);
+            }
+        }
+        assert_eq!(got, [1, 2, 3, 4]);
+        assert!(handle.failure().get().is_none());
+    }
+
+    /// Letting go of a supervised handle stops the reconnecting.
+    #[test]
+    fn dropping_a_supervised_handle_stops_it() {
+        let sessions = Arc::new(AtomicU32::new(0));
+        let count = sessions.clone();
+        let handle = supervise(move || {
+            count.fetch_add(1, Ordering::Relaxed);
+            Ok(run_device(
+                TestDecoder,
+                TestEncoder,
+                Box::new(OneShotReader(Some(vec![1]))),
+                Box::new(SinkWriter),
+            ))
+        });
+        assert!(
+            handle
+                .frames_rx
+                .recv_timeout(Duration::from_secs(10))
+                .is_ok()
+        );
+        drop(handle);
+        thread::sleep(Duration::from_millis(1500));
+        let after = sessions.load(Ordering::Relaxed);
+        thread::sleep(Duration::from_millis(1500));
+        assert_eq!(sessions.load(Ordering::Relaxed), after);
     }
 
     /// A device that stays connected but quiet: reads time out forever.
@@ -598,20 +668,36 @@ mod tests {
         assert_eq!(handle.close(), Closed::Unconfirmed);
     }
 
-    /// Stopping the supervisor closes the device on purpose, even on a
+    /// Closing a supervised handle closes the session on purpose, and
+    /// says how that went.
+    #[test]
+    fn closing_a_supervised_handle_says_goodbye() {
+        let written = RecordingWriter::default();
+        let for_factory = written.clone();
+        let handle = supervise(move || Ok(quiet_device(&for_factory)));
+        thread::sleep(Duration::from_millis(300)); // let the session open
+        assert_eq!(handle.close(), Closed::Confirmed);
+        assert_eq!(*written.0.lock().unwrap(), b"BYE");
+    }
+
+    /// Dropping a supervised handle closes the device on purpose, even on a
     /// quiet bus; a device that merely went away is not told goodbye.
     #[test]
     fn stopping_the_supervisor_says_goodbye() {
         let written = RecordingWriter::default();
         let for_factory = written.clone();
-        let sup = Supervisor::new(move || Ok(quiet_device(&for_factory)));
+        let sup = supervise(move || Ok(quiet_device(&for_factory)));
         thread::sleep(Duration::from_millis(300)); // let the session open
-        drop(sup); // stop, and wait for the manager
+        drop(sup); // stop: the manager closes the device
+        let deadline = std::time::Instant::now() + Duration::from_secs(10);
+        while written.0.lock().unwrap().is_empty() && std::time::Instant::now() < deadline {
+            thread::sleep(Duration::from_millis(50));
+        }
         assert_eq!(*written.0.lock().unwrap(), b"BYE");
 
         let written = RecordingWriter::default();
         let for_factory = written.clone();
-        let sup = Supervisor::new(move || {
+        let sup = supervise(move || {
             Ok(run_device(
                 TestDecoder,
                 ByeEncoder,
@@ -675,6 +761,33 @@ mod tests {
             Box::new(SlowWriter(Some(Duration::from_millis(20)), written.clone())),
         );
         for _ in 0..30 {
+            handle.send_frame(frame()).unwrap();
+        }
+        let closer = handle.closer();
+        assert_eq!(closer.close(Duration::from_millis(500)), Closed::Confirmed);
+        assert!(written.lock().unwrap().ends_with(b"BYE"));
+    }
+
+    /// So it does behind a supervised handle: its closer sees the session's
+    /// writer make progress. The backlog (60 writes of 20 ms, ~1.2 s) is
+    /// more than twice the timeout.
+    #[test]
+    fn a_long_backlog_drains_behind_a_supervised_handle() {
+        let written = Arc::new(Mutex::new(Vec::new()));
+        let for_factory = written.clone();
+        let handle = supervise(move || {
+            Ok(run_device(
+                TestDecoder,
+                ByteEncoder,
+                Box::new(QuietReader),
+                Box::new(SlowWriter(
+                    Some(Duration::from_millis(20)),
+                    for_factory.clone(),
+                )),
+            ))
+        });
+        thread::sleep(Duration::from_millis(300)); // let the session open
+        for _ in 0..60 {
             handle.send_frame(frame()).unwrap();
         }
         let closer = handle.closer();

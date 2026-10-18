@@ -17,8 +17,8 @@
 //! * [`Codec::close`] — the goodbye (an iKonvert goes off the bus).
 //!
 //! The caller supplies the time (`now_ms`, Unix milliseconds) wherever a
-//! codec needs one, so the same code runs under the threaded `bus::open_*`
-//! runners, in an async task, or in a browser over WebSerial.
+//! codec needs one, so the same code runs under the threaded runners of
+//! `bus::Device`, in an async task, or in a browser over WebSerial.
 
 pub mod bst95;
 pub mod bst_d0;

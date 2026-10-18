@@ -1,15 +1,45 @@
 pub mod canboat
 pub mod canboat::bus
 pub mod canboat::bus::raw
-pub fn canboat::bus::raw::capabilities(&str) -> core::option::Option<canboat::codec::raw::Capabilities>
-pub fn canboat::bus::raw::open_bst95(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
-pub fn canboat::bus::raw::open_canalyst(&str, u8, u32) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
-pub fn canboat::bus::raw::open_mxpgn(&str, u32) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
-pub fn canboat::bus::raw::open_socketcan(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
-pub fn canboat::bus::raw::open_usb_can_a(&str, u32) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
-pub fn canboat::bus::raw::open_ydwg(&str) -> core::io::error::Result<canboat::bus::raw::RawDeviceHandle>
 pub type canboat::bus::raw::RawDeviceHandle = canboat::bus::DeviceHandle<canboat::codec::raw::CanFrame>
 pub type canboat::bus::raw::RawFrameSender = canboat::bus::FrameSender<canboat::codec::raw::CanFrame>
+#[non_exhaustive] pub enum canboat::bus::ActisenseFormat
+pub canboat::bus::ActisenseFormat::Mxpgn
+pub canboat::bus::ActisenseFormat::N2kActisense
+pub canboat::bus::ActisenseFormat::N2kAscii
+pub canboat::bus::ActisenseFormat::NgtActisense
+pub canboat::bus::ActisenseFormat::RawActisense
+pub canboat::bus::ActisenseFormat::RawAscii
+impl canboat::bus::ActisenseFormat
+pub const canboat::bus::ActisenseFormat::ALL: &'static [canboat::bus::ActisenseFormat]
+pub fn canboat::bus::ActisenseFormat::describe(self) -> &'static str
+pub fn canboat::bus::ActisenseFormat::name(self) -> &'static str
+impl core::clone::Clone for canboat::bus::ActisenseFormat
+pub fn canboat::bus::ActisenseFormat::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::ActisenseFormat
+impl core::cmp::PartialEq for canboat::bus::ActisenseFormat
+pub fn canboat::bus::ActisenseFormat::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::ActisenseFormat
+pub fn canboat::bus::ActisenseFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::hash::Hash for canboat::bus::ActisenseFormat
+pub fn canboat::bus::ActisenseFormat::hash<__H: core::hash::Hasher>(&self, &mut __H)
+impl core::marker::Copy for canboat::bus::ActisenseFormat
+impl core::marker::StructuralPartialEq for canboat::bus::ActisenseFormat
+#[non_exhaustive] pub enum canboat::bus::Bitrates
+pub canboat::bus::Bitrates::Any
+pub canboat::bus::Bitrates::Fixed
+pub canboat::bus::Bitrates::Only(&'static [u32])
+impl canboat::bus::Bitrates
+pub fn canboat::bus::Bitrates::allows(self, u32) -> bool
+impl core::clone::Clone for canboat::bus::Bitrates
+pub fn canboat::bus::Bitrates::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::Bitrates
+impl core::cmp::PartialEq for canboat::bus::Bitrates
+pub fn canboat::bus::Bitrates::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::Bitrates
+pub fn canboat::bus::Bitrates::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::Bitrates
+impl core::marker::StructuralPartialEq for canboat::bus::Bitrates
 #[non_exhaustive] pub enum canboat::bus::BusProtocol
 pub canboat::bus::BusProtocol::J1939
 pub canboat::bus::BusProtocol::Nmea2000
@@ -51,6 +81,186 @@ impl core::fmt::Debug for canboat::bus::Closed
 pub fn canboat::bus::Closed::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::bus::Closed
 impl core::marker::StructuralPartialEq for canboat::bus::Closed
+#[non_exhaustive] pub enum canboat::bus::Kind
+pub canboat::bus::Kind::Actisense(canboat::bus::ActisenseFormat)
+pub canboat::bus::Kind::Aos
+pub canboat::bus::Kind::Canalyst
+pub canboat::bus::Kind::Ikonvert
+pub canboat::bus::Kind::Maretron
+pub canboat::bus::Kind::Miniplex
+pub canboat::bus::Kind::SeaSmart
+pub canboat::bus::Kind::SocketCan
+pub canboat::bus::Kind::UsbCanA
+pub canboat::bus::Kind::YachtDevices
+impl canboat::bus::Kind
+pub const canboat::bus::Kind::ALL: &'static [canboat::bus::Kind]
+pub const canboat::bus::Kind::NGT1: canboat::bus::Kind
+pub const canboat::bus::Kind::OLD_NAMES: &'static [(&'static str, canboat::bus::Kind)]
+pub fn canboat::bus::Kind::capabilities(self) -> canboat::bus::Capabilities
+pub fn canboat::bus::Kind::data_format(self) -> core::option::Option<canboat::bus::ActisenseFormat>
+pub fn canboat::bus::Kind::default_baud(self) -> core::option::Option<u32>
+pub fn canboat::bus::Kind::describe(self) -> &'static str
+pub fn canboat::bus::Kind::name(self) -> &'static str
+pub fn canboat::bus::Kind::pgn_lists(self) -> canboat::bus::PgnListUse
+pub fn canboat::bus::Kind::settings(self) -> &'static [canboat::bus::Setting]
+pub fn canboat::bus::Kind::takes(self, canboat::bus::Setting) -> bool
+pub fn canboat::bus::Kind::transports(self) -> &'static [canboat::bus::Transport]
+pub fn canboat::bus::Kind::with_format(&str, core::option::Option<canboat::bus::ActisenseFormat>) -> core::result::Result<canboat::bus::Kind, canboat::bus::UnknownKind>
+impl core::clone::Clone for canboat::bus::Kind
+pub fn canboat::bus::Kind::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::Kind
+impl core::cmp::PartialEq for canboat::bus::Kind
+pub fn canboat::bus::Kind::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::Kind
+pub fn canboat::bus::Kind::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::bus::Kind
+pub fn canboat::bus::Kind::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::hash::Hash for canboat::bus::Kind
+pub fn canboat::bus::Kind::hash<__H: core::hash::Hasher>(&self, &mut __H)
+impl core::marker::Copy for canboat::bus::Kind
+impl core::marker::StructuralPartialEq for canboat::bus::Kind
+impl core::str::traits::FromStr for canboat::bus::Kind
+pub type canboat::bus::Kind::Err = canboat::bus::UnknownKind
+pub fn canboat::bus::Kind::from_str(&str) -> core::result::Result<canboat::bus::Kind, canboat::bus::UnknownKind>
+#[non_exhaustive] pub enum canboat::bus::ListUse
+pub canboat::bus::ListUse::Advertised
+pub canboat::bus::ListUse::Ignored
+pub canboat::bus::ListUse::Stored
+pub canboat::bus::ListUse::StoredExclusive
+pub canboat::bus::ListUse::TransmitEnable
+impl canboat::bus::ListUse
+pub fn canboat::bus::ListUse::describe(self) -> &'static str
+pub fn canboat::bus::ListUse::exclusive(self) -> bool
+impl core::clone::Clone for canboat::bus::ListUse
+pub fn canboat::bus::ListUse::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::ListUse
+impl core::cmp::PartialEq for canboat::bus::ListUse
+pub fn canboat::bus::ListUse::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::ListUse
+pub fn canboat::bus::ListUse::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::ListUse
+impl core::marker::StructuralPartialEq for canboat::bus::ListUse
+#[non_exhaustive] pub enum canboat::bus::OperatingMode
+pub canboat::bus::OperatingMode::CanPacket
+pub canboat::bus::OperatingMode::CanPacketAscii
+pub canboat::bus::OperatingMode::NgConvertNormal
+pub canboat::bus::OperatingMode::NgTransferNormal
+pub canboat::bus::OperatingMode::NgTransferRaw
+pub canboat::bus::OperatingMode::NgTransferRxAll
+pub canboat::bus::OperatingMode::Other(u16)
+impl canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::code(self) -> u16
+pub fn canboat::bus::OperatingMode::from_code(u16) -> Self
+impl core::clone::Clone for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::OperatingMode
+impl core::cmp::PartialEq for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::OperatingMode
+impl core::marker::StructuralPartialEq for canboat::bus::OperatingMode
+#[non_exhaustive] pub enum canboat::bus::Setting
+pub canboat::bus::Setting::Baud
+pub canboat::bus::Setting::Bitrate
+pub canboat::bus::Setting::Channel
+pub canboat::bus::Setting::ConfigureLink
+pub canboat::bus::Setting::IgnoreChecksum
+pub canboat::bus::Setting::Mode
+pub canboat::bus::Setting::NoClaim
+pub canboat::bus::Setting::NoTxRateLimit
+pub canboat::bus::Setting::Node
+pub canboat::bus::Setting::Password
+pub canboat::bus::Setting::RxFilter
+impl canboat::bus::Setting
+pub const canboat::bus::Setting::ALL: &'static [canboat::bus::Setting]
+pub fn canboat::bus::Setting::kinds(self) -> impl core::iter::traits::iterator::Iterator<Item = canboat::bus::Kind>
+pub fn canboat::bus::Setting::name(self) -> &'static str
+impl core::clone::Clone for canboat::bus::Setting
+pub fn canboat::bus::Setting::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::Setting
+impl core::cmp::PartialEq for canboat::bus::Setting
+pub fn canboat::bus::Setting::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::Setting
+pub fn canboat::bus::Setting::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::hash::Hash for canboat::bus::Setting
+pub fn canboat::bus::Setting::hash<__H: core::hash::Hasher>(&self, &mut __H)
+impl core::marker::Copy for canboat::bus::Setting
+impl core::marker::StructuralPartialEq for canboat::bus::Setting
+#[non_exhaustive] pub enum canboat::bus::Transport
+pub canboat::bus::Transport::Interface
+pub canboat::bus::Transport::Serial
+pub canboat::bus::Transport::Serial::baud: u32
+pub canboat::bus::Transport::Tcp
+pub canboat::bus::Transport::Tcp::port: u16
+pub canboat::bus::Transport::Udp
+pub canboat::bus::Transport::Udp::port: core::option::Option<u16>
+pub canboat::bus::Transport::Usb
+impl core::clone::Clone for canboat::bus::Transport
+pub fn canboat::bus::Transport::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::Transport
+impl core::cmp::PartialEq for canboat::bus::Transport
+pub fn canboat::bus::Transport::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::Transport
+pub fn canboat::bus::Transport::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::Transport
+impl core::marker::StructuralPartialEq for canboat::bus::Transport
+#[non_exhaustive] pub struct canboat::bus::Capabilities
+pub canboat::bus::Capabilities::bitrates: canboat::bus::Bitrates
+pub canboat::bus::Capabilities::echoes: bool
+pub canboat::bus::Capabilities::iso_tp_sends: bool
+pub canboat::bus::Capabilities::n2k_tx_only: bool
+pub canboat::bus::Capabilities::node: bool
+pub canboat::bus::Capabilities::protocols: &'static [canboat::schema::BusProtocol]
+pub canboat::bus::Capabilities::raw: bool
+pub canboat::bus::Capabilities::raw_sends: bool
+pub canboat::bus::Capabilities::rewrites_source: bool
+pub canboat::bus::Capabilities::sends: bool
+pub canboat::bus::Capabilities::standard_frames: bool
+impl core::clone::Clone for canboat::bus::Capabilities
+pub fn canboat::bus::Capabilities::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::Capabilities
+impl core::cmp::PartialEq for canboat::bus::Capabilities
+pub fn canboat::bus::Capabilities::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::Capabilities
+pub fn canboat::bus::Capabilities::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::Capabilities
+impl core::marker::StructuralPartialEq for canboat::bus::Capabilities
+pub struct canboat::bus::Device
+impl canboat::bus::Device
+pub fn canboat::bus::Device::address(&self) -> &str
+pub fn canboat::bus::Device::baud(self, u32) -> Self
+pub fn canboat::bus::Device::bitrate(self, u32) -> Self
+pub fn canboat::bus::Device::capabilities(&self) -> canboat::bus::Capabilities
+pub fn canboat::bus::Device::channel(self, u8) -> Self
+pub fn canboat::bus::Device::configure_link(self, bool) -> Self
+pub fn canboat::bus::Device::extra_tx_pgns(self, alloc::vec::Vec<u32>) -> Self
+pub fn canboat::bus::Device::heartbeat_ms(self, u64) -> Self
+pub fn canboat::bus::Device::ignore_checksum(self) -> Self
+pub fn canboat::bus::Device::kind(&self) -> canboat::bus::Kind
+pub fn canboat::bus::Device::learn_tx_pgns(self, bool) -> Self
+pub fn canboat::bus::Device::manufacturer(self, u16) -> Self
+pub fn canboat::bus::Device::mode(self, canboat::bus::OperatingMode) -> Self
+pub fn canboat::bus::Device::model_version(self, &'static str) -> Self
+pub fn canboat::bus::Device::new(canboat::bus::Kind, impl core::convert::Into<alloc::string::String>) -> Self
+pub fn canboat::bus::Device::no_claim(self) -> Self
+pub fn canboat::bus::Device::no_tx_rate_limit(self) -> Self
+pub fn canboat::bus::Device::open_raw(&self) -> core::io::error::Result<canboat::bus::DeviceHandle<canboat::codec::raw::CanFrame>>
+pub fn canboat::bus::Device::password(self, impl core::convert::Into<alloc::string::String>) -> Self
+pub fn canboat::bus::Device::pgn_lists(self, canboat::codec::PgnLists) -> Self
+pub fn canboat::bus::Device::reconnect(self, bool) -> Self
+pub fn canboat::bus::Device::rx_filter(self, alloc::vec::Vec<u32>) -> Self
+pub fn canboat::bus::Device::source_address(self, u8) -> Self
+pub fn canboat::bus::Device::state_dir(self, std::path::PathBuf) -> Self
+pub fn canboat::bus::Device::system_instance(self, u8) -> Self
+pub fn canboat::bus::Device::timeout(self, core::time::Duration) -> Self
+pub fn canboat::bus::Device::unique(self, u32) -> Self
+impl core::clone::Clone for canboat::bus::Device
+pub fn canboat::bus::Device::clone(&self) -> Self
+impl core::fmt::Debug for canboat::bus::Device
+pub fn canboat::bus::Device::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::bus::DeviceCloser<F>
 impl<F> canboat::bus::DeviceCloser<F>
 pub fn canboat::bus::DeviceCloser<F>::close(&self, core::time::Duration) -> canboat::bus::Closed
@@ -68,6 +278,7 @@ pub fn canboat::bus::DeviceFailure::fmt(&self, &mut core::fmt::Formatter<'_>) ->
 pub struct canboat::bus::DeviceHandle<F>
 pub canboat::bus::DeviceHandle::frames_rx: std::sync::mpsc::Receiver<F>
 impl<F: core::marker::Send + 'static> canboat::bus::DeviceHandle<F>
+pub fn canboat::bus::DeviceHandle<F>::claimed_address(&self) -> core::option::Option<u8>
 pub fn canboat::bus::DeviceHandle<F>::close(self) -> canboat::bus::Closed
 pub fn canboat::bus::DeviceHandle<F>::closer(&self) -> canboat::bus::DeviceCloser<F>
 pub fn canboat::bus::DeviceHandle<F>::failure(&self) -> canboat::bus::DeviceFailure
@@ -93,6 +304,18 @@ impl<F> canboat::bus::FrameSender<F>
 pub fn canboat::bus::FrameSender<F>::send_frame(&self, F) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
 impl<F> core::clone::Clone for canboat::bus::FrameSender<F>
 pub fn canboat::bus::FrameSender<F>::clone(&self) -> Self
+#[non_exhaustive] pub struct canboat::bus::PgnListUse
+pub canboat::bus::PgnListUse::rx: canboat::bus::ListUse
+pub canboat::bus::PgnListUse::tx: canboat::bus::ListUse
+impl core::clone::Clone for canboat::bus::PgnListUse
+pub fn canboat::bus::PgnListUse::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::PgnListUse
+impl core::cmp::PartialEq for canboat::bus::PgnListUse
+pub fn canboat::bus::PgnListUse::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::PgnListUse
+pub fn canboat::bus::PgnListUse::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::PgnListUse
+impl core::marker::StructuralPartialEq for canboat::bus::PgnListUse
 pub struct canboat::bus::UnknownBusProtocol(pub alloc::string::String)
 impl core::clone::Clone for canboat::schema::UnknownBusProtocol
 pub fn canboat::schema::UnknownBusProtocol::clone(&self) -> Self
@@ -105,6 +328,18 @@ pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter
 impl core::fmt::Display for canboat::schema::UnknownBusProtocol
 pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::schema::UnknownBusProtocol
+pub struct canboat::bus::UnknownKind(_)
+impl core::clone::Clone for canboat::bus::UnknownKind
+pub fn canboat::bus::UnknownKind::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::UnknownKind
+impl core::cmp::PartialEq for canboat::bus::UnknownKind
+pub fn canboat::bus::UnknownKind::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::bus::UnknownKind
+impl core::fmt::Debug for canboat::bus::UnknownKind
+pub fn canboat::bus::UnknownKind::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::bus::UnknownKind
+pub fn canboat::bus::UnknownKind::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bus::UnknownKind
 pub mod canboat::codec
 pub mod canboat::codec::bst95
 pub struct canboat::codec::bst95::Bst95
@@ -320,20 +555,20 @@ pub canboat::codec::ngt1::OperatingMode::NgTransferNormal
 pub canboat::codec::ngt1::OperatingMode::NgTransferRaw
 pub canboat::codec::ngt1::OperatingMode::NgTransferRxAll
 pub canboat::codec::ngt1::OperatingMode::Other(u16)
-impl canboat::codec::ngt1::OperatingMode
-pub fn canboat::codec::ngt1::OperatingMode::code(self) -> u16
-pub fn canboat::codec::ngt1::OperatingMode::from_code(u16) -> Self
-impl core::clone::Clone for canboat::codec::ngt1::OperatingMode
-pub fn canboat::codec::ngt1::OperatingMode::clone(&self) -> Self
-impl core::cmp::Eq for canboat::codec::ngt1::OperatingMode
-impl core::cmp::PartialEq for canboat::codec::ngt1::OperatingMode
-pub fn canboat::codec::ngt1::OperatingMode::eq(&self, &Self) -> bool
-impl core::fmt::Debug for canboat::codec::ngt1::OperatingMode
-pub fn canboat::codec::ngt1::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
-impl core::fmt::Display for canboat::codec::ngt1::OperatingMode
-pub fn canboat::codec::ngt1::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
-impl core::marker::Copy for canboat::codec::ngt1::OperatingMode
-impl core::marker::StructuralPartialEq for canboat::codec::ngt1::OperatingMode
+impl canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::code(self) -> u16
+pub fn canboat::bus::OperatingMode::from_code(u16) -> Self
+impl core::clone::Clone for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::OperatingMode
+impl core::cmp::PartialEq for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::bus::OperatingMode
+pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::OperatingMode
+impl core::marker::StructuralPartialEq for canboat::bus::OperatingMode
 pub struct canboat::codec::ngt1::AosInfo
 pub canboat::codec::ngt1::AosInfo::firmware_version: alloc::string::String
 pub canboat::codec::ngt1::AosInfo::hardware_version: alloc::string::String
@@ -349,7 +584,7 @@ pub fn canboat::codec::ngt1::AosInfo::fmt(&self, &mut core::fmt::Formatter<'_>) 
 impl core::marker::StructuralPartialEq for canboat::codec::ngt1::AosInfo
 pub struct canboat::codec::ngt1::Config
 pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
-pub canboat::codec::ngt1::Config::operating_mode: canboat::codec::ngt1::OperatingMode
+pub canboat::codec::ngt1::Config::operating_mode: canboat::bus::OperatingMode
 pub canboat::codec::ngt1::Config::pgn_lists: canboat::codec::PgnLists
 pub canboat::codec::ngt1::Config::tx_list_record: alloc::sync::Arc<std::sync::poison::mutex::Mutex<canboat::codec::ngt1::TxListRecord>>
 impl core::clone::Clone for canboat::codec::ngt1::Config
@@ -532,6 +767,13 @@ pub fn canboat::codec::raw::Ydwg::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::raw::Ydwg::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
 pub fn canboat::codec::raw::Ydwg::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::raw::Ydwg::write_gap(&self) -> core::time::Duration
+impl<C: canboat::codec::raw::RawCodec + ?core::marker::Sized> canboat::codec::raw::RawCodec for alloc::boxed::Box<C>
+pub fn alloc::boxed::Box<C>::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn alloc::boxed::Box<C>::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn alloc::boxed::Box<C>::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn alloc::boxed::Box<C>::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn alloc::boxed::Box<C>::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn alloc::boxed::Box<C>::write_gap(&self) -> core::time::Duration
 pub mod canboat::codec::usb_can_a
 pub struct canboat::codec::usb_can_a::UsbCanA
 impl canboat::codec::usb_can_a::UsbCanA

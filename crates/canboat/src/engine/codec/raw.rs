@@ -65,13 +65,6 @@ pub struct Capabilities {
     pub standard_frames: bool,
 }
 
-/// What SocketCAN carries: both kinds of frame, both ways. It needs no
-/// codec, but is a raw link all the same.
-pub(crate) const SOCKETCAN: Capabilities = Capabilities {
-    sends: true,
-    standard_frames: true,
-};
-
 /// A gateway's raw CAN framing, driven by its caller. See the [module
 /// docs](self).
 pub trait RawCodec {
@@ -102,6 +95,33 @@ pub trait RawCodec {
     /// Empty when the gateway needs nothing.
     fn close(&mut self) -> Vec<u8> {
         Vec::new()
+    }
+}
+
+/// A boxed codec, for a gateway chosen at run time.
+impl<C: RawCodec + ?Sized> RawCodec for Box<C> {
+    fn capabilities(&self) -> Capabilities {
+        (**self).capabilities()
+    }
+
+    fn open(&mut self) -> Vec<u8> {
+        (**self).open()
+    }
+
+    fn receive(&mut self, bytes: &[u8], events: &mut Vec<Event>) {
+        (**self).receive(bytes, events)
+    }
+
+    fn send(&mut self, frame: &CanFrame) -> Result<Vec<u8>, Refused> {
+        (**self).send(frame)
+    }
+
+    fn write_gap(&self) -> Duration {
+        (**self).write_gap()
+    }
+
+    fn close(&mut self) -> Vec<u8> {
+        (**self).close()
     }
 }
 

@@ -27,6 +27,8 @@
 //! `io::ErrorKind::Unsupported` error and `Config` is a placeholder.
 
 #[cfg(target_os = "linux")]
+pub(crate) use imp::configure_can_link as configure_link;
+#[cfg(target_os = "linux")]
 pub use imp::run;
 
 pub use super::iso11783_node::Config;
@@ -37,7 +39,7 @@ use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
 /// hasn't successfully claimed an address yet. Callers (e.g.
 /// `canboat-pipeline`'s CSV-port injector) treat this as "no rewrite
 /// available, leave the caller's `src` alone".
-pub const CLAIM_UNCLAIMED: u8 = 254;
+pub const CLAIM_UNCLAIMED: u8 = super::CLAIM_UNCLAIMED;
 
 /// PGNs the gateway itself originates, always first in its PGN 126464
 /// Transmit list: ISO Acknowledgement, ISO Request, ISO Address Claim, Group
@@ -390,7 +392,7 @@ mod imp {
     /// often clears it. Best-effort: on give-up it logs and returns rather
     /// than aborting the device session, so a later supervisor reconnect can
     /// try again. PRIVILEGED — requires the process to run as root.
-    fn configure_can_link(iface: &str, bitrate: u32) {
+    pub(crate) fn configure_can_link(iface: &str, bitrate: u32) {
         let ci = match CanInterface::open(iface) {
             Ok(ci) => ci,
             Err(e) => {

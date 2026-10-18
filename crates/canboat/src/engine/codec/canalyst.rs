@@ -27,6 +27,13 @@ use super::{Codec, Event, Refused};
 
 /// Bytes in one USB packet: a count and three messages.
 pub const PACKET_LEN: usize = 64;
+
+/// The CAN bit rates the adapter runs at: those its own software offers,
+/// for which `io::canalyst` has the bus timing.
+pub(crate) const BITRATES: [u32; 13] = [
+    10_000, 20_000, 40_000, 50_000, 80_000, 100_000, 125_000, 200_000, 250_000, 400_000, 500_000,
+    800_000, 1_000_000,
+];
 /// Messages in one packet.
 const MESSAGES_PER_PACKET: usize = 3;
 /// Bytes in one message.
