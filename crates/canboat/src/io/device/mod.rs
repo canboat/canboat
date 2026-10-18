@@ -52,21 +52,20 @@ pub mod line_gateway;
 pub mod maretron;
 #[cfg(feature = "io")]
 pub mod ngt1;
+pub mod open;
 pub mod raw;
 #[cfg(feature = "io")]
 pub mod replay;
 #[cfg(feature = "io")]
 pub mod socketcan;
-#[cfg(feature = "io")]
 pub mod supervisor;
 #[cfg(feature = "io")]
 pub mod usb_can_a;
 
-#[cfg(feature = "io")]
 pub use supervisor::{DeviceFactory, Supervisor};
 
 use std::io::{self, Read, Write};
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
@@ -166,6 +165,26 @@ pub struct DeviceHandle<F = RawFrame> {
     failure: DeviceFailure,
     /// Why the device's frames stopped, when the device went away.
     lost: DeviceFailure,
+    /// A supervised device's: set on close, join or drop, so that it stops
+    /// reconnecting.
+    stop: Option<StopOnDrop>,
+    /// The address canboat's node on the device holds, [`CLAIM_UNCLAIMED`]
+    /// while it has none; `None` where canboat runs no node.
+    claim: Option<Arc<AtomicU8>>,
+}
+
+/// What [`DeviceHandle::claimed_address`] reads while canboat's node holds
+/// no address.
+pub(crate) const CLAIM_UNCLAIMED: u8 = 254;
+
+/// Sets its flag when dropped: a supervised [`DeviceHandle`]'s, so that
+/// letting go of the handle stops the reconnecting too.
+struct StopOnDrop(Arc<AtomicBool>);
+
+impl Drop for StopOnDrop {
+    fn drop(&mut self) {
+        self.0.store(true, Ordering::Relaxed);
+    }
 }
 
 /// Why a device stopped: see [`DeviceHandle::failure`] and
@@ -215,6 +234,29 @@ impl<F: Send + 'static> DeviceHandle<F> {
         self.lost.clone()
     }
 
+    /// The source address canboat's node on the device holds, if it runs
+    /// one and has claimed an address.
+    pub fn claimed_address(&self) -> Option<u8> {
+        self.claim
+            .as_ref()
+            .map(|claim| claim.load(Ordering::Relaxed))
+            .filter(|&address| address < CLAIM_UNCLAIMED)
+    }
+
+    /// The node's live claim address, for the parts of `canboat server`
+    /// that stamp it on what they send.
+    #[cfg_attr(not(feature = "bridge"), allow(dead_code))]
+    pub(crate) fn claim_atom(&self) -> Option<Arc<AtomicU8>> {
+        self.claim.clone()
+    }
+
+    /// Have [`claimed_address`](Self::claimed_address) read `claim`.
+    #[cfg_attr(not(feature = "io"), allow(dead_code))]
+    pub(crate) fn with_claim(mut self, claim: Arc<AtomicU8>) -> Self {
+        self.claim = Some(claim);
+        self
+    }
+
     /// Queue a frame to be encoded and written to the device.
     pub fn send_frame(&self, frame: F) -> Result<(), DeviceWriterGone> {
         self.cmd_tx
@@ -232,6 +274,8 @@ impl<F: Send + 'static> DeviceHandle<F> {
     /// Signal shutdown to the writer thread and wait for both threads
     /// to exit.
     pub fn join(self) {
+        // A supervised device stops reconnecting.
+        drop(self.stop);
         // Nothing receives any more: a reader that only stops when its
         // send fails (replay) must see that, or the join waits for ever.
         drop(self.frames_rx);
@@ -269,6 +313,7 @@ impl<F: Send + 'static> DeviceHandle<F> {
         DeviceCloser {
             cmd_tx: self.cmd_tx.clone(),
             progress: self.progress.clone(),
+            stop: self.stop.as_ref().map(|stop| stop.0.clone()),
         }
     }
 }
@@ -295,6 +340,8 @@ pub enum Closed {
 pub struct DeviceCloser<F = RawFrame> {
     cmd_tx: mpsc::Sender<WriterCmd<F>>,
     progress: Arc<AtomicU64>,
+    /// A supervised device's stop flag.
+    stop: Option<Arc<AtomicBool>>,
 }
 
 impl<F> Clone for DeviceCloser<F> {
@@ -302,6 +349,7 @@ impl<F> Clone for DeviceCloser<F> {
         Self {
             cmd_tx: self.cmd_tx.clone(),
             progress: self.progress.clone(),
+            stop: self.stop.clone(),
         }
     }
 }
@@ -313,6 +361,10 @@ impl<F> DeviceCloser<F> {
     /// `timeout` without one — a long backlog still drains, a stuck writer
     /// does not hang the caller.
     pub fn close(&self, timeout: Duration) -> Closed {
+        // A supervised device: no reconnecting after this.
+        if let Some(stop) = &self.stop {
+            stop.store(true, Ordering::Relaxed);
+        }
         let (done_tx, done_rx) = mpsc::channel();
         if self
             .cmd_tx
@@ -388,6 +440,8 @@ pub(crate) fn from_parts<F>(
         progress,
         failure: DeviceFailure::default(),
         lost,
+        stop: None,
+        claim: None,
     }
 }
 
@@ -448,6 +502,8 @@ pub fn run<F: Send + 'static, D: DeviceDecoder<F>, E: DeviceEncoder<F>>(
         progress,
         failure,
         lost,
+        stop: None,
+        claim: None,
     }
 }
 

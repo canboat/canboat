@@ -370,6 +370,7 @@ pub mod bus {
         ActisenseFormat, Bitrates, Capabilities, Kind, ListUse, PgnListUse, Setting, Transport,
         UnknownKind,
     };
+    pub use crate::io::device::open::Device;
     pub use crate::io::device::{
         Closed, DeviceCloser, DeviceFailure, DeviceHandle, DeviceWriterGone, FrameSender,
     };

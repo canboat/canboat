@@ -105,6 +105,33 @@ pub trait RawCodec {
     }
 }
 
+/// A boxed codec, for a gateway chosen at run time.
+impl<C: RawCodec + ?Sized> RawCodec for Box<C> {
+    fn capabilities(&self) -> Capabilities {
+        (**self).capabilities()
+    }
+
+    fn open(&mut self) -> Vec<u8> {
+        (**self).open()
+    }
+
+    fn receive(&mut self, bytes: &[u8], events: &mut Vec<Event>) {
+        (**self).receive(bytes, events)
+    }
+
+    fn send(&mut self, frame: &CanFrame) -> Result<Vec<u8>, Refused> {
+        (**self).send(frame)
+    }
+
+    fn write_gap(&self) -> Duration {
+        (**self).write_gap()
+    }
+
+    fn close(&mut self) -> Vec<u8> {
+        (**self).close()
+    }
+}
+
 /// Refuse what is no CAN frame, and (unless `standard`) an 11-bit frame.
 fn check(frame: &CanFrame, standard: bool) -> Result<(), Refused> {
     if frame.data.len() > 8 {
