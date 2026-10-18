@@ -31,9 +31,11 @@
 //!
 //! Alongside the bus traffic the codec emits the synthetic `NMEA 2000
 //! gateway: network status` (PGN 262400), as canboat C's `actisense-serial`
-//! does. With [`Config::pgn_lists`] naming Transmit PGNs it also brings the
-//! gateway's Transmit PGN Enable list up to date after startup (see
-//! [`super::ngt1_tx_list`]).
+//! does. After startup it reads the gateway's Transmit PGN Enable list,
+//! and with [`Config::pgn_lists`] naming Transmit PGNs brings it up to date
+//! (see [`super::ngt1_tx_list`]). Without, a frame for a PGN not on it is
+//! sent all the same, and dropped by the gateway, so the first of each is
+//! warned about.
 //!
 //! A gateway that answers no BEM command within [`PROBE_AFTER_MS`] is asked
 //! whether it is an Across Ocean Systems simulator ([`crate::engine::format::aos`]),
@@ -183,6 +185,8 @@ pub struct Ngt1 {
     settle: Settle,
     /// Frames for the bus held meanwhile, encoded.
     held: Vec<Vec<u8>>,
+    /// PGNs sent that the gateway's list lacks, each warned about once.
+    warned: Vec<u32>,
 }
 
 /// Asking a gateway that answers no BEM command what it is.
@@ -252,6 +256,7 @@ impl Ngt1 {
             aos: None,
             settle: Settle::Settled,
             held: Vec::new(),
+            warned: Vec::new(),
         }
     }
 
@@ -320,6 +325,31 @@ impl Ngt1 {
             self.gate = None;
             self.aos = Some(info);
             self.probe = Probe::Done;
+        }
+    }
+
+    /// Say so, once per PGN, when the gateway's list lacks a PGN sent: the
+    /// gateway drops it without a word. Only without a transmit list of
+    /// our own ([`Config::pgn_lists`]): with one, the gate refuses what is
+    /// not on it, and the sync has put on it what is.
+    fn warn_if_dropped(&mut self, pgn: u32) {
+        if self.gate.is_some() || self.warned.contains(&pgn) {
+            return;
+        }
+        let Some(complete) = self.tx_list.lacks(pgn) else {
+            return;
+        };
+        self.warned.push(pgn);
+        let fix = "name it, and every PGN you send, with --tx-pgn (pgn_lists.tx in the library)";
+        if complete {
+            log::warn!(
+                "ngt1: PGN {pgn} is not on the NGT-1's transmit list, which drops it; {fix}"
+            );
+        } else {
+            log::warn!(
+                "ngt1: PGN {pgn} is not on the NGT-1's transmit list as read (Format 1, which \
+                 can miss some), so it may be dropped; {fix}"
+            );
         }
     }
 
@@ -586,6 +616,7 @@ impl Codec for Ngt1 {
         if 6 + frame.data.len() > u8::MAX as usize {
             return Err(Refused::TooLarge);
         }
+        self.warn_if_dropped(frame.pgn);
         let bytes = encode_n2k_send_frame(frame);
         if self.settle == Settle::Settled {
             Ok(bytes)
@@ -683,6 +714,47 @@ mod settle_tests {
         events.clear();
         d.tick(NOW + MODE_SETTLE_MS, &mut events);
         assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
+    }
+}
+
+#[cfg(test)]
+mod tx_list_warning_tests {
+    use super::*;
+
+    fn frame(pgn: u32) -> RawFrame {
+        RawFrame::new(None, 2, pgn, 0, 255, vec![1, 2, 3])
+    }
+
+    /// A PGN the gateway's list lacks is still sent, and warned about
+    /// once; one on it, or sent before the list is read, is not.
+    #[test]
+    fn a_pgn_the_gateway_drops_is_warned_about_once() {
+        let mut d = Ngt1::new(Config::default());
+        assert!(d.send(&frame(127250)).is_ok());
+        assert!(d.warned.is_empty(), "the list is not read yet");
+        d.tx_list.read_for_test(&[59904, 127508], true);
+        assert!(d.send(&frame(127508)).is_ok());
+        assert!(d.send(&frame(127250)).is_ok());
+        assert!(d.send(&frame(127250)).is_ok());
+        assert!(d.send(&frame(130306)).is_ok());
+        assert_eq!(d.warned, [127250, 130306]);
+    }
+
+    /// With a transmit list of our own the gate refuses what is not on it,
+    /// and the sync put the rest on the gateway's: no warning.
+    #[test]
+    fn a_named_transmit_list_warns_nothing() {
+        let mut d = Ngt1::new(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127250],
+                rx: Vec::new(),
+            },
+            ..Default::default()
+        });
+        d.tx_list.read_for_test(&[59904], true);
+        assert!(d.send(&frame(127250)).is_ok());
+        assert_eq!(d.send(&frame(130306)), Err(Refused::NotOnTxList));
+        assert!(d.warned.is_empty());
     }
 }
 
@@ -841,7 +913,10 @@ mod network_status_tests {
             extra_tx_pgns: vec![127258],
             ..Default::default()
         });
-        assert!(d.tx_list.is_done(), "nothing to write");
+        assert!(
+            d.tx_list.lacks(127258).is_none(),
+            "nothing written, nor read yet"
+        );
         let status = pgn_list_status(&PgnLists::default(), &[127258]);
         assert_eq!(status.tx, PgnListSupport::Untouched);
         let status = pgn_list_status(
