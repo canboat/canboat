@@ -329,7 +329,7 @@ pub mod read {
 ///
 /// Every gateway is opened the one way: name its [`Kind`](bus::Kind) and
 /// where it is with [`Device::new`](bus::Device::new), set what it needs,
-/// and [`open`](bus::Device::open) it. [`Kind`](bus::Kind) and
+/// and `open` it. [`Kind`](bus::Kind) and
 /// [`capabilities`](bus::Device::capabilities) say what a gateway can do,
 /// and a setting it does not have is refused rather than ignored. The
 /// handle that comes back, a [`DeviceHandle`](bus::DeviceHandle), is
@@ -370,7 +370,7 @@ pub mod read {
 /// # }
 /// ```
 ///
-/// [`open`](bus::Device::open) needs the `io` feature;
+/// `open` needs the `io` feature;
 /// [`open_raw`](bus::Device::open_raw), single CAN frames with nothing of
 /// NMEA 2000 in between, only `raw` (and `raw-usb` for the CANalyst-II).
 #[cfg(feature = "raw")]
@@ -394,17 +394,17 @@ pub mod bus {
     /// NMEA 2000 or J1939, such as Mastervolt MasterBus. Needs only the
     /// `raw` feature (`raw-usb` for the CANalyst-II).
     ///
-    /// [`Device::open_raw`](super::Device::open_raw) runs the gateway's
+    /// [`Device::open_raw`](crate::bus::Device::open_raw) runs the gateway's
     /// [`RawCodec`](crate::codec::raw::RawCodec) on a reader and a writer
-    /// thread and returns a [`RawDeviceHandle`]: frames received come out
+    /// thread and returns a [`RawDeviceHandle`](crate::bus::raw::RawDeviceHandle): frames received come out
     /// of its `frames_rx`, frames to send go in through
-    /// [`send_frame`](super::DeviceHandle::send_frame) or a cloned
-    /// [`frame_sender`](super::DeviceHandle::frame_sender), and either half
+    /// [`send_frame`](crate::bus::DeviceHandle::send_frame) or a cloned
+    /// [`frame_sender`](crate::bus::DeviceHandle::frame_sender), and either half
     /// may live on its own thread.
-    /// [`capabilities`](super::Device::capabilities) says what a gateway can
-    /// carry ([`raw`](super::Capabilities::raw),
-    /// [`raw_sends`](super::Capabilities::raw_sends),
-    /// [`standard_frames`](super::Capabilities::standard_frames)); a frame
+    /// [`capabilities`](crate::bus::Device::capabilities) says what a gateway can
+    /// carry ([`raw`](crate::bus::Capabilities::raw),
+    /// [`raw_sends`](crate::bus::Capabilities::raw_sends),
+    /// [`standard_frames`](crate::bus::Capabilities::standard_frames)); a frame
     /// it cannot is logged and dropped.
     ///
     /// ```no_run
@@ -423,8 +423,8 @@ pub mod bus {
     /// ```
     ///
     /// When the gateway goes away, `frames_rx` closes and
-    /// [`lost`](super::DeviceHandle::lost) says why; open it again, or
-    /// open it with [`reconnect`](super::Device::reconnect).
+    /// [`lost`](crate::bus::DeviceHandle::lost) says why; open it again, or
+    /// open it with [`reconnect`](crate::bus::Device::reconnect).
     pub mod raw {
         use crate::engine::codec::raw::CanFrame;
 

@@ -280,7 +280,7 @@ pub struct Capabilities {
     /// It transmits single CAN frames as they are given, through
     /// `open_raw`.
     pub raw_sends: bool,
-    /// What [`Device::open`](super::open::Device::open) is given to send
+    /// What `Device::open` is given to send
     /// reaches the bus.
     pub sends: bool,
     /// It puts its own source address on what it transmits.
@@ -299,7 +299,7 @@ pub struct Capabilities {
     pub echoes: bool,
     /// The bit rates it can be set to.
     pub bitrates: Bitrates,
-    /// The protocols [`Device::open`](super::open::Device::open) carries
+    /// The protocols `Device::open` carries
     /// on it.
     pub protocols: &'static [BusProtocol],
 }

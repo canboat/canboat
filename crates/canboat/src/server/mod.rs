@@ -532,7 +532,7 @@ struct OpenedSource {
     /// (`--socketcan` and `--canalyst` expose one). Read by the CSV-port
     /// injector to rewrite client-supplied default-`src` frames.
     claim_addr: Option<Arc<std::sync::atomic::AtomicU8>>,
-    /// What the backend does with `BridgeConfig::pgn_lists`; `None` when
+    /// What the gateway does with `Device::pgn_lists`; `None` when
     /// none were given.
     pgn_list_status: Option<PgnListStatus>,
 }

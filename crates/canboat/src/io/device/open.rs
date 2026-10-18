@@ -43,7 +43,7 @@ use super::{CLAIM_UNCLAIMED, DeviceHandle};
 ///
 /// A setting the kind does not have ([`Kind::settings`]), a bit rate it
 /// cannot run at, or an address it cannot be reached at, makes
-/// [`open`](Self::open) and [`open_raw`](Self::open_raw) fail with
+/// `open` and [`open_raw`](Self::open_raw) fail with
 /// [`io::ErrorKind::InvalidInput`]: no setting is ever ignored.
 ///
 /// Without [`reconnect`](Self::reconnect), what `open` returns lasts one
@@ -238,7 +238,7 @@ impl Device {
 
     /// The PGNs the application receives and transmits: what the gateway
     /// does with them is [`Kind::pgn_lists`], and
-    /// [`pgn_list_status`](Self::pgn_list_status) says how it went. Every
+    /// `pgn_list_status` says how it went. Every
     /// kind takes them; one that has no such list leaves them be.
     ///
     /// On an NGT-1 or iKonvert, once the transmit list names a PGN, every

@@ -379,7 +379,7 @@ impl Bridge {
         self.db.encode_by_pgn(pgn)
     }
 
-    /// What the backend did with [`BridgeConfig::pgn_lists`]: whether it
+    /// What the gateway did with [`Device::pgn_lists`](crate::bus::Device::pgn_lists): whether it
     /// advertises each list in its PGN 126464 answer, and which PGNs did not
     /// fit. `None` when there is nothing to advertise: the config named no
     /// PGNs and no quirk transmits from the gateway's address.
@@ -388,7 +388,7 @@ impl Bridge {
     }
 
     /// The live claimed ISO source address, if the backend exposes one
-    /// (`socketcan` or `canalyst`) and it currently holds a valid unicast
+    /// (one canboat runs its node on) and it currently holds a valid unicast
     /// address. `None` otherwise.
     pub fn claimed_address(&self) -> Option<u8> {
         self.claim_addr
