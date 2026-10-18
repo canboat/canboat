@@ -458,6 +458,14 @@ impl TxListSync {
                 if *attempt < READ_ATTEMPTS {
                     let attempt = attempt + 1;
                     self.read_f1(attempt, now)
+                } else if self.wanted.is_empty() {
+                    // Only read, to tell what the gateway drops: nothing
+                    // is at stake, but nothing will be warned about.
+                    log::info!(
+                        "ngt1: no answer to reading the transmit PGN list; PGNs it drops are not warned about"
+                    );
+                    self.state = State::Done;
+                    Vec::new()
                 } else {
                     log::warn!(
                         "ngt1: no answer to reading the transmit PGN list; {:?} may not be transmitted",
