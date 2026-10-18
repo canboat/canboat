@@ -141,11 +141,11 @@ mod linux {
         let reader = thread::Builder::new()
             .name("socketcan-raw-reader".into())
             .spawn(move || read(&rsock, &name, &frames_tx, &rlost, &rstop))?;
-        let (wprogress, name) = (progress.clone(), iface.to_string());
+        let (wprogress, wlost, name) = (progress.clone(), lost.clone(), iface.to_string());
         let writer = thread::Builder::new()
             .name("socketcan-raw-writer".into())
             .spawn(move || {
-                write(&sock, &name, &cmd_rx, &wprogress);
+                write(&sock, &name, &cmd_rx, &wprogress, &wlost);
                 stop.store(true, Ordering::Relaxed);
             })?;
         Ok(from_parts(
@@ -206,6 +206,7 @@ mod linux {
         iface: &str,
         cmd_rx: &mpsc::Receiver<WriterCmd<CanFrame>>,
         progress: &AtomicU64,
+        lost: &DeviceFailure,
     ) {
         while let Ok(cmd) = cmd_rx.recv() {
             let frame = match cmd {
@@ -227,7 +228,11 @@ mod linux {
                 continue;
             };
             // A full transmit queue (ENOBUFS) empties as the bus takes the
-            // frames: wait for room rather than drop the frame.
+            // frames: wait for room rather than drop the frame. If it stays
+            // full, nobody on the bus acknowledges (we may be alone on it):
+            // drop the frame and go on, as the NMEA 2000 SocketCAN link does.
+            // Any other error is the interface going: stop, which stops the
+            // reader too.
             let deadline = Instant::now() + WRITE_WAIT;
             loop {
                 match sock.write_frame(&can) {
@@ -235,15 +240,21 @@ mod linux {
                         progress.fetch_add(1, Ordering::Relaxed);
                         break;
                     }
-                    Err(e)
-                        if e.raw_os_error() == Some(libc_enobufs())
-                            && Instant::now() < deadline =>
-                    {
+                    Err(e) if e.raw_os_error() == Some(libc_enobufs()) => {
+                        if Instant::now() >= deadline {
+                            log::warn!(
+                                "CAN {iface}: transmit queue stays full, dropping frame {:08X}",
+                                frame.id
+                            );
+                            break;
+                        }
                         thread::sleep(Duration::from_millis(1));
                     }
                     Err(e) => {
-                        log::warn!("CAN {iface}: write failed: {e}");
-                        break;
+                        let why = format!("CAN {iface}: write error: {e}");
+                        log::error!("{why}");
+                        lost.set(&why);
+                        return;
                     }
                 }
             }
