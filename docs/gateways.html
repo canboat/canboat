@@ -58,6 +58,8 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 <tr><td><code>yachtd</code></td><td></td><td>Yacht Devices YDWG-02, YDEN-02, YDNR-02, YDNU-02</td><td><code>tcp://</code> (1457), <code>udp://</code>, serial (38400)</td><td>rw</td><td>yes</td><td>–</td></tr>
 <tr><td><code>miniplex</code></td><td></td><td>ShipModul MiniPlex-3 with NMEA 2000</td><td><code>tcp://</code> (10110), <code>udp://</code>, serial (460800)</td><td>rw</td><td>yes</td><td>–</td></tr>
 <tr><td><code>seasmart</code></td><td></td><td>Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode</td><td><code>tcp://</code> (10001), <code>udp://</code>, serial (38400)</td><td>rw</td><td>–</td><td>–</td></tr>
+<tr><td><code>candump</code></td><td></td><td>SensESP N2K gateway, other N2K IP gateways in candump</td><td><code>tcp://</code> (2599)</td><td>rw</td><td>yes</td><td>yes</td></tr>
+<tr><td><code>plain</code></td><td></td><td>N2K IP gateways in canboat PLAIN/FAST, a canboat server's raw port</td><td><code>tcp://</code> (2599)</td><td>rw</td><td>–</td><td>–</td></tr>
 <tr><td><code>ikonvert</code></td><td></td><td>Digital Yacht iKonvert, NavLink2</td><td>serial (230400), <code>tcp://</code> (2000), <code>udp://</code> (2000)</td><td>rw</td><td>–</td><td>–</td></tr>
 <tr><td><code>maretron</code></td><td></td><td>Maretron IPG100/200</td><td><code>tcp://</code> (6543)</td><td>rw</td><td>–</td><td>–</td></tr>
 <tr><td><code>aos</code></td><td></td><td>AOS NMEA 2000/0183 Simulator</td><td>serial (115200), <code>usb</code>, <code>tcp://</code> (6001)</td><td>rw</td><td>–</td><td>–</td></tr>
@@ -80,6 +82,12 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 <li><strong>W2K-2:</strong> each data server (60001–60003) takes one Tx Format, set on its <em>Serial</em> page: <code>ngt-actisense</code>, <code>n2k-actisense</code>, <code>n2k-ascii</code>, or NMEA 0183, which holds only the sentences the W2K-2 converts, never a PGN. Each needs a route from N2K on the <em>Routing</em> page, which a change of Tx Format can clear; to send, a route to an enabled virtual device (N2KV1, "Data1", by default; Data2 and Data3 start disabled, and what is routed to them is dropped). It also has a hidden data server, CANDIRECT, on port 20000, which its web pages do not show: in BST-95 it is <code>raw-actisense</code> (<code>tcp://w2k:20000</code>), in NMEA 0183 it sends every CAN frame as <code>$MXPGN</code>, for <code>--data-format mxpgn</code>. canboat's NGT-1 code works with it: the W2K-2 refuses the NGT-1's Rx All mode, and canboat goes on in its mode. Seen on firmware 3.025 and 3.095; what a W2K-1 does is not known.</li>
 <li><strong>actisense mxpgn:</strong> an Actisense gateway writes <code>$MXPGN</code>'s data in bus order, first byte first, where a MiniPlex writes it as one number, last byte first; both cite the same rule. Actisense's own example (<code>$MXPGN,01F214,6842,00B004FF7FFFFFFF</code>, a battery at 12.00 V) and a W2K-2 have it so, and a W2K-2 sends only what is written so. Nothing in a stream says which, so a capture is read as ShipModul's unless told: <code>canboat convert --from actisense-mxpgn</code>, <code>analyzer -format ACTISENSE_MXPGN</code>.</li>
 <li><strong>seasmart:</strong> <code>$PCDIN</code> carries one whole message, with its source but no priority or destination, so an addressed PGN goes where the gateway decides. Not every gateway takes it to send: Yacht Devices gateways take only 59904, 127488, 127489, 127493, 127502, 127505 and 127508, and only on a server port set to bidirectional; Quark-elec does not document taking it at all. Chetco's port is 10001; give the port of the others (Quark-elec 2000, Yacht Devices 1456 by default). Received messages get the host's time: the sentence's own time stamp is no clock time.</li>
+<li><strong>candump:</strong> a gateway that streams SocketCAN <code>candump</code> text over TCP, such as the SensESP N2K gateway (port 2599, canboatjs's N2K IP gateway's, by default). canboat reads every candump shape, log, pretty and Angstrom, and sends the log shape, <code>(1502979132.106111) can0 09F50374#000A00FF…</code>, one frame per line: a fast-packet goes out as its frames. 11-bit frames are Quick PCS (<code>--protocol quick</code>). Finding the gateway over mDNS (<code>_sensesp-n2k._tcp</code>) is not done yet: give its address.
+<ul>
+<li><strong>Without <code>--node</code></strong> frames go out as they are given, source address included: canboat claims no address, and nothing checks that the one you send from is free. The PGN lists are ignored. <code>open_raw</code> sends this way too.</li>
+<li><strong>With <code>--node</code></strong> canboat runs its own node on it, as on a CANalyst-II: it claims an address (<code>--address</code> and the other node options, which need <code>--node</code> here), answers ISO Requests, advertises the PGN lists, sends ISO TP, and sends what you give it from its address. In the library this is <code>Device::run_node(true)</code>.</li>
+</ul></li>
+<li><strong>plain:</strong> canboat PLAIN/FAST lines, both ways, on one TCP connection, as an N2K IP gateway in canboatjs's <code>actisense</code> format speaks them. The lines' own timestamps are kept. A canboat server serves its bus read-only on its raw port, <code>--kind plain -r tcp://pi:2603</code>; to chain one canboat server into another, both ways, use <code>canboat server --canboat-csv</code> (reading 2603, writing 2600).</li>
 <li><strong>seasmart, miniplex:</strong> a sentence whose checksum is wrong is dropped, with an error. Some sources write wrong ones (the examples in Quark-elec's manuals, Chetco's own switch page): <code>--ignore-checksum</code> takes them anyway, as do <code>canboat convert --ignore-checksum</code> and <code>analyzer -ignore-checksum</code> for a capture.</li>
 <li>The names of canboat 8.3.0 still work: <code>--kind ngt1</code>, <code>w2k-ascii</code> and <code>ydwg</code>, and <code>canboat server --actisense …</code>, <code>--ikonvert …</code>, <code>--maretron …</code> and <code>--socketcan …</code>.</li>
 </ul>
@@ -98,8 +106,9 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 <tr><td><code>--password</code></td><td><code>maretron</code></td></tr>
 <tr><td><code>--no-tx-rate-limit</code></td><td><code>ikonvert</code></td></tr>
 <tr><td><code>--ignore-checksum</code></td><td><code>miniplex</code>, <code>seasmart</code></td></tr>
-<tr><td>node options</td><td><code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td></tr>
-<tr><td><code>--no-claim</code></td><td><code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td></tr>
+<tr><td><code>--node</code></td><td><code>candump</code></td></tr>
+<tr><td>node options</td><td><code>candump</code>, <code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td></tr>
+<tr><td><code>--no-claim</code></td><td><code>candump</code>, <code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td></tr>
 </tbody>
 </table>
 <p>&lt;!-- END generated by canboat: options --&gt;</p>
@@ -136,8 +145,8 @@ SUBSYSTEM==&quot;tty&quot;, ACTION==&quot;add&quot;, ENV{ID_SERIAL}==&quot;Actis
 </tr></thead>
 <tbody>
 <tr><td><code>actisense (ngt-actisense)</code></td><td>ignored</td><td>the gateway's Transmit PGN Enable list: it sends only these</td></tr>
+<tr><td><code>candump</code>, <code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td><td>advertised by canboat's node</td><td>advertised by canboat's node</td></tr>
 <tr><td><code>ikonvert</code></td><td>stored in the gateway, which advertises it</td><td>stored in the gateway, which advertises it and sends only these</td></tr>
-<tr><td><code>aos</code>, <code>socketcan</code>, <code>canalyst</code>, <code>usb-can-a</code></td><td>advertised by canboat's node</td><td>advertised by canboat's node</td></tr>
 <tr><td>The others</td><td>ignored</td><td>ignored</td></tr>
 </tbody>
 </table>

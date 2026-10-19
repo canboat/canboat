@@ -488,7 +488,7 @@ pub mod codec {
     /// `bus::raw`, with the `raw` feature, runs these on threads.
     pub mod raw {
         pub use crate::engine::codec::raw::{
-            Bst95, CanFrame, Canalyst, Capabilities, Event, Mxpgn, RawCodec, UsbCanA, Ydwg,
+            Bst95, CanFrame, Canalyst, Candump, Capabilities, Event, Mxpgn, RawCodec, UsbCanA, Ydwg,
         };
     }
     /// The PGNs a gateway is told the application sends and reads.

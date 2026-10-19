@@ -26,6 +26,7 @@ const OPTIONS: &[(&str, Setting)] = &[
     ("--password", Setting::Password),
     ("--no-tx-rate-limit", Setting::NoTxRateLimit),
     ("--ignore-checksum", Setting::IgnoreChecksum),
+    ("--node", Setting::RunNode),
     ("node options", Setting::Node),
     ("--no-claim", Setting::NoClaim),
 ];
@@ -277,6 +278,10 @@ fn render_gateway_help() -> String {
          miniplex). A W2K-2 sends it only on its hidden CANDIRECT data server (port \
          20000) set to NMEA 0183; its own data servers' NMEA 0183 has no $MXPGN. A W2K-1 \
          is not known to send it."
+            .to_string(),
+        "candump runs canboat's node only with --node: then it claims an address, \
+         answers ISO Requests and sends ISO TP, as on socketcan. Without, frames go \
+         out as they are given, source address and all, and the PGN lists are ignored."
             .to_string(),
         "ikonvert: tcp:// is the better mode for a NavLink2. Over udp://[bind:][port] \
          (its UDP output, port 2000) canboat only receives: it expects the gateway to be \
@@ -554,7 +559,7 @@ mod tests {
     fn the_kinds_that_carry_a_protocol_are_listed() {
         assert_eq!(
             kinds_carrying(BusProtocol::Quick),
-            "socketcan, canalyst or usb-can-a"
+            "candump, socketcan, canalyst or usb-can-a"
         );
         let j1939 = kinds_carrying(BusProtocol::J1939);
         for kind in ["actisense (mxpgn)", "yachtd", "miniplex", "socketcan"] {

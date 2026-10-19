@@ -68,6 +68,8 @@ pub struct Device {
     pgn_lists: PgnLists,
     extra_tx_pgns: Vec<u32>,
     node: Node,
+    /// Run canboat's node on a gateway that would pass frames through.
+    run_node: bool,
     reconnect: bool,
     /// What every session of this device shares, also across clones.
     shared: Shared,
@@ -92,6 +94,7 @@ impl std::fmt::Debug for Device {
             .field("pgn_lists", &self.pgn_lists)
             .field("extra_tx_pgns", &self.extra_tx_pgns)
             .field("node", &self.node)
+            .field("run_node", &self.run_node)
             .field("reconnect", &self.reconnect)
             .finish_non_exhaustive()
     }
@@ -166,6 +169,7 @@ impl Device {
             pgn_lists: PgnLists::default(),
             extra_tx_pgns: Vec::new(),
             node: Node::default(),
+            run_node: false,
             reconnect: false,
             shared: Shared {
                 claim: Arc::new(AtomicU8::new(CLAIM_UNCLAIMED)),
@@ -328,6 +332,19 @@ impl Device {
         self.with(Setting::Node)
     }
 
+    /// Run canboat's node on a gateway that otherwise passes frames
+    /// through as they are given (`candump`): it claims an address, answers
+    /// ISO Requests, sends ISO TP, and sends what the application gives it
+    /// from its own address. The node settings need it there.
+    pub fn run_node(mut self, run: bool) -> Self {
+        self.run_node = run;
+        if run {
+            self.with(Setting::RunNode)
+        } else {
+            self
+        }
+    }
+
     /// Run canboat's node without claiming an address: listen only, or on
     /// an AOS simulator send from the simulator's own.
     pub fn no_claim(mut self) -> Self {
@@ -371,6 +388,10 @@ impl Device {
     /// once it is opened).
     pub fn capabilities(&self) -> Capabilities {
         let mut caps = self.kind.capabilities();
+        if self.kind.takes(Setting::RunNode) && !self.run_node {
+            caps.node = false;
+            caps.iso_tp_sends = false;
+        }
         if self.receive_only() {
             caps.sends = false;
             caps.raw_sends = false;
@@ -416,6 +437,18 @@ impl Device {
         if let Some(&setting) = self.given.iter().find(|&&s| !kind.takes(s)) {
             return Err(invalid(format!(
                 "{kind}: has no {} setting",
+                setting.name()
+            )));
+        }
+        if kind.takes(Setting::RunNode)
+            && !self.run_node
+            && let Some(&setting) = self
+                .given
+                .iter()
+                .find(|&&s| matches!(s, Setting::Node | Setting::NoClaim))
+        {
+            return Err(invalid(format!(
+                "{kind}: the {} setting is canboat's node's, which runs only with run_node",
                 setting.name()
             )));
         }
@@ -487,7 +520,7 @@ impl Device {
         } else {
             self.open_session(protocol)?
         };
-        Ok(if self.kind.capabilities().node {
+        Ok(if self.capabilities().node {
             handle.with_claim(self.shared.claim.clone())
         } else {
             handle
@@ -529,19 +562,24 @@ impl Device {
             return None;
         }
         let uses = self.kind.pgn_lists();
-        Some(if self.receive_only() || uses.tx == ListUse::Ignored {
-            PgnListStatus {
-                tx: PgnListSupport::Unsupported,
-                rx: PgnListSupport::Unsupported,
-                dropped: Vec::new(),
-            }
-        } else {
-            match self.kind {
-                Kind::NGT1 => super::ngt1::pgn_list_status(&self.pgn_lists, &self.extra_tx_pgns),
-                Kind::Ikonvert => super::ikonvert::pgn_list_status(&effective),
-                _ => super::socketcan::pgn_list_status(&effective),
-            }
-        })
+        let no_node = self.kind.takes(Setting::RunNode) && !self.run_node;
+        Some(
+            if self.receive_only() || uses.tx == ListUse::Ignored || no_node {
+                PgnListStatus {
+                    tx: PgnListSupport::Unsupported,
+                    rx: PgnListSupport::Unsupported,
+                    dropped: Vec::new(),
+                }
+            } else {
+                match self.kind {
+                    Kind::NGT1 => {
+                        super::ngt1::pgn_list_status(&self.pgn_lists, &self.extra_tx_pgns)
+                    }
+                    Kind::Ikonvert => super::ikonvert::pgn_list_status(&effective),
+                    _ => super::socketcan::pgn_list_status(&effective),
+                }
+            },
+        )
     }
 
     /// The application's lists, with the extra transmit PGNs.
@@ -560,7 +598,8 @@ impl Device {
     fn warn_about_pgn_lists(&self) {
         let (lists, uses) = (&self.pgn_lists, self.kind.pgn_lists());
         let unused = |what: &str, pgns: &[u32], used: ListUse| {
-            if !pgns.is_empty() && (used == ListUse::Ignored || self.receive_only()) {
+            let no_node = self.kind.takes(Setting::RunNode) && !self.run_node;
+            if !pgns.is_empty() && (used == ListUse::Ignored || self.receive_only() || no_node) {
                 log::warn!(
                     "{}: has no {what} PGN list here; ignoring {pgns:?}",
                     self.kind
@@ -610,6 +649,7 @@ impl Device {
             Kind::Aos => Some("canboat-aos"),
             Kind::Canalyst => Some("canboat-canalyst"),
             Kind::UsbCanA => Some("canboat-usb-can-a"),
+            Kind::Candump => Some("canboat-candump"),
             _ => None,
         });
         super::socketcan::Config {
@@ -729,6 +769,15 @@ impl Device {
                 )
             }
             Kind::SeaSmart => line(LineFormat::SeaSmart, &[])?,
+            Kind::Candump if self.run_node => {
+                let ((reader, writer), _) = self.line_endpoint()?;
+                super::candump::run(reader, writer, self.node_config(protocol), claim())?
+            }
+            Kind::Candump => line(LineFormat::Candump, &[])?,
+            Kind::Plain => {
+                let (reader, writer) = crate::io::net::open_tcp(&self.address, self.tcp_port())?;
+                super::canboat_csv::run(reader, writer)
+            }
             Kind::Actisense(ActisenseFormat::RawAscii) => line(LineFormat::YdwgRaw, &[])?,
             Kind::Actisense(ActisenseFormat::N2kAscii) => line(LineFormat::N2kAscii, &[])?,
             Kind::Actisense(ActisenseFormat::Mxpgn) => line(LineFormat::ActisenseMxpgn, &[])?,
@@ -803,6 +852,7 @@ impl Device {
             Kind::Actisense(ActisenseFormat::Mxpgn) => Box::new(raw_codec::Mxpgn::actisense()),
             Kind::Actisense(ActisenseFormat::RawActisense) => Box::new(raw_codec::Bst95::new()),
             Kind::Canalyst => Box::new(raw_codec::Canalyst::new()),
+            Kind::Candump => Box::new(raw_codec::Candump::with_clock(super::now_ms)),
             Kind::UsbCanA => Box::new(raw_codec::UsbCanA::new(
                 self.bitrate.unwrap_or(NMEA_2000_BITRATE),
             )?),
@@ -1055,6 +1105,49 @@ mod tests {
     fn debug_leaves_the_password_out() {
         let dev = Device::new(Kind::Maretron, "ipg").password("hunter2");
         assert!(!format!("{dev:?}").contains("hunter2"));
+    }
+
+    #[test]
+    fn candump_runs_the_node_only_when_asked() {
+        let plain = Device::new(Kind::Candump, "tcp://sensesp");
+        assert!(!plain.capabilities().node && !plain.capabilities().iso_tp_sends);
+        assert!(plain.capabilities().raw_sends);
+        let why = Device::new(Kind::Candump, "tcp://sensesp")
+            .source_address(9)
+            .check(None)
+            .expect_err("refused")
+            .to_string();
+        assert!(why.contains("run_node"), "{why}");
+        let node = Device::new(Kind::Candump, "tcp://sensesp")
+            .run_node(true)
+            .source_address(9)
+            .no_claim();
+        assert!(node.check(Some(BusProtocol::J1939)).is_ok());
+        assert!(node.capabilities().node && node.capabilities().iso_tp_sends);
+        assert!(
+            Device::new(Kind::SocketCan, "can0")
+                .run_node(true)
+                .check(None)
+                .is_err()
+        );
+    }
+
+    #[cfg(feature = "io")]
+    #[test]
+    fn candump_advertises_the_lists_only_with_its_node() {
+        let lists = PgnLists {
+            tx: vec![127250],
+            rx: vec![],
+        };
+        let status = |dev: Device| dev.pgn_lists(lists.clone()).pgn_list_status().unwrap().tx;
+        assert_eq!(
+            status(Device::new(Kind::Candump, "tcp://x")),
+            PgnListSupport::Unsupported
+        );
+        assert_eq!(
+            status(Device::new(Kind::Candump, "tcp://x").run_node(true)),
+            PgnListSupport::Answered
+        );
     }
 
     #[test]

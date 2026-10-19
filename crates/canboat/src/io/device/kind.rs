@@ -38,6 +38,13 @@ pub enum Kind {
     Miniplex,
     /// A gateway in Chetco's SeaSmart.Net `$PCDIN`.
     SeaSmart,
+    /// A gateway sending SocketCAN `candump` text over TCP: a SensESP N2K
+    /// gateway, or another N2K IP gateway in candump mode.
+    Candump,
+    /// A gateway sending canboat PLAIN/FAST lines over TCP: an N2K IP
+    /// gateway in canboatjs's `actisense` format, or, to read, a canboat
+    /// server's raw port.
+    Plain,
     /// A Linux SocketCAN interface. canboat is the node on it.
     SocketCan,
     /// A CANalyst-II (Waveshare USB-CAN-B) over USB. canboat is the node.
@@ -152,6 +159,9 @@ pub enum Setting {
     IgnoreChecksum,
     /// Have the gateway itself pass on only some PGNs.
     RxFilter,
+    /// Run canboat's node on a gateway that passes frames as they are
+    /// given, which otherwise passes them through.
+    RunNode,
     /// canboat's node: its address, ISO NAME, heartbeat and the rest.
     Node,
     /// Run canboat's node without claiming an address.
@@ -170,6 +180,7 @@ impl Setting {
         Setting::NoTxRateLimit,
         Setting::IgnoreChecksum,
         Setting::RxFilter,
+        Setting::RunNode,
         Setting::Node,
         Setting::NoClaim,
     ];
@@ -186,6 +197,7 @@ impl Setting {
             Setting::NoTxRateLimit => "no_tx_rate_limit",
             Setting::IgnoreChecksum => "ignore_checksum",
             Setting::RxFilter => "rx_filter",
+            Setting::RunNode => "run_node",
             Setting::Node => "node",
             Setting::NoClaim => "no_claim",
         }
@@ -373,6 +385,8 @@ impl Kind {
         Kind::YachtDevices,
         Kind::Miniplex,
         Kind::SeaSmart,
+        Kind::Candump,
+        Kind::Plain,
         Kind::Ikonvert,
         Kind::Maretron,
         Kind::Aos,
@@ -399,6 +413,8 @@ impl Kind {
             Kind::YachtDevices => "yachtd",
             Kind::Miniplex => "miniplex",
             Kind::SeaSmart => "seasmart",
+            Kind::Candump => "candump",
+            Kind::Plain => "plain",
             Kind::SocketCan => "socketcan",
             Kind::Canalyst => "canalyst",
             Kind::UsbCanA => "usb-can-a",
@@ -460,6 +476,8 @@ impl Kind {
             Kind::SeaSmart => {
                 "Chetco SeaSmart, Quark-elec QK-A032/A034/A036, Yacht Devices in NMEA 0183 mode"
             }
+            Kind::Candump => "SensESP N2K gateway, other N2K IP gateways in candump",
+            Kind::Plain => "N2K IP gateways in canboat PLAIN/FAST, a canboat server's raw port",
             Kind::Ikonvert => "Digital Yacht iKonvert, NavLink2",
             Kind::Maretron => "Maretron IPG100/200",
             Kind::Aos => "AOS NMEA 2000/0183 Simulator",
@@ -504,6 +522,8 @@ impl Kind {
                 Udp { port: Some(2000) },
             ],
             Kind::Maretron => &[Tcp { port: 6543 }],
+            // canboatjs's N2K IP gateway's port.
+            Kind::Candump | Kind::Plain => &[Tcp { port: 2599 }],
             Kind::SocketCan => &[Interface],
             Kind::Canalyst => &[Usb],
             Kind::UsbCanA => &[Serial {
@@ -531,7 +551,8 @@ impl Kind {
             Kind::Maretron => &[Password],
             Kind::YachtDevices | Kind::Actisense(ActisenseFormat::RawActisense) => &[Baud],
             Kind::Miniplex | Kind::SeaSmart => &[Baud, IgnoreChecksum],
-            Kind::Actisense(_) => &[],
+            Kind::Actisense(_) | Kind::Plain => &[],
+            Kind::Candump => &[RunNode, Node, NoClaim],
             Kind::SocketCan => &[Bitrate, ConfigureLink, Node, NoClaim],
             Kind::Canalyst => &[Bitrate, Channel, Node, NoClaim],
             Kind::UsbCanA => &[Baud, Bitrate, Node, NoClaim],
@@ -548,7 +569,7 @@ impl Kind {
         let (rx, tx) = match self {
             Kind::Ikonvert => (ListUse::Stored, ListUse::StoredExclusive),
             Kind::NGT1 => (ListUse::Ignored, ListUse::TransmitEnable),
-            Kind::Aos | Kind::SocketCan | Kind::Canalyst | Kind::UsbCanA => {
+            Kind::Aos | Kind::SocketCan | Kind::Canalyst | Kind::UsbCanA | Kind::Candump => {
                 (ListUse::Advertised, ListUse::Advertised)
             }
             _ => (ListUse::Ignored, ListUse::Ignored),
@@ -579,7 +600,19 @@ impl Kind {
                 ..N2K_GATEWAY
             },
             Kind::Actisense(ActisenseFormat::N2kAscii)
-            | Kind::Actisense(ActisenseFormat::N2kActisense) => N2K_GATEWAY,
+            | Kind::Actisense(ActisenseFormat::N2kActisense)
+            | Kind::Plain => N2K_GATEWAY,
+            // A CAN controller's frames as text, both kinds, both ways, with
+            // canboat's node if it runs one (Setting::RunNode).
+            Kind::Candump => Capabilities {
+                raw_sends: true,
+                rewrites_source: false,
+                standard_frames: true,
+                node: true,
+                iso_tp_sends: true,
+                protocols: EVERY,
+                ..FRAME_GATEWAY
+            },
             Kind::YachtDevices => Capabilities {
                 echoes: true,
                 ..FRAME_GATEWAY

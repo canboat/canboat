@@ -331,6 +331,21 @@ impl core::default::Default for canboat::codec::raw::Canalyst
 pub fn canboat::codec::raw::Canalyst::default() -> Self
 impl core::fmt::Debug for canboat::codec::raw::Canalyst
 pub fn canboat::codec::raw::Canalyst::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::raw::Candump
+impl canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::new() -> Self
+pub fn canboat::codec::raw::Candump::with_clock(fn() -> u64) -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Candump::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Candump::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Candump::write_gap(&self) -> core::time::Duration
+impl core::default::Default for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::default() -> Self
+impl core::fmt::Debug for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 #[non_exhaustive] pub struct canboat::codec::raw::Capabilities
 pub canboat::codec::raw::Capabilities::sends: bool
 pub canboat::codec::raw::Capabilities::standard_frames: bool
@@ -405,6 +420,13 @@ pub fn canboat::codec::raw::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::raw::Canalyst::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
 pub fn canboat::codec::raw::Canalyst::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::raw::Canalyst::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Candump::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Candump::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Candump::write_gap(&self) -> core::time::Duration
 impl canboat::codec::raw::RawCodec for canboat::codec::raw::Mxpgn
 pub fn canboat::codec::raw::Mxpgn::capabilities(&self) -> canboat::codec::raw::Capabilities
 pub fn canboat::codec::raw::Mxpgn::close(&mut self) -> alloc::vec::Vec<u8>

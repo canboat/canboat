@@ -451,6 +451,78 @@ impl RawCodec for Ydwg {
     }
 }
 
+/// SocketCAN `candump` text over a socket: a SensESP N2K gateway, a
+/// canboatjs N2K IP gateway in candump mode. Receives any candump shape
+/// (log, pretty, Angstrom), 29-bit and 11-bit frames alike; sends the log
+/// shape, `(<epoch.micros>) can0 <canid>#<hexbytes>`, frames as they are
+/// given.
+#[derive(Debug)]
+pub struct Candump {
+    lines: Lines,
+    /// The time to give what is sent, in Unix milliseconds.
+    clock: fn() -> u64,
+}
+
+impl Default for Candump {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Candump {
+    /// A codec that sends every line with time 0: a codec has no clock of
+    /// its own ([`Candump::with_clock`] gives it one).
+    pub fn new() -> Self {
+        Self {
+            lines: Lines::default(),
+            clock: || 0,
+        }
+    }
+
+    /// A codec that gives what it sends the time `clock` says, in Unix
+    /// milliseconds.
+    pub fn with_clock(clock: fn() -> u64) -> Self {
+        Self {
+            lines: Lines::default(),
+            clock,
+        }
+    }
+}
+
+impl RawCodec for Candump {
+    fn capabilities(&self) -> Capabilities {
+        Capabilities {
+            sends: true,
+            standard_frames: true,
+        }
+    }
+
+    fn receive(&mut self, bytes: &[u8], events: &mut Vec<Event>) {
+        let dropped = self.lines.push(
+            bytes,
+            |line| match crate::engine::format::candump::parse_can(line) {
+                Ok(Some(frame)) => events.push(Event::Frame(frame)),
+                Ok(None) => {}
+                Err(e) => events.push(Event::Error(format!("{line}: {e}"))),
+            },
+        );
+        events.extend(Lines::overflow(dropped));
+    }
+
+    fn send(&mut self, frame: &CanFrame) -> Result<Vec<u8>, Refused> {
+        check(frame, true)?;
+        let mut out = String::with_capacity(48);
+        crate::engine::format::candump::write_log(
+            &mut out,
+            frame.id,
+            frame.extended,
+            &frame.data,
+            (self.clock)(),
+        );
+        Ok(out.into_bytes())
+    }
+}
+
 /// `$MXPGN` sentences: a ShipModul MiniPlex ([`Mxpgn::miniplex`]), or an
 /// Actisense gateway sending them ([`Mxpgn::actisense`]), which orders the
 /// data the other way round. Receive only: the gateway transmits a frame
@@ -576,10 +648,38 @@ mod tests {
     }
 
     #[test]
+    fn candump_frames_go_both_ways() {
+        let mut codec = Candump::with_clock(|| 1_502_979_132_106);
+        let mut events = Vec::new();
+        codec.receive(
+            b"(1502979132.106111) can0 09F50374#000A00FF\n  can0  123   [2]  01 02\n",
+            &mut events,
+        );
+        assert_eq!(
+            events,
+            [
+                Event::Frame(ext(0x09F5_0374, &[0x00, 0x0A, 0x00, 0xFF])),
+                Event::Frame(CanFrame::standard(0x123, &[1, 2]).unwrap()),
+            ]
+        );
+        assert_eq!(
+            codec.send(&ext(0x09F5_0374, &[0xAB])).unwrap(),
+            b"(1502979132.106000) can0 09F50374#AB\n"
+        );
+        assert_eq!(
+            codec
+                .send(&CanFrame::standard(0x7FF, &[]).unwrap())
+                .unwrap(),
+            b"(1502979132.106000) can0 7FF#\n"
+        );
+    }
+
+    #[test]
     fn what_a_codec_refuses_matches_its_capabilities() {
         let standard = CanFrame::standard(0x123, &[1]).unwrap();
         let extended = ext(MASTERBUS_ID, &[1]);
-        let codecs: [Box<dyn RawCodec>; 6] = [
+        let codecs: [Box<dyn RawCodec>; 7] = [
+            Box::new(Candump::new()),
             Box::new(Bst95::new()),
             Box::new(Canalyst::new()),
             Box::new(UsbCanA::new(250_000).unwrap()),

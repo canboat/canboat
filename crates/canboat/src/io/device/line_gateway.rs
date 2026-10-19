@@ -2,7 +2,8 @@
 
 //! Line-based network gateway codecs: Yacht Devices RAW (YDWG-02 /
 //! YDEN, also the NavLink2's RAW port), Actisense N2K ASCII (W2K-1),
-//! ShipModul `$MXPGN` (MiniPlex) and SeaSmart `$PCDIN`.
+//! ShipModul `$MXPGN` (MiniPlex), SeaSmart `$PCDIN` and SocketCAN
+//! `candump` (a SensESP N2K gateway).
 //!
 //! They speak newline-delimited text over a TCP or UDP socket, or a
 //! serial port. The decoder half accumulates a partial line
@@ -19,7 +20,7 @@ use std::io::{Read, Write};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use crate::engine::format::{actisense_ascii, iso11783_compose, mxpgn, seasmart, ydwg02};
+use crate::engine::format::{actisense_ascii, candump, iso11783_compose, mxpgn, seasmart, ydwg02};
 use crate::engine::frame::FASTPACKET_MAX_SIZE;
 use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::startup::format_iso_ms;
@@ -48,6 +49,9 @@ pub enum LineFormat {
     /// NMEA 0183 sentences, which carry no message. Sent the same way,
     /// with no priority or destination: the sentence has neither.
     SeaSmart,
+    /// SocketCAN `candump` text, one CAN frame per line, in any of its
+    /// shapes; sent in the log shape. 11-bit frames on a Quick bus.
+    Candump,
 }
 
 impl LineFormat {
@@ -229,6 +233,15 @@ impl DeviceDecoder for Decoder {
                     Ok(None) => {}
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
+                LineFormat::Candump => {
+                    match candump::parse_line_for(&line, self.protocol.standard_frames()) {
+                        Ok(Some(frame)) => self.push_frame(frame, &now, events),
+                        // A frame of the other kind (11-bit on an NMEA 2000
+                        // bus), or the Angstrom banner.
+                        Ok(None) => {}
+                        Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
+                    }
+                }
                 LineFormat::N2kAscii => match actisense_ascii::parse_line(&line) {
                     Ok(mut frame) => {
                         frame.timestamp = Some(now.clone());
@@ -332,9 +345,22 @@ impl DeviceEncoder for Encoder {
                 seasmart::write_line(&mut out, frame).ok()?;
                 out.push_str("\r\n");
             }
-            LineFormat::YdwgRaw | LineFormat::Mxpgn | LineFormat::ActisenseMxpgn => {
-                let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
+            LineFormat::YdwgRaw
+            | LineFormat::Mxpgn
+            | LineFormat::ActisenseMxpgn
+            | LineFormat::Candump => {
+                // An 11-bit frame's identifier is its message type, its pgn.
+                let extended = !self.protocol.standard_frames();
+                let canid = if extended {
+                    iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst)
+                } else {
+                    frame.pgn
+                };
                 let write_one = |out: &mut String, data: &[u8]| {
+                    if self.format == LineFormat::Candump {
+                        candump::write_log(out, canid, extended, data, super::now_ms());
+                        return;
+                    }
                     if self.format != LineFormat::YdwgRaw {
                         let one = RawFrame::new(
                             None,
@@ -441,6 +467,43 @@ pub fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn candump_lines_go_both_ways() {
+        let enc = Encoder::new(LineFormat::Candump);
+        // A fast-packet PGN goes out as its frames, each a log line.
+        let out = enc.encode_frame(&frame(129029, &[0u8; 20])).expect("sent");
+        let out = String::from_utf8(out).unwrap();
+        assert_eq!(out.lines().count(), 3, "{out}");
+        assert!(out.lines().all(|l| l.contains(" can0 0DF80507#")), "{out}");
+        // And what it wrote reads back whole.
+        let mut dec = Decoder::new(LineFormat::Candump);
+        let got = decode_all(&mut dec, &out);
+        assert_eq!(got.len(), 1);
+        assert_eq!((got[0].pgn, got[0].src, got[0].data.len()), (129029, 7, 20));
+        // Every shape is read; the timestamp is the host's.
+        let got = decode_all(
+            &mut dec,
+            "  can0  09F80115   [8]  7E 47 2B 1D B8 39 05 03\n\
+             <0x09f80115> [8] 7e 47 2b 1d b8 39 05 03\n",
+        );
+        assert_eq!(got.len(), 2);
+        assert!(got.iter().all(|f| f.pgn == 129025 && f.timestamp.is_some()));
+    }
+
+    #[test]
+    fn candump_on_a_quick_bus_is_11_bit() {
+        let enc = Encoder::with_protocol(LineFormat::Candump, BusProtocol::Quick);
+        let quick = RawFrame::new(None, 0, 0x123, 0, 255, [1, 2]);
+        let out = String::from_utf8(enc.encode_frame(&quick).unwrap()).unwrap();
+        assert!(out.ends_with(" can0 123#0102\n"), "{out}");
+        let mut dec = Decoder::with_protocol(LineFormat::Candump, BusProtocol::Quick);
+        let got = decode_all(&mut dec, &out);
+        assert_eq!(got.len(), 1);
+        assert_eq!(got[0].pgn, 0x123);
+        // A 29-bit frame is not of a Quick bus.
+        assert!(decode_all(&mut dec, "(1.0) can0 09F80115#7E\n").is_empty());
+    }
 
     fn frame(pgn: u32, data: &[u8]) -> RawFrame {
         RawFrame::new(None, 3, pgn, 7, 255, data.iter().copied())
