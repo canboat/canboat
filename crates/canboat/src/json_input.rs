@@ -873,6 +873,46 @@ mod tests {
     }
 
     #[test]
+    fn request_names_a_126720_variant_behind_the_catch_all() {
+        // An Airmar DST console reading the sensor's Simulate Mode:
+        // a Request for 126720 naming Manufacturer = Airmar, Industry =
+        // Marine and Proprietary ID 35. 126720's catch-all is listed
+        // first; like the C analyzer, the parameters are matched against
+        // the manufacturer variants behind it, so parameter 4 takes
+        // airmarSimulateMode's 8-bit Proprietary ID instead of the
+        // catch-all's raw Data. Byte-identical to canboatjs.
+        let line = r#"{"pgn":126208,"prio":3,"dst":35,"fields":{
+            "functionCode":"Request","pgn":126720,"numberOfParameters":3,
+            "list":[{"parameter":1,"value":135},{"parameter":3,"value":4},
+                    {"parameter":4,"value":35}]}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[
+                0x00, 0x00, 0xef, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x03, 0x01, 0x87, 0x00,
+                0x03, 0x04, 0x04, 0x23
+            ]
+        );
+
+        // The decoder resolves the same variant from the wire bytes.
+        let decoded = db().decode(&frame).unwrap();
+        let id = decoded
+            .fields
+            .iter()
+            .rfind(|f| f.repeat_set == 1)
+            .expect("parameter 4's value");
+        assert!(
+            matches!(
+                id.value,
+                crate::engine::FieldValue::Lookup { value: 35, .. }
+            ),
+            "got {:?}",
+            id.value
+        );
+    }
+
+    #[test]
     fn variable_time_target_encodes_from_seconds_or_clock() {
         // A 126208 Command setting 126992 System Time's Time (field 5)
         // through a VARIABLE: seconds, whole or not, bare or -nv, and the

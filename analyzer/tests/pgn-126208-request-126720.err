@@ -1,0 +1,3 @@
+INFO pgn-126208-request-126720 [analyzer] Timestamp fixed
+INFO pgn-126208-request-126720 [analyzer] Detected FAST format with all frames on one line
+ERROR pgn-126208-request-126720 [analyzer] PGN 126208 has 2 missing fields in repeating set

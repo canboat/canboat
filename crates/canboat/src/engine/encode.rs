@@ -718,17 +718,6 @@ impl PgnBuilder {
         pairs
     }
 
-    /// Pick the definition of `target_pgn` that the staged parameter
-    /// pairs describe — the encode-side mirror of decode's
-    /// `match_pgn_by_parameters` (itself a port of the C analyzer's
-    /// `getMatchingPgnByParameters`). A candidate qualifies when every
-    /// pair that lands on one of its `Match` fields stages to exactly
-    /// the match value; the first qualifying variant wins, and a PGN
-    /// whose leading definition has no match fields is answered by it
-    /// outright (the 126720 catch-all-first case). Returns `None` when
-    /// nothing can be narrowed — the caller falls back to the leading
-    /// definition, so every previously-working single-variant target
-    /// resolves exactly as before.
     /// The PGN the message's PGN field names (a group function's
     /// commanded PGN), when it is staged.
     fn staged_target_pgn(&self) -> Option<u32> {
@@ -742,8 +731,20 @@ impl PgnBuilder {
             })
     }
 
+    /// Pick the definition of `target_pgn` that the staged parameter
+    /// pairs describe — the encode-side mirror of decode's
+    /// `match_pgn_by_parameters` (itself a port of the C analyzer's
+    /// `getMatchingPgnByParameters`). Like the C, it starts past a
+    /// catch-all listed first, so a 126720 request naming Airmar and
+    /// proprietary ID 35 uses Airmar's Simulate Mode layout. A candidate
+    /// qualifies when every pair that lands on one of its `Match` fields
+    /// stages to exactly the match value; the first qualifying variant
+    /// wins, and a PGN whose first specific definition has no match
+    /// fields is answered by it outright. Returns `None` when nothing
+    /// can be narrowed — the caller falls back to the leading
+    /// definition, which for 126720 is its catch-all.
     fn match_target_variant(&self, target_pgn: u32) -> Option<&'static PgnInfo> {
-        let first = self.db.first_pgn(target_pgn)?;
+        let first = self.db.specific_variants(target_pgn).next()?;
         if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
             return Some(first);
         }
@@ -756,7 +757,7 @@ impl PgnBuilder {
         {
             return None;
         }
-        'variant: for cand in self.db.pgn_variants(target_pgn) {
+        'variant: for cand in self.db.specific_variants(target_pgn) {
             for &(idx, value) in &pairs {
                 if idx == 0 {
                     continue 'variant;

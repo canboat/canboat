@@ -250,6 +250,15 @@ impl PgnDatabase {
         }
     }
 
+    /// The definitions of a PGN number that are not a range catch-all,
+    /// in order: what canboat's `searchForPgn` (analyzer/pgn.c) starts
+    /// from, as it steps past a catch-all listed first. 126720's is, so
+    /// a 126208 parameter list for 126720 is matched against the
+    /// manufacturer variants.
+    pub(crate) fn specific_variants(&self, pgn: u32) -> impl Iterator<Item = &'static PgnInfo> {
+        self.pgn_variants(pgn).filter(|p| p.fallback != Some(true))
+    }
+
     /// First definition whose `Id` field matches `id` (e.g.
     /// `"cogSogRapidUpdate"`). O(n) linear scan — call once at startup
     /// and cache the resulting `&'static PgnInfo`.

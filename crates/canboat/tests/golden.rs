@@ -271,6 +271,21 @@ fn seasmart_json() {
     );
 }
 
+/// 126208 Requests for proprietary 126720 (test-pgn-126208-request-126720
+/// in analyzer/tests/): the C steps past 126720's catch-all, listed
+/// first, so Airmar's requests resolve their variants and parameter 4
+/// reads as a Proprietary ID. A Raymarine request whose proprietary ID
+/// no variant carries (samples/raymarine-ev1.raw) falls back to the
+/// catch-all, the rest of the message as raw Data.
+#[test]
+fn pgn_126208_request_126720_json() {
+    run_case(
+        "pgn-126208-request-126720.in",
+        "pgn-126208-request-126720.out",
+        &["--json", "--nv", "--fixtime", "pgn-126208-request-126720"],
+    );
+}
+
 /// `-si`: the database's non-SI units leave in SI (test-si-units in
 /// analyzer/tests/Makefile) — kWh/Ah/% as J/C/ratio (65005, 127505,
 /// 127506, 127513, 130576 signed), rpm as Hz (127488, 130825), L and L/h
