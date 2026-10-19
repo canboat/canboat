@@ -645,6 +645,7 @@ fn reader_thread<F, D: DeviceDecoder<F>>(
                 return;
             }
             Ok(n) => {
+                wire_trace("<-", &buf[..n]);
                 decoder.decode(&buf[..n], &mut events);
                 if !deliver(&mut events) {
                     return;
@@ -664,6 +665,17 @@ fn reader_thread<F, D: DeviceDecoder<F>>(
                 return;
             }
         }
+    }
+}
+
+/// Hex-dump bytes crossing the device I/O boundary, at `trace` level, so a
+/// `RUST_LOG=trace` run shows the exact wire traffic (which NGT-1 command a
+/// send carries, what a gateway emits). `dir` is `"<-"` for a read, `"->"`
+/// for a write. The formatting is skipped unless `trace` is on.
+fn wire_trace(dir: &str, bytes: &[u8]) {
+    if log::log_enabled!(log::Level::Trace) {
+        let hex: String = bytes.iter().map(|b| format!("{b:02x} ")).collect();
+        log::trace!("wire {dir} {} bytes: {}", bytes.len(), hex.trim_end());
     }
 }
 
@@ -691,6 +703,7 @@ fn writer_thread<F, E: DeviceEncoder<F>>(
     let gap = encoder.write_gap();
     let mut last_frame: Option<Instant> = None;
     if !init.is_empty() {
+        wire_trace("->", &init);
         if let Err(e) = writer.write_all(&init) {
             log::error!("device init write failed: {e}");
             return;
@@ -708,6 +721,7 @@ fn writer_thread<F, E: DeviceEncoder<F>>(
                 match rx.recv_timeout(timeout) {
                     Ok(cmd) => cmd,
                     Err(mpsc::RecvTimeoutError::Timeout) => {
+                        wire_trace("->", payload);
                         if let Err(e) = writer.write_all(payload) {
                             log::warn!("device keepalive failed: {e}");
                             return;
@@ -745,6 +759,7 @@ fn writer_thread<F, E: DeviceEncoder<F>>(
             },
             WriterCmd::Shutdown(done) => {
                 let bytes = encoder.shutdown_bytes();
+                wire_trace("->", &bytes);
                 let sent = bytes.is_empty()
                     || match writer.write_all(&bytes).and_then(|()| writer.flush()) {
                         Ok(()) => true,
@@ -759,6 +774,7 @@ fn writer_thread<F, E: DeviceEncoder<F>>(
                 return;
             }
         };
+        wire_trace("->", &bytes);
         if let Err(e) = writer.write_all(&bytes) {
             log::error!("device write failed: {e}");
             return;
