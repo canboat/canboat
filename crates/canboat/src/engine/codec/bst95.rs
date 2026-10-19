@@ -36,8 +36,12 @@ pub struct Bst95 {
     seq: HashMap<(u32, u8), u8>,
     /// The ISO TP transfers being sent.
     tp: TpSender,
-    /// The time of the last receive or tick, for [`Codec::send`].
-    now_ms: u64,
+    /// The time of the last receive, tick or [`Codec::send_at`], for
+    /// [`Codec::send`]; `None` before the first.
+    now_ms: Option<u64>,
+    /// ISO TP frames given to [`Codec::send`] before the codec had a time
+    /// to pace them by: started at the first.
+    unclocked: Vec<RawFrame>,
 }
 
 impl Default for Bst95 {
@@ -55,7 +59,8 @@ impl Bst95 {
             reassembler: Reassembler::new(),
             seq: HashMap::new(),
             tp: TpSender::new(),
-            now_ms: 0,
+            now_ms: None,
+            unclocked: Vec::new(),
         }
     }
 
@@ -76,6 +81,18 @@ impl Bst95 {
         }
     }
 
+    /// The time is `now_ms`: the transfers [`Codec::send`] held for want
+    /// of one start now.
+    fn clock(&mut self, now_ms: u64, events: &mut Vec<Event>) {
+        self.now_ms = Some(now_ms);
+        for frame in std::mem::take(&mut self.unclocked) {
+            match self.send_at(&frame, now_ms) {
+                Ok(bytes) => events.push(Event::Send(bytes)),
+                Err(e) => events.push(Event::Error(format!("PGN {}: {e}", frame.pgn))),
+            }
+        }
+    }
+
     fn next_seq(&mut self, pgn: u32, src: u8) -> u8 {
         let e = self.seq.entry((pgn, src)).or_insert(0);
         let s = *e;
@@ -88,7 +105,7 @@ impl Codec for Bst95 {
     /// A quiet bus still gets its minute's summary of incomplete
     /// fast-packets, and the ISO TP packets that are due.
     fn tick(&mut self, now_ms: u64, events: &mut Vec<Event>) {
-        self.now_ms = now_ms;
+        self.clock(now_ms, events);
         self.reassembler.tick(now_ms);
         self.poll_tp(now_ms, events);
     }
@@ -98,7 +115,7 @@ impl Codec for Bst95 {
     }
 
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
-        self.now_ms = now_ms;
+        self.clock(now_ms, events);
         let dropped = self.bdtp.dropped;
         self.reassembler.tick(now_ms);
         for &b in bytes {
@@ -139,12 +156,26 @@ impl Codec for Bst95 {
         }
     }
 
+    /// An ISO TP transfer before the codec has a time (no receive, tick
+    /// or [`Codec::send_at`] yet) is held, and starts at the first.
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused> {
-        self.send_at(frame, self.now_ms)
+        match self.now_ms {
+            Some(now_ms) => self.send_at(frame, now_ms),
+            None if frame.data.len() > 8
+                && frame.data.len() <= TP_MAX_SIZE
+                && frame.pgn < SYNTHETIC_PGN_START
+                && self.protocol.packet_type(frame.pgn) != FramePacketType::Fast =>
+            {
+                self.unclocked.push(frame.clone());
+                Ok(Vec::new())
+            }
+            // No time needed.
+            None => self.send_at(frame, 0),
+        }
     }
 
     fn send_at(&mut self, frame: &RawFrame, now_ms: u64) -> Result<Vec<u8>, Refused> {
-        self.now_ms = now_ms;
+        self.now_ms = Some(now_ms);
         if frame.pgn >= SYNTHETIC_PGN_START {
             return Err(Refused::Synthetic);
         }
@@ -294,6 +325,28 @@ mod tests {
             [NOW + BAM_GAP_MS, NOW + 2 * BAM_GAP_MS, NOW + 3 * BAM_GAP_MS]
         );
         assert_eq!(&packets[2].data[..], &[3, 15, 16, 17, 18, 19, 20, 0xFF]);
+    }
+
+    #[test]
+    fn a_transfer_sent_before_the_codec_has_a_time_starts_at_the_first() {
+        use crate::engine::iso_tp::T3_MS;
+        let mut codec = Bst95::new(BusProtocol::J1939);
+        let mut to_peer = frame(65260, &[7; 20]);
+        to_peer.dst = 0x30;
+        assert!(codec.send(&to_peer).unwrap().is_empty());
+
+        let mut events = Vec::new();
+        codec.tick(NOW, &mut events);
+        let rts = sent(&events);
+        assert_eq!(
+            (rts[0].pgn, rts[0].data[0], rts[0].dst),
+            (PGN_TP_CM, 16, 0x30)
+        );
+        // Paced from then, not from time zero: no abort a moment later.
+        assert_eq!(codec.next_deadline(), Some(NOW + T3_MS));
+        let mut events = Vec::new();
+        codec.tick(NOW + 10, &mut events);
+        assert!(sent(&events).is_empty());
     }
 
     #[test]
