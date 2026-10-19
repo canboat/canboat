@@ -13,13 +13,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 * BridgeConfig names its gateway in one field, device: Option<Device>, in place of actisense, aos, ikonvert, maretron, socketcan, canalyst, canalyst_channel, usb_can_a and gateway, and of the settings that went with them (baud, ngt1_mode, socketcan_*, maretron_password, ikonvert_*, ignore_checksum, the node's address and ISO NAME, pgn_lists, learn_tx_pgns): those are Device's now. bridge::Gateway and bridge::GatewayKind are gone; bridge::Kind and bridge::Device stand in. The Supervisor type is gone too: a Device with reconnect(true) is the supervised handle.
 * --kind ikonvert tcp://host connects to port 2000, the NavLink2's, instead of 6001; give the port for anything else, such as a ser2net bridge.
-* BridgeConfig has a new field, ignore_checksum; a struct literal without ..Default::default() needs it.
 * InputFormat has a new variant, Mxpgn; a match on it needs an arm for it.
-* BridgeConfig has a new field, usb_can_a; a struct literal without ..Default::default() needs it.
-* BridgeConfig has new fields. An option given for a gateway that does not have it is now an error, where it used to be ignored.
+* An option given for a gateway that does not take it is now an error, where it used to be ignored.
 * the Rust InputFormat::Chetco variant is now InputFormat::SeaSmart.
-* BridgeConfig has a new field, gateway; a struct literal without ..Default::default() needs it.
-* BridgeConfig::socketcan_address is now BridgeConfig::address, and BridgeConfig gains the canalyst and canalyst_channel fields, so a BridgeConfig struct literal must name the new fields (or use ..BridgeConfig::default()). Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 * **ngt1:** `canboat::codec::ngt1::Config` has a new public field, `operating_mode`; build it with `..Default::default()`.
 * **decode:** EncodeError is #[non_exhaustive] and has a new ProprietaryHeader variant; an exhaustive match on it needs a wildcard arm. PgnBuilder::build refuses a 126208 Read/Write Fields whose Manufacturer Code / Industry Code header does not match its commanded PGN.
 * **node:** canboat::device::heartbeat_frame returns Result<Frame, EncodeError> instead of Frame.
@@ -31,7 +27,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-* --bus nmea2000|j1939, and a J1939 SocketCAN node ([#942](https://github.com/canboat/canboat/issues/942)) ([2353d83](https://github.com/canboat/canboat/commit/2353d83ce4d7176706996a61b28d2d03845a3c12))
+* --protocol nmea2000|j1939, and a J1939 SocketCAN node ([#942](https://github.com/canboat/canboat/issues/942)) ([2353d83](https://github.com/canboat/canboat/commit/2353d83ce4d7176706996a61b28d2d03845a3c12))
 * --kind actisense --data-format mxpgn, $MXPGN in Actisense's byte order ([#1058](https://github.com/canboat/canboat/issues/1058)) ([90138d9](https://github.com/canboat/canboat/commit/90138d9c99722f6e468d1b447f3b049ffb8ea1a2))
 * --kind ikonvert reads a NavLink2's UDP output; port 2000 by default ([#1054](https://github.com/canboat/canboat/issues/1054)) ([36ff977](https://github.com/canboat/canboat/commit/36ff977f1faf6257de53887ff4298f4fe312780b))
 * --kind seasmart, a read/write $PCDIN gateway, convert --to seasmart and --ignore-checksum ([#1052](https://github.com/canboat/canboat/issues/1052)) ([0c2c15a](https://github.com/canboat/canboat/commit/0c2c15a84b118ad4b084a60e2984bd8554407528))
@@ -123,7 +119,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Changed
 
 * **keel:** name PGN table entries instead of numbering them ([#937](https://github.com/canboat/canboat/issues/937)) ([d35431c](https://github.com/canboat/canboat/commit/d35431c1bcf4f1f5d59baa3254c875ae3099b81e))
-* rename --bus to --protocol before it is released ([#944](https://github.com/canboat/canboat/issues/944)) ([a2af20a](https://github.com/canboat/canboat/commit/a2af20ae8130b5d7d53197925bbc93771805b1ee))
 
 ## [8.3.0](https://github.com/canboat/canboat/compare/v8.2.1...v8.3.0) (2026-09-25)
 
