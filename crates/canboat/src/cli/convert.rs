@@ -13,7 +13,7 @@
 //!   pipeline; this is what the `analyzer` binary does.
 
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, BufWriter, Write};
+use std::io::{self, BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
@@ -365,8 +365,7 @@ pub fn run(args: Args) -> Result<()> {
     let protocol = args.protocol.resolve()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let binary = binary_input(&args);
-    let stdout = io::stdout();
-    let mut out = BufWriter::new(stdout.lock());
+    let mut out = crate::cli::stdout(args.input().is_none() && crate::cli::stdin_is_live());
 
     if args.to.is_frame_level() {
         convert_raw(&args, protocol, forced, binary, &mut out)

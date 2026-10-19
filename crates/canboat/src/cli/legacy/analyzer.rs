@@ -15,7 +15,7 @@
 //! becomes the single source of truth.
 
 use std::ffi::OsString;
-use std::io::{self, BufWriter, Write};
+use std::io::{self, Write};
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
@@ -153,8 +153,7 @@ fn run_cli(cli: Cli) -> Result<()> {
         geo,
     };
 
-    let stdout = io::stdout();
-    let mut out = BufWriter::new(stdout.lock());
+    let mut out = crate::cli::stdout(cli.file.is_none() && crate::cli::stdin_is_live());
     let mut line_buf = String::with_capacity(512);
 
     // canboat's analyzer leads with a one-line JSON banner. `-fixtime`
