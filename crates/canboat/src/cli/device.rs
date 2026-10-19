@@ -297,8 +297,8 @@ pub struct DeviceArgs {
         long,
         help = help::only_help(
             Setting::RunNode,
-            "run canboat's node on the gateway: claim an address, answer ISO \
-             Requests and send ISO TP; without, frames go out as they are given."
+            "run canboat's node on the gateway: claim an address and answer ISO \
+             Requests; without, frames go out as they are given."
         ),
         help_heading = help::node_heading()
     )]

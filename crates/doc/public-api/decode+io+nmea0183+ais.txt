@@ -355,9 +355,11 @@ impl canboat::codec::Codec for canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl core::default::Default for canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::default() -> Self
@@ -369,9 +371,11 @@ impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst_d0::BstD0::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::bst_d0::BstD0::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::bst_d0::BstD0::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst_d0::BstD0::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::bst_d0::BstD0::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl core::default::Default for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::default() -> Self
@@ -388,9 +392,11 @@ impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::canalyst::Canalyst::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::canalyst::Canalyst::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::canalyst::Canalyst::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::canalyst::Canalyst::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl core::default::Default for canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::default() -> Self
@@ -419,9 +425,11 @@ impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::codec::iso_tp
 #[non_exhaustive] pub enum canboat::codec::iso_tp::TpError
@@ -548,9 +556,11 @@ impl canboat::codec::Codec for canboat::codec::maretron::Maretron
 pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::codec::ngt1
 #[non_exhaustive] pub enum canboat::codec::ngt1::OperatingMode
@@ -608,9 +618,11 @@ impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl core::default::Default for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::default() -> Self
@@ -811,9 +823,11 @@ impl canboat::codec::Codec for canboat::codec::usb_can_a::UsbCanA
 pub fn canboat::codec::usb_can_a::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::usb_can_a::UsbCanA::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::usb_can_a::UsbCanA::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::usb_can_a::UsbCanA::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::usb_can_a::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::usb_can_a::UsbCanA::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::usb_can_a::UsbCanA::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::usb_can_a::UsbCanA::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::usb_can_a::UsbCanA::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl core::default::Default for canboat::codec::usb_can_a::UsbCanA
 pub fn canboat::codec::usb_can_a::UsbCanA::default() -> Self
@@ -833,6 +847,7 @@ impl core::fmt::Debug for canboat::codec::Event
 pub fn canboat::codec::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::codec::Event
 #[non_exhaustive] pub enum canboat::codec::Refused
+pub canboat::codec::Refused::Busy
 pub canboat::codec::Refused::NotOnTxList
 pub canboat::codec::Refused::ReceiveOnly
 pub canboat::codec::Refused::Synthetic
@@ -869,65 +884,81 @@ pub trait canboat::codec::Codec
 pub fn canboat::codec::Codec::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::Codec::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::Codec::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::Codec::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst95::Bst95
 pub fn canboat::codec::bst95::Bst95::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst95::Bst95::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst95::Bst95::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::bst95::Bst95::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst95::Bst95::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::bst95::Bst95::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst95::Bst95::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::bst95::Bst95::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::bst_d0::BstD0
 pub fn canboat::codec::bst_d0::BstD0::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::bst_d0::BstD0::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::bst_d0::BstD0::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::bst_d0::BstD0::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::bst_d0::BstD0::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::bst_d0::BstD0::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::bst_d0::BstD0::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::bst_d0::BstD0::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::canalyst::Canalyst
 pub fn canboat::codec::canalyst::Canalyst::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::canalyst::Canalyst::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::canalyst::Canalyst::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::canalyst::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::canalyst::Canalyst::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::canalyst::Canalyst::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::canalyst::Canalyst::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::canalyst::Canalyst::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::maretron::Maretron
 pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
 pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::usb_can_a::UsbCanA
 pub fn canboat::codec::usb_can_a::UsbCanA::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::usb_can_a::UsbCanA::failure(&self) -> core::option::Option<&str>
 pub fn canboat::codec::usb_can_a::UsbCanA::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::usb_can_a::UsbCanA::next_deadline(&self) -> core::option::Option<u64>
 pub fn canboat::codec::usb_can_a::UsbCanA::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::usb_can_a::UsbCanA::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::usb_can_a::UsbCanA::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::usb_can_a::UsbCanA::send_at(&mut self, &canboat::Frame, u64) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::usb_can_a::UsbCanA::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::ids
 pub mod canboat::output

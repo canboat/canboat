@@ -136,6 +136,18 @@ pub trait DeviceEncoder<F = RawFrame>: Send + Sync + 'static {
     fn write_gap(&self) -> Duration {
         Duration::ZERO
     }
+
+    /// When [`Self::poll`] next has bytes to write, in Unix milliseconds
+    /// (the host clock): the next packet of an ISO TP transfer. The
+    /// writer wakes for it. `None` by default.
+    fn next_deadline(&self) -> Option<u64> {
+        None
+    }
+
+    /// The bytes due at `now_ms`.
+    fn poll(&self, _now_ms: u64) -> Vec<u8> {
+        Vec::new()
+    }
 }
 
 /// Commands accepted by the writer thread.
@@ -512,12 +524,14 @@ pub fn run_codec<C: Codec + Send + 'static>(
     writer: Box<dyn Write + Send>,
 ) -> DeviceHandle {
     let codec = Arc::new(Mutex::new(codec));
+    let stray = Arc::new(Mutex::new(Vec::new()));
     let decoder = CodecDecoder {
         codec: codec.clone(),
         fixtime,
         events: Vec::with_capacity(8),
+        stray: stray.clone(),
     };
-    run(decoder, CodecEncoder { codec }, reader, writer)
+    run(decoder, CodecEncoder { codec, stray }, reader, writer)
 }
 
 /// The host clock in Unix milliseconds, as the codecs take it.
@@ -540,11 +554,16 @@ struct CodecDecoder<C> {
     codec: Arc<Mutex<C>>,
     fixtime: Option<String>,
     events: Vec<Event>,
+    /// What a tick on the writer's deadline produced that is not bytes to
+    /// write, for the reader to deliver.
+    stray: Arc<Mutex<Vec<Event>>>,
 }
 
 impl<C> CodecDecoder<C> {
     fn deliver(&mut self, out: &mut Vec<DeviceEvent>) {
-        out.extend(self.events.drain(..).map(|ev| match ev {
+        let mut stray = std::mem::take(&mut *lock(&self.stray));
+        stray.append(&mut self.events);
+        out.extend(stray.into_iter().map(|ev| match ev {
             Event::Frame(mut f) => {
                 if let Some(ts) = &self.fixtime {
                     f.timestamp = Some(ts.clone());
@@ -582,6 +601,7 @@ impl<C: Codec + Send + 'static> DeviceDecoder for CodecDecoder<C> {
 /// The writer thread's view of a shared [`Codec`].
 struct CodecEncoder<C> {
     codec: Arc<Mutex<C>>,
+    stray: Arc<Mutex<Vec<Event>>>,
 }
 
 impl<C: Codec + Send + 'static> DeviceEncoder for CodecEncoder<C> {
@@ -594,11 +614,37 @@ impl<C: Codec + Send + 'static> DeviceEncoder for CodecEncoder<C> {
     }
 
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
-        lock(&self.codec).send(frame).ok()
+        match lock(&self.codec).send_at(frame, now_ms()) {
+            Ok(bytes) => Some(bytes),
+            Err(why) => {
+                log::debug!("not sending PGN {}: {why}", frame.pgn);
+                None
+            }
+        }
     }
 
     fn shutdown_bytes(&self) -> Vec<u8> {
         lock(&self.codec).close()
+    }
+
+    fn next_deadline(&self) -> Option<u64> {
+        lock(&self.codec).next_deadline()
+    }
+
+    /// Tick the codec at its deadline: the bytes it sends are written, and
+    /// anything else it has is left for the reader.
+    fn poll(&self, now_ms: u64) -> Vec<u8> {
+        let mut events = Vec::new();
+        lock(&self.codec).tick(now_ms, &mut events);
+        let mut bytes = Vec::new();
+        let mut stray = lock(&self.stray);
+        for ev in events {
+            match ev {
+                Event::Send(b) => bytes.extend(b),
+                ev => stray.push(ev),
+            }
+        }
+        bytes
     }
 }
 
@@ -702,24 +748,38 @@ fn writer_thread<F, E: DeviceEncoder<F>>(
 
     loop {
         let now = Instant::now();
-        let cmd = match (next_keepalive, &keepalive) {
-            (Some(deadline), Some((interval, payload))) => {
-                let timeout = deadline.saturating_duration_since(now);
-                match rx.recv_timeout(timeout) {
-                    Ok(cmd) => cmd,
-                    Err(mpsc::RecvTimeoutError::Timeout) => {
-                        if let Err(e) = writer.write_all(payload) {
-                            log::warn!("device keepalive failed: {e}");
-                            return;
-                        }
-                        let _ = writer.flush();
-                        next_keepalive = Some(Instant::now() + *interval);
-                        continue;
+        // The encoder's own deadline (ISO TP pacing), on the host clock.
+        let due = encoder
+            .next_deadline()
+            .map(|at| now + Duration::from_millis(at.saturating_sub(now_ms())));
+        let wake = match (due, next_keepalive) {
+            (Some(d), Some(k)) => Some(d.min(k)),
+            (d, k) => d.or(k),
+        };
+        let cmd = match wake {
+            Some(wake) => match rx.recv_timeout(wake.saturating_duration_since(now)) {
+                Ok(cmd) => cmd,
+                Err(mpsc::RecvTimeoutError::Timeout) if due == Some(wake) => {
+                    match encoder.poll(now_ms()) {
+                        b if b.is_empty() => continue,
+                        b => WriterCmd::Bytes(b),
                     }
-                    Err(mpsc::RecvTimeoutError::Disconnected) => return,
                 }
-            }
-            _ => match rx.recv() {
+                Err(mpsc::RecvTimeoutError::Timeout) => {
+                    let Some((interval, payload)) = &keepalive else {
+                        continue;
+                    };
+                    if let Err(e) = writer.write_all(payload) {
+                        log::warn!("device keepalive failed: {e}");
+                        return;
+                    }
+                    let _ = writer.flush();
+                    next_keepalive = Some(Instant::now() + *interval);
+                    continue;
+                }
+                Err(mpsc::RecvTimeoutError::Disconnected) => return,
+            },
+            None => match rx.recv() {
                 Ok(cmd) => cmd,
                 Err(_) => return,
             },
@@ -874,6 +934,59 @@ mod tests {
         expected.extend(build_set_mode_binary());
         expected.extend(build_frame(out.pgn, out.prio, out.dst, &out.data).unwrap());
         assert_eq!(*sink.0.lock().unwrap(), expected);
+    }
+
+    /// A BAM's data packets go out at the codec's deadlines, 50 ms apart,
+    /// though the reader only ticks every 250 ms of a quiet line.
+    #[test]
+    fn the_writer_sends_at_the_codecs_deadlines() {
+        use crate::engine::BusProtocol;
+        use crate::engine::codec::bst95::Bst95;
+        use crate::engine::format::bst::{BdtpDecoder, bst95_message};
+
+        /// A quiet line, for a second.
+        struct Quiet(u32);
+        impl Read for Quiet {
+            fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+                if self.0 == 0 {
+                    return Ok(0);
+                }
+                self.0 -= 1;
+                thread::sleep(Duration::from_millis(250));
+                Err(io::ErrorKind::WouldBlock.into())
+            }
+        }
+        let sink = Sink::default();
+        let handle = run_codec(
+            Bst95::new(BusProtocol::J1939),
+            None,
+            Box::new(Quiet(4)),
+            Box::new(sink.clone()),
+        );
+        let started = Instant::now();
+        let bam = RawFrame::new(None, 6, 65260, 0x21, 255, [7u8; 20]);
+        handle.send_frame(bam).unwrap();
+        let packets = |sink: &Sink| {
+            let mut d = BdtpDecoder::default();
+            sink.0
+                .lock()
+                .unwrap()
+                .iter()
+                .filter_map(|&b| d.push_byte(b))
+                .filter_map(|m| bst95_message(&m))
+                .count()
+        };
+        while packets(&sink) < 4 && started.elapsed() < Duration::from_secs(2) {
+            thread::sleep(Duration::from_millis(5));
+        }
+        let took = started.elapsed();
+        assert_eq!(packets(&sink), 4, "the announcement and three packets");
+        assert!(took >= Duration::from_millis(150), "{took:?}");
+        assert!(
+            took < Duration::from_millis(600),
+            "not paced by the tick: {took:?}"
+        );
+        handle.close();
     }
 
     /// A codec that finds the device is the wrong one stops the reader:

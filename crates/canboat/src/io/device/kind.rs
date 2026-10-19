@@ -302,8 +302,9 @@ pub struct Capabilities {
     /// It transmits only whole NMEA 2000 messages, and joins and splits
     /// the fast-packets itself.
     pub n2k_tx_only: bool,
-    /// J1939 messages over 8 bytes are sent, by ISO TP: only where canboat
-    /// is the node. Elsewhere they are received only.
+    /// J1939 messages over 8 bytes are sent, by ISO TP: where canboat is
+    /// the node, and on the gateways that pass frames to the bus as they
+    /// are given, a line each. Elsewhere they are received only.
     pub iso_tp_sends: bool,
     /// canboat runs its own node on it, which claims an address.
     pub node: bool,
@@ -615,6 +616,7 @@ impl Kind {
             },
             Kind::YachtDevices => Capabilities {
                 echoes: true,
+                iso_tp_sends: true,
                 ..FRAME_GATEWAY
             },
             Kind::Miniplex | Kind::Actisense(ActisenseFormat::Mxpgn) => FRAME_GATEWAY,
@@ -622,11 +624,13 @@ impl Kind {
             // `open` is given as Yacht Devices RAW lines, as for a YDWG.
             Kind::Actisense(ActisenseFormat::RawAscii) => Capabilities {
                 rewrites_source: false,
+                iso_tp_sends: true,
                 ..FRAME_GATEWAY
             },
             Kind::Actisense(ActisenseFormat::RawActisense) => Capabilities {
                 raw_sends: true,
                 rewrites_source: false,
+                iso_tp_sends: true,
                 echoes: true,
                 ..FRAME_GATEWAY
             },
@@ -732,8 +736,9 @@ mod tests {
             assert!(!caps.raw_sends || caps.raw, "{kind}");
             assert!(!(caps.raw_sends && caps.rewrites_source), "{kind}");
             assert!(!(caps.n2k_tx_only && caps.raw), "{kind}");
-            // canboat's node is what sends ISO TP, and claims an address.
-            assert_eq!(caps.iso_tp_sends, caps.node && caps.raw, "{kind}");
+            // ISO TP is sent as frames: by canboat's node, or a line each.
+            assert!(!caps.iso_tp_sends || caps.raw, "{kind}");
+            assert!(!(caps.node && caps.raw) || caps.iso_tp_sends, "{kind}");
             assert_eq!(caps.node, kind.takes(Setting::Node), "{kind}");
             assert_eq!(
                 kind.takes(Setting::Bitrate),

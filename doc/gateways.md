@@ -36,8 +36,14 @@ set to, by Actisense's names (`--data-format`, default `ngt-actisense`):
 - **Read/write:** `udp://[bind:]port` only receives. A W2K-1 sends
   `ngt-actisense` but does not take it; canboat does not handle that yet.
 - **J1939** (`--protocol j1939`): ISO TP messages are received wherever it says
-  yes, but sent only on SocketCAN, the CANalyst-II and the USB-CAN-A, where
-  canboat is the node. **11-bit** frames are Quick PCS (`--protocol
+  yes. They are sent on SocketCAN, the CANalyst-II and the USB-CAN-A, where
+  canboat is the node, and frame by frame on a Yacht
+  Devices RAW gateway, an Actisense gateway in `raw-ascii` or
+  `raw-actisense`, and `candump`. A BAM's data packets go 50 ms apart. A
+  Yacht Devices gateway sends them from its own address, so an RTS/CTS
+  receiver answers it, not the address the message gave; canboat learns the
+  gateway's address from its echo of what canboat sent. The MiniPlex and
+  `actisense mxpgn` send no ISO TP. **11-bit** frames are Quick PCS (`--protocol
   quick`). The rest carry NMEA 2000 only.
 - **ikonvert: use TCP for a NavLink2.** A NavLink2 serves the iKonvert
   protocol on TCP *or* UDP, whichever its web page is set to, on port 2000
