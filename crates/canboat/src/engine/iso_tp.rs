@@ -92,7 +92,7 @@ const ABORT_TIMEOUT: u8 = 3;
 const ABORT_BAD_SEQUENCE: u8 = 7;
 
 /// Transfers waiting behind a running one, per (source, destination).
-const MAX_QUEUED: usize = 16;
+pub(crate) const MAX_QUEUED: usize = 16;
 
 /// Why a message could not be sent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

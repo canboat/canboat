@@ -20,7 +20,7 @@
 use std::collections::HashMap;
 
 use crate::engine::format::bst::{BdtpDecoder, bst95_message, encode_bst95};
-use crate::engine::iso_tp::{PGN_TP_CM, TP_MAX_SIZE, TpError, TpSender};
+use crate::engine::iso_tp::{MAX_QUEUED, PGN_TP_CM, TP_MAX_SIZE, TpError, TpSender};
 use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::{BusProtocol, FramePacketType, RawFrame, fastpacket, format_iso_ms};
 
@@ -40,8 +40,13 @@ pub struct Bst95 {
     /// [`Codec::send`]; `None` before the first.
     now_ms: Option<u64>,
     /// ISO TP frames given to [`Codec::send`] before the codec had a time
-    /// to pace them by: started at the first.
-    unclocked: Vec<RawFrame>,
+    /// to pace them by, in order: started at the first. Only then, so no
+    /// transfer is running while any is held.
+    held: Vec<RawFrame>,
+    /// The announcements of held transfers started by a
+    /// [`Codec::send_at`] that refused its own frame: sent at the next
+    /// tick.
+    unsent: Vec<u8>,
 }
 
 impl Default for Bst95 {
@@ -60,7 +65,8 @@ impl Bst95 {
             seq: HashMap::new(),
             tp: TpSender::new(),
             now_ms: None,
-            unclocked: Vec::new(),
+            held: Vec::new(),
+            unsent: Vec::new(),
         }
     }
 
@@ -82,15 +88,71 @@ impl Bst95 {
     }
 
     /// The time is `now_ms`: the transfers [`Codec::send`] held for want
-    /// of one start now.
-    fn clock(&mut self, now_ms: u64, events: &mut Vec<Event>) {
+    /// of one start now, in order. Returns their announcements.
+    fn start_held(&mut self, now_ms: u64) -> Vec<u8> {
         self.now_ms = Some(now_ms);
-        for frame in std::mem::take(&mut self.unclocked) {
-            match self.send_at(&frame, now_ms) {
-                Ok(bytes) => events.push(Event::Send(bytes)),
-                Err(e) => events.push(Event::Error(format!("PGN {}: {e}", frame.pgn))),
+        let mut out = Vec::new();
+        for frame in std::mem::take(&mut self.held) {
+            // Checked when held, with nothing running: each starts or
+            // queues.
+            if let Ok(bytes) = self.encode_frame(&frame, Some(now_ms)) {
+                out.extend(bytes);
             }
         }
+        out
+    }
+
+    /// [`Self::start_held`] for a receive or tick, with what a refused
+    /// [`Codec::send_at`] left.
+    fn clock(&mut self, now_ms: u64, events: &mut Vec<Event>) {
+        let mut out = std::mem::take(&mut self.unsent);
+        out.extend(self.start_held(now_ms));
+        if !out.is_empty() {
+            events.push(Event::Send(out));
+        }
+    }
+
+    /// The gateway's bytes for `frame`. An ISO TP transfer needs a time to
+    /// be paced by: without one (`now_ms` `None`) it is held.
+    fn encode_frame(&mut self, frame: &RawFrame, now_ms: Option<u64>) -> Result<Vec<u8>, Refused> {
+        if frame.pgn >= SYNTHETIC_PGN_START {
+            return Err(Refused::Synthetic);
+        }
+        let mut out = Vec::new();
+        let mut put =
+            |data: &[u8]| encode_bst95(frame.prio, frame.pgn, frame.src, frame.dst, data, &mut out);
+        if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
+            let seq = self.next_seq(frame.pgn, frame.src);
+            let chunks = fastpacket::fragment(seq, &frame.data).ok_or(Refused::TooLarge)?;
+            for chunk in &chunks {
+                put(chunk);
+            }
+        } else if frame.data.len() <= 8 {
+            put(&frame.data);
+        } else if frame.data.len() <= TP_MAX_SIZE {
+            // One BST-95 message is one CAN frame: a longer one goes by ISO
+            // TP, its announcement now and its data at the deadlines.
+            let Some(now_ms) = now_ms else {
+                // The first of a pair starts, the rest queue behind it.
+                let pair = |f: &RawFrame| (f.src, f.dst) == (frame.src, frame.dst);
+                if self.held.iter().filter(|f| pair(f)).count() > MAX_QUEUED {
+                    return Err(Refused::Busy);
+                }
+                self.held.push(frame.clone());
+                return Ok(Vec::new());
+            };
+            let announce = self
+                .tp
+                .send(now_ms, frame.pgn, frame.src, frame.dst, &frame.data)
+                .map_err(|e| match e {
+                    TpError::QueueFull => Refused::Busy,
+                    _ => Refused::TooLarge,
+                })?;
+            return Ok(Self::encode(&announce));
+        } else {
+            return Err(Refused::TooLarge);
+        }
+        Ok(out)
     }
 
     fn next_seq(&mut self, pgn: u32, src: u8) -> u8 {
@@ -111,7 +173,11 @@ impl Codec for Bst95 {
     }
 
     fn next_deadline(&self) -> Option<u64> {
-        self.tp.next_deadline()
+        let unsent = self.now_ms.filter(|_| !self.unsent.is_empty());
+        match (unsent, self.tp.next_deadline()) {
+            (Some(a), Some(b)) => Some(a.min(b)),
+            (a, b) => a.or(b),
+        }
     }
 
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>) {
@@ -159,52 +225,22 @@ impl Codec for Bst95 {
     /// An ISO TP transfer before the codec has a time (no receive, tick
     /// or [`Codec::send_at`] yet) is held, and starts at the first.
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused> {
-        match self.now_ms {
-            Some(now_ms) => self.send_at(frame, now_ms),
-            None if frame.data.len() > 8
-                && frame.data.len() <= TP_MAX_SIZE
-                && frame.pgn < SYNTHETIC_PGN_START
-                && self.protocol.packet_type(frame.pgn) != FramePacketType::Fast =>
-            {
-                self.unclocked.push(frame.clone());
-                Ok(Vec::new())
-            }
-            // No time needed.
-            None => self.send_at(frame, 0),
-        }
+        self.encode_frame(frame, self.now_ms)
     }
 
+    /// The transfers held for want of a time start first.
     fn send_at(&mut self, frame: &RawFrame, now_ms: u64) -> Result<Vec<u8>, Refused> {
-        self.now_ms = Some(now_ms);
-        if frame.pgn >= SYNTHETIC_PGN_START {
-            return Err(Refused::Synthetic);
-        }
-        let mut out = Vec::new();
-        let mut put =
-            |data: &[u8]| encode_bst95(frame.prio, frame.pgn, frame.src, frame.dst, data, &mut out);
-        if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
-            let seq = self.next_seq(frame.pgn, frame.src);
-            let chunks = fastpacket::fragment(seq, &frame.data).ok_or(Refused::TooLarge)?;
-            for chunk in &chunks {
-                put(chunk);
+        let mut out = self.start_held(now_ms);
+        match self.encode_frame(frame, Some(now_ms)) {
+            Ok(bytes) => {
+                out.extend(bytes);
+                Ok(out)
             }
-        } else if frame.data.len() <= 8 {
-            put(&frame.data);
-        } else if frame.data.len() <= TP_MAX_SIZE {
-            // One BST-95 message is one CAN frame: a longer one goes by ISO
-            // TP, its announcement now and its data at the deadlines.
-            let announce = self
-                .tp
-                .send(now_ms, frame.pgn, frame.src, frame.dst, &frame.data)
-                .map_err(|e| match e {
-                    TpError::QueueFull => Refused::Busy,
-                    _ => Refused::TooLarge,
-                })?;
-            return Ok(Self::encode(&announce));
-        } else {
-            return Err(Refused::TooLarge);
+            Err(e) => {
+                self.unsent.extend(out);
+                Err(e)
+            }
         }
-        Ok(out)
     }
 }
 
@@ -347,6 +383,54 @@ mod tests {
         let mut events = Vec::new();
         codec.tick(NOW + 10, &mut events);
         assert!(sent(&events).is_empty());
+    }
+
+    #[test]
+    fn a_short_frame_sent_without_a_time_does_not_start_the_clock() {
+        use crate::engine::iso_tp::T3_MS;
+        let mut codec = Bst95::new(BusProtocol::J1939);
+        assert!(!codec.send(&frame(65262, &[1; 8])).unwrap().is_empty());
+        let mut to_peer = frame(65260, &[7; 20]);
+        to_peer.dst = 0x30;
+        assert!(codec.send(&to_peer).unwrap().is_empty(), "still held");
+
+        let mut events = Vec::new();
+        codec.tick(NOW, &mut events);
+        assert_eq!(sent(&events)[0].data[0], 16);
+        assert_eq!(codec.next_deadline(), Some(NOW + T3_MS));
+    }
+
+    #[test]
+    fn a_held_transfer_starts_before_a_later_timed_one() {
+        let mut codec = Bst95::new(BusProtocol::J1939);
+        let mut held = frame(65260, &[7; 20]);
+        held.dst = 0x30;
+        let mut later = frame(65260, &[8; 30]);
+        later.dst = 0x30;
+        assert!(codec.send(&held).unwrap().is_empty());
+
+        // The held one's RTS, for 20 bytes; the later one queues behind it.
+        let rts = frames_in(&codec.send_at(&later, NOW).unwrap());
+        assert_eq!(rts.len(), 1);
+        assert_eq!((rts[0].data[0], rts[0].data[1]), (16, 20));
+    }
+
+    #[test]
+    fn held_transfers_are_refused_once_their_queue_would_be_full() {
+        use crate::engine::iso_tp::MAX_QUEUED;
+        let mut codec = Bst95::new(BusProtocol::J1939);
+        let mut to_peer = frame(65260, &[7; 20]);
+        to_peer.dst = 0x30;
+        for _ in 0..=MAX_QUEUED {
+            assert!(codec.send(&to_peer).unwrap().is_empty());
+        }
+        assert!(matches!(codec.send(&to_peer), Err(Refused::Busy)));
+
+        // All that were taken start or queue at the first time.
+        let mut events = Vec::new();
+        codec.tick(NOW, &mut events);
+        assert!(!events.iter().any(|e| matches!(e, Event::Error(_))));
+        assert_eq!(sent(&events).len(), 1);
     }
 
     #[test]
