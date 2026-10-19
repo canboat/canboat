@@ -230,6 +230,22 @@ such list ignores it, with a warning.
 > `wmm`'s 127258), are allowed without being named. With no transmit PGN
 > named, nothing is refused and the gateway's own list decides.
 
+With no transmit PGN named, canboat still reads an NGT-1's list when it
+starts, and warns once for each PGN you send that is not on it, which the
+gateway drops without a word:
+
+```
+WARN ngt1: PGN 127250 is not on the NGT-1's transmit list, which drops it; name it, and every PGN you send, with --tx-pgn (pgn_lists.tx in the library)
+```
+
+A list read in Format 1 (firmware before 2.500) can miss PGNs that are on
+it; the warning then says the PGN may be dropped. Nothing is warned about
+before the list is read, about 2 s after the gateway starts, nor on a
+gateway that does not answer the read, such as the AOS simulator.
+
+An NGT-1 sets the sequence ID (SID) of what it transmits itself: SIDs 0, 1,
+… written by canboat arrive on the bus as 0x80, 0x81, …
+
 The PGN lists only advertise; they never filter what you receive. To receive
 only some PGNs, use `--rx-filter <pgn>[,…]` (or `BridgeConfig::rx_filter`):
 an iKonvert filters in the gateway, and for every other gateway canboat drops
