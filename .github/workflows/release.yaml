@@ -303,11 +303,16 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v7
 
+      # Cygwin's own action fetches setup straight from cygwin.com, so a
+      # Chocolatey outage can't fail the build. It installs where the
+      # job's default shell expects it, and keeps Cygwin off the system
+      # PATH so the MSVC steps don't find its link.exe.
       - name: Set up Cygwin
-        uses: egor-tensin/setup-cygwin@v4
+        uses: cygwin/cygwin-install-action@v6
         with:
-            packages: make gcc-core zip
-            hardlinks: 1
+            packages: make,gcc-core,zip
+            install-dir: C:\tools\cygwin
+            add-to-path: false
 
       # The login shell starts in the Cygwin home directory, so the repo
       # path must be spelled out — but derived from GITHUB_WORKSPACE, not
