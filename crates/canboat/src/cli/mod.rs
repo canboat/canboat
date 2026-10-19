@@ -56,6 +56,35 @@ pub fn log_startup(name: &str, version: &str) {
     log::info!("{name} v{version} (canboat.json v{CANBOAT_JSON_VERSION}) {COPYRIGHT_ID}");
 }
 
+/// Where a command writes its output. Line by line when the input is
+/// live (a gateway, or a pipe or a terminal on stdin), as the C programs
+/// flush every message: a reader down the pipe gets each one as it
+/// comes, not once a buffer fills, and a stop by signal loses none.
+/// Buffered for a file.
+pub(crate) fn stdout(live: bool) -> Box<dyn std::io::Write> {
+    let out = std::io::stdout().lock();
+    if live {
+        // `Stdout` itself is line-buffered.
+        Box::new(out)
+    } else {
+        Box::new(std::io::BufWriter::new(out))
+    }
+}
+
+/// Whether stdin is live: anything but a regular file.
+pub(crate) fn stdin_is_live() -> bool {
+    #[cfg(unix)]
+    {
+        use std::os::fd::AsFd;
+        if let Ok(fd) = std::io::stdin().as_fd().try_clone_to_owned() {
+            return !std::fs::File::from(fd)
+                .metadata()
+                .is_ok_and(|m| m.is_file());
+        }
+    }
+    true
+}
+
 /// Read the process argv and translate any single-dash long options
 /// to double-dash form. This lets users invoke a canboat-rs tool the
 /// same way they'd invoke its C counterpart:

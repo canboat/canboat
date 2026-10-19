@@ -17,7 +17,7 @@
 //! per-kind producer name is preserved so the n2kd parity harness keeps
 //! comparing like with like).
 
-use std::io::{self, BufRead, BufWriter, Write};
+use std::io::{self, BufRead, Write};
 use std::thread;
 use std::time::Duration;
 
@@ -149,8 +149,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     // `--rx-filter`, for what the gateway does not filter itself; an
     // iKonvert has done it already, which this does not undo.
     let filter = RxFilter::new(&args.gateway.rx_filter);
-    let stdout = io::stdout();
-    let mut out = BufWriter::new(stdout.lock());
+    let mut out = super::stdout(true);
     write_prologue(&mut out, args).context("writing prologue")?;
 
     match (args.read_only, args.write_only) {
