@@ -92,7 +92,9 @@ pub fn kind_help(kind: Kind) -> String {
         }
         return format!("{vendor} {}; see --data-format", models.join(", "));
     }
-    if kind.capabilities().node {
+    if kind.takes(Setting::RunNode) {
+        format!("{}; canboat is the node with --node", kind.describe())
+    } else if kind.capabilities().node {
         format!("{}; canboat is the node", kind.describe())
     } else {
         kind.describe().to_string()
@@ -233,6 +235,16 @@ fn pgn_list_groups() -> Vec<(Vec<Kind>, ListUse, ListUse)> {
     groups
 }
 
+/// `name`, and that what it does with the PGN lists is its node's, which
+/// runs only with `--node` (`flag`) on a kind that takes it.
+fn with_node(kind: &Kind, name: String, flag: &str) -> String {
+    if kind.takes(Setting::RunNode) && kind.pgn_lists().rx == ListUse::Advertised {
+        format!("{name} (with {flag})")
+    } else {
+        name
+    }
+}
+
 /// The end of `--help` for both commands.
 pub fn gateway_help() -> &'static str {
     static HELP: LazyLock<String> = LazyLock::new(render_gateway_help);
@@ -320,7 +332,7 @@ fn render_gateway_help() -> String {
         } else {
             kinds
                 .iter()
-                .map(Kind::to_string)
+                .map(|k| with_node(k, k.to_string(), "--node"))
                 .collect::<Vec<_>>()
                 .join(", ")
         };
@@ -542,7 +554,7 @@ fn markdown_pgn_lists() -> String {
         } else {
             kinds
                 .iter()
-                .map(|k| format!("`{k}`"))
+                .map(|k| with_node(k, format!("`{k}`"), "`--node`"))
                 .collect::<Vec<_>>()
                 .join(", ")
         };

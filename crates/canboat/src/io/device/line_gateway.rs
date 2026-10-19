@@ -351,6 +351,13 @@ impl DeviceEncoder for Encoder {
             | LineFormat::Candump => {
                 // An 11-bit frame's identifier is its message type, its pgn.
                 let extended = !self.protocol.standard_frames();
+                if !extended && frame.pgn > 0x7FF {
+                    log::warn!(
+                        "not sending message type {:#X}: an 11-bit identifier is at most 0x7FF",
+                        frame.pgn
+                    );
+                    return None;
+                }
                 let canid = if extended {
                     iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst)
                 } else {
@@ -467,6 +474,13 @@ pub fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_11_bit_identifier_too_large_is_not_sent() {
+        let enc = Encoder::with_protocol(LineFormat::Candump, BusProtocol::Quick);
+        assert!(enc.encode_frame(&frame(0x800, &[1])).is_none());
+        assert!(enc.encode_frame(&frame(0x7FF, &[1])).is_some());
+    }
 
     #[test]
     fn candump_lines_go_both_ways() {

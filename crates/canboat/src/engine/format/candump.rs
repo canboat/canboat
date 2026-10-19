@@ -144,6 +144,14 @@ fn header(id_tok: &str, standard: bool) -> Result<Option<(u8, u32, u8, u8)>, Par
     if (id_tok.len() <= 3) != standard {
         return Ok(None);
     }
+    // No more bits than the frame kind has: 11, or 29.
+    if canid > if standard { 0x7FF } else { 0x1FFF_FFFF } {
+        return Err(ParseError::BadInteger {
+            field: "canid",
+            value: id_tok.to_string(),
+            offset: None,
+        });
+    }
     Ok(Some(if standard {
         (0, canid, 0, 255)
     } else {
@@ -381,6 +389,16 @@ pub fn parse_can(line: &str) -> Result<Option<CanFrame>, ParseError> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn an_identifier_too_large_for_its_kind_is_refused() {
+        use super::{parse_can, parse_line_for};
+        assert!(parse_line_for("(1.0) can0 FFF#01", true).is_err());
+        assert!(parse_line_for("(1.0) can0 7FF#01", true).unwrap().is_some());
+        assert!(parse_line_for("(1.0) can0 20000000#01", false).is_err());
+        assert!(parse_can("(1.0) can0 FFF#01").is_err());
+        assert!(parse_can("(1.0) can0 1FFFFFFF#01").unwrap().is_some());
+    }
+
     #[test]
     fn a_log_line_written_reads_back() {
         let mut out = String::new();

@@ -341,6 +341,9 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     if args.si.is_some() && !kind.takes(Setting::Node) {
         anyhow::bail!("--si: --kind {kind} does not have it");
     }
+    if args.si.is_some() && kind.takes(Setting::RunNode) && !gateway.node {
+        anyhow::bail!("--si: --kind {kind} runs canboat's node only with --node");
+    }
     let mut dev = gateway.device(kind, &args.device);
     // Where canboat's node runs: on candump only with --node.
     if dev.capabilities().node {
