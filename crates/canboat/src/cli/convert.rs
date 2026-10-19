@@ -342,6 +342,11 @@ impl Args {
         self.file.as_deref().or(self.file_pos.as_deref())
     }
 
+    /// Whether the input is stdin: none given, or `-`.
+    fn reads_stdin(&self) -> bool {
+        self.input().is_none_or(|p| p.as_os_str() == "-")
+    }
+
     /// Which capture groups of a `.nif` to unwrap.
     fn container_opts(&self) -> container::Options {
         container::Options {
@@ -365,10 +370,11 @@ pub fn run(args: Args) -> Result<()> {
     let protocol = args.protocol.resolve()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let binary = binary_input(&args);
-    let mut out = crate::cli::stdout(args.input().is_none() && crate::cli::stdin_is_live());
+    let live = args.reads_stdin() && crate::cli::stdin_is_live();
+    let mut out = crate::cli::stdout(live);
 
     if args.to.is_frame_level() {
-        convert_raw(&args, protocol, forced, binary, &mut out)
+        convert_raw(&args, protocol, forced, binary, live, &mut out)
     } else {
         convert_decoded(&args, protocol, forced, binary, &mut out)
     }
@@ -420,14 +426,17 @@ fn binary_input(args: &Args) -> Option<Binary> {
 }
 
 /// Raw path: input frames → the selected frame-level format, no decode.
-/// The no-filter case is exactly [`crate::io::copy`]; with filters we
-/// run the same pull loop with a per-frame predicate. The writer is
-/// chosen by `--to` (PLAIN / YDWG02 / Actisense ASCII / Actisense EBL).
+/// The no-filter case is exactly [`crate::io::copy`]; with filters, or
+/// from a `live` input, whose every frame is flushed as it comes (a
+/// binary format has no line end to flush at), we run the same pull loop.
+/// The writer is chosen by `--to` (PLAIN / YDWG02 / Actisense ASCII /
+/// Actisense EBL).
 fn convert_raw<W: Write>(
     args: &Args,
     protocol: BusProtocol,
     forced: Option<InputFormat>,
     binary: Option<Binary>,
+    live: bool,
     out: &mut W,
 ) -> Result<()> {
     let source = open_source(args.input(), args.container_opts())?;
@@ -471,13 +480,16 @@ fn convert_raw<W: Write>(
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
-    if !args.has_filter() {
+    if !args.has_filter() && !live {
         copy(&mut *reader, &mut *writer).context("converting frames")?;
         return Ok(());
     }
     while let Some(frame) = reader.read_frame().context("reading input")? {
         if args.keep(&frame) {
             writer.write_frame(&frame).context("writing frame")?;
+            if live {
+                writer.flush().context("flushing output")?;
+            }
         }
     }
     writer.flush().context("flushing output")?;

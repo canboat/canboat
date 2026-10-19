@@ -54,6 +54,51 @@ fn convert_from_a_pipe_writes_each_message_as_it_comes() {
     assert!(line.contains("\"pgn\":127508"), "{line}");
 }
 
+#[test]
+fn convert_from_dash_writes_each_message_as_it_comes() {
+    let line = lines_while_stdin_open(
+        env!("CARGO_BIN_EXE_canboat").as_ref(),
+        &["convert", "--to", "json", "--no-banner", "-"],
+        1,
+    );
+    assert!(line.contains("\"pgn\":127508"), "{line}");
+}
+
+/// A binary format has no line end: each record is flushed as it is made.
+#[test]
+fn convert_to_a_binary_format_writes_each_record_as_it_comes() {
+    let mut child = Command::new(env!("CARGO_BIN_EXE_canboat"))
+        .args(["convert", "--to", "actisense-ebl"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .expect("spawn canboat");
+    let mut stdin = child.stdin.take().unwrap();
+    stdin.write_all(LINE).expect("write stdin");
+    stdin.flush().unwrap();
+    let mut stdout = child.stdout.take().unwrap();
+    let (tx, rx) = mpsc::channel();
+    // Until the message's own record: the EBL timestamp records before it
+    // end in 0x0A, which a line-buffered stdout flushes at anyway.
+    std::thread::spawn(move || {
+        let mut got = Vec::new();
+        let mut buf = [0u8; 64];
+        while !got.windows(3).any(|w| w == [0xc8, 0xf9, 0x04]) {
+            match std::io::Read::read(&mut stdout, &mut buf) {
+                Ok(0) | Err(_) => break,
+                Ok(n) => got.extend_from_slice(&buf[..n]),
+            }
+        }
+        let _ = tx.send(());
+    });
+    let got = rx.recv_timeout(Duration::from_secs(10));
+    let _ = child.kill();
+    let _ = child.wait();
+    drop(stdin);
+    got.expect("the message's record did not come while stdin was still open");
+}
+
 #[cfg(unix)]
 #[test]
 fn analyzer_from_a_pipe_writes_each_message_as_it_comes() {
