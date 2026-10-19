@@ -84,19 +84,25 @@ fn convert_to_a_binary_format_writes_each_record_as_it_comes() {
     std::thread::spawn(move || {
         let mut got = Vec::new();
         let mut buf = [0u8; 64];
-        while !got.windows(3).any(|w| w == [0xc8, 0xf9, 0x04]) {
+        let found = loop {
+            if got.windows(3).any(|w| w == [0xc8, 0xf9, 0x04]) {
+                break true;
+            }
             match std::io::Read::read(&mut stdout, &mut buf) {
-                Ok(0) | Err(_) => break,
+                Ok(0) | Err(_) => break false,
                 Ok(n) => got.extend_from_slice(&buf[..n]),
             }
-        }
-        let _ = tx.send(());
+        };
+        let _ = tx.send(found);
     });
     let got = rx.recv_timeout(Duration::from_secs(10));
     let _ = child.kill();
     let _ = child.wait();
     drop(stdin);
-    got.expect("the message's record did not come while stdin was still open");
+    assert!(
+        got.expect("the message's record did not come while stdin was still open"),
+        "the output ended without the message's record"
+    );
 }
 
 #[cfg(unix)]
