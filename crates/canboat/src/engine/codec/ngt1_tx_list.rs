@@ -65,10 +65,13 @@
 //! session cut off before its save is simply retried.
 //!
 //! canboatjs stopped doing this by default in 2020 ("this is possibly
-//! causing issues", canboatjs#136). So this runs only when the embedder
-//! names Transmit PGNs, reads the list first, and writes — enable, save,
-//! activate — only when a PGN is missing, so a device already set up is
-//! never written to again.
+//! causing issues", canboatjs#136). So the list is written — enable, save,
+//! activate — only when the embedder names Transmit PGNs and one is
+//! missing, so a device already set up is never written to again.
+//!
+//! The list is read in any case, and kept ([`TxListSync::lacks`]): a frame
+//! for a PGN not on it is sent, and dropped by the gateway without a word,
+//! so the codec says so (canboat#1060).
 
 use std::sync::{Arc, Mutex};
 
@@ -170,11 +173,22 @@ pub struct TxListRecord {
     refused: Vec<u32>,
 }
 
-/// Brings the NGT-1's Transmit PGN Enable list up to `wanted`. Feed it the
-/// gateway's `NGT_MSG_RECEIVED` payloads and the passing time; send the
-/// byte strings it returns to the gateway.
+/// The gateway's transmit list as read, with what this session enabled.
+#[derive(Debug)]
+struct Known {
+    pgns: Vec<u32>,
+    /// Read in Format 2. Format 1 can miss PGNs that are there (see the
+    /// module docs).
+    complete: bool,
+}
+
+/// Reads the NGT-1's Transmit PGN Enable list, and brings it up to
+/// `wanted`. Feed it the gateway's `NGT_MSG_RECEIVED` payloads and the
+/// passing time; send the byte strings it returns to the gateway.
 pub struct TxListSync {
     wanted: Vec<u32>,
+    /// The gateway's list, once read.
+    known: Option<Known>,
     state: State,
     /// When the pending answer times out.
     deadline: u64,
@@ -186,21 +200,17 @@ pub struct TxListSync {
 
 impl TxListSync {
     /// A sync for `wanted`, sharing `record` with the other sessions of
-    /// this run; one that has nothing to do when `wanted` is empty.
+    /// this run; one that only reads the list when `wanted` is empty.
     ///
     /// The record keeps a reconnect from writing again what is known: a
     /// PGN the read cannot show but the gateway has, a PGN it refuses, and
     /// — the gateway resetting to an older list, say — a PGN saved once
     /// already, which is then not saved a second time.
     pub fn new(wanted: Vec<u32>, record: Arc<Mutex<TxListRecord>>) -> Self {
-        let state = if wanted.is_empty() {
-            State::Done
-        } else {
-            State::AwaitStartup
-        };
         Self {
             wanted,
-            state,
+            known: None,
+            state: State::AwaitStartup,
             deadline: u64::MAX,
             record,
             firmware: None,
@@ -223,11 +233,40 @@ impl TxListSync {
     /// which sends every PGN).
     pub fn abandon(&mut self) {
         self.state = State::Done;
+        self.known = None;
     }
 
     /// Whether the sync has finished, successfully or not.
     pub fn is_done(&self) -> bool {
         self.state == State::Done
+    }
+
+    /// Whether the gateway's list, once read, lacks `pgn`: `None` while it
+    /// is not known (not read yet, never answered, or no NGT-1), otherwise
+    /// `Some(complete)` when `pgn` is missing, `complete` saying whether
+    /// the read showed the whole list (Format 2) or may have missed it
+    /// (Format 1).
+    pub fn lacks(&self, pgn: u32) -> Option<bool> {
+        let known = self.known.as_ref()?;
+        (!known.pgns.contains(&pgn)).then_some(known.complete)
+    }
+
+    /// Have read `pgns`, for the codec's tests.
+    #[cfg(test)]
+    pub(crate) fn read_for_test(&mut self, pgns: &[u32], complete: bool) {
+        self.known = Some(Known {
+            pgns: pgns.to_vec(),
+            complete,
+        });
+    }
+
+    /// `pgn` is on the gateway's list now.
+    fn note_enabled(&mut self, pgn: u32) {
+        if let Some(known) = &mut self.known
+            && !known.pgns.contains(&pgn)
+        {
+            known.pgns.push(pgn);
+        }
     }
 
     /// Advance on an `NGT_MSG_RECEIVED` payload.
@@ -253,7 +292,7 @@ impl TxListSync {
             }
             (State::Reading { have, .. }, BEM_TX_PGN_ENABLE_LIST_F1) if status == Some(F1_LAST) => {
                 let have = std::mem::take(have);
-                self.on_list(&have, now)
+                self.on_list(have, false, now)
             }
             (State::ReadingF2 { list, .. }, BEM_SUPPORTED_PGN_LIST | BEM_TX_PGN_ENABLE_LIST_F2) => {
                 let Some(answer) = BemResponse::parse(payload) else {
@@ -273,13 +312,19 @@ impl TxListSync {
                 }
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 match list.pgns() {
-                    Some(have) => self.on_list(&have, now),
+                    Some(have) => self.on_list(have, true, now),
                     None => Vec::new(),
                 }
             }
-            (State::Enabling { todo, added }, BEM_TX_PGN_ENABLE) => {
+            (State::Enabling { todo, .. }, BEM_TX_PGN_ENABLE) => {
                 let pgn = todo.remove(0);
                 let result = enable_result(payload, status);
+                if result.is_ok() {
+                    self.note_enabled(pgn);
+                }
+                let State::Enabling { todo, added } = &mut self.state else {
+                    unreachable!("matched above");
+                };
                 if let Ok(mut record) = self.record.lock() {
                     match result {
                         Ok(Enabled::Now) if record.saved.contains(&pgn) => log::warn!(
@@ -332,9 +377,26 @@ impl TxListSync {
         }
     }
 
-    /// The gateway's list is in: enable what `wanted` has and `have` lacks.
-    fn on_list(&mut self, have: &[u32], now: u64) -> Vec<Vec<u8>> {
+    /// The gateway's list is in, `complete` when read in Format 2: keep
+    /// it, and enable what `wanted` has and `have` lacks.
+    fn on_list(&mut self, have: Vec<u32>, complete: bool, now: u64) -> Vec<Vec<u8>> {
         log::debug!("ngt1: the gateway's transmit PGN list: {have:?}");
+        // With what the gateway said it has this run, though this read
+        // cannot show it (Format 1 misses some).
+        let mut pgns = have.clone();
+        if let Ok(record) = self.record.lock() {
+            for &pgn in &record.present {
+                if !pgns.contains(&pgn) {
+                    pgns.push(pgn);
+                }
+            }
+        }
+        self.known = Some(Known { pgns, complete });
+        if self.wanted.is_empty() {
+            // Read only, to tell what the gateway drops.
+            self.state = State::Done;
+            return Vec::new();
+        }
         let missing: Vec<u32> = self
             .wanted
             .iter()
@@ -396,6 +458,14 @@ impl TxListSync {
                 if *attempt < READ_ATTEMPTS {
                     let attempt = attempt + 1;
                     self.read_f1(attempt, now)
+                } else if self.wanted.is_empty() {
+                    // Only read, to tell what the gateway drops: nothing
+                    // is at stake, but nothing will be warned about.
+                    log::info!(
+                        "ngt1: no answer to reading the transmit PGN list; PGNs it drops are not warned about"
+                    );
+                    self.state = State::Done;
+                    Vec::new()
                 } else {
                     log::warn!(
                         "ngt1: no answer to reading the transmit PGN list; {:?} may not be transmitted",
@@ -747,11 +817,48 @@ mod tests {
     }
 
     #[test]
-    fn nothing_wanted_means_nothing_sent() {
-        let mut s = TxListSync::new(Vec::new(), Arc::default());
+    fn nothing_wanted_means_only_a_read() {
+        let mut s = started(Vec::new());
+        assert_eq!(s.lacks(127250), None, "not read yet");
+        assert!(s.on_message(&list_part(&[59392, 127508]), 2_100).is_empty());
+        assert!(
+            s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_200)
+                .is_empty(),
+            "nothing written"
+        );
         assert!(s.is_done());
-        assert!(s.on_message(&MODE_ANSWER, 0).is_empty());
+        assert_eq!(s.lacks(127508), None);
+        // Read in Format 1, which can miss a PGN that is there.
+        assert_eq!(s.lacks(127250), Some(false));
         assert!(s.on_tick(u64::MAX).is_empty());
+    }
+
+    /// What the gateway enables this session is on its list.
+    #[test]
+    fn an_enabled_pgn_is_on_the_list() {
+        let mut s = started(vec![127508, 127250]);
+        s.on_message(&list_part(&[127508]), 2_100);
+        assert_eq!(
+            s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_200),
+            vec![enable_command(127250)]
+        );
+        assert_eq!(s.lacks(127250), Some(false));
+        s.on_message(&answer(127250, 0), 2_300);
+        assert_eq!(s.lacks(127250), None);
+        assert_eq!(s.lacks(130306), Some(false));
+    }
+
+    /// A restarted gateway's list is read again: until then it is not
+    /// known.
+    #[test]
+    fn a_restart_forgets_the_list() {
+        let mut s = started(Vec::new());
+        s.on_message(&[BEM_TX_PGN_ENABLE_LIST_F1, F1_LAST], 2_100);
+        assert_eq!(s.lacks(127250), Some(false));
+        s.restart();
+        assert_eq!(s.lacks(127250), None);
+        s.abandon();
+        assert_eq!(s.lacks(127250), None);
     }
 
     #[test]
