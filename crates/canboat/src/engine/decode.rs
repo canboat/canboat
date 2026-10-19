@@ -1260,14 +1260,16 @@ pub(crate) fn field_present(condition: Option<&str>, target_pgn: Option<u32>) ->
 /// the answer, and a definition that disagrees (or that has no such
 /// field at all) steps out.
 ///
-/// Returns `None` when nothing matches — for a proprietary PGN with
-/// only Manufacturer and Industry given, that is the normal outcome.
+/// Returns `None` when nothing matches — for a proprietary PGN whose
+/// parameters name no variant, such as a Raymarine request whose
+/// proprietary ID none of Raymarine's 126720 variants carries, that is
+/// the normal outcome, and the caller uses the catch-all.
 fn match_pgn_by_parameters(
     db: &PgnDatabase,
     pgn_id: u32,
     params: &[u8],
 ) -> Option<&'static PgnInfo> {
-    let first = db.first_pgn(pgn_id)?;
+    let first = db.specific_variants(pgn_id).next()?;
 
     // A proprietary PGN can only be narrowed by Manufacturer (field 1)
     // and Industry Code (field 3); without both there is nothing to go
@@ -1281,15 +1283,13 @@ fn match_pgn_by_parameters(
     // `hasMatchFields` is set per *definition* (fieldtype.c), and the C
     // tests it on the first one only -- so a PGN whose leading
     // definition needs no matching is answered by that definition
-    // outright. This is how 126720 resolves: its catch-all is listed
-    // first and carries no `Match`, so a Raymarine request lands there
-    // without ever considering the 52 manufacturer variants behind it.
+    // outright.
     if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
         return Some(first);
     }
 
     let nparams = *params.first()? as usize;
-    'variant: for cand in db.pgn_variants(pgn_id) {
+    'variant: for cand in db.specific_variants(pgn_id) {
         let mut d = 1usize;
         // Exactly `nparams` pairs — walking to the end of the data
         // instead would read trailing bytes as a bogus extra parameter.
@@ -1335,14 +1335,16 @@ fn decode_variable(
     // resolve a *variant* from the parameter list itself -- a request for
     // 130833 that sets Manufacturer=Furuno picks
     // furunoShipParametersAndAntennaPosition, and its parameter 4 is a real
-    // typed field. Only when that fails (126720 has 53 variants and a
-    // Manufacturer/Industry pair narrows nothing) borrow the *catch-all*
+    // typed field, as does an Airmar request for 126720 naming proprietary
+    // ID 35 (Simulate Mode). Only when that fails -- no variant agrees with
+    // the parameters, as for a Raymarine request whose proprietary ID none of
+    // Raymarine's 126720 variants carries -- borrow the *catch-all*
     // definition, whose leading fields every variant shares.
     //
-    // It has to be the catch-all and not merely the first definition: the
-    // first definition of 126720 is somebody's specific variant whose
-    // Manufacturer Code is a `Match` field, so borrowing it would make every
-    // request from another manufacturer decode against the wrong layout.
+    // It has to be the catch-all and not merely the first specific
+    // definition: 126720's is somebody's variant whose Manufacturer Code is
+    // a `Match` field, so borrowing it would make every request from another
+    // manufacturer decode against the wrong layout.
     //
     // Resolved once per record and cached, as the C caches `g_refPgn`.
     let (target_info, used_catch_all) = match ctx.resolved_target {
@@ -3194,20 +3196,48 @@ mod tests {
     }
 
     #[test]
-    fn manufacturer_alone_lands_on_the_126720_catch_all() {
+    fn parameters_naming_no_126720_variant_fall_back_to_the_catch_all() {
         // From samples/raymarine-ev1.raw: Manufacturer = Raymarine
-        // (1851), Industry = Marine, then parameter 4's value. 126720's
-        // catch-all is listed first and carries no `Match`, so it
-        // answers immediately — none of the 52 manufacturer variants is
-        // ever reachable this way, which is the point: their layouts
-        // would be a guess.
+        // (1851), Industry = Marine, then parameter 4's value, which no
+        // Raymarine 126720 variant carries as its proprietary ID. The C
+        // matches no definition and decodes the value against the
+        // catch-all, as the rest of the message: "5C 05 0F".
         let params = [4u8, 0x01, 0x3b, 0x07, 0x03, 0x04, 0x04, 0x5c, 0x05, 0x0f];
-        let picked = match_pgn_by_parameters(db(), 126720, &params).expect("the catch-all");
-        assert!(
-            picked.fallback.unwrap_or(false),
-            "expected the Fallback definition, got id={}",
-            picked.id
-        );
+        assert!(match_pgn_by_parameters(db(), 126720, &params).is_none());
+
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x00, 0x00, 0xef, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x04, 0x01, 0x3b, 0x07,
+            0x03, 0x04, 0x04, 0x5c, 0x05, 0x0f,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 126208,
+            src: 204,
+            dst: 172,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let value = dec
+            .fields
+            .iter()
+            .rfind(|f| f.repeat_set == 1)
+            .expect("parameter 4's value");
+        match &value.value {
+            FieldValue::Binary(b) => assert_eq!(b.as_slice(), &[0x5c, 0x05, 0x0f]),
+            other => panic!("expected the catch-all's raw Data, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parameters_resolve_a_126720_variant_behind_the_catch_all() {
+        // 126720's catch-all is listed first. The C steps past it
+        // (`searchForPgn`), so Manufacturer = Airmar (135), Industry =
+        // Marine and Proprietary ID 35 pick Airmar's Simulate Mode.
+        //   [count][1][mfg lo,hi][3][industry][4][proprietary id]
+        let params = [3u8, 0x01, 0x87, 0x00, 0x03, 0x04, 0x04, 0x23];
+        let picked = match_pgn_by_parameters(db(), 126720, &params).expect("a variant");
+        assert_eq!(picked.id, "airmarSimulateMode");
     }
 
     #[test]
