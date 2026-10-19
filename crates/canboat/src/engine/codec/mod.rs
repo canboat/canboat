@@ -11,9 +11,10 @@
 //! * [`Codec::open`] — the bytes to write once the link is up;
 //! * [`Codec::receive`] — bytes read from the gateway in, [`Event`]s out:
 //!   bus frames, and bytes the handshake needs written back;
-//! * [`Codec::tick`] — lets deadlines advance while the line is quiet;
+//! * [`Codec::tick`] — lets deadlines advance while the line is quiet, and
+//!   [`Codec::next_deadline`] says when one is due;
 //! * [`Codec::send`] — a frame for the bus in, the gateway's bytes out, or
-//!   a [`Refused`] reason;
+//!   a [`Refused`] reason ([`Codec::send_at`] with the time);
 //! * [`Codec::close`] — the goodbye (an iKonvert goes off the bus).
 //!
 //! The caller supplies the time (`now_ms`, Unix milliseconds) wherever a
@@ -66,6 +67,9 @@ pub enum Refused {
     /// frame on one that carries 29-bit frames only, or an identifier that
     /// does not fit its kind ([`raw`]).
     Unsupported,
+    /// Too many ISO TP transfers already wait for this source and
+    /// destination.
+    Busy,
 }
 
 impl std::fmt::Display for Refused {
@@ -76,6 +80,7 @@ impl std::fmt::Display for Refused {
             Self::TooLarge => "payload too large for the gateway",
             Self::ReceiveOnly => "the gateway only receives",
             Self::Unsupported => "the gateway cannot carry this kind of frame",
+            Self::Busy => "too many ISO TP transfers queued",
         })
     }
 }
@@ -97,11 +102,28 @@ pub trait Codec {
     fn receive(&mut self, bytes: &[u8], now_ms: u64, events: &mut Vec<Event>);
 
     /// Advance the codec's deadlines with nothing received. Call it
-    /// periodically — the threaded runners do every 250 ms of silence.
+    /// periodically — the threaded runners do every 250 ms of silence —
+    /// and at [`Self::next_deadline`].
     fn tick(&mut self, _now_ms: u64, _events: &mut Vec<Event>) {}
 
-    /// Encode `frame` for the gateway.
+    /// When [`Self::tick`] next has something to send, in Unix
+    /// milliseconds: the next packet of an ISO TP transfer, which goes out
+    /// 50 ms after the one before, or its timeout. `None` when nothing is
+    /// due but what the 250 ms tick does.
+    fn next_deadline(&self) -> Option<u64> {
+        None
+    }
+
+    /// Encode `frame` for the gateway. A codec that paces what it sends
+    /// (ISO TP) takes the time from the last [`Self::receive`] or
+    /// [`Self::tick`]; [`Self::send_at`] gives it.
     fn send(&mut self, frame: &RawFrame) -> Result<Vec<u8>, Refused>;
+
+    /// [`Self::send`] at `now_ms`, Unix milliseconds.
+    fn send_at(&mut self, frame: &RawFrame, now_ms: u64) -> Result<Vec<u8>, Refused> {
+        let _ = now_ms;
+        self.send(frame)
+    }
 
     /// Bytes to write when the application closes the link on purpose.
     /// Empty when the gateway needs nothing.

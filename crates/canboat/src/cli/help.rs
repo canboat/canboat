@@ -277,8 +277,7 @@ fn render_gateway_help() -> String {
         format!(
             "* the default. rw: canboat reads from and writes to the bus; a \
              udp://[bind:]port only reads. J1939 (--protocol j1939): where it says yes; \
-             ISO TP messages are received there, but sent only on {}, where canboat is \
-             the node. 11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 \
+             ISO TP messages are received there, and sent on {}. 11-bit: Quick PCS (--protocol quick). The others carry NMEA 2000 \
              only.",
             or_list(&kinds(|k| k.capabilities().iso_tp_sends))
         ),
@@ -292,7 +291,7 @@ fn render_gateway_help() -> String {
          is not known to send it."
             .to_string(),
         "candump runs canboat's node only with --node: then it claims an address, \
-         answers ISO Requests and sends ISO TP, as on socketcan. Without, frames go \
+         answers ISO Requests and advertises the PGN lists, as on socketcan. Without, frames go \
          out as they are given, source address and all, and the PGN lists are ignored."
             .to_string(),
         "ikonvert: tcp:// is the better mode for a NavLink2. Over udp://[bind:][port] \

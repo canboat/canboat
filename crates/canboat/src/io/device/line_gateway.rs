@@ -12,7 +12,10 @@
 //! individual CAN frames — reassembles fast-packets before emitting.
 //! The encoder half writes the device's transmit shape: complete
 //! `A…` lines for N2K ASCII, bare `<CANID> <bytes…>` lines for RAW
-//! with fast-packet payloads fragmented per ISO 11783-3.
+//! with fast-packet payloads fragmented per ISO 11783-3. On RAW and
+//! candump a longer message that is not a fast-packet goes by ISO TP
+//! ([`crate::engine::iso_tp`]), paced by the writer at the encoder's
+//! deadlines; the decoder hands it the receiver's Clear To Send.
 
 use std::collections::{HashMap, VecDeque};
 use std::fmt::Write as _;
@@ -22,6 +25,7 @@ use std::time::{Duration, Instant};
 
 use crate::engine::format::{actisense_ascii, candump, iso11783_compose, mxpgn, seasmart, ydwg02};
 use crate::engine::frame::FASTPACKET_MAX_SIZE;
+use crate::engine::iso_tp::{PGN_TP_CM, TP_MAX_SIZE, TpSender};
 use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::startup::format_iso_ms;
 use crate::engine::{BusProtocol, FramePacketType, RawFrame};
@@ -122,6 +126,8 @@ pub struct Decoder {
     checksum: bool,
     /// A MiniPlex's Address Claims and Product Information.
     psmd: mxpgn::Psmd,
+    /// The encoder, to hand the ISO TP answers the bus delivers.
+    encoder: Option<Arc<Encoder>>,
 }
 
 impl Decoder {
@@ -139,7 +145,15 @@ impl Decoder {
             sent: Sent::default(),
             checksum: true,
             psmd: mxpgn::Psmd::default(),
+            encoder: None,
         }
+    }
+
+    /// Hand `encoder` the Clear To Send, End Of Message and Abort frames
+    /// for the ISO TP transfers it sends, and the gateway's address.
+    pub fn with_encoder(mut self, encoder: Arc<Encoder>) -> Self {
+        self.encoder = Some(encoder);
+        self
     }
 
     /// Accept `$PCDIN` and `$MXPGN` sentences whose checksum is wrong.
@@ -156,6 +170,14 @@ impl Decoder {
 
     /// Pass on a CAN frame received at `now`, joining fast-packets.
     fn push_frame(&mut self, mut frame: RawFrame, now: &str, events: &mut Vec<DeviceEvent>) {
+        if frame.pgn == PGN_TP_CM
+            && let Some(encoder) = &self.encoder
+        {
+            let answer = encoder.tp_frame(super::now_ms(), &frame);
+            if !answer.is_empty() {
+                events.push(DeviceEvent::SendBytes(answer));
+            }
+        }
         frame.timestamp = Some(now.to_string());
         let pt = self.protocol.packet_type(frame.pgn);
         match self.reassembler.push(frame, pt) {
@@ -171,8 +193,9 @@ impl Decoder {
 impl DeviceDecoder for Decoder {
     /// A quiet line still gets its minute's summary of incomplete
     /// fast-packets.
-    fn tick(&mut self, _events: &mut Vec<DeviceEvent>) {
+    fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
         self.reassembler.tick(super::now_ms());
+        self.poll_tp(events);
     }
 
     /// Frames get the host's time, as from every other gateway: the
@@ -202,7 +225,14 @@ impl DeviceDecoder for Decoder {
                                 && self.sent.is_echo(
                                     iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst),
                                     &frame.data,
-                                ) => {}
+                                ) =>
+                        {
+                            // Sent from the gateway's own address: where the
+                            // answers to our ISO TP come.
+                            if let Some(encoder) = &self.encoder {
+                                encoder.gateway_is(frame.src);
+                            }
+                        }
                         Ok(frame) => self.push_frame(frame, &now, events),
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                     }
@@ -251,8 +281,36 @@ impl DeviceDecoder for Decoder {
                 },
             }
         }
+        // The window a Clear To Send asked for.
+        self.poll_tp(events);
     }
 }
+
+impl Decoder {
+    fn poll_tp(&mut self, events: &mut Vec<DeviceEvent>) {
+        if let Some(encoder) = &self.encoder {
+            let due = encoder.poll(super::now_ms());
+            if !due.is_empty() {
+                events.push(DeviceEvent::SendBytes(due));
+            }
+        }
+    }
+}
+
+/// The ISO TP transfers an [`Encoder`] sends.
+#[derive(Default)]
+struct IsoTp {
+    sender: TpSender,
+    /// The gateway puts its own source address on what it sends, so the
+    /// transfers are its, and the answers come to it.
+    rewrites_source: bool,
+    /// Its address, once an echo has shown it.
+    gateway: Option<u8>,
+}
+
+/// The source the transfers through a gateway that rewrites it are kept
+/// under, whatever the application gave.
+const GATEWAY_SOURCE: u8 = crate::engine::ADDR_NULL;
 
 pub struct Encoder {
     format: LineFormat,
@@ -263,6 +321,7 @@ pub struct Encoder {
     /// Bytes to write as soon as the link opens.
     init: Vec<u8>,
     sent: Sent,
+    tp: Mutex<IsoTp>,
 }
 
 impl Encoder {
@@ -278,7 +337,84 @@ impl Encoder {
             seq: Mutex::new(HashMap::new()),
             init: Vec::new(),
             sent: Sent::default(),
+            tp: Mutex::new(IsoTp::default()),
         }
+    }
+
+    /// The gateway puts its own source address on what it transmits: the
+    /// answers to an ISO TP transfer come to it, not to the source the
+    /// application gave.
+    pub fn rewrites_source(self, rewrites: bool) -> Self {
+        self.tp.lock().expect("tp mutex").rewrites_source = rewrites;
+        self
+    }
+
+    /// Whether a long message goes by ISO TP: a 29-bit CAN frame per line.
+    fn sends_iso_tp(&self) -> bool {
+        matches!(self.format, LineFormat::YdwgRaw | LineFormat::Candump)
+            && !self.protocol.standard_frames()
+    }
+
+    /// The gateway's address, from an echo of what it sent for us.
+    fn gateway_is(&self, address: u8) {
+        self.tp.lock().expect("tp mutex").gateway = Some(address);
+    }
+
+    /// Feed a TP.CM from the bus to the transfers; the bytes it answers.
+    fn tp_frame(&self, now_ms: u64, frame: &RawFrame) -> Vec<u8> {
+        let mut tp = self.tp.lock().expect("tp mutex");
+        let answer = if tp.rewrites_source {
+            // Ours are the gateway's; until an echo shows its address, an
+            // answer to anyone may be one.
+            if tp.gateway.is_some_and(|gw| gw != frame.dst) {
+                return Vec::new();
+            }
+            let mut to_us = frame.clone();
+            to_us.dst = GATEWAY_SOURCE;
+            tp.sender.on_frame(now_ms, &to_us)
+        } else {
+            tp.sender.on_frame(now_ms, frame)
+        };
+        drop(tp);
+        self.write_tp(&answer)
+    }
+
+    /// The lines for ISO TP `frames`.
+    fn write_tp(&self, frames: &[RawFrame]) -> Vec<u8> {
+        let mut out = String::new();
+        for f in frames {
+            self.write_can(&mut out, f.prio, f.pgn, f.src, f.dst, &f.data);
+        }
+        out.into_bytes()
+    }
+
+    /// One CAN frame, as a line.
+    fn write_can(&self, out: &mut String, prio: u8, pgn: u32, src: u8, dst: u8, data: &[u8]) {
+        // An 11-bit frame's identifier is its message type, its pgn.
+        let extended = !self.protocol.standard_frames();
+        let canid = if extended {
+            iso11783_compose(prio, pgn, src, dst)
+        } else {
+            pgn
+        };
+        match self.format {
+            LineFormat::Candump => {
+                candump::write_log(out, canid, extended, data, super::now_ms());
+                return;
+            }
+            LineFormat::YdwgRaw => {
+                self.sent.note(canid, data);
+                let _ = write!(out, "{canid:08X}");
+                for b in data {
+                    let _ = write!(out, " {b:02X}");
+                }
+            }
+            _ => {
+                let one = RawFrame::new(None, prio, pgn, src, dst, data.iter().copied());
+                let _ = mxpgn::write_ordered(out, &one, true, self.format.mxpgn_order());
+            }
+        }
+        out.push_str("\r\n");
     }
 
     /// Record in `sent` the RAW frames written.
@@ -350,42 +486,15 @@ impl DeviceEncoder for Encoder {
             | LineFormat::ActisenseMxpgn
             | LineFormat::Candump => {
                 // An 11-bit frame's identifier is its message type, its pgn.
-                let extended = !self.protocol.standard_frames();
-                if !extended && frame.pgn > 0x7FF {
+                if self.protocol.standard_frames() && frame.pgn > 0x7FF {
                     log::warn!(
                         "not sending message type {:#X}: an 11-bit identifier is at most 0x7FF",
                         frame.pgn
                     );
                     return None;
                 }
-                let canid = if extended {
-                    iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst)
-                } else {
-                    frame.pgn
-                };
                 let write_one = |out: &mut String, data: &[u8]| {
-                    if self.format == LineFormat::Candump {
-                        candump::write_log(out, canid, extended, data, super::now_ms());
-                        return;
-                    }
-                    if self.format != LineFormat::YdwgRaw {
-                        let one = RawFrame::new(
-                            None,
-                            frame.prio,
-                            frame.pgn,
-                            frame.src,
-                            frame.dst,
-                            data.iter().copied(),
-                        );
-                        let _ = mxpgn::write_ordered(out, &one, true, self.format.mxpgn_order());
-                    } else {
-                        self.sent.note(canid, data);
-                        let _ = write!(out, "{canid:08X}");
-                        for b in data {
-                            let _ = write!(out, " {b:02X}");
-                        }
-                    }
-                    out.push_str("\r\n");
+                    self.write_can(out, frame.prio, frame.pgn, frame.src, frame.dst, data)
                 };
                 if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
                     let seq = self.next_seq(frame.pgn, frame.src);
@@ -400,9 +509,36 @@ impl DeviceEncoder for Encoder {
                     for chunk in chunks {
                         write_one(&mut out, &chunk);
                     }
+                } else if frame.data.len() > 8
+                    && frame.data.len() <= TP_MAX_SIZE
+                    && self.sends_iso_tp()
+                {
+                    // One line is one CAN frame: a longer message goes by ISO
+                    // TP, its announcement now and its data at the deadlines.
+                    let mut tp = self.tp.lock().expect("tp mutex");
+                    let src = if tp.rewrites_source {
+                        GATEWAY_SOURCE
+                    } else {
+                        frame.src
+                    };
+                    let announce = match tp.sender.send(
+                        super::now_ms(),
+                        frame.pgn,
+                        src,
+                        frame.dst,
+                        &frame.data,
+                    ) {
+                        Ok(announce) => announce,
+                        Err(e) => {
+                            log::warn!("not sending PGN {}: {e}", frame.pgn);
+                            return None;
+                        }
+                    };
+                    drop(tp);
+                    return Some(self.write_tp(&announce));
                 } else if frame.data.len() > 8 {
-                    // One RAW line is one CAN frame. On J1939 this payload
-                    // needs ISO TP, which we cannot send yet.
+                    // One line is one CAN frame, and this gateway gets no ISO
+                    // TP from canboat.
                     log::warn!(
                         "not sending PGN {}: {} bytes do not fit one CAN frame",
                         frame.pgn,
@@ -415,6 +551,34 @@ impl DeviceEncoder for Encoder {
             }
         }
         Some(out.into_bytes())
+    }
+
+    fn next_deadline(&self) -> Option<u64> {
+        self.tp.lock().expect("tp mutex").sender.next_deadline()
+    }
+
+    fn poll(&self, now_ms: u64) -> Vec<u8> {
+        let due = self.tp.lock().expect("tp mutex").sender.poll(now_ms);
+        self.write_tp(&due)
+    }
+}
+
+/// An encoder its decoder shares.
+impl DeviceEncoder for Arc<Encoder> {
+    fn init_bytes(&self) -> Vec<u8> {
+        (**self).init_bytes()
+    }
+
+    fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
+        (**self).encode_frame(frame)
+    }
+
+    fn next_deadline(&self) -> Option<u64> {
+        (**self).next_deadline()
+    }
+
+    fn poll(&self, now_ms: u64) -> Vec<u8> {
+        (**self).poll(now_ms)
     }
 }
 
@@ -457,15 +621,21 @@ pub fn run(
     protocol: BusProtocol,
     init: &[u8],
     ignore_checksum: bool,
+    rewrites_source: bool,
 ) -> DeviceHandle {
     let sent = Sent::default();
-    super::run(
-        Decoder::with_protocol(format, protocol)
-            .with_sent(sent.clone())
-            .ignore_checksum(ignore_checksum),
+    let encoder = Arc::new(
         Encoder::with_protocol(format, protocol)
             .with_init(init)
-            .with_sent(sent),
+            .with_sent(sent.clone())
+            .rewrites_source(rewrites_source),
+    );
+    super::run(
+        Decoder::with_protocol(format, protocol)
+            .with_sent(sent)
+            .ignore_checksum(ignore_checksum)
+            .with_encoder(encoder.clone()),
+        encoder,
         reader,
         writer,
     )
@@ -594,6 +764,101 @@ mod tests {
     /// canboat#1039: the echo of a frame canboat wrote is skipped, with
     /// the gateway's source address in place of ours; another client's
     /// transmit is passed on.
+    /// The bytes the decoder asks to write.
+    fn answers(dec: &mut Decoder, text: &str) -> String {
+        let mut events = Vec::new();
+        dec.decode(text.as_bytes(), &mut events);
+        events
+            .into_iter()
+            .filter_map(|e| match e {
+                DeviceEvent::SendBytes(b) => Some(String::from_utf8(b).unwrap()),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// `text`'s lines, as a YDWG echoes them: marked `T`, from `gateway`.
+    fn echoed(text: &str, gateway: u8) -> String {
+        text.lines()
+            .map(|l| {
+                let (canid, data) = l.split_once(' ').unwrap();
+                format!("00:00:01.000 T {}{gateway:02X} {data}\r\n", &canid[..6])
+            })
+            .collect()
+    }
+
+    #[test]
+    fn a_long_j1939_message_goes_out_as_a_bam_at_the_deadlines() {
+        let enc = Encoder::with_protocol(LineFormat::YdwgRaw, BusProtocol::J1939);
+        let vin: Vec<u8> = (1..=20).collect();
+        let cm = String::from_utf8(enc.encode_frame(&frame(65260, &vin)).unwrap()).unwrap();
+        assert_eq!(cm, "1CECFF07 20 14 00 03 FF EC FE 00\r\n");
+        let mut packets = String::new();
+        let mut at = Vec::new();
+        while let Some(due) = enc.next_deadline() {
+            at.push(due);
+            packets.push_str(&String::from_utf8(enc.poll(due)).unwrap());
+        }
+        assert_eq!(packets.lines().count(), 3, "{packets}");
+        assert!(packets.lines().all(|l| l.starts_with("1CEBFF07 ")));
+        assert!(packets.ends_with("1CEBFF07 03 0F 10 11 12 13 14 FF\r\n"));
+        assert!(
+            at.windows(2)
+                .all(|w| w[1] >= w[0] + crate::engine::iso_tp::BAM_GAP_MS)
+        );
+    }
+
+    /// A YDWG sends from its own address, so the receiver's Clear To Send
+    /// comes to that, which its echo shows.
+    #[test]
+    fn a_clear_to_send_to_the_gateway_releases_the_window() {
+        let sent = Sent::default();
+        let enc = Arc::new(
+            Encoder::with_protocol(LineFormat::YdwgRaw, BusProtocol::J1939)
+                .with_sent(sent.clone())
+                .rewrites_source(true),
+        );
+        let mut dec = Decoder::with_protocol(LineFormat::YdwgRaw, BusProtocol::J1939)
+            .with_sent(sent)
+            .with_encoder(enc.clone());
+        let mut to_peer = frame(65260, &[7; 20]);
+        to_peer.dst = 0x30;
+        let rts = String::from_utf8(enc.encode_frame(&to_peer).unwrap()).unwrap();
+        assert!(rts.starts_with("1CEC30FE 10 14 00 03 FF EC FE 00"), "{rts}");
+        assert!(decode_all(&mut dec, &echoed(&rts, 0xE2)).is_empty());
+
+        // A CTS to another address is not for us.
+        let cts = |to: u8| format!("00:00:01.010 R 1CEC{to:02X}30 11 03 01 FF FF EC FE 00\r\n");
+        assert_eq!(answers(&mut dec, &cts(0xE3)), "");
+        let window = answers(&mut dec, &cts(0xE2));
+        assert_eq!(window.lines().count(), 3, "{window}");
+        assert!(
+            window.lines().all(|l| l.starts_with("1CEB30FE ")),
+            "{window}"
+        );
+
+        // The echoes of the window are not the bus's.
+        assert!(decode_all(&mut dec, &echoed(&window, 0xE2)).is_empty());
+        let eoma = "00:00:01.020 R 1CECE230 13 14 00 03 FF EC FE 00\r\n";
+        decode_all(&mut dec, eoma);
+        assert_eq!(enc.next_deadline(), None, "the transfer is done");
+    }
+
+    #[test]
+    fn candump_sends_iso_tp_from_the_source_given() {
+        let enc = Encoder::with_protocol(LineFormat::Candump, BusProtocol::J1939);
+        let cm = String::from_utf8(enc.encode_frame(&frame(65260, &[7; 20])).unwrap()).unwrap();
+        assert!(cm.ends_with(" can0 1CECFF07#20140003FFECFE00\n"), "{cm}");
+        assert!(enc.next_deadline().is_some());
+    }
+
+    #[test]
+    fn mxpgn_gets_no_iso_tp() {
+        let enc = Encoder::with_protocol(LineFormat::Mxpgn, BusProtocol::J1939);
+        assert!(enc.encode_frame(&frame(65260, &[7; 20])).is_none());
+        assert_eq!(enc.next_deadline(), None);
+    }
+
     #[test]
     fn raw_skips_only_the_echoes_of_our_own_transmits() {
         let sent = Sent::default();
@@ -809,6 +1074,7 @@ mod tests {
             BusProtocol::Nmea2000,
             init,
             false,
+            true,
         )
         .join();
         sink.0.lock().unwrap().clone()

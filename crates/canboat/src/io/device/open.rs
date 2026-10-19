@@ -390,11 +390,11 @@ impl Device {
         let mut caps = self.kind.capabilities();
         if self.kind.takes(Setting::RunNode) && !self.run_node {
             caps.node = false;
-            caps.iso_tp_sends = false;
         }
         if self.receive_only() {
             caps.sends = false;
             caps.raw_sends = false;
+            caps.iso_tp_sends = false;
         }
         caps
     }
@@ -684,6 +684,7 @@ impl Device {
                 protocol,
                 init,
                 self.ignore_checksum,
+                self.kind.capabilities().rewrites_source,
             ))
         };
         Ok(match self.kind {
@@ -766,6 +767,7 @@ impl Device {
                     protocol,
                     &line_gateway::miniplex_init(),
                     self.ignore_checksum,
+                    true,
                 )
             }
             Kind::SeaSmart => line(LineFormat::SeaSmart, &[])?,
@@ -1110,7 +1112,7 @@ mod tests {
     #[test]
     fn candump_runs_the_node_only_when_asked() {
         let plain = Device::new(Kind::Candump, "tcp://sensesp");
-        assert!(!plain.capabilities().node && !plain.capabilities().iso_tp_sends);
+        assert!(!plain.capabilities().node && plain.capabilities().iso_tp_sends);
         assert!(plain.capabilities().raw_sends);
         let why = Device::new(Kind::Candump, "tcp://sensesp")
             .source_address(9)
