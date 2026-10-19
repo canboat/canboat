@@ -28,6 +28,7 @@
 
 use smallvec::SmallVec;
 
+use crate::engine::codec::raw_can::CanFrame;
 use crate::engine::format::common::iso11783_decompose;
 use crate::engine::format::plain::ParseError;
 use crate::engine::format::timestamp::days_to_ymd;
@@ -142,6 +143,14 @@ fn header(id_tok: &str, standard: bool) -> Result<Option<(u8, u32, u8, u8)>, Par
     // candump's `%03X` for a standard frame, `%08X` for an extended one.
     if (id_tok.len() <= 3) != standard {
         return Ok(None);
+    }
+    // No more bits than the frame kind has: 11, or 29.
+    if canid > if standard { 0x7FF } else { 0x1FFF_FFFF } {
+        return Err(ParseError::BadInteger {
+            field: "canid",
+            value: id_tok.to_string(),
+            offset: None,
+        });
     }
     Ok(Some(if standard {
         (0, canid, 0, 255)
@@ -337,8 +346,90 @@ fn epoch_to_iso(ts: &str) -> String {
     format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{millis:03}Z")
 }
 
+/// Append `frame` as a candump *log* line, the shape candump's `-l` writes
+/// and a SensESP N2K gateway takes: `(<epoch.micros>) can0
+/// <canid>#<hexbytes>\n`, the identifier with 8 hex digits when `extended`,
+/// 3 when not. `now_ms` is the time to give it, in Unix milliseconds.
+pub fn write_log(out: &mut String, canid: u32, extended: bool, data: &[u8], now_ms: u64) {
+    use std::fmt::Write as _;
+    let _ = write!(
+        out,
+        "({}.{:06}) can0 ",
+        now_ms / 1000,
+        (now_ms % 1000) * 1000
+    );
+    let _ = if extended {
+        write!(out, "{canid:08X}#")
+    } else {
+        write!(out, "{canid:03X}#")
+    };
+    for b in data {
+        let _ = write!(out, "{b:02X}");
+    }
+    out.push('\n');
+}
+
+/// The CAN frame a candump line holds, 29-bit or 11-bit. `Ok(None)` for a
+/// line that holds none (the Angstrom banner).
+pub fn parse_can(line: &str) -> Result<Option<CanFrame>, ParseError> {
+    if let Some(f) = parse_line_for(line, false)? {
+        let id = crate::engine::format::iso11783_compose(f.prio, f.pgn, f.src, f.dst);
+        return Ok(Some(CanFrame {
+            id,
+            extended: true,
+            data: f.data,
+        }));
+    }
+    Ok(parse_line_for(line, true)?.map(|f| CanFrame {
+        id: f.pgn,
+        extended: false,
+        data: f.data,
+    }))
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn an_identifier_too_large_for_its_kind_is_refused() {
+        use super::{parse_can, parse_line_for};
+        assert!(parse_line_for("(1.0) can0 FFF#01", true).is_err());
+        assert!(parse_line_for("(1.0) can0 7FF#01", true).unwrap().is_some());
+        assert!(parse_line_for("(1.0) can0 20000000#01", false).is_err());
+        assert!(parse_can("(1.0) can0 FFF#01").is_err());
+        assert!(parse_can("(1.0) can0 1FFFFFFF#01").unwrap().is_some());
+    }
+
+    #[test]
+    fn a_log_line_written_reads_back() {
+        let mut out = String::new();
+        write_log(
+            &mut out,
+            0x09F8_0115,
+            true,
+            &[0x7E, 0x47],
+            1_502_979_132_106,
+        );
+        assert_eq!(out, "(1502979132.106000) can0 09F80115#7E47\n");
+        assert_eq!(
+            parse_can(&out).unwrap(),
+            CanFrame::extended(0x09F8_0115, &[0x7E, 0x47])
+        );
+        let mut out = String::new();
+        write_log(&mut out, 0x123, false, &[1, 2, 3], 0);
+        assert_eq!(out, "(0.000000) can0 123#010203\n");
+        assert_eq!(
+            parse_can(&out).unwrap(),
+            CanFrame::standard(0x123, &[1, 2, 3])
+        );
+        // A PDU1 identifier, with its destination, comes back whole.
+        let mut out = String::new();
+        write_log(&mut out, 0x18EA_2301, true, &[0, 0xEE, 0], 0);
+        assert_eq!(parse_can(&out).unwrap().map(|f| f.id), Some(0x18EA_2301));
+        for line in ["  can0  123   [2]  01 02", "<0x09f80115> [1] 7e"] {
+            assert!(parse_can(line).unwrap().is_some(), "{line}");
+        }
+    }
+
     use super::*;
 
     #[test]

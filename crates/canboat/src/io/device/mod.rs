@@ -41,6 +41,8 @@ pub mod canalyst;
 #[cfg(feature = "io")]
 pub mod canboat_csv;
 #[cfg(feature = "io")]
+pub mod candump;
+#[cfg(feature = "io")]
 pub mod ikonvert;
 #[cfg(feature = "io")]
 mod iso11783_node;

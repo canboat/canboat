@@ -60,9 +60,11 @@ impl core::marker::StructuralPartialEq for canboat::bridge::GpsRolloverTarget
 pub canboat::bridge::Kind::Actisense(canboat::bus::ActisenseFormat)
 pub canboat::bridge::Kind::Aos
 pub canboat::bridge::Kind::Canalyst
+pub canboat::bridge::Kind::Candump
 pub canboat::bridge::Kind::Ikonvert
 pub canboat::bridge::Kind::Maretron
 pub canboat::bridge::Kind::Miniplex
+pub canboat::bridge::Kind::Plain
 pub canboat::bridge::Kind::SeaSmart
 pub canboat::bridge::Kind::SocketCan
 pub canboat::bridge::Kind::UsbCanA
@@ -211,6 +213,7 @@ pub fn canboat::bus::Device::password(self, impl core::convert::Into<alloc::stri
 pub fn canboat::bus::Device::pgn_list_status(&self) -> core::option::Option<canboat::device::PgnListStatus>
 pub fn canboat::bus::Device::pgn_lists(self, canboat::codec::PgnLists) -> Self
 pub fn canboat::bus::Device::reconnect(self, bool) -> Self
+pub fn canboat::bus::Device::run_node(self, bool) -> Self
 pub fn canboat::bus::Device::rx_filter(self, alloc::vec::Vec<u32>) -> Self
 pub fn canboat::bus::Device::source_address(self, u8) -> Self
 pub fn canboat::bus::Device::state_dir(self, std::path::PathBuf) -> Self
@@ -340,9 +343,11 @@ impl core::marker::StructuralPartialEq for canboat::bus::Closed
 pub canboat::bus::Kind::Actisense(canboat::bus::ActisenseFormat)
 pub canboat::bus::Kind::Aos
 pub canboat::bus::Kind::Canalyst
+pub canboat::bus::Kind::Candump
 pub canboat::bus::Kind::Ikonvert
 pub canboat::bus::Kind::Maretron
 pub canboat::bus::Kind::Miniplex
+pub canboat::bus::Kind::Plain
 pub canboat::bus::Kind::SeaSmart
 pub canboat::bus::Kind::SocketCan
 pub canboat::bus::Kind::UsbCanA
@@ -428,6 +433,7 @@ pub canboat::bus::Setting::NoClaim
 pub canboat::bus::Setting::NoTxRateLimit
 pub canboat::bus::Setting::Node
 pub canboat::bus::Setting::Password
+pub canboat::bus::Setting::RunNode
 pub canboat::bus::Setting::RxFilter
 impl canboat::bus::Setting
 pub const canboat::bus::Setting::ALL: &'static [canboat::bus::Setting]
@@ -508,6 +514,7 @@ pub fn canboat::bus::Device::password(self, impl core::convert::Into<alloc::stri
 pub fn canboat::bus::Device::pgn_list_status(&self) -> core::option::Option<canboat::device::PgnListStatus>
 pub fn canboat::bus::Device::pgn_lists(self, canboat::codec::PgnLists) -> Self
 pub fn canboat::bus::Device::reconnect(self, bool) -> Self
+pub fn canboat::bus::Device::run_node(self, bool) -> Self
 pub fn canboat::bus::Device::rx_filter(self, alloc::vec::Vec<u32>) -> Self
 pub fn canboat::bus::Device::source_address(self, u8) -> Self
 pub fn canboat::bus::Device::state_dir(self, std::path::PathBuf) -> Self
@@ -929,6 +936,21 @@ impl core::default::Default for canboat::codec::raw::Canalyst
 pub fn canboat::codec::raw::Canalyst::default() -> Self
 impl core::fmt::Debug for canboat::codec::raw::Canalyst
 pub fn canboat::codec::raw::Canalyst::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::raw::Candump
+impl canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::new() -> Self
+pub fn canboat::codec::raw::Candump::with_clock(fn() -> u64) -> Self
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Candump::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Candump::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Candump::write_gap(&self) -> core::time::Duration
+impl core::default::Default for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::default() -> Self
+impl core::fmt::Debug for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 #[non_exhaustive] pub struct canboat::codec::raw::Capabilities
 pub canboat::codec::raw::Capabilities::sends: bool
 pub canboat::codec::raw::Capabilities::standard_frames: bool
@@ -1003,6 +1025,13 @@ pub fn canboat::codec::raw::Canalyst::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::raw::Canalyst::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
 pub fn canboat::codec::raw::Canalyst::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::raw::Canalyst::write_gap(&self) -> core::time::Duration
+impl canboat::codec::raw::RawCodec for canboat::codec::raw::Candump
+pub fn canboat::codec::raw::Candump::capabilities(&self) -> canboat::codec::raw::Capabilities
+pub fn canboat::codec::raw::Candump::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::raw::Candump::receive(&mut self, &[u8], &mut alloc::vec::Vec<canboat::codec::raw::Event>)
+pub fn canboat::codec::raw::Candump::send(&mut self, &canboat::codec::raw::CanFrame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::raw::Candump::write_gap(&self) -> core::time::Duration
 impl canboat::codec::raw::RawCodec for canboat::codec::raw::Mxpgn
 pub fn canboat::codec::raw::Mxpgn::capabilities(&self) -> canboat::codec::raw::Capabilities
 pub fn canboat::codec::raw::Mxpgn::close(&mut self) -> alloc::vec::Vec<u8>

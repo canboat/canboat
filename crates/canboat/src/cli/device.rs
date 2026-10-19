@@ -292,6 +292,18 @@ pub struct DeviceArgs {
     #[arg(short = 'a', long, alias = "socketcan-address", value_name = "ADDR", help_heading = help::node_heading())]
     pub address: Option<u8>,
 
+    /// Run canboat's node on a gateway that passes frames through.
+    #[arg(
+        long,
+        help = help::only_help(
+            Setting::RunNode,
+            "run canboat's node on the gateway: claim an address, answer ISO \
+             Requests and send ISO TP; without, frames go out as they are given."
+        ),
+        help_heading = help::node_heading()
+    )]
+    pub node: bool,
+
     /// Claim no address: listen only, or on aos send from the simulator's own.
     ///
     /// On socketcan and canalyst a passive sniff. On aos canboat runs no
@@ -362,6 +374,7 @@ impl DeviceArgs {
                 Setting::IgnoreChecksum,
                 self.ignore_checksum,
             ),
+            ("--node", Setting::RunNode, self.node),
             ("--address", Setting::Node, self.address.is_some()),
             ("--no-claim", Setting::NoClaim, self.no_claim),
             ("--unique", Setting::Node, self.unique.is_some()),
@@ -422,6 +435,15 @@ impl DeviceArgs {
             }
             bail!("{flag}: --kind {kind} does not have it");
         }
+        if kind.takes(Setting::RunNode)
+            && !self.node
+            && let Some((flag, _)) = self
+                .settings_given()
+                .into_iter()
+                .find(|&(_, s)| matches!(s, Setting::Node | Setting::NoClaim))
+        {
+            bail!("{flag}: --kind {kind} runs canboat's node only with --node");
+        }
         Ok(())
     }
 
@@ -481,6 +503,9 @@ impl DeviceArgs {
         }
         if self.no_claim {
             dev = dev.no_claim();
+        }
+        if self.node {
+            dev = dev.run_node(true);
         }
         dev
     }
@@ -624,6 +649,25 @@ mod tests {
     }
 
     #[test]
+    fn candump_takes_the_node_options_only_with_node() {
+        assert!(parse(&["-a", "9"]).check(Some(Kind::Candump)).is_err());
+        assert!(
+            parse(&["--node", "-a", "9"])
+                .check(Some(Kind::Candump))
+                .is_ok()
+        );
+        assert!(parse(&["--node"]).check(Some(Kind::SocketCan)).is_err());
+        let dev = parse(&["--node", "-a", "9"]).device(Kind::Candump, "tcp://sensesp");
+        assert!(dev.capabilities().node);
+        assert!(
+            !parse(&[])
+                .device(Kind::Candump, "tcp://x")
+                .capabilities()
+                .node
+        );
+    }
+
+    #[test]
     fn kind_and_data_format_resolve() {
         use clap::ValueEnum;
         let kind = |name: &str| KindArg::from_str(name, false).unwrap();
@@ -673,6 +717,8 @@ mod tests {
                 "yachtd",
                 "miniplex",
                 "seasmart",
+                "candump",
+                "plain",
                 "ikonvert",
                 "maretron",
                 "aos",

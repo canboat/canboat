@@ -47,6 +47,8 @@ fn producer(kind: Kind) -> &'static str {
         Kind::YachtDevices => "ydwg-gateway",
         Kind::Miniplex => "miniplex",
         Kind::SeaSmart => "seasmart",
+        Kind::Candump => "candump-gateway",
+        Kind::Plain => "plain-gateway",
         Kind::Canalyst => "canalyst",
         Kind::UsbCanA => "usb-can-a",
     }
@@ -339,8 +341,12 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     if args.si.is_some() && !kind.takes(Setting::Node) {
         anyhow::bail!("--si: --kind {kind} does not have it");
     }
+    if args.si.is_some() && kind.takes(Setting::RunNode) && !gateway.node {
+        anyhow::bail!("--si: --kind {kind} runs canboat's node only with --node");
+    }
     let mut dev = gateway.device(kind, &args.device);
-    if kind.takes(Setting::Node) {
+    // Where canboat's node runs: on candump only with --node.
+    if dev.capabilities().node {
         if let Some(instance) = args.si {
             dev = dev.system_instance(instance);
         }

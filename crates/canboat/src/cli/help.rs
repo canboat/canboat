@@ -26,6 +26,7 @@ const OPTIONS: &[(&str, Setting)] = &[
     ("--password", Setting::Password),
     ("--no-tx-rate-limit", Setting::NoTxRateLimit),
     ("--ignore-checksum", Setting::IgnoreChecksum),
+    ("--node", Setting::RunNode),
     ("node options", Setting::Node),
     ("--no-claim", Setting::NoClaim),
 ];
@@ -91,7 +92,9 @@ pub fn kind_help(kind: Kind) -> String {
         }
         return format!("{vendor} {}; see --data-format", models.join(", "));
     }
-    if kind.capabilities().node {
+    if kind.takes(Setting::RunNode) {
+        format!("{}; canboat is the node with --node", kind.describe())
+    } else if kind.capabilities().node {
         format!("{}; canboat is the node", kind.describe())
     } else {
         kind.describe().to_string()
@@ -232,6 +235,16 @@ fn pgn_list_groups() -> Vec<(Vec<Kind>, ListUse, ListUse)> {
     groups
 }
 
+/// `name`, and that what it does with the PGN lists is its node's, which
+/// runs only with `--node` (`flag`) on a kind that takes it.
+fn with_node(kind: &Kind, name: String, flag: &str) -> String {
+    if kind.takes(Setting::RunNode) && kind.pgn_lists().rx == ListUse::Advertised {
+        format!("{name} (with {flag})")
+    } else {
+        name
+    }
+}
+
 /// The end of `--help` for both commands.
 pub fn gateway_help() -> &'static str {
     static HELP: LazyLock<String> = LazyLock::new(render_gateway_help);
@@ -278,6 +291,10 @@ fn render_gateway_help() -> String {
          20000) set to NMEA 0183; its own data servers' NMEA 0183 has no $MXPGN. A W2K-1 \
          is not known to send it."
             .to_string(),
+        "candump runs canboat's node only with --node: then it claims an address, \
+         answers ISO Requests and sends ISO TP, as on socketcan. Without, frames go \
+         out as they are given, source address and all, and the PGN lists are ignored."
+            .to_string(),
         "ikonvert: tcp:// is the better mode for a NavLink2. Over udp://[bind:][port] \
          (its UDP output, port 2000) canboat only receives: it expects the gateway to be \
          on the bus already, put there by another client, and never takes it off. Its \
@@ -315,7 +332,7 @@ fn render_gateway_help() -> String {
         } else {
             kinds
                 .iter()
-                .map(Kind::to_string)
+                .map(|k| with_node(k, k.to_string(), "--node"))
                 .collect::<Vec<_>>()
                 .join(", ")
         };
@@ -537,7 +554,7 @@ fn markdown_pgn_lists() -> String {
         } else {
             kinds
                 .iter()
-                .map(|k| format!("`{k}`"))
+                .map(|k| with_node(k, format!("`{k}`"), "`--node`"))
                 .collect::<Vec<_>>()
                 .join(", ")
         };
@@ -554,7 +571,7 @@ mod tests {
     fn the_kinds_that_carry_a_protocol_are_listed() {
         assert_eq!(
             kinds_carrying(BusProtocol::Quick),
-            "socketcan, canalyst or usb-can-a"
+            "candump, socketcan, canalyst or usb-can-a"
         );
         let j1939 = kinds_carrying(BusProtocol::J1939);
         for kind in ["actisense (mxpgn)", "yachtd", "miniplex", "socketcan"] {
