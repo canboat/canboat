@@ -1000,16 +1000,18 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65532</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967292</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65007">0xFDEF:
             PGN 65007
             - Utility Phase C AC Power</h3><p/><p>
@@ -1063,16 +1065,18 @@ limitations under the License.
             8
             bytes long and contains 4 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">0 .. 65532</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reactive Power</td><td/><td><a href="#pq-ELECTRICAL_REACTIVE_POWER">VAR</a><div class="xs">-2000000000 .. 2294967292</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65010">0xFDF2:
             PGN 65010
             - Utility Phase B AC Power</h3><p/><p>
@@ -1130,10 +1134,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
@@ -1194,10 +1199,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
@@ -1275,10 +1281,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
@@ -1339,10 +1346,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
@@ -1403,10 +1411,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
@@ -1467,10 +1476,11 @@ limitations under the License.
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 Cos Phi<div class="xs">0 .. 3.999755859375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> -2000000000</div></td><td/></tr><tr><td>2</td><td>Power factor</td><td/><td>6.103515625e-05 <a href="#pq-POWER_FACTOR">Cos Phi</a><div class="xs">-1 .. 2.999755859375</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -1</div></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits

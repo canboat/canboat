@@ -363,10 +363,10 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_UINT16_VAR"},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 30, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
      .camelDescription = "utilityPhaseCAcReactivePower",
      .priority = 3},
@@ -400,10 +400,10 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_UINT16_VAR"},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 30, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
      .camelDescription = "utilityPhaseBAcReactivePower",
      .priority = 3},
@@ -438,7 +438,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -475,7 +475,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -523,7 +523,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -560,7 +560,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -597,7 +597,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -634,7 +634,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "POWER_FACTOR_UFIX16_J1939"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
