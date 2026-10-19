@@ -6935,17 +6935,18 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>VAR</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <Signed>true</Signed>
+          <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_REACTIVE_POWER</PhysicalQuantity>
         </Field>
@@ -6954,24 +6955,26 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -6985,8 +6988,8 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>30</BitLength>
-          <BitOffset>34</BitOffset>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -7150,17 +7153,18 @@ limitations under the License.
           <Order>1</Order>
           <Id>reactivePower</Id>
           <Name>Reactive Power</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>VAR</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <Signed>true</Signed>
+          <Offset>-2000000000</Offset>
+          <RangeMin>-2000000000</RangeMin>
+          <RangeMax>2294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_REACTIVE_POWER</PhysicalQuantity>
         </Field>
@@ -7169,24 +7173,26 @@ limitations under the License.
           <Id>powerFactor</Id>
           <Name>Power factor</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>powerFactorLagging</Id>
           <Name>Power Factor Lagging</Name>
           <BitLength>2</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -7200,8 +7206,8 @@ limitations under the License.
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>30</BitLength>
-          <BitOffset>34</BitOffset>
+          <BitLength>14</BitLength>
+          <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -7390,12 +7396,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7606,12 +7614,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -7876,12 +7886,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8092,12 +8104,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8308,12 +8322,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -8524,12 +8540,14 @@ limitations under the License.
           <Unit>Cos Phi</Unit>
           <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>3.999755859375</RangeMax>
+          <Offset>-1</Offset>
+          <RangeMin>-1</RangeMin>
+          <RangeMax>2.999755859375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POWER_FACTOR</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>

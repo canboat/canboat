@@ -1279,6 +1279,14 @@ FieldType fieldTypeList[] = {
      .resolution = 6.103515625e-5,
      .physical = &POWER_FACTOR},
 
+    {.name = "POWER_FACTOR_UFIX16_J1939",
+     .description = "Power Factor, J1939 16 bit",
+     .encodingDescription = "SAE J1939's 16-bit power factor encoding: 1/16384 per bit from -1, so raw 0x8000 is a power factor of 1. The offset is -16384 steps.",
+     .baseFieldType = "UFIX16",
+     .offset = -16384,
+     .resolution = 6.103515625e-5,
+     .physical = &POWER_FACTOR},
+
     {.name = "POWER_FACTOR_UFIX8",
      .description = "Power Factor",
      .baseFieldType = "UFIX8",

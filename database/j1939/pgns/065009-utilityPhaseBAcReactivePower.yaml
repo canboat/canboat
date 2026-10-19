@@ -5,12 +5,10 @@ type: Single
 fields:
 - id: reactivePower
   name: Reactive Power
-  type: POWER_UINT16_VAR
+  type: POWER_FIX32_VAR_OFFSET
 - id: powerFactor
   name: Power factor
-  type: UINT16
-  resolution: 6.103515625e-05
-  unit: Cos Phi
+  type: POWER_FACTOR_UFIX16_J1939
 - id: powerFactorLagging
   name: Power Factor Lagging
   type: LOOKUP
@@ -19,4 +17,4 @@ fields:
 - id: reserved
   name: Reserved
   type: RESERVED
-  bits: 30
+  bits: 14

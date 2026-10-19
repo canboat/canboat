@@ -132,10 +132,10 @@ BO_ 2566778366 PGN_65005_utilityTotalAcEnergy: 8 Vector__XXX
  SG_ totalEnergyExport : 0|32@1+ (1,0) [0|0] "kWh" Vector__XXX
 
 BO_ 2566778622 PGN_65006_utilityPhaseCAcReactiv: 8 Vector__XXX
- SG_ reserved : 34|30@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 16|16@1+ (6.103515625e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|16@1+ (1,0) [0|0] "VAR" Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.103515625e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566778878 PGN_65007_utilityPhaseCAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
@@ -148,10 +148,10 @@ BO_ 2566779134 PGN_65008_utilityPhaseCBasicAcQu: 8 Vector__XXX
  SG_ lineLineAcRmsVoltage : 0|16@1+ (1,0) [0|0] "V" Vector__XXX
 
 BO_ 2566779390 PGN_65009_utilityPhaseBAcReactiv: 8 Vector__XXX
- SG_ reserved : 34|30@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactorLagging : 32|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ powerFactor : 16|16@1+ (6.103515625e-05,0) [0|0] "Cos Phi" Vector__XXX
- SG_ reactivePower : 0|16@1+ (1,0) [0|0] "VAR" Vector__XXX
+ SG_ reserved : 50|14@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactorLagging : 48|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ powerFactor : 32|16@1+ (6.103515625e-05,0) [0|0] "Cos Phi" Vector__XXX
+ SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566779646 PGN_65010_utilityPhaseBAcPower: 8 Vector__XXX
  SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
