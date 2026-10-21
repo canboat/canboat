@@ -281,6 +281,63 @@ Pgn pgnList[] = {
      .priority = 7,
      .explanation = "Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status."},
 
+    {"Furuno: Command",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 0, .description = "Command", .partOfPrimaryKey = true},
+      {.name = "Command", .camelName = "command", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
+     },
+     .camelDescription = "furunoCommand",
+     .priority = 7,
+     .explanation = "A command to an addressed Furuno device, and the device's reply. The Furuno Setting Tool sends command 0 to an SCX-20, which replies 3; an MCU-006 remote accepts commands 0 to 2 from its MFD and replies 3 to command 0, 4 to the others."},
+
+    {"Furuno: Remote Keyboard Report",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "Keyboard Report", .partOfPrimaryKey = true},
+      {.name = "Key 1", .camelName = "key1", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Key 2", .camelName = "key2", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Key 3", .camelName = "key3", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Key 4", .camelName = "key4", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Key 5", .camelName = "key5", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "furunoRemoteKeyboardReport",
+     .priority = 7,
+     .explanation = "The keys a Furuno MCU-006 remote holds, as USB HID keyboard usage IDs in the order pressed, sent to its MFD when they change and every second. An unused slot is 0xFF; all 0xFF means no key is held."},
+
+    {"Furuno: Remote Pointer Report",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 3, .description = "Pointer Report", .partOfPrimaryKey = true},
+      {.name = "dX", .camelName = "dx", .fieldType = "INT8", .resolution = 1.0, .hasSign = true},
+      {.name = "dY", .camelName = "dy", .fieldType = "INT8", .resolution = 1.0, .hasSign = true},
+      {.name = "Wheel", .camelName = "wheel", .fieldType = "INT8", .resolution = 1.0, .hasSign = true},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Button", .camelName = "button", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Spare", .camelName = "spare10", .fieldType = "SPARE", .size = 2, .resolution = 1.0},
+      {.name = "Keypad Mode", .camelName = "keypadMode", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Spare", .camelName = "spare12", .fieldType = "SPARE", .size = 4, .resolution = 1.0}
+     },
+     .camelDescription = "furunoRemotePointerReport",
+     .priority = 7,
+     .explanation = "A Furuno MCU-006 remote's joystick and knob, sent to its MFD on movement and every second. dx and dy move the MFD's cursor, Wheel is knob detents (zoom on a chart). Field A is always 1."},
+
     {"0xF000-0xFEFF: Standardized single-frame non-addressed",
      61440,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -1109,6 +1166,24 @@ Pgn pgnList[] = {
      .camelDescription = "maretronTripVolume",
      .priority = 5},
 
+    {"Furuno: Remote Announce",
+     65287,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Host", .camelName = "host", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Device", .camelName = "device", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Spare", .camelName = "spare6", .fieldType = "SPARE", .size = 6, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 40, .resolution = 1.0}
+     },
+     .camelDescription = "furunoRemoteAnnounce",
+     .interval = 5000,
+     .priority = 7,
+     .explanation = "Broadcast every 5 s. A TimeZero MFD sends it with Host set, offering to pair; an unpaired Furuno MCU-006 remote pairs with the first one it hears. The remote sends it with Device set."},
+
     {"Seatalk: Alarm",
      65288,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -1141,6 +1216,24 @@ Pgn pgnList[] = {
      },
      .camelDescription = "maretron420Ma",
      .priority = 5},
+
+    {"Furuno: Remote Backlight",
+     65288,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "B", .camelName = "b", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0},
+      {.name = "Preset", .camelName = "preset", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0},
+      {.name = "Brightness", .camelName = "brightness", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+     },
+     .camelDescription = "furunoRemoteBacklight",
+     .priority = 7,
+     .explanation = "A Furuno MCU-006 remote's backlight, broadcast at boot and when it changes. The MFD sets it with a 126208 Command on this PGN right after pairing, to its own brightness; the field numbers there are 4 to 7 for the fields after the header."},
 
     {"Simnet: Trim Tab Sensor Calibration",
      65289,
@@ -7794,6 +7887,23 @@ Pgn pgnList[] = {
      },
      .camelDescription = "seaRecoveryWatermakerStatus"},
 
+    {"Furuno: Remote Info",
+     130816,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 240, .description = "Remote Info", .partOfPrimaryKey = true},
+      {.name = "Reserved", .camelName = "reserved5", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "furunoRemoteInfo",
+     .priority = 7,
+     .explanation = "Broadcast by a Furuno MCU-006 remote after its MFD sends it Remote Command 0. Known from the firmware only."},
+
     {"Navico: Feature Unlock",
      130817,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -10434,6 +10544,20 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"}
      },
      .camelDescription = "navicoProprietaryFp"},
+
+    {"Furuno: Remote Host",
+     130849,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1855, .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Host", .camelName = "host", .fieldType = "ISO_NAME"}
+     },
+     .camelDescription = "furunoRemoteHost",
+     .priority = 7,
+     .explanation = "The NAME of the MFD a Furuno MCU-006 remote is paired with, broadcast once the pairing is made."},
 
     {"Simnet: Command AP Standby",
      130850,

@@ -1,0 +1,33 @@
+pgn: 130849
+id: furunoRemoteHost
+description: 'Furuno: Remote Host'
+type: Fast
+variantOrder: 2
+priority: 7
+explanation: The NAME of the MFD a Furuno MCU-006 remote is paired with, broadcast once the pairing is made.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: host
+  name: Host
+  type: ISO_NAME

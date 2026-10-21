@@ -1,0 +1,48 @@
+pgn: 65288
+id: furunoRemoteBacklight
+description: 'Furuno: Remote Backlight'
+type: Single
+variantOrder: 3
+priority: 7
+explanation: A Furuno MCU-006 remote's backlight, broadcast at boot and when it changes. The MFD sets it with a 126208 Command on this PGN right after pairing, to its own brightness; the field numbers there are 4 to 7 for the fields after the header.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: preset
+  name: Preset
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: brightness
+  name: Brightness
+  type: PERCENTAGE_UINT8
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 24
