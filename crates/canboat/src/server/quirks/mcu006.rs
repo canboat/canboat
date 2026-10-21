@@ -226,11 +226,26 @@ impl Mcu006 {
 
     /// Log what other nodes say that could be about us: any Furuno
     /// proprietary frame, and anything addressed to our address.
+    /// The traffic a paired TZMAP9 repeats on its own, its announce every
+    /// 5 s and its maintenance poll every 30 s, goes to `trace` and
+    /// `debug`; everything else to `info`.
     fn log_interesting(&self, d: &DecodedPgn, own: Option<u8>) {
         let to_us = own.is_some_and(|a| a == d.dst);
         let furuno_prop = is_proprietary(d.pgn) && d.data.starts_with(&FURUNO_HEADER);
         if to_us || (furuno_prop && is_remote_pgn(d.pgn)) {
-            log::info!(
+            let from_host = self.host.is_some_and(|h| h.addr == d.src);
+            let maintenance_poll = d.pgn == PGN_GROUP_FUNCTION
+                && d.data.first() == Some(&0)
+                && d.data.get(1..4) == Some(&[0x00, 0xef, 0x01][..]);
+            let level = if from_host && d.pgn == PGN_ANNOUNCE {
+                log::Level::Trace
+            } else if maintenance_poll {
+                log::Level::Debug
+            } else {
+                log::Level::Info
+            };
+            log::log!(
+                level,
                 "quirk(mcu006): rx pgn {} ({:#x}) src {} dst {}{}: {}",
                 d.pgn,
                 d.pgn,
@@ -245,7 +260,7 @@ impl Mcu006 {
     /// An `0xFF07` from another node. Byte 2 bit 0 set is the pairing
     /// trigger (`FUN_080136e8`); a real remote acts on it only while it
     /// has no host. A TimeZero MFD broadcasts it every 5 s, so repeats
-    /// from our own host are only logged at `debug`. Returns the request
+    /// from our own host are only logged at `trace`. Returns the request
     /// for the new host's address claim, which completes the pairing.
     fn on_announce(&mut self, d: &DecodedPgn) -> Option<RawFrame> {
         if !d.data.starts_with(&FURUNO_HEADER) || d.data.get(2).is_none_or(|b| b & 1 == 0) {
@@ -253,7 +268,7 @@ impl Mcu006 {
         }
         if let Some(host) = self.host {
             if host.addr == d.src {
-                log::debug!("quirk(mcu006): host src {} announces again", d.src);
+                log::trace!("quirk(mcu006): host src {} announces again", d.src);
             } else {
                 log::info!(
                     "quirk(mcu006): pairing offer from src {} ignored, paired with src {}",
