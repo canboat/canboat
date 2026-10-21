@@ -158,7 +158,7 @@ impl Mcu006 {
                 }
             }
             PGN_ISO_REQUEST => out.extend(self.handle_request(d)),
-            PGN_ANNOUNCE => self.on_announce(d),
+            PGN_ANNOUNCE => out.extend(self.on_announce(d)),
             PGN_HID => out.extend(self.on_hid_command(d)),
             _ => {}
         }
@@ -198,28 +198,49 @@ impl Mcu006 {
 
     /// An `0xFF07` from another node. Byte 2 bit 0 set is the pairing
     /// trigger (`FUN_080136e8`); a real remote acts on it only while it
-    /// has no host.
-    fn on_announce(&mut self, d: &DecodedPgn) {
+    /// has no host. A TimeZero MFD broadcasts it every 5 s, so repeats
+    /// from our own host are only logged at `debug`. Returns the request
+    /// for the new host's address claim, which completes the pairing.
+    fn on_announce(&mut self, d: &DecodedPgn) -> Option<RawFrame> {
         if !d.data.starts_with(&FURUNO_HEADER) || d.data.get(2).is_none_or(|b| b & 1 == 0) {
-            return;
+            return None;
         }
-        if self.host.is_some() {
-            log::info!(
-                "quirk(mcu006): pairing request from src {} ignored, already paired with {:?}",
-                d.src,
-                self.host
-            );
-            return;
+        if let Some(host) = self.host {
+            if host.addr == d.src {
+                log::debug!("quirk(mcu006): host src {} announces again", d.src);
+            } else {
+                log::info!(
+                    "quirk(mcu006): pairing offer from src {} ignored, paired with src {}",
+                    d.src,
+                    host.addr
+                );
+            }
+            return None;
         }
         log::info!(
-            "quirk(mcu006): PAIRING request from src {}; taking it as host, \
-             waiting for its address claim to learn its NAME",
+            "quirk(mcu006): PAIRING offer from src {}; taking it as host, \
+             requesting its address claim to learn its NAME",
             d.src
         );
         self.host = Some(Host {
             addr: d.src,
             name: None,
         });
+        self.claim_request(d.src)
+    }
+
+    /// An ISO Request for the address claim of `dst`.
+    fn claim_request(&self, dst: u8) -> Option<RawFrame> {
+        let addr = self.claim.address()?;
+        let pgn = PGN_ISO_ADDRESS_CLAIM;
+        Some(RawFrame::new(
+            None,
+            6,
+            PGN_ISO_REQUEST,
+            addr,
+            dst,
+            [pgn as u8, (pgn >> 8) as u8, (pgn >> 16) as u8],
+        ))
     }
 
     /// An address claim: completes a pending pairing, or follows a known
@@ -330,6 +351,15 @@ impl Mcu006 {
         {
             self.last_announce = Some(now);
             out.extend(self.announce());
+            // The firmware asks for claims every 5 s until it knows the
+            // host's NAME (`FUN_0800cda4`).
+            if let Some(Host {
+                addr: host,
+                name: None,
+            }) = self.host
+            {
+                out.extend(self.claim_request(host));
+            }
         }
         if self
             .last_heartbeat
@@ -602,7 +632,7 @@ mod tests {
             ADDR_GLOBAL,
             [0x3f, 0x9f, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff],
         ));
-        m.process(&trigger, t0 + Duration::from_secs(2));
+        let out = m.process(&trigger, t0 + Duration::from_secs(2));
         assert_eq!(
             m.host,
             Some(Host {
@@ -610,6 +640,11 @@ mod tests {
                 name: None
             })
         );
+        let req = out
+            .iter()
+            .find(|f| f.pgn == PGN_ISO_REQUEST)
+            .expect("asks the host for its claim");
+        assert_eq!((req.dst, req.data.as_slice()), (3, &[0x00, 0xee, 0x00][..]));
 
         let mfd_name = 0xa0a0_0000_e7e1_2345;
         let out = m.process(&claim(3, mfd_name), t0 + Duration::from_secs(3));

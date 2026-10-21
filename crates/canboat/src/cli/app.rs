@@ -105,7 +105,9 @@ pub fn main() -> ExitCode {
             let level = if config.quiet {
                 "error"
             } else if config.verbose {
-                "debug"
+                // nusb logs every USB transfer of a CANalyst or USB-CAN-A at
+                // debug; that drowns the bus. RUST_LOG brings it back.
+                "debug,nusb=info"
             } else {
                 "info"
             };
