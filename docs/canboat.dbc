@@ -476,7 +476,8 @@ BO_ 2566852094 PGN_65293_multiplexed: 8 Vector__XXX
  SG_ manufacturerIndustry M : 0|16@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566852350 PGN_65294_bepMarineProprietaryPg: 8 Vector__XXX
- SG_ data : 16|48@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ data : 24|40@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ brightness : 16|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX

@@ -14853,11 +14853,12 @@
         "PGN":65294,
         "Id":"bepMarineProprietaryPgn65294",
         "Description":"BEP Marine: Proprietary PGN 65294",
+        "Explanation":"Carries a display brightness. A Furuno TZMAP9 broadcasts it with every step of its brightness slider, Brightness running from 83 down to 1 and back; the other bytes stayed the same.",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":4,
+        "FieldCount":5,
         "Length":8,
         "Fields":[
           {
@@ -14904,10 +14905,28 @@
           },
           {
             "Order":4,
+            "Id":"brightness",
+            "Name":"Brightness",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Unit":"%",
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
+          },
+          {
+            "Order":5,
             "Id":"data",
             "Name":"Data",
-            "BitLength":48,
-            "BitOffset":16,
+            "BitLength":40,
+            "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"

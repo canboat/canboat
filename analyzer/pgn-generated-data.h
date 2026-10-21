@@ -1406,9 +1406,11 @@ Pgn pgnList[] = {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 295, .description = "BEP Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
+      {.name = "Brightness", .camelName = "brightness", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0},
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 40, .resolution = 1.0}
      },
-     .camelDescription = "bepMarineProprietaryPgn65294"},
+     .camelDescription = "bepMarineProprietaryPgn65294",
+     .explanation = "Carries a display brightness. A Furuno TZMAP9 broadcasts it with every step of its brightness slider, Brightness running from 83 down to 1 and back; the other bytes stayed the same."},
 
     {"BEP Marine: CZone Alarm",
      65295,
