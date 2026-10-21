@@ -128,12 +128,16 @@ impl Bridge {
                 config.protocol
             );
         }
-        // The scx20 and motion quirks impersonate a device (motion claims a
-        // whole new virtual node), so they need --kind socketcan, canalyst or usb-can-a —
+        // The scx20, motion and mcu006 quirks impersonate a device (motion and
+        // mcu006 claim a whole new virtual node), so they need --kind socketcan, canalyst or usb-can-a —
         // the backends that preserve a frame's src on outbound. The wmm quirk emits
         // canboat's own PGN 127258, so it only needs *some* writable backend
         // — that check happens below once one is known.
-        for kind in [quirks::QuirkKind::Scx20, quirks::QuirkKind::Motion] {
+        for kind in [
+            quirks::QuirkKind::Scx20,
+            quirks::QuirkKind::Motion,
+            quirks::QuirkKind::Mcu006,
+        ] {
             if config.quirk.contains(&kind) && !config.is_node() {
                 let name = kind.name();
                 anyhow::bail!(

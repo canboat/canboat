@@ -167,7 +167,7 @@ pub struct Args {
 
     /// Apply a quirk to the bus; repeatable (see the possible values).
     ///
-    /// `scx20` and `motion` impersonate or claim a device and need
+    /// `scx20`, `motion` and `mcu006` impersonate or claim a device and need
     /// `--kind socketcan`, `canalyst` or `usb-can-a`; `wmm` emits canboat's own PGN and
     /// works with any gateway that can send; `gps-rollover` only rewrites
     /// decoded dates and needs no gateway at all.
