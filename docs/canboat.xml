@@ -13280,6 +13280,7 @@ limitations under the License.
       <PGN>65294</PGN>
       <Id>bepMarineProprietaryPgn65294</Id>
       <Description>BEP Marine: Proprietary PGN 65294</Description>
+      <Explanation>Carries a display brightness. A Furuno TZMAP9 broadcasts it with every step of its brightness slider, Brightness running from 83 down to 1 and back; the other bytes stayed the same.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -13288,7 +13289,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>5</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -13335,10 +13336,28 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>brightness</Id>
+          <Name>Brightness</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>48</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>40</BitLength>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
