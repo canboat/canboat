@@ -349,20 +349,57 @@ impl Mcu006 {
             return Vec::new();
         };
         let data = &d.data;
-        if d.dst != addr || data.len() < 4 {
+        let to_us = d.dst == addr;
+        if !(to_us || d.dst == ADDR_GLOBAL) || data.len() < 4 {
             return Vec::new();
         }
         let pgn = u32::from_le_bytes([data[1], data[2], data[3], 0]);
         match (data[0], pgn) {
-            (1, PGN_STATUS) => self.on_backlight_command(d, addr),
-            (0, PGN_MAINTENANCE) => self.on_maintenance_request(d, addr),
+            (1, PGN_STATUS) if to_us => self.on_backlight_command(d, addr),
+            (0, PGN_MAINTENANCE) if to_us => self.on_maintenance_request(d, addr),
+            (0, PGN_HOST) => self.on_host_request(d, addr, to_us),
             _ => Vec::new(),
+        }
+    }
+
+    /// 126208 Request for `0x1FF21`, "which MFD are you paired with". A
+    /// TZMAP9 broadcasts one to Furuno devices with every step of its
+    /// brightness slider. The firmware answers with 130849 to the
+    /// requester when the only fields are 1 (manufacturer code, 1855 =
+    /// Furuno) and 3 (industry code, 4 = marine); any other field is
+    /// refused, with an Acknowledge only when the request
+    /// was addressed to the remote.
+    fn on_host_request(&self, d: &DecodedPgn, addr: u8, to_us: bool) -> Vec<RawFrame> {
+        // Function, PGN, transmission interval (4), interval offset (2).
+        let Some(params) = d.data.get(10..).and_then(parse_params) else {
+            return Vec::new();
+        };
+        let codes: Vec<u8> = params
+            .iter()
+            .map(|&(field, value)| {
+                let ok = match field {
+                    1 => is_furuno(value),
+                    3 => value & 7 == 4,
+                    _ => false,
+                };
+                if ok { 0 } else { PARAM_ERROR }
+            })
+            .collect();
+        if codes.iter().all(|&c| c == 0) {
+            log::debug!("quirk(mcu006): src {} asks for our host", d.src);
+            return self.host_frame(d.src).into_iter().collect();
+        }
+        if to_us {
+            vec![ack_frame(addr, d.src, &d.data[1..4], &codes)]
+        } else {
+            Vec::new()
         }
     }
 
     /// 126208 Command on `0xFF08`. A TZMAP9 sets the backlight right after
     /// pairing (the `0xff08` case of the firmware's command handler): field
-    /// 1 must be Furuno, field 3 marine, 4 and 5 are ignored, 6 is the
+    /// 1, the manufacturer code, must be 1855 (Furuno), field 3, the
+    /// industry code, 4 (marine); 4 and 5 are ignored, 6 is the
     /// preset and 7 the percentage. Answered with a 126208 Acknowledge
     /// and, when every field passes, the new `0xFF08` status.
     fn on_backlight_command(&mut self, d: &DecodedPgn, addr: u8) -> Vec<RawFrame> {
@@ -409,7 +446,8 @@ impl Mcu006 {
     }
 
     /// 126208 Request for the maintenance PGN `0x1EF00`. The firmware
-    /// accepts field 1 = Furuno, 3 = marine and 4 = `0x0b`, 1 or 2; any
+    /// accepts field 1 (manufacturer code) = 1855, field 3 (industry code)
+    /// = 4 and field 4 = `0x0b`, 1 or 2; any
     /// other field is refused. A TZMAP9 asks with field 4 = 5 and a field
     /// 5 every 30 s, which a real remote refuses too: an Acknowledge with
     /// error codes. The replies to the queries it does accept are not
@@ -568,11 +606,12 @@ impl Mcu006 {
         ))
     }
 
-    /// `0x1FF21`: `3F 9F` + the host's NAME (`FUN_08015638`). `None` until
-    /// the pairing has completed.
+    /// `0x1FF21`: `3F 9F` + the host's NAME (`FUN_08015638`), all ones
+    /// while unpaired, as the firmware's stored NAME then is. `None` until
+    /// we hold an address.
     fn host_frame(&self, dst: u8) -> Option<RawFrame> {
         let addr = self.claim.address()?;
-        let name = self.host?.name?;
+        let name = self.host.and_then(|h| h.name).unwrap_or(u64::MAX);
         let mut data = FURUNO_HEADER.to_vec();
         data.extend_from_slice(&name.to_le_bytes());
         Some(RawFrame::new(None, PRIO, PGN_HOST, addr, dst, data))
@@ -1003,6 +1042,43 @@ mod tests {
             f.data.as_slice(),
             [0x3f, 0x9f, 0x02, 0xff, 0xff, 0xff, 0xff, 0xff]
         );
+    }
+
+    #[test]
+    fn answers_the_broadcast_host_request() {
+        let mut m = Mcu006::new(None);
+        let t0 = Instant::now();
+        drive_to_claimed(&mut m, t0);
+        // As a TZMAP9 broadcasts it with each brightness step.
+        let req = dec(&RawFrame::new(
+            None,
+            3,
+            PGN_GROUP_FUNCTION,
+            1,
+            ADDR_GLOBAL,
+            [
+                0x00, 0x21, 0xff, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x02, 0x01, 0x3f, 0x07,
+                0x03, 0x04,
+            ],
+        ));
+        let out = m.process(&req, t0 + Duration::from_secs(2));
+        let host = out.iter().find(|f| f.pgn == PGN_HOST).expect("130849");
+        assert_eq!(host.dst, 1);
+        assert_eq!(&host.data[2..], &[0xff; 8], "unpaired: all ones");
+
+        // A request with a field the remote does not know: silent when
+        // broadcast.
+        let odd = dec(&RawFrame::new(
+            None,
+            3,
+            PGN_GROUP_FUNCTION,
+            1,
+            ADDR_GLOBAL,
+            [
+                0x00, 0x21, 0xff, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x04, 0x05,
+            ],
+        ));
+        assert!(m.process(&odd, t0 + Duration::from_secs(2)).is_empty());
     }
 
     #[test]
