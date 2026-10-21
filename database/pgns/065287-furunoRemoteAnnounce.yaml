@@ -1,0 +1,60 @@
+pgn: 65287
+id: furunoRemoteAnnounce
+description: 'Furuno: Remote Announce'
+type: Single
+variantOrder: 4
+priority: 7
+interval: 5000
+explanation: Broadcast every 5 s. A TimeZero MFD sends it with Host set, offering to pair; an unpaired Furuno MCU-006 remote pairs with the first one it hears. The remote sends it with Device set.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: host
+  name: Host
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: device
+  name: Device
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 6
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 40
+samples:
+- raw: "2026-10-21T13:21:59.532Z,7,65287,1,255,8,3f,9f,01,ff,ff,ff,ff,ff"  # from furuno-tzmap9-mcu006.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    host: "Yes"
+    device: "No"
+- raw: "2026-10-21T13:21:56.251Z,7,65287,110,255,8,3f,9f,02,ff,ff,ff,ff,ff"  # from furuno-tzmap9-mcu006.raw
+  expects:
+    host: "No"
+    device: "Yes"

@@ -1,0 +1,56 @@
+pgn: 61184
+id: furunoCommand
+description: 'Furuno: Command'
+type: Single
+variantOrder: 7
+priority: 7
+explanation: A command to an addressed Furuno device, and the device's reply. The Furuno Setting Tool sends command 0 to an SCX-20, which replies 3; an MCU-006 remote accepts commands 0 to 2 from its MFD and replies 3 to command 0, 4 to the others.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  The samples are the Furuno Setting Tool and an SCX-20.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  description: Command
+  match: 0
+  primaryKey: true
+- id: command
+  name: Command
+  type: UINT8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,0,52,8,3f,9f,00,00,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    proprietaryId: 0
+    command: 0
+- raw: "2023-01-01-00:00:00.000,7,61184,52,0,8,3f,9f,00,03,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    proprietaryId: 0
+    command: 3
