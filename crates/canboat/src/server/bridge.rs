@@ -75,6 +75,8 @@ pub struct Bridge {
     engine: Arc<RequestEngine>,
     nmea_filter: Option<Arc<Mutex<crate::n2kd::nmea_filter::NmeaFilter>>>,
     overrides: Option<Arc<Mutex<crate::n2kd::overrides::OverrideEngine>>>,
+    /// Shared by `--quirk mcu006` and its control port.
+    mcu006_link: Option<quirks::mcu006::Link>,
 
     /// Optional in-process decoded tap (installed by [`Bridge::decoded`]).
     decoded_tx: Option<mpsc::Sender<Arc<DecodedPgn>>>,
@@ -302,6 +304,10 @@ impl Bridge {
             None => None,
         };
 
+        let mcu006_link = config
+            .quirk
+            .contains(&quirks::QuirkKind::Mcu006)
+            .then(quirks::mcu006::Link::default);
         Ok(Self {
             config,
             db,
@@ -321,6 +327,7 @@ impl Bridge {
             engine,
             nmea_filter,
             overrides,
+            mcu006_link,
             decoded_tx: None,
             serve_stop: Arc::new(AtomicBool::new(false)),
             tcp_joins: Vec::new(),
@@ -513,6 +520,20 @@ impl Bridge {
                 stop(),
             )?);
         }
+        // The emulated MCU-006's keys, pointer and knob. Its reports go
+        // straight to the device writer.
+        if let (Some(link), Some(sender)) = (self.mcu006_link.as_ref(), self.device_sender.as_ref())
+            && config.mcu006_port != 0
+        {
+            self.tcp_joins
+                .push(super::mcu006_control::spawn_mcu006_control_server(
+                    config.bind,
+                    config.mcu006_port,
+                    link.clone(),
+                    sender.clone(),
+                    stop(),
+                )?);
+        }
         Ok(())
     }
 
@@ -524,10 +545,16 @@ impl Bridge {
             analyzer: self.analyzer_hub.clone(),
             snapshot: self.snapshot.clone(),
             engine: Arc::clone(&self.engine),
-            quirks: quirks::Quirks::new(
-                self.config.quirk.clone(),
-                self.config.config_dir.as_deref(),
-            ),
+            quirks: {
+                let mut q = quirks::Quirks::new(
+                    self.config.quirk.clone(),
+                    self.config.config_dir.as_deref(),
+                );
+                if let Some(link) = &self.mcu006_link {
+                    q.set_mcu006_link(link.clone());
+                }
+                q
+            },
             device_sender: self.device_sender.clone(),
             claim_addr: self.claim_addr.clone(),
             overrides: self.overrides.clone(),
