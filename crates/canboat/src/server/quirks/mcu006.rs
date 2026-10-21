@@ -51,6 +51,8 @@ const PGN_ANNOUNCE: u32 = 65287; // 0xFF07
 const PGN_STATUS: u32 = 65288; // 0xFF08
 const PGN_HID_INFO: u32 = 130816; // 0x1FF00
 const PGN_HOST: u32 = 130849; // 0x1FF21
+const PGN_GROUP_FUNCTION: u32 = 126208;
+const PGN_MAINTENANCE: u32 = 126720; // 0x1EF00
 
 const MFG_FURUNO: u16 = 1855;
 /// Furuno's proprietary header word `0x9F3F`: manufacturer 1855, reserved
@@ -92,6 +94,8 @@ const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(60);
 /// Backlight preset 0 and 50 %, the firmware's defaults.
 const BACKLIGHT_PRESET: u8 = 0;
 const BACKLIGHT_PERCENT: u8 = 50;
+/// 126208 parameter error code for a value the remote refuses.
+const PARAM_ERROR: u8 = 4;
 
 /// The MFD this remote reports to.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -109,6 +113,9 @@ pub struct Mcu006 {
     last_announce: Option<Instant>,
     last_heartbeat: Option<Instant>,
     heartbeat_seq: u8,
+    /// Set by the MFD through 126208 on `0xFF08`.
+    backlight_preset: u8,
+    backlight_percent: u8,
     host: Option<Host>,
 }
 
@@ -121,6 +128,8 @@ impl Mcu006 {
             last_announce: None,
             last_heartbeat: None,
             heartbeat_seq: 0,
+            backlight_preset: BACKLIGHT_PRESET,
+            backlight_percent: BACKLIGHT_PERCENT,
             host: None,
         }
     }
@@ -160,6 +169,7 @@ impl Mcu006 {
             PGN_ISO_REQUEST => out.extend(self.handle_request(d)),
             PGN_ANNOUNCE => out.extend(self.on_announce(d)),
             PGN_HID => out.extend(self.on_hid_command(d)),
+            PGN_GROUP_FUNCTION => out.extend(self.on_group_function(d)),
             _ => {}
         }
 
@@ -297,6 +307,109 @@ impl Mcu006 {
         }
     }
 
+    /// A 126208 Command or Request addressed to us.
+    fn on_group_function(&mut self, d: &DecodedPgn) -> Vec<RawFrame> {
+        let Some(addr) = self.claim.address() else {
+            return Vec::new();
+        };
+        let data = &d.data;
+        if d.dst != addr || data.len() < 4 {
+            return Vec::new();
+        }
+        let pgn = u32::from_le_bytes([data[1], data[2], data[3], 0]);
+        match (data[0], pgn) {
+            (1, PGN_STATUS) => self.on_backlight_command(d, addr),
+            (0, PGN_MAINTENANCE) => self.on_maintenance_request(d, addr),
+            _ => Vec::new(),
+        }
+    }
+
+    /// 126208 Command on `0xFF08`. A TZMAP9 sets the backlight right after
+    /// pairing (the `0xff08` case of the firmware's command handler): field
+    /// 1 must be Furuno, field 3 marine, 4 and 5 are ignored, 6 is the
+    /// preset and 7 the percentage. Answered with a 126208 Acknowledge
+    /// and, when every field passes, the new `0xFF08` status.
+    fn on_backlight_command(&mut self, d: &DecodedPgn, addr: u8) -> Vec<RawFrame> {
+        let Some(params) = d.data.get(5..).and_then(parse_params) else {
+            return Vec::new();
+        };
+        let (mut preset, mut percent) = (self.backlight_preset, self.backlight_percent);
+        let codes: Vec<u8> = params
+            .iter()
+            .map(|&(field, value)| {
+                let ok = match field {
+                    1 => is_furuno(value),
+                    3 => value & 7 == 4,
+                    6 => {
+                        preset = value as u8 & 0x0f;
+                        true
+                    }
+                    7 => {
+                        percent = value as u8;
+                        true
+                    }
+                    8 => false,
+                    _ => true,
+                };
+                if ok { 0 } else { PARAM_ERROR }
+            })
+            .collect();
+        let mut out = vec![ack_frame(addr, d.src, &d.data[1..4], &codes)];
+        if codes.iter().all(|&c| c == 0) {
+            log::info!(
+                "quirk(mcu006): src {} sets the backlight to preset {preset}, {percent} %",
+                d.src
+            );
+            self.backlight_preset = preset;
+            self.backlight_percent = percent;
+            out.extend(self.status());
+        } else {
+            log::info!(
+                "quirk(mcu006): refused a backlight command from src {}: codes {codes:?}",
+                d.src
+            );
+        }
+        out
+    }
+
+    /// 126208 Request for the maintenance PGN `0x1EF00`. The firmware
+    /// accepts field 1 = Furuno, 3 = marine and 4 = `0x0b`, 1 or 2; any
+    /// other field is refused. A TZMAP9 asks with field 4 = 5 and a field
+    /// 5 every 30 s, which a real remote refuses too: an Acknowledge with
+    /// error codes. The replies to the queries it does accept are not
+    /// implemented.
+    fn on_maintenance_request(&self, d: &DecodedPgn, addr: u8) -> Vec<RawFrame> {
+        // Function, PGN, transmission interval (4), interval offset (2).
+        let Some(params) = d.data.get(10..).and_then(parse_params) else {
+            return Vec::new();
+        };
+        let codes: Vec<u8> = params
+            .iter()
+            .map(|&(field, value)| {
+                let ok = match field {
+                    1 => is_furuno(value),
+                    3 => value & 7 == 4,
+                    4 => matches!(value, 0x0b | 1 | 2),
+                    _ => false,
+                };
+                if ok { 0 } else { PARAM_ERROR }
+            })
+            .collect();
+        if codes.iter().all(|&c| c == 0) {
+            log::warn!(
+                "quirk(mcu006): src {} sent a maintenance query the remote accepts \
+                 ({params:?}); its reply is not implemented",
+                d.src
+            );
+            return Vec::new();
+        }
+        log::debug!(
+            "quirk(mcu006): refusing maintenance request {params:?} from src {}",
+            d.src
+        );
+        vec![ack_frame(addr, d.src, &d.data[1..4], &codes)]
+    }
+
     fn hid_reply(&self, src: u8, dst: u8, code: u8) -> RawFrame {
         RawFrame::new(
             None,
@@ -410,8 +523,8 @@ impl Mcu006 {
                 0x3f,
                 0x9f,
                 0x00,
-                (BACKLIGHT_PRESET & 0x0f) << 4 | 1,
-                BACKLIGHT_PERCENT,
+                (self.backlight_preset & 0x0f) << 4 | 1,
+                self.backlight_percent,
                 0xff,
                 0xff,
                 0xff,
@@ -443,6 +556,36 @@ impl Mcu006 {
         }
         .frame(addr)
     }
+}
+
+/// The parameters of a 126208 Command or Request: a count, then `field`
+/// and value pairs. Field 1 (the manufacturer code) is two bytes, every
+/// other field the remote knows is one. `None` if the payload is short.
+fn parse_params(data: &[u8]) -> Option<Vec<(u8, u16)>> {
+    let (&count, mut rest) = data.split_first()?;
+    let mut params = Vec::with_capacity(count as usize);
+    for _ in 0..count {
+        let (&field, tail) = rest.split_first()?;
+        let size = if field == 1 { 2 } else { 1 };
+        let value = tail.get(..size)?;
+        params.push((field, value.iter().rev().fold(0, |v, &b| v << 8 | b as u16)));
+        rest = &tail[size..];
+    }
+    Some(params)
+}
+
+fn is_furuno(manufacturer_field: u16) -> bool {
+    manufacturer_field & 0x7ff == MFG_FURUNO
+}
+
+/// A 126208 Acknowledge (`FUN_080138c0`): function 2, the PGN, no PGN or
+/// interval error, then one 4-bit code per parameter, two to a byte.
+fn ack_frame(src: u8, dst: u8, pgn: &[u8], codes: &[u8]) -> RawFrame {
+    let mut data = vec![2, pgn[0], pgn[1], pgn[2], 0, codes.len() as u8];
+    for pair in codes.chunks(2) {
+        data.push(pair[0] & 0x0f | pair.get(1).map_or(0, |c| c << 4));
+    }
+    RawFrame::new(None, 3, PGN_GROUP_FUNCTION, src, dst, data)
 }
 
 /// The remote's NAME. The unique number is derived from the host machine,
@@ -673,6 +816,69 @@ mod tests {
         ));
         m.process(&other_remote, t0 + Duration::from_secs(2));
         assert_eq!(m.host, None);
+    }
+
+    #[test]
+    fn acknowledges_the_backlight_command() {
+        let mut m = Mcu006::new(None);
+        let t0 = Instant::now();
+        let addr = drive_to_claimed(&mut m, t0);
+        // As a TZMAP9 sent it right after pairing: preset 4, 25 %.
+        let cmd = dec(&RawFrame::new(
+            None,
+            3,
+            PGN_GROUP_FUNCTION,
+            1,
+            addr,
+            [
+                0x01, 0x08, 0xff, 0x00, 0xf8, 0x06, 0x01, 0x3f, 0x07, 0x03, 0x04, 0x04, 0x00, 0x05,
+                0x01, 0x06, 0x04, 0x07, 0x19,
+            ],
+        ));
+        let out = m.process(&cmd, t0 + Duration::from_secs(2));
+        let ack = out
+            .iter()
+            .find(|f| f.pgn == PGN_GROUP_FUNCTION)
+            .expect("acknowledged");
+        assert_eq!((ack.dst, ack.prio), (1, 3));
+        assert_eq!(
+            ack.data.as_slice(),
+            [0x02, 0x08, 0xff, 0x00, 0x00, 0x06, 0, 0, 0]
+        );
+        let status = out.iter().find(|f| f.pgn == PGN_STATUS).expect("status");
+        assert_eq!(
+            status.data.as_slice(),
+            [0x3f, 0x9f, 0, 0x41, 25, 0xff, 0xff, 0xff]
+        );
+    }
+
+    #[test]
+    fn refuses_the_tzmap_maintenance_request() {
+        let mut m = Mcu006::new(None);
+        let t0 = Instant::now();
+        let addr = drive_to_claimed(&mut m, t0);
+        // As a TZMAP9 sends it every 30 s.
+        let req = dec(&RawFrame::new(
+            None,
+            3,
+            PGN_GROUP_FUNCTION,
+            1,
+            addr,
+            [
+                0x00, 0x00, 0xef, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x04, 0x01, 0x3f, 0x07,
+                0x03, 0x04, 0x04, 0x05, 0x05, 0x00,
+            ],
+        ));
+        let out = m.process(&req, t0 + Duration::from_secs(2));
+        let ack = out
+            .iter()
+            .find(|f| f.pgn == PGN_GROUP_FUNCTION)
+            .expect("acknowledged");
+        assert_eq!(ack.dst, 1);
+        assert_eq!(
+            ack.data.as_slice(),
+            [0x02, 0x00, 0xef, 0x01, 0x00, 0x04, 0x00, 0x44]
+        );
     }
 
     #[test]
