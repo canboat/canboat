@@ -15,12 +15,16 @@
 //! [`DecodedPgn::field_ref`] — instead of hand-unpacking bytes, and can
 //! act on fast-packet PGNs too.
 //!
-//! Two quirks are recognised:
+//! Three quirks are recognised:
 //! - `Scx20` — impersonate a Furuno SCX-20's Product Information (see
 //!   [[device-scx20]] / `samples/scx20-setting-tool-*.raw`). Gated to
 //!   `--socketcan` at the CLI layer because every other device backend
 //!   rewrites the outbound source address, defeating the impersonation.
 //!   Lives in [`scx20`].
+//! - `Mcu006` — present a Furuno MCU-006 RotoKey remote: claim its NAME,
+//!   answer discovery, announce, follow an MFD's pairing and log what the
+//!   MFD sends. Claims a new device, so needs a node backend. Lives in
+//!   [`mcu006`].
 //! - `Wmm` — compute magnetic variation locally (WMM 2025) and emit our
 //!   own PGN 127258, plus ask older-WMM sources to stop. It emits
 //!   canboat's *own* node (no impersonation), so it works with any
@@ -36,6 +40,7 @@
 //! [`gps_relay`].
 
 pub mod gps_relay;
+pub mod mcu006;
 pub mod motion;
 pub mod scx20;
 pub mod wmm;
@@ -64,6 +69,10 @@ pub enum QuirkKind {
     /// present, so a Navico Hercules accepts it. Needs to claim a new
     /// device, so needs socketcan.
     Motion,
+    /// Present a Furuno MCU-006 N2K remote to a TimeZero MFD: its NAME,
+    /// Product Information, announce and pairing. Claims a new device, so
+    /// needs socketcan.
+    Mcu006,
     /// Correct GNSS dates from a receiver that never learned about the
     /// GPS 1024-week rollover and reports one or two epochs in the
     /// past — and every date the listed devices stamp from that clock.
@@ -86,6 +95,7 @@ impl QuirkKind {
             QuirkKind::Scx20 => "scx20",
             QuirkKind::Wmm => "wmm",
             QuirkKind::Motion => "motion",
+            QuirkKind::Mcu006 => "mcu006",
             QuirkKind::GpsRollover(_) => "gps-rollover",
             QuirkKind::GpsRelay => "gps-relay",
         }
@@ -124,10 +134,11 @@ impl FromStr for QuirkKind {
             "scx20" => no_args(QuirkKind::Scx20),
             "wmm" => no_args(QuirkKind::Wmm),
             "motion" => no_args(QuirkKind::Motion),
+            "mcu006" => no_args(QuirkKind::Mcu006),
             "gps-rollover" => Target::parse(args).map(QuirkKind::GpsRollover),
             "gps-relay" => no_args(QuirkKind::GpsRelay),
             _ => Err(format!(
-                "unknown quirk '{name}'; the quirks are: scx20, wmm, motion, gps-rollover, gps-relay"
+                "unknown quirk '{name}'; the quirks are: scx20, wmm, motion, mcu006, gps-rollover, gps-relay"
             )),
         }
     }
@@ -142,6 +153,8 @@ pub struct Quirks {
     wmm: Option<wmm::WmmQuirk>,
     /// Present iff `--quirk motion`. Owns the Motion-Sensor impersonation.
     motion: Option<motion::Motion>,
+    /// Present iff `--quirk mcu006`. Owns the MCU-006 impersonation.
+    mcu006: Option<mcu006::Mcu006>,
     /// Present iff `--quirk gps-relay`. Re-sends a listed device's data.
     gps_relay: Option<gps_relay::GpsRelay>,
 }
@@ -165,6 +178,9 @@ impl Quirks {
             motion: kinds
                 .contains(&QuirkKind::Motion)
                 .then(|| motion::Motion::new(state_dir)),
+            mcu006: kinds
+                .contains(&QuirkKind::Mcu006)
+                .then(|| mcu006::Mcu006::new(state_dir)),
             gps_relay: kinds
                 .contains(&QuirkKind::GpsRelay)
                 .then(gps_relay::GpsRelay::new),
@@ -177,6 +193,7 @@ impl Quirks {
         self.scx20.is_some()
             || self.wmm.is_some()
             || self.motion.is_some()
+            || self.mcu006.is_some()
             || self.gps_relay.is_some()
     }
 
@@ -199,10 +216,31 @@ impl Quirks {
         if let Some(motion) = self.motion.as_mut() {
             out.extend(motion.process(decoded, now));
         }
+        if let Some(mcu006) = self.mcu006.as_mut() {
+            let mut frames = mcu006.process(decoded, now);
+            stamp(&mut frames);
+            out.extend(frames);
+        }
         if let Some(relay) = self.gps_relay.as_mut() {
             out.extend(relay.process(decoded, own_addr));
         }
         out
+    }
+}
+
+/// Stamp a host-clock timestamp on any frame that lacks one, so the local
+/// analyzer / snapshot streams show these synthetic frames with a time.
+fn stamp(frames: &mut [RawFrame]) {
+    if frames.iter().all(|f| f.timestamp.is_some()) {
+        return;
+    }
+    let ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0);
+    let ts = crate::engine::format_iso_ms(ms);
+    for f in frames.iter_mut().filter(|f| f.timestamp.is_none()) {
+        f.timestamp = Some(ts.clone());
     }
 }
 
@@ -233,6 +271,7 @@ pub(crate) mod tests {
     fn parses_every_name() {
         assert_eq!("gps-relay".parse::<QuirkKind>(), Ok(QuirkKind::GpsRelay));
         assert!("gps-relay=4".parse::<QuirkKind>().is_err());
+        assert_eq!("mcu006".parse::<QuirkKind>(), Ok(QuirkKind::Mcu006));
         assert_eq!(
             "gps-rollover=4".parse::<QuirkKind>(),
             Ok(QuirkKind::GpsRollover(Target::Devices(vec![

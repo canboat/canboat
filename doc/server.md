@@ -103,6 +103,7 @@ or invent data, so you switch on the ones you need:
 | `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
 | `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
+| `mcu006` | Presents a Furuno MCU-006 RotoKey remote to a TimeZero MFD: claims its NAME, answers discovery with its Product Information, announces itself every 5 s, follows an MFD's pairing request and logs every remote-related frame the MFD sends. Identity only for now; it sends no key presses yet | `canboat server --quirk mcu006` (needs `--kind socketcan`, `canalyst` or `usb-can-a`) |
 
 `gps-rollover` is the odd one out: it corrects a decoded value rather than
 putting a frame on the bus, which is why it is available when decoding a
