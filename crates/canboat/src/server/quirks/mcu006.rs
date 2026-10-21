@@ -28,13 +28,16 @@
 //!   frame addressed to us, at `info`. That log is the point of the
 //!   exercise.
 //!
-//! Not yet: key and pointer reports, a control port to drive them, and
-//! persisting the pairing across restarts.
+//! The reports themselves are sent by the control port in
+//! [`crate::server::mcu006_control`], which reads the remote's address
+//! and its host from the shared [`Link`]. Not yet: persisting the pairing
+//! across restarts.
 //!
 //! Timing piggybacks on bus traffic, like the other quirks: the periodic
 //! frames go out on the first decoded frame after they fall due. An MFD
 //! keeps the bus busy enough for that.
 
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use crate::engine::{ADDR_GLOBAL, DecodedPgn, RawFrame};
@@ -97,6 +100,19 @@ const BACKLIGHT_PERCENT: u8 = 50;
 /// 126208 parameter error code for a value the remote refuses.
 const PARAM_ERROR: u8 = 4;
 
+/// Where the remote's reports go, kept up to date by the quirk for the
+/// control port. Both are `None` until the claim and the pairing are done.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct LinkState {
+    /// Our claimed source address.
+    pub addr: Option<u8>,
+    /// The paired MFD's address, once its NAME is known.
+    pub host: Option<u8>,
+}
+
+/// The quirk's [`LinkState`], shared with the control port.
+pub type Link = Arc<Mutex<LinkState>>;
+
 /// The MFD this remote reports to.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct Host {
@@ -117,6 +133,7 @@ pub struct Mcu006 {
     backlight_preset: u8,
     backlight_percent: u8,
     host: Option<Host>,
+    link: Option<Link>,
 }
 
 impl Mcu006 {
@@ -131,7 +148,13 @@ impl Mcu006 {
             backlight_preset: BACKLIGHT_PRESET,
             backlight_percent: BACKLIGHT_PERCENT,
             host: None,
+            link: None,
         }
+    }
+
+    /// Share where reports go with the control port.
+    pub fn set_link(&mut self, link: Link) {
+        self.link = Some(link);
     }
 
     pub fn process(&mut self, d: &DecodedPgn, now: Instant) -> Vec<RawFrame> {
@@ -185,7 +208,20 @@ impl Mcu006 {
         }
 
         out.extend(self.periodic(now));
+        self.update_link();
         out
+    }
+
+    fn update_link(&self) {
+        let Some(link) = &self.link else { return };
+        let state = LinkState {
+            addr: self.claim.address(),
+            host: self.host.filter(|h| h.name.is_some()).map(|h| h.addr),
+        };
+        let mut shared = link.lock().unwrap_or_else(|e| e.into_inner());
+        if *shared != state {
+            *shared = state;
+        }
     }
 
     /// Log what other nodes say that could be about us: any Furuno
@@ -558,6 +594,39 @@ impl Mcu006 {
     }
 }
 
+/// Keyboard report on `0xEF00`: `3F 9F 02` then up to five HID usage IDs,
+/// `FF` for an empty slot (`FUN_08013274`).
+pub(crate) fn keyboard_report(src: u8, dst: u8, keys: &[u8]) -> RawFrame {
+    let mut data = [0x3f, 0x9f, 0x02, 0xff, 0xff, 0xff, 0xff, 0xff];
+    for (slot, &key) in data[3..].iter_mut().zip(keys) {
+        *slot = key;
+    }
+    RawFrame::new(None, PRIO, PGN_HID, src, dst, data)
+}
+
+/// Pointer report on `0xEF00`: `3F 9F 03 dx dy wheel 01 flags`, bit 0 of
+/// `flags` the knob button (`FUN_08013308`).
+pub(crate) fn pointer_report(
+    src: u8,
+    dst: u8,
+    dx: i8,
+    dy: i8,
+    wheel: i8,
+    button: bool,
+) -> RawFrame {
+    let data = [
+        0x3f,
+        0x9f,
+        0x03,
+        dx as u8,
+        dy as u8,
+        wheel as u8,
+        0x01,
+        button as u8,
+    ];
+    RawFrame::new(None, PRIO, PGN_HID, src, dst, data)
+}
+
 /// The parameters of a 126208 Command or Request: a count, then `field`
 /// and value pairs. Field 1 (the manufacturer code) is two bytes, every
 /// other field the remote knows is one. `None` if the payload is short.
@@ -878,6 +947,61 @@ mod tests {
         assert_eq!(
             ack.data.as_slice(),
             [0x02, 0x00, 0xef, 0x01, 0x00, 0x04, 0x00, 0x44]
+        );
+    }
+
+    #[test]
+    fn link_shows_address_and_host_once_paired() {
+        let link = Link::default();
+        let mut m = Mcu006::new(None);
+        m.set_link(link.clone());
+        let t0 = Instant::now();
+        let addr = drive_to_claimed(&mut m, t0);
+        assert_eq!(
+            *link.lock().unwrap(),
+            LinkState {
+                addr: Some(addr),
+                host: None
+            }
+        );
+        let trigger = dec(&RawFrame::new(
+            None,
+            7,
+            PGN_ANNOUNCE,
+            1,
+            ADDR_GLOBAL,
+            [0x3f, 0x9f, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff],
+        ));
+        m.process(&trigger, t0 + Duration::from_secs(2));
+        assert_eq!(
+            link.lock().unwrap().host,
+            None,
+            "not until the NAME is known"
+        );
+        m.process(
+            &claim(1, 0xc078_af00_e7e4_252c),
+            t0 + Duration::from_secs(3),
+        );
+        assert_eq!(link.lock().unwrap().host, Some(1));
+    }
+
+    #[test]
+    fn builds_the_reports_that_moved_a_tzmap9() {
+        // The frames verified on a TZMAP9 on 2026-10-21.
+        let f = pointer_report(110, 1, 16, 0, 0, false);
+        assert_eq!((f.pgn, f.prio, f.src, f.dst), (PGN_HID, 7, 110, 1));
+        assert_eq!(f.data.as_slice(), [0x3f, 0x9f, 0x03, 0x10, 0, 0, 1, 0]);
+        let f = pointer_report(110, 1, 0, 0, -1, true);
+        assert_eq!(f.data.as_slice(), [0x3f, 0x9f, 0x03, 0, 0, 0xff, 1, 1]);
+        let f = keyboard_report(110, 1, &[0x52]);
+        assert_eq!(
+            f.data.as_slice(),
+            [0x3f, 0x9f, 0x02, 0x52, 0xff, 0xff, 0xff, 0xff]
+        );
+        let f = keyboard_report(110, 1, &[]);
+        assert_eq!(
+            f.data.as_slice(),
+            [0x3f, 0x9f, 0x02, 0xff, 0xff, 0xff, 0xff, 0xff]
         );
     }
 

@@ -187,6 +187,14 @@ impl Quirks {
         }
     }
 
+    /// Share the MCU-006's address and host with its control port. A
+    /// no-op unless `--quirk mcu006` is on.
+    pub fn set_mcu006_link(&mut self, link: mcu006::Link) {
+        if let Some(m) = self.mcu006.as_mut() {
+            m.set_link(link);
+        }
+    }
+
     /// `true` iff at least one quirk is enabled — lets the pipeline skip
     /// the per-frame call entirely on the common path.
     pub fn is_enabled(&self) -> bool {
