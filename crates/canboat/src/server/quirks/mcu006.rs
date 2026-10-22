@@ -5,13 +5,14 @@
 //! The MCU-006 is Furuno's NMEA 2000 remote for TimeZero MFDs: a HID
 //! keyboard and pointer tunnelled over proprietary PGN 61184 (`0xEF00`)
 //! to one paired MFD. With `--quirk mcu006` canboat claims a distinct
-//! virtual node that looks like one on the bus, so we can see whether an
-//! MFD (the target is a TZMAP9) notices it and how it tries to pair.
+//! virtual node that looks like one on the bus and pairs with the MFD, so
+//! a program can drive the MFD through the control port as if it held the
+//! remote.
 //!
 //! The byte layouts come from the MCU-006 firmware 01.03 (the `FUN_…`
-//! names are its functions) and were checked against a TZMAP9 on a bus:
-//! `samples/furuno-tzmap9-mcu006.raw`. Nothing has been checked against a
-//! real MCU-006.
+//! names are its functions). A TZMAP9 pairs with this remote and acts on
+//! every key, the pointer and the knob: `samples/furuno-tzmap9-mcu006.raw`.
+//! Nothing has been checked against a real MCU-006.
 //!
 //! What this half does:
 //! - claims an address with the remote's NAME (Furuno 1855, class 110
@@ -24,9 +25,9 @@
 //!   byte 2 set makes it the host, and its next address claim gives its
 //!   NAME. Then announces it in 130849, as the remote does;
 //! - answers the host's `0xEF00` commands the way the firmware does;
-//! - logs every Furuno-proprietary frame another node sends, and every
-//!   frame addressed to us, at `info`. That log is the point of the
-//!   exercise.
+//! - logs pairing and the host's settings at `info`; every
+//!   Furuno-proprietary frame another node sends, and every frame
+//!   addressed to us, at `debug`.
 //!
 //! The reports themselves are sent by the control port in
 //! [`crate::server::mcu006_control`], which reads the remote's address
@@ -227,8 +228,8 @@ impl Mcu006 {
     /// Log what other nodes say that could be about us: any Furuno
     /// proprietary frame, and anything addressed to our address.
     /// The traffic a paired TZMAP9 repeats on its own, its announce every
-    /// 5 s and its maintenance poll every 30 s, goes to `trace` and
-    /// `debug`; everything else to `info`.
+    /// 5 s and its maintenance poll every 30 s, goes to `trace`; everything
+    /// else to `debug`.
     fn log_interesting(&self, d: &DecodedPgn, own: Option<u8>) {
         let to_us = own.is_some_and(|a| a == d.dst);
         let furuno_prop = is_proprietary(d.pgn) && d.data.starts_with(&FURUNO_HEADER);
@@ -237,12 +238,10 @@ impl Mcu006 {
             let maintenance_poll = d.pgn == PGN_GROUP_FUNCTION
                 && d.data.first() == Some(&0)
                 && d.data.get(1..4) == Some(&[0x00, 0xef, 0x01][..]);
-            let level = if from_host && d.pgn == PGN_ANNOUNCE {
+            let level = if (from_host && d.pgn == PGN_ANNOUNCE) || maintenance_poll {
                 log::Level::Trace
-            } else if maintenance_poll {
-                log::Level::Debug
             } else {
-                log::Level::Info
+                log::Level::Debug
             };
             log::log!(
                 level,
@@ -270,7 +269,7 @@ impl Mcu006 {
             if host.addr == d.src {
                 log::trace!("quirk(mcu006): host src {} announces again", d.src);
             } else {
-                log::info!(
+                log::debug!(
                     "quirk(mcu006): pairing offer from src {} ignored, paired with src {}",
                     d.src,
                     host.addr
@@ -279,7 +278,7 @@ impl Mcu006 {
             return None;
         }
         log::info!(
-            "quirk(mcu006): PAIRING offer from src {}; taking it as host, \
+            "quirk(mcu006): pairing offer from src {}; taking it as host, \
              requesting its address claim to learn its NAME",
             d.src
         );
@@ -334,7 +333,7 @@ impl Mcu006 {
         }
         match d.data.get(3) {
             Some(0) => {
-                log::info!("quirk(mcu006): command 0 from src {}, replying 03", d.src);
+                log::debug!("quirk(mcu006): command 0 from src {}, replying 03", d.src);
                 vec![
                     self.hid_reply(addr, d.src, 3),
                     RawFrame::new(
@@ -348,7 +347,7 @@ impl Mcu006 {
                 ]
             }
             Some(cmd @ (1 | 2)) => {
-                log::info!(
+                log::debug!(
                     "quirk(mcu006): command {cmd} from src {}, replying 04",
                     d.src
                 );
@@ -522,7 +521,7 @@ impl Mcu006 {
         };
         let requested = u32::from_le_bytes([requested[0], requested[1], requested[2], 0]);
         if d.dst == addr {
-            log::info!(
+            log::debug!(
                 "quirk(mcu006): request for pgn {requested} from src {}",
                 d.src
             );
