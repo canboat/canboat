@@ -29,13 +29,19 @@
 //! released, so a dropped connection cannot leave a key held down. Keypad
 //! mode is a setting of the remote, not something a client holds, so it
 //! stays as the last client left it.
+//!
+//! The port is open to the network, so it guards the bus: a line longer
+//! than [`MAX_LINE`] closes the connection, and the frames it sends, from
+//! every client together, are paced at most one per [`FRAME_GAP`]. A client
+//! that sends faster waits, and TCP slows it down, rather than the writer's
+//! queue growing.
 
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 use serde_json::{Value, json};
@@ -51,6 +57,11 @@ const TAP: Duration = Duration::from_millis(100);
 const MAX_KEYS: usize = 5;
 /// The most a `pointer` or `knob` command moves: 16 reports of 127.
 const MAX_MOVE: i64 = 16 * 127;
+/// The longest command line; a real one is under a hundred bytes.
+const MAX_LINE: usize = 4096;
+/// The least time between two frames from the port: 500 a second, about a
+/// quarter of a 250 kbit/s bus.
+const FRAME_GAP: Duration = Duration::from_millis(2);
 
 /// What the remote is doing: the keys held (in the order pressed), the
 /// button and keypad mode, across every client.
@@ -91,6 +102,8 @@ struct Control {
     link: Link,
     sender: FrameSender,
     remote: Mutex<Remote>,
+    /// When the next frame may go out.
+    next_frame: Mutex<Instant>,
 }
 
 /// Bind the MCU-006 control port and start its keepalive.
@@ -108,6 +121,7 @@ pub fn spawn_mcu006_control_server(
         link,
         sender,
         remote: Mutex::new(Remote::default()),
+        next_frame: Mutex::new(Instant::now()),
     });
     {
         let control = control.clone();
@@ -160,7 +174,17 @@ impl Control {
         }
     }
 
+    /// Send one frame, first waiting for its slot: frames from every
+    /// client go out at most one per [`FRAME_GAP`].
     fn send(&self, frame: crate::engine::RawFrame) {
+        let wait = {
+            let mut next = self.next_frame.lock().unwrap_or_else(|e| e.into_inner());
+            let now = Instant::now();
+            let slot = (*next).max(now);
+            *next = slot + FRAME_GAP;
+            slot - now
+        };
+        thread::sleep(wait);
         if self.sender.send_frame(frame).is_err() {
             log::warn!("mcu006-control: the CAN writer is gone");
         }
@@ -200,8 +224,8 @@ fn run_client(stream: TcpStream, control: &Control) {
         return;
     };
     let mut held = Held::default();
-    for line in BufReader::new(stream).lines() {
-        let Ok(line) = line else { break };
+    let mut reader = BufReader::new(stream);
+    while let Some(line) = read_line(&mut reader) {
         let line = line.trim();
         if line.is_empty() {
             continue;
@@ -221,6 +245,27 @@ fn run_client(stream: TcpStream, control: &Control) {
     }
     release(control, &mut held);
     log::info!("mcu006-control client disconnected");
+}
+
+/// The next line, without its newline. `None` at the end of the stream, on
+/// an error, or for a line longer than [`MAX_LINE`] or not UTF-8, any of
+/// which ends the connection.
+fn read_line(reader: &mut impl BufRead) -> Option<String> {
+    let mut bytes = Vec::new();
+    let read = reader
+        .take(MAX_LINE as u64 + 1)
+        .read_until(b'\n', &mut bytes)
+        .ok()?;
+    if read == 0 {
+        return None;
+    }
+    if bytes.last() == Some(&b'\n') {
+        bytes.pop();
+    } else if bytes.len() > MAX_LINE {
+        log::warn!("mcu006-control: a line longer than {MAX_LINE} bytes; closing");
+        return None;
+    }
+    String::from_utf8(bytes).ok()
 }
 
 fn add_state(reply: &mut Value, control: &Control) {
@@ -452,6 +497,25 @@ mod tests {
         assert_eq!(steps(16, -5), vec![(16, -5)]);
         assert_eq!(steps(300, -10), vec![(127, -10), (127, 0), (46, 0)]);
         assert_eq!(steps(-128, 0), vec![(-127, 0), (-1, 0)]);
+    }
+
+    #[test]
+    fn reads_lines_up_to_the_limit() {
+        let mut r = std::io::Cursor::new(b"{\"tap\":\"Up\"}\r\n\nlast".to_vec());
+        assert_eq!(read_line(&mut r).as_deref(), Some("{\"tap\":\"Up\"}\r"));
+        assert_eq!(read_line(&mut r).as_deref(), Some(""));
+        assert_eq!(read_line(&mut r).as_deref(), Some("last"));
+        assert_eq!(read_line(&mut r), None);
+
+        let mut line = vec![b' '; MAX_LINE];
+        line.push(b'\n');
+        assert!(read_line(&mut std::io::Cursor::new(line.clone())).is_some());
+        line.insert(0, b' ');
+        assert_eq!(read_line(&mut std::io::Cursor::new(line)), None);
+        assert_eq!(
+            read_line(&mut std::io::Cursor::new(vec![0xff, b'\n'])),
+            None
+        );
     }
 
     #[test]
