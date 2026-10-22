@@ -206,7 +206,13 @@ impl Advert {
                 self.port,
                 &properties[..],
             )
-            .map(mdns_sd::ServiceInfo::enable_addr_auto)
+            .map(|info| {
+                let mut info = info.enable_addr_auto();
+                // The ports listen on IPv4 only; an AAAA record would send
+                // a client to an address nothing listens on.
+                info.set_interfaces(vec![mdns_sd::IfKind::IPv4]);
+                info
+            })
         } else {
             mdns_sd::ServiceInfo::new(
                 SERVICE_TYPE,
@@ -399,5 +405,12 @@ mod tests {
         let info = found.expect("the advert was found");
         assert_eq!(info.get_property_val_str("analyzer"), Some("42598"));
         assert_eq!(info.get_property_val_str("quirks"), Some("wmm"));
+        // Only IPv4 from us, but not "only IPv4" overall: the SRV target is
+        // the system hostname, for which Bonjour or Avahi answer AAAA too.
+        let addresses = info.get_addresses();
+        assert!(
+            addresses.iter().any(|a| a.is_ipv4()),
+            "no IPv4 address advertised: {addresses:?}"
+        );
     }
 }
