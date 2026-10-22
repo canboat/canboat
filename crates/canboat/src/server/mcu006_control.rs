@@ -13,19 +13,22 @@
 //! {"knob":-2}                     turn the knob two detents
 //! {"button":true}                 hold the knob button; false releases it
 //! {"click":true}                  press and release the knob button
+//! {"keypad":true}                 keypad mode on (CURS/SCROLL); false turns it off
 //! {"release":true}                release everything this client holds
 //! {"status":true}                 just report the state
 //!
-//! → {"ok":true,"addr":110,"host":1,"keys":[82],"button":false}
+//! → {"ok":true,"addr":110,"host":1,"keys":[82],"button":false,"keypad":false}
 //! → {"ok":false,"error":"…", …}
 //! ```
 //!
 //! The reports go straight to the CAN writer, not through the pipeline:
 //! the quirks only run when a frame arrives, and a quiet bus would make the
 //! cursor lag. While the remote is paired, a keepalive thread repeats the
-//! held keys and the button every second, as the firmware does
+//! held keys, the button and keypad mode every second, as the firmware does
 //! (`FUN_0800ccf0`). A client that disconnects has its keys and button
-//! released, so a dropped connection cannot leave a key held down.
+//! released, so a dropped connection cannot leave a key held down. Keypad
+//! mode is a setting of the remote, not something a client holds, so it
+//! stays as the last client left it.
 
 use std::io::{BufRead, BufReader, Write};
 use std::net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream};
@@ -47,13 +50,22 @@ const TAP: Duration = Duration::from_millis(100);
 /// The remote reports at most five keys at once.
 const MAX_KEYS: usize = 5;
 
-/// What the remote is doing: the keys held (in the order pressed) and the
-/// button, across every client.
+/// What the remote is doing: the keys held (in the order pressed), the
+/// button and keypad mode, across every client.
 #[derive(Default)]
 struct Remote {
     keys: Vec<u8>,
     /// How many clients hold the button.
     button: usize,
+    /// The CURS/SCROLL button's mode: the joystick as arrow keys.
+    keypad: bool,
+}
+
+impl Remote {
+    /// The pointer report's flags: the button and keypad mode.
+    fn flags(&self) -> (bool, bool) {
+        (self.button > 0, self.keypad)
+    }
 }
 
 struct Control {
@@ -135,17 +147,14 @@ impl Control {
         }
     }
 
-    /// The held keys and the button, as the 1 s keepalive sends them.
+    /// The held keys, the button and keypad mode, as the 1 s keepalive
+    /// sends them.
     fn send_state(&self) {
         let Ok((addr, host)) = self.route() else {
             return;
         };
-        let (keys, button) = {
-            let r = self.remote();
-            (r.keys.clone(), r.button > 0)
-        };
-        self.send(keyboard_report(addr, host, &keys));
-        self.send(pointer_report(addr, host, 0, 0, 0, button));
+        self.send_keys(addr, host);
+        self.send_flags(addr, host);
     }
 
     fn send_keys(&self, addr: u8, host: u8) {
@@ -153,9 +162,10 @@ impl Control {
         self.send(keyboard_report(addr, host, &keys));
     }
 
-    fn send_button(&self, addr: u8, host: u8) {
-        let button = self.remote().button > 0;
-        self.send(pointer_report(addr, host, 0, 0, 0, button));
+    /// A pointer report without movement: the button and keypad mode.
+    fn send_flags(&self, addr: u8, host: u8) {
+        let (button, keypad) = self.remote().flags();
+        self.send(pointer_report(addr, host, 0, 0, 0, button, keypad));
     }
 }
 
@@ -201,6 +211,7 @@ fn add_state(reply: &mut Value, control: &Control) {
     reply["host"] = json!(link.host);
     reply["keys"] = json!(r.keys);
     reply["button"] = json!(r.button > 0);
+    reply["keypad"] = json!(r.keypad);
 }
 
 fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String> {
@@ -227,29 +238,34 @@ fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String>
     } else if let Some(p) = cmd.get("pointer") {
         let dx = p.get("dx").and_then(Value::as_i64).unwrap_or(0);
         let dy = p.get("dy").and_then(Value::as_i64).unwrap_or(0);
-        let button = control.remote().button > 0;
+        let (button, keypad) = control.remote().flags();
         for (dx, dy) in steps(dx, dy) {
-            control.send(pointer_report(addr, host, dx, dy, 0, button));
+            control.send(pointer_report(addr, host, dx, dy, 0, button, keypad));
         }
     } else if let Some(n) = cmd.get("knob") {
         let n = n.as_i64().ok_or("knob takes a whole number of detents")?;
-        let button = control.remote().button > 0;
+        let (button, keypad) = control.remote().flags();
         for (wheel, _) in steps(n, 0) {
-            control.send(pointer_report(addr, host, 0, 0, wheel, button));
+            control.send(pointer_report(addr, host, 0, 0, wheel, button, keypad));
         }
     } else if let Some(down) = cmd.get("button") {
         let down = down.as_bool().ok_or("button takes true or false")?;
         set_button(control, held, down);
-        control.send_button(addr, host);
+        control.send_flags(addr, host);
     } else if cmd.get("click").is_some() {
         set_button(control, held, true);
-        control.send_button(addr, host);
+        control.send_flags(addr, host);
         thread::sleep(TAP);
         set_button(control, held, false);
-        control.send_button(addr, host);
+        control.send_flags(addr, host);
+    } else if let Some(on) = cmd.get("keypad") {
+        control.remote().keypad = on.as_bool().ok_or("keypad takes true or false")?;
+        control.send_flags(addr, host);
     } else {
         return Err(
-            "unknown command; use key, tap, pointer, knob, button, click, release or status".into(),
+            "unknown command; use key, tap, pointer, knob, button, click, keypad, \
+                    release or status"
+                .into(),
         );
     }
     Ok(())
@@ -308,7 +324,7 @@ fn release(control: &Control, held: &mut Held) {
     set_button(control, held, false);
     if let Ok((addr, host)) = control.route() {
         control.send_keys(addr, host);
-        control.send_button(addr, host);
+        control.send_flags(addr, host);
     }
 }
 

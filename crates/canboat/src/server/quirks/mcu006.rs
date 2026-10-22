@@ -659,7 +659,8 @@ pub(crate) fn keyboard_report(src: u8, dst: u8, keys: &[u8]) -> RawFrame {
 }
 
 /// Pointer report on `0xEF00`: `3F 9F 03 dx dy wheel 01 flags`, bit 0 of
-/// `flags` the knob button (`FUN_08013308`).
+/// `flags` the knob button, bit 3 keypad mode: the CURS/SCROLL button's
+/// joystick-as-arrow-keys (`FUN_08013308`).
 pub(crate) fn pointer_report(
     src: u8,
     dst: u8,
@@ -667,6 +668,7 @@ pub(crate) fn pointer_report(
     dy: i8,
     wheel: i8,
     button: bool,
+    keypad: bool,
 ) -> RawFrame {
     let data = [
         0x3f,
@@ -676,7 +678,7 @@ pub(crate) fn pointer_report(
         dy as u8,
         wheel as u8,
         0x01,
-        button as u8,
+        button as u8 | (keypad as u8) << 3,
     ];
     RawFrame::new(None, PRIO, PGN_HID, src, dst, data)
 }
@@ -1042,11 +1044,14 @@ mod tests {
     #[test]
     fn builds_the_reports_that_moved_a_tzmap9() {
         // The frames verified on a TZMAP9 on 2026-10-21.
-        let f = pointer_report(110, 1, 16, 0, 0, false);
+        let f = pointer_report(110, 1, 16, 0, 0, false, false);
         assert_eq!((f.pgn, f.prio, f.src, f.dst), (PGN_HID, 7, 110, 1));
         assert_eq!(f.data.as_slice(), [0x3f, 0x9f, 0x03, 0x10, 0, 0, 1, 0]);
-        let f = pointer_report(110, 1, 0, 0, -1, true);
+        let f = pointer_report(110, 1, 0, 0, -1, true, false);
         assert_eq!(f.data.as_slice(), [0x3f, 0x9f, 0x03, 0, 0, 0xff, 1, 1]);
+        // Keypad mode is bit 3, next to the button in bit 0.
+        let f = pointer_report(110, 1, 0, 0, 0, true, true);
+        assert_eq!(f.data.as_slice(), [0x3f, 0x9f, 0x03, 0, 0, 0, 1, 0x09]);
         let f = keyboard_report(110, 1, &[0x52]);
         assert_eq!(
             f.data.as_slice(),

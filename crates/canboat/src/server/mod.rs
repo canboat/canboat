@@ -255,11 +255,12 @@ pub struct Args {
     overrides_port: u16,
 
     /// Control port for `--quirk mcu006`: drive the emulated remote's keys,
-    /// pointer and knob, one JSON command a line (read and write).
+    /// pointer, knob and keypad mode, one JSON command a line (read and
+    /// write).
     ///
     /// For example `{"tap":"Up"}`, `{"pointer":{"dx":40,"dy":0}}`,
-    /// `{"knob":-1}` or `{"click":true}`. Only opened with the quirk. `0`
-    /// turns it off.
+    /// `{"knob":-1}`, `{"click":true}` or `{"keypad":true}`. Only opened
+    /// with the quirk. `0` turns it off.
     #[arg(long, value_name = "PORT", default_value_t = 2607, help_heading = PORTS)]
     mcu006_port: u16,
 
