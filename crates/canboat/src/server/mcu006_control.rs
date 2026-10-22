@@ -102,7 +102,8 @@ struct Control {
     link: Link,
     sender: FrameSender,
     remote: Mutex<Remote>,
-    /// When the next frame may go out.
+    /// When the next frame may go out. Held while a frame waits for its
+    /// slot, so frames go out one at a time and in order.
     next_frame: Mutex<Instant>,
 }
 
@@ -174,20 +175,17 @@ impl Control {
         }
     }
 
-    /// Send one frame, first waiting for its slot: frames from every
-    /// client go out at most one per [`FRAME_GAP`].
-    fn send(&self, frame: crate::engine::RawFrame) {
-        let wait = {
-            let mut next = self.next_frame.lock().unwrap_or_else(|e| e.into_inner());
-            let now = Instant::now();
-            let slot = (*next).max(now);
-            *next = slot + FRAME_GAP;
-            slot - now
-        };
-        thread::sleep(wait);
-        if self.sender.send_frame(frame).is_err() {
+    /// Send one frame once its slot comes: frames from every client go out
+    /// one at a time, at most one per [`FRAME_GAP`]. The frame is built
+    /// when it goes out, so a report of the remote's state is never older
+    /// than one sent before it.
+    fn send(&self, build: impl FnOnce() -> crate::engine::RawFrame) {
+        let mut next = self.next_frame.lock().unwrap_or_else(|e| e.into_inner());
+        thread::sleep(next.saturating_duration_since(Instant::now()));
+        if self.sender.send_frame(build()).is_err() {
             log::warn!("mcu006-control: the CAN writer is gone");
         }
+        *next = Instant::now() + FRAME_GAP;
     }
 
     /// The held keys, the button and keypad mode, as the 1 s keepalive
@@ -201,14 +199,20 @@ impl Control {
     }
 
     fn send_keys(&self, addr: u8, host: u8) {
-        let keys = self.remote().codes();
-        self.send(keyboard_report(addr, host, &keys));
+        self.send(|| keyboard_report(addr, host, &self.remote().codes()));
     }
 
     /// A pointer report without movement: the button and keypad mode.
     fn send_flags(&self, addr: u8, host: u8) {
-        let (button, keypad) = self.remote().flags();
-        self.send(pointer_report(addr, host, 0, 0, 0, button, keypad));
+        self.send_move(addr, host, 0, 0, 0);
+    }
+
+    /// A pointer report: a movement, with the button and keypad mode.
+    fn send_move(&self, addr: u8, host: u8, dx: i8, dy: i8, wheel: i8) {
+        self.send(|| {
+            let (button, keypad) = self.remote().flags();
+            pointer_report(addr, host, dx, dy, wheel, button, keypad)
+        });
     }
 }
 
@@ -302,15 +306,13 @@ fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String>
     } else if let Some(p) = cmd.get("pointer") {
         let dx = movement(p.get("dx"), "dx")?;
         let dy = movement(p.get("dy"), "dy")?;
-        let (button, keypad) = control.remote().flags();
         for (dx, dy) in steps(dx, dy) {
-            control.send(pointer_report(addr, host, dx, dy, 0, button, keypad));
+            control.send_move(addr, host, dx, dy, 0);
         }
     } else if let Some(n) = cmd.get("knob") {
         let n = movement(Some(n), "knob")?;
-        let (button, keypad) = control.remote().flags();
         for (wheel, _) in steps(n, 0) {
-            control.send(pointer_report(addr, host, 0, 0, wheel, button, keypad));
+            control.send_move(addr, host, 0, 0, wheel);
         }
     } else if let Some(down) = cmd.get("button") {
         let down = down.as_bool().ok_or("button takes true or false")?;
@@ -515,6 +517,45 @@ mod tests {
         assert_eq!(
             read_line(&mut std::io::Cursor::new(vec![0xff, b'\n'])),
             None
+        );
+    }
+
+    #[test]
+    fn paces_frames_from_every_client() {
+        use crate::io::device::WriterCmd;
+        let (sender, rx) = FrameSender::for_test();
+        let control = Arc::new(Control {
+            link: Arc::new(Mutex::new(LinkState::default())),
+            sender,
+            remote: Mutex::new(Remote::default()),
+            next_frame: Mutex::new(Instant::now()),
+        });
+        let clients: Vec<_> = (0..3)
+            .map(|_| {
+                let control = control.clone();
+                thread::spawn(move || {
+                    for _ in 0..5 {
+                        control.send_move(110, 1, 1, 0, 0);
+                    }
+                })
+            })
+            .collect();
+        let mut times = Vec::new();
+        for _ in 0..15 {
+            match rx.recv_timeout(Duration::from_secs(5)) {
+                Ok(WriterCmd::Frame(_)) => times.push(Instant::now()),
+                _ => panic!("expected a frame"),
+            }
+        }
+        for client in clients {
+            client.join().unwrap();
+        }
+        // Allow a little for the receiver waking late.
+        let gaps = times.windows(2).map(|w| w[1] - w[0]);
+        let total: Duration = gaps.sum();
+        assert!(
+            total >= FRAME_GAP * 14 - Duration::from_millis(2),
+            "{total:?}"
         );
     }
 

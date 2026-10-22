@@ -423,6 +423,15 @@ impl<F> FrameSender<F> {
     }
 }
 
+#[cfg(test)]
+impl<F> FrameSender<F> {
+    /// A sender whose frames arrive on the receiver, with no device behind it.
+    pub(crate) fn for_test() -> (Self, mpsc::Receiver<WriterCmd<F>>) {
+        let (cmd_tx, cmd_rx) = mpsc::channel();
+        (Self { cmd_tx }, cmd_rx)
+    }
+}
+
 /// Build a [`DeviceHandle`] from already-wired channels and thread
 /// handles. Used by codecs whose I/O model isn't byte-stream-shaped
 /// (e.g. `socketcan`) and can't use the generic [`run`] runner below.
