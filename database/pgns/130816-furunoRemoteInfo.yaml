@@ -8,7 +8,6 @@ explanation: Broadcast by a Furuno MCU-006 remote after its MFD sends it Remote 
 notes: |-
   The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
   NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
-  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
