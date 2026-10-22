@@ -32,3 +32,8 @@ request = "https://github.com/canboat/canboat/issues/1056"
 repo = "Maps-Messaging/canbus_interface"
 releases = "minor"
 request = "https://github.com/canboat/canboat/issues/1069"
+
+[[project]]
+repo = "open-ships/n2k"
+releases = "minor"
+request = "https://github.com/canboat/canboat/issues/1087"
