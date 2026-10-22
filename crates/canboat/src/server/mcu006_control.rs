@@ -49,12 +49,15 @@ const KEEPALIVE: Duration = Duration::from_secs(1);
 const TAP: Duration = Duration::from_millis(100);
 /// The remote reports at most five keys at once.
 const MAX_KEYS: usize = 5;
+/// The most a `pointer` or `knob` command moves: 16 reports of 127.
+const MAX_MOVE: i64 = 16 * 127;
 
 /// What the remote is doing: the keys held (in the order pressed), the
 /// button and keypad mode, across every client.
 #[derive(Default)]
 struct Remote {
-    keys: Vec<u8>,
+    /// Each key held, with how many clients hold it.
+    keys: Vec<(u8, usize)>,
     /// How many clients hold the button.
     button: usize,
     /// The CURS/SCROLL button's mode: the joystick as arrow keys.
@@ -62,6 +65,22 @@ struct Remote {
 }
 
 impl Remote {
+    /// The keys held, in the order pressed.
+    fn codes(&self) -> Vec<u8> {
+        self.keys.iter().map(|&(code, _)| code).collect()
+    }
+
+    /// One client lets go of `code`; the key is released when the last
+    /// one does.
+    fn drop_key(&mut self, code: u8) {
+        if let Some(i) = self.keys.iter().position(|&(k, _)| k == code) {
+            self.keys[i].1 -= 1;
+            if self.keys[i].1 == 0 {
+                self.keys.remove(i);
+            }
+        }
+    }
+
     /// The pointer report's flags: the button and keypad mode.
     fn flags(&self) -> (bool, bool) {
         (self.button > 0, self.keypad)
@@ -158,7 +177,7 @@ impl Control {
     }
 
     fn send_keys(&self, addr: u8, host: u8) {
-        let keys = self.remote().keys.clone();
+        let keys = self.remote().codes();
         self.send(keyboard_report(addr, host, &keys));
     }
 
@@ -209,7 +228,7 @@ fn add_state(reply: &mut Value, control: &Control) {
     let r = control.remote();
     reply["addr"] = json!(link.addr);
     reply["host"] = json!(link.host);
-    reply["keys"] = json!(r.keys);
+    reply["keys"] = json!(r.codes());
     reply["button"] = json!(r.button > 0);
     reply["keypad"] = json!(r.keypad);
 }
@@ -226,24 +245,24 @@ fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String>
     if let Some(key) = cmd.get("key") {
         let code = key_code(key)?;
         let down = cmd.get("down").and_then(Value::as_bool).unwrap_or(true);
-        set_key(control, held, code, down)?;
+        set_key(&mut control.remote(), held, code, down)?;
         control.send_keys(addr, host);
     } else if let Some(key) = cmd.get("tap") {
         let code = key_code(key)?;
-        set_key(control, held, code, true)?;
+        set_key(&mut control.remote(), held, code, true)?;
         control.send_keys(addr, host);
         thread::sleep(TAP);
-        set_key(control, held, code, false)?;
+        set_key(&mut control.remote(), held, code, false)?;
         control.send_keys(addr, host);
     } else if let Some(p) = cmd.get("pointer") {
-        let dx = p.get("dx").and_then(Value::as_i64).unwrap_or(0);
-        let dy = p.get("dy").and_then(Value::as_i64).unwrap_or(0);
+        let dx = movement(p.get("dx"), "dx")?;
+        let dy = movement(p.get("dy"), "dy")?;
         let (button, keypad) = control.remote().flags();
         for (dx, dy) in steps(dx, dy) {
             control.send(pointer_report(addr, host, dx, dy, 0, button, keypad));
         }
     } else if let Some(n) = cmd.get("knob") {
-        let n = n.as_i64().ok_or("knob takes a whole number of detents")?;
+        let n = movement(Some(n), "knob")?;
         let (button, keypad) = control.remote().flags();
         for (wheel, _) in steps(n, 0) {
             control.send(pointer_report(addr, host, 0, 0, wheel, button, keypad));
@@ -271,23 +290,32 @@ fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String>
     Ok(())
 }
 
-fn set_key(control: &Control, held: &mut Held, code: u8, down: bool) -> Result<(), String> {
-    let mut r = control.remote();
+/// A `pointer` axis or `knob` turn: a whole number within ±[`MAX_MOVE`],
+/// 0 when absent.
+fn movement(v: Option<&Value>, what: &str) -> Result<i64, String> {
+    let Some(v) = v else { return Ok(0) };
+    v.as_i64()
+        .filter(|n| (-MAX_MOVE..=MAX_MOVE).contains(n))
+        .ok_or_else(|| format!("{what} takes a whole number from -{MAX_MOVE} to {MAX_MOVE}"))
+}
+
+fn set_key(r: &mut Remote, held: &mut Held, code: u8, down: bool) -> Result<(), String> {
     if down {
         if !held.keys.contains(&code) {
-            if r.keys.len() >= MAX_KEYS && !r.keys.contains(&code) {
+            if let Some((_, holders)) = r.keys.iter_mut().find(|(k, _)| *k == code) {
+                *holders += 1;
+            } else if r.keys.len() >= MAX_KEYS {
                 return Err(format!(
                     "the remote reports at most {MAX_KEYS} keys at once"
                 ));
+            } else {
+                r.keys.push((code, 1));
             }
             held.keys.push(code);
-            if !r.keys.contains(&code) {
-                r.keys.push(code);
-            }
         }
     } else if let Some(i) = held.keys.iter().position(|&k| k == code) {
         held.keys.remove(i);
-        r.keys.retain(|&k| k != code);
+        r.drop_key(code);
     }
     Ok(())
 }
@@ -310,16 +338,11 @@ fn release(control: &Control, held: &mut Held) {
     if held.keys.is_empty() && !held.button {
         return;
     }
-    for code in std::mem::take(&mut held.keys) {
-        let _ = set_key(
-            control,
-            &mut Held {
-                keys: vec![code],
-                button: false,
-            },
-            code,
-            false,
-        );
+    {
+        let mut r = control.remote();
+        for code in std::mem::take(&mut held.keys) {
+            r.drop_key(code);
+        }
     }
     set_button(control, held, false);
     if let Ok((addr, host)) = control.route() {
@@ -429,5 +452,44 @@ mod tests {
         assert_eq!(steps(16, -5), vec![(16, -5)]);
         assert_eq!(steps(300, -10), vec![(127, -10), (127, 0), (46, 0)]);
         assert_eq!(steps(-128, 0), vec![(-127, 0), (-1, 0)]);
+    }
+
+    #[test]
+    fn bounds_a_movement() {
+        assert_eq!(movement(None, "dx"), Ok(0));
+        assert_eq!(movement(Some(&json!(-40)), "dx"), Ok(-40));
+        assert_eq!(movement(Some(&json!(MAX_MOVE)), "knob"), Ok(MAX_MOVE));
+        assert!(movement(Some(&json!(MAX_MOVE + 1)), "dx").is_err());
+        assert!(movement(Some(&json!(i64::MIN)), "dx").is_err());
+        assert!(movement(Some(&json!(u64::MAX)), "dx").is_err());
+        assert!(movement(Some(&json!("40")), "dx").is_err());
+        assert!(movement(Some(&json!(1.5)), "knob").is_err());
+    }
+
+    #[test]
+    fn a_key_two_clients_hold_stays_down_until_both_let_go() {
+        let mut r = Remote::default();
+        let (mut a, mut b) = (Held::default(), Held::default());
+        set_key(&mut r, &mut a, 0x52, true).unwrap();
+        set_key(&mut r, &mut b, 0x52, true).unwrap();
+        set_key(&mut r, &mut a, 0x52, true).unwrap(); // a repeat is not a second hold
+        assert_eq!(r.codes(), [0x52]);
+        set_key(&mut r, &mut a, 0x52, false).unwrap();
+        assert_eq!(r.codes(), [0x52]);
+        set_key(&mut r, &mut b, 0x52, false).unwrap();
+        assert!(r.codes().is_empty());
+    }
+
+    #[test]
+    fn holds_at_most_five_keys() {
+        let mut r = Remote::default();
+        let mut a = Held::default();
+        for code in 0x1e..0x23 {
+            set_key(&mut r, &mut a, code, true).unwrap();
+        }
+        assert!(set_key(&mut r, &mut a, 0x23, true).is_err());
+        // Another client may still hold one of the five.
+        set_key(&mut r, &mut Held::default(), 0x1e, true).unwrap();
+        assert_eq!(r.codes(), [0x1e, 0x1f, 0x20, 0x21, 0x22]);
     }
 }
