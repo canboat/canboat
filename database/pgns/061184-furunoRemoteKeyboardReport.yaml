@@ -1,0 +1,58 @@
+pgn: 61184
+id: furunoRemoteKeyboardReport
+description: 'Furuno: Remote Keyboard Report'
+type: Single
+variantOrder: 8
+priority: 7
+explanation: The keys a Furuno MCU-006 remote holds, as USB HID keyboard usage IDs in the order pressed, sent to its MFD when they change and every second. An unused slot is 0xFF; all 0xFF means no key is held.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  description: Keyboard Report
+  match: 2
+  primaryKey: true
+- id: key1
+  name: Key 1
+  type: UINT8
+- id: key2
+  name: Key 2
+  type: UINT8
+- id: key3
+  name: Key 3
+  type: UINT8
+- id: key4
+  name: Key 4
+  type: UINT8
+- id: key5
+  name: Key 5
+  type: UINT8
+samples:
+- raw: "2026-10-21T00:00:00.000Z,7,61184,110,1,8,3f,9f,02,52,ff,ff,ff,ff"  # from furuno-tzmap9-mcu006.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    proprietaryId: 2
+    key1: 82

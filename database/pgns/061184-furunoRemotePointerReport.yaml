@@ -1,0 +1,84 @@
+pgn: 61184
+id: furunoRemotePointerReport
+description: 'Furuno: Remote Pointer Report'
+type: Single
+variantOrder: 9
+priority: 7
+explanation: A Furuno MCU-006 remote's joystick and knob, sent to its MFD on movement and every second. dx and dy move the MFD's cursor, Wheel is knob detents (zoom on a chart). Field A is always 1.
+notes: |-
+  The Furuno MCU-006 / MCU-006H RotoKey remote is a HID keyboard and pointer tunnelled over
+  NMEA 2000 to one paired TimeZero MFD. Layout from the MCU-006 firmware 01.03.
+  Seen on a bus between a TZMAP9 and canboat's `--quirk mcu006` in samples/furuno-tzmap9-mcu006.raw.
+  The position of Keypad Mode, the CURS/SCROLL button's joystick-as-arrow-keys mode, is from the
+  firmware only; the capture has neither it nor Button set.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  description: Pointer Report
+  match: 3
+  primaryKey: true
+- id: dx
+  name: dX
+  type: INT8
+- id: dy
+  name: dY
+  type: INT8
+- id: wheel
+  name: Wheel
+  type: INT8
+- id: a
+  name: A
+  type: UINT8
+- id: button
+  name: Button
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare10
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: keypadMode
+  name: Keypad Mode
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare12
+  name: Spare
+  type: SPARE
+  bits: 4
+samples:
+- raw: "2026-10-21T00:00:00.000Z,7,61184,110,1,8,3f,9f,03,10,00,00,01,00"  # from furuno-tzmap9-mcu006.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    proprietaryId: 3
+    dx: 16
+    dy: 0
+    wheel: 0
+    a: 1
+    button: "No"
+    keypadMode: "No"
+- raw: "2026-10-21T00:00:00.000Z,7,61184,110,1,8,3f,9f,03,00,00,ff,01,00"  # from furuno-tzmap9-mcu006.raw
+  expects:
+    proprietaryId: 3
+    wheel: -1

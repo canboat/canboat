@@ -116,6 +116,7 @@ impl core::marker::StructuralPartialEq for canboat::device::PgnListSupport
 #[non_exhaustive] pub enum canboat::bridge::Quirk
 pub canboat::bridge::Quirk::GpsRelay
 pub canboat::bridge::Quirk::GpsRollover(canboat::bridge::GpsRolloverTarget)
+pub canboat::bridge::Quirk::Mcu006
 pub canboat::bridge::Quirk::Motion
 pub canboat::bridge::Quirk::Scx20
 pub canboat::bridge::Quirk::Wmm
@@ -164,6 +165,7 @@ pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc
 pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::device: core::option::Option<canboat::bus::Device>
 pub canboat::bridge::BridgeConfig::input_port: u16
+pub canboat::bridge::BridgeConfig::mcu006_port: u16
 pub canboat::bridge::BridgeConfig::nmea0183_filter: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::nmea0183_filter_port: u16
 pub canboat::bridge::BridgeConfig::nmea0183_port: u16

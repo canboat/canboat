@@ -51,6 +51,7 @@
 //! carries nothing but PGN 262657 and never touches the bus.
 
 mod bridge;
+mod mcu006_control;
 mod pipeline;
 mod quirks;
 mod snapshot;
@@ -167,7 +168,7 @@ pub struct Args {
 
     /// Apply a quirk to the bus; repeatable (see the possible values).
     ///
-    /// `scx20` and `motion` impersonate or claim a device and need
+    /// `scx20`, `motion` and `mcu006` impersonate or claim a device and need
     /// `--kind socketcan`, `canalyst` or `usb-can-a`; `wmm` emits canboat's own PGN and
     /// works with any gateway that can send; `gps-rollover` only rewrites
     /// decoded dates and needs no gateway at all.
@@ -252,6 +253,16 @@ pub struct Args {
     /// turns it off.
     #[arg(long, value_name = "PORT", default_value_t = 2606, help_heading = PORTS)]
     overrides_port: u16,
+
+    /// Control port for `--quirk mcu006`: drive the emulated remote's keys,
+    /// pointer, knob and keypad mode, one JSON command a line (read and
+    /// write).
+    ///
+    /// For example `{"tap":"Up"}`, `{"pointer":{"dx":40,"dy":0}}`,
+    /// `{"knob":-1}`, `{"click":true}` or `{"keypad":true}`. Only opened
+    /// with the quirk. `0` turns it off.
+    #[arg(long, value_name = "PORT", default_value_t = 2607, help_heading = PORTS)]
+    mcu006_port: u16,
 
     /// Also write the NMEA 0183 sentences to stdout, as n2kd --nmea0183 does.
     #[arg(long, help_heading = NMEA0183)]
@@ -362,6 +373,8 @@ pub struct BridgeConfig {
     pub config_dir: Option<PathBuf>,
     pub nmea0183_filter_port: u16,
     pub overrides_port: u16,
+    /// The `--quirk mcu006` control port; `0` = off.
+    pub mcu006_port: u16,
     /// How field keys and PGN descriptions are spelled on the analyzer
     /// JSON / snapshot ports (`--id`). Defaults to
     /// [`CamelCase::Lower`](crate::engine::output::CamelCase::Lower).
@@ -414,6 +427,7 @@ impl Default for BridgeConfig {
             config_dir: None,
             nmea0183_filter_port: 2605,
             overrides_port: 2606,
+            mcu006_port: 2607,
             // Machine-facing defaults, matching `convert` / `analyzer`
             // and what canboatjs consumers expect.
             camel_case: crate::engine::output::CamelCase::Lower,
@@ -497,6 +511,7 @@ impl From<Args> for BridgeConfig {
             config_dir: a.config_dir,
             nmea0183_filter_port: a.nmea0183_filter_port,
             overrides_port: a.overrides_port,
+            mcu006_port: a.mcu006_port,
             camel_case: a.shape.camel_case(),
             units: a.shape.units(),
             wrap: a.shape.wrap(),

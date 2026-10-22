@@ -39,9 +39,9 @@
 //! 130842→130824 rate transcode. The Simnet source-selection handshake
 //! (65323 / 130840) is not implemented yet.
 
-use std::time::{Instant, SystemTime, UNIX_EPOCH};
+use std::time::Instant;
 
-use crate::engine::{ADDR_GLOBAL, DecodedPgn, RawFrame, field, format_iso_ms};
+use crate::engine::{ADDR_GLOBAL, DecodedPgn, RawFrame, field};
 use crate::io::address_claim::AddressClaim;
 use crate::io::nmea_responder::{self, ProductInfo};
 
@@ -207,7 +207,7 @@ impl Motion {
             out.extend(self.product_info());
         }
 
-        stamp(&mut out);
+        super::stamp(&mut out);
         out
     }
 
@@ -378,22 +378,6 @@ fn build_130824_payload(roll: i32, pitch: i32, yaw: i32) -> Vec<u8> {
         v.extend_from_slice(&transcode_rate(count).to_le_bytes());
     }
     v
-}
-
-/// Stamp a host-clock timestamp on any frame that lacks one, so the local
-/// analyzer / snapshot streams show these synthetic frames with a time.
-fn stamp(frames: &mut [RawFrame]) {
-    if frames.iter().all(|f| f.timestamp.is_some()) {
-        return;
-    }
-    let ms = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_millis() as u64)
-        .unwrap_or(0);
-    let ts = format_iso_ms(ms);
-    for f in frames.iter_mut().filter(|f| f.timestamp.is_none()) {
-        f.timestamp = Some(ts.clone());
-    }
 }
 
 #[cfg(test)]
