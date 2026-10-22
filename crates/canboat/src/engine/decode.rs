@@ -540,7 +540,8 @@ impl DecodedPgn {
     ///
     /// A field the decoder reports as not available had all its bits set
     /// on the wire (a System Instance of 15, say), so it packs as all
-    /// ones, not 0.
+    /// ones, not 0. One that hit the out-of-range or reserved sentinel
+    /// packs the raw value it carries (a System Instance of 14 or 13).
     pub fn iso_name(&self) -> Option<u64> {
         if self.pgn != 60928 {
             return None;
@@ -548,8 +549,13 @@ impl DecodedPgn {
         let f = |name: &str, bits: u32| -> u64 {
             let mask = (1u64 << bits) - 1;
             self.field_by_name(name)
-                .and_then(|df| df.value.as_i64())
-                .map_or(mask, |v| v as u64 & mask)
+                .and_then(|df| match df.value {
+                    FieldValue::OutOfRange { value } | FieldValue::ReservedValue { value } => {
+                        Some(value)
+                    }
+                    ref v => v.as_i64().map(|v| v as u64),
+                })
+                .map_or(mask, |v| v & mask)
         };
         Some(
             f("Unique Number", 21)
@@ -2710,6 +2716,34 @@ mod tests {
         };
         let dec = db().decode(&frame).expect("decode");
         assert_eq!(dec.iso_name(), Some(u64::from_le_bytes(wire)));
+    }
+
+    #[test]
+    fn iso_name_keeps_out_of_range_and_reserved_fields() {
+        // System Instance 14 and 13 (byte 7's low nibble) decode as the
+        // out-of-range and reserved sentinels, not as numbers.
+        for system_instance in [0x0e, 0x0d] {
+            let wire = [
+                0xef,
+                0xfe,
+                0xe0,
+                0xe7,
+                0xff,
+                0x82,
+                0xdc,
+                0xc0 | system_instance,
+            ];
+            let frame = RawFrame {
+                timestamp: None,
+                prio: 6,
+                pgn: 60928,
+                src: 110,
+                dst: 255,
+                data: smallvec::SmallVec::from_slice(&wire),
+            };
+            let dec = db().decode(&frame).expect("decode");
+            assert_eq!(dec.iso_name(), Some(u64::from_le_bytes(wire)));
+        }
     }
 
     #[test]
