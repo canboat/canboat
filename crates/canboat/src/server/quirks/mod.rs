@@ -195,6 +195,17 @@ impl Quirks {
         }
     }
 
+    /// Hand the quirks that claim a NAME of their own the mDNS advert's
+    /// TXT keys: each sets `<quirk>.name`, and `mcu006` its `mcu006.host`.
+    pub fn set_txt(&mut self, txt: crate::server::mdns::Txt) {
+        if let Some(m) = self.motion.as_mut() {
+            m.set_txt(&txt);
+        }
+        if let Some(m) = self.mcu006.as_mut() {
+            m.set_txt(txt);
+        }
+    }
+
     /// `true` iff at least one quirk is enabled — lets the pipeline skip
     /// the per-frame call entirely on the common path.
     pub fn is_enabled(&self) -> bool {

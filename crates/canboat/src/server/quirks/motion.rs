@@ -154,6 +154,14 @@ impl Motion {
         }
     }
 
+    /// Advertise the Motion Sensor's NAME as `motion.name`.
+    pub fn set_txt(&self, txt: &crate::server::mdns::Txt) {
+        txt.set(
+            "motion.name",
+            Some(crate::server::mdns::name_hex(self.claim.name())),
+        );
+    }
+
     /// Drive the claim state machine and relay attitude. `now` is injected
     /// so the (relative) claim clock is deterministic in tests.
     pub fn process(&mut self, d: &DecodedPgn, now: Instant) -> Vec<RawFrame> {

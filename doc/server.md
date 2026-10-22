@@ -31,6 +31,39 @@ The state the filter and override ports set is kept in `--config-dir`:
 `/etc/default/canboat` if it is writable (the systemd/root case), otherwise
 `~/.local/canboat`. `canboat server --help` has the rest of the options.
 
+## Discovery
+
+`canboat server` advertises itself over mDNS / DNS-SD as `_canboat._tcp`, so
+a client on the LAN can find it, see which ports it serves and what it runs,
+without being told a host and port. The instance is called
+`canboat on <hostname>`, with DNS-SD's ` (2)` added when two servers share a
+host. `--no-mdns` turns it off, for a network where multicast is unwanted.
+
+The SRV record names the analyzer port, or the first open port when that one
+is off. The TXT record:
+
+| Key | Value |
+| --- | --- |
+| `version` | the canboat version |
+| `name` | canboat's own ISO NAME on the bus, 16 hex digits; only where canboat runs a node (`--kind socketcan`, `canalyst` or `usb-can-a`) |
+| `serial` | the Model Serial Code in that node's Product Information (PGN 126996), so a client can match this server with what other devices, such as a TimeZero MFD, report about the bus |
+| `snapshot`, `analyzer`, `nmea0183`, `input`, `ais`, `raw`, `nmea0183-filter`, `overrides`, `mcu006` | one key per port that is open, named after its option without `-port` |
+| `quirks` | the quirks that are on, comma-separated, by name only: `gps-rollover=4` is `gps-rollover` |
+| `motion.name`, `mcu006.name` | the NAME the `motion` or `mcu006` quirk claims |
+| `mcu006.host` | the NAME of the MFD the `mcu006` remote paired with, once it has; announced again when it changes |
+
+With `--bind <address>` the advert is only on that interface, as the ports
+are; otherwise it is on every interface that is up. It is withdrawn when the
+server stops on SIGINT or SIGTERM. canboat answers mDNS itself, so it needs
+neither Avahi nor Bonjour, and works alongside either. It is the `mdns`
+cargo feature, on by default; `cargo build --no-default-features --features
+cli` leaves it out of the binary.
+
+```sh
+dns-sd -B _canboat._tcp                      # macOS
+avahi-browse -r _canboat._tcp                # Linux
+```
+
 ## Running it as a service
 
 `canboat server` is one process with nothing else to supervise, so any init

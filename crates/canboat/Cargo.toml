@@ -19,7 +19,7 @@ exclude     = ["parity/"]
 # docs.rs documents the whole library surface and none of the CLI.
 [package.metadata.docs.rs]
 no-default-features = true
-features = ["decode", "io", "raw", "raw-usb", "node", "bridge", "nmea0183", "ais", "json-input"]
+features = ["decode", "io", "raw", "raw-usb", "node", "bridge", "mdns", "nmea0183", "ais", "json-input"]
 
 # The one crate. The library's public surface is curated (see
 # doc/library-api-plan.md) and gated behind the `decode` / `io` /
@@ -37,9 +37,11 @@ path = "src/main.rs"
 required-features = ["cli"]
 
 [features]
-# The repo and the release build the binary, so `cli` is the package default.
+# The repo and the release build the binary, so `cli` is the package default,
+# with `canboat server`'s mDNS advert; `--no-default-features --features cli`
+# builds the binary without it.
 # Library consumers select `default-features = false, features = ["decode", …]`.
-default = ["cli"]
+default = ["cli", "mdns"]
 
 # ── library features (what external consumers pick) ──
 # sans-I/O engine: schema, decode, encode, formatters
@@ -59,6 +61,8 @@ usb      = ["io", "raw-usb"]
 node     = ["decode"]
 # live-bus: Bridge + BridgeConfig + serving
 bridge   = ["io", "node", "dep:anyhow", "dep:serde", "dep:serde_json", "dep:world_magnetic_model"]
+# the bridge advertises its served ports over mDNS / DNS-SD
+mdns     = ["bridge", "dep:mdns-sd"]
 nmea0183 = ["decode"]                      # output::write_nmea0183
 ais      = ["decode"]                      # output::write_ais
 
@@ -105,6 +109,9 @@ serde      = { workspace = true, optional = true }
 serde_json = { workspace = true, optional = true, features = ["preserve_order"] }
 # The WMM quirk computes magnetic variation locally.
 world_magnetic_model = { version = "1.2025.0", optional = true }
+# `canboat server` advertises itself as `_canboat._tcp`; pure Rust, no
+# Avahi or Bonjour needed.
+mdns-sd    = { version = "0.21", optional = true, default-features = false, features = ["logging"] }
 
 # cli
 clap       = { workspace = true, optional = true }

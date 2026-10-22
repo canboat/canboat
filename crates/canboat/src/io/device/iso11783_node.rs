@@ -273,7 +273,7 @@ fn advertised_pgns(builtin: &[u32], extra: &[u32], which: &str) -> Vec<u32> {
 }
 
 /// Build the 64-bit ISO NAME from a [`Config`].
-fn build_name(config: &Config) -> u64 {
+pub(super) fn build_name(config: &Config) -> u64 {
     let unique = if config.unique != 0 {
         config.unique
     } else {

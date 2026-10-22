@@ -670,6 +670,14 @@ impl Device {
         }
     }
 
+    /// The ISO NAME canboat's node claims on this gateway; `None` when it
+    /// claims none (`no_claim`). Only meaningful where canboat runs the
+    /// node, see [`capabilities`](Self::capabilities).
+    #[cfg(feature = "io")]
+    pub(crate) fn node_name(&self, protocol: BusProtocol) -> Option<u64> {
+        (!self.node.no_claim).then(|| super::iso11783_node::build_name(&self.node_config(protocol)))
+    }
+
     /// One session of [`open`](Self::open).
     #[cfg(feature = "io")]
     fn open_session(&self, protocol: BusProtocol) -> io::Result<DeviceHandle> {

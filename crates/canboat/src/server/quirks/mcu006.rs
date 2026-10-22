@@ -135,6 +135,8 @@ pub struct Mcu006 {
     backlight_percent: u8,
     host: Option<Host>,
     link: Option<Link>,
+    /// The mDNS advert's TXT keys, and the host NAME last put there.
+    txt: Option<(crate::server::mdns::Txt, Option<u64>)>,
 }
 
 impl Mcu006 {
@@ -150,12 +152,24 @@ impl Mcu006 {
             backlight_percent: BACKLIGHT_PERCENT,
             host: None,
             link: None,
+            txt: None,
         }
     }
 
     /// Share where reports go with the control port.
     pub fn set_link(&mut self, link: Link) {
         self.link = Some(link);
+    }
+
+    /// Advertise the remote's NAME as `mcu006.name`, and from now on the
+    /// paired MFD's as `mcu006.host`.
+    pub fn set_txt(&mut self, txt: crate::server::mdns::Txt) {
+        txt.set(
+            "mcu006.name",
+            Some(crate::server::mdns::name_hex(self.claim.name())),
+        );
+        self.txt = Some((txt, None));
+        self.update_txt();
     }
 
     pub fn process(&mut self, d: &DecodedPgn, now: Instant) -> Vec<RawFrame> {
@@ -210,7 +224,21 @@ impl Mcu006 {
 
         out.extend(self.periodic(now));
         self.update_link();
+        self.update_txt();
         out
+    }
+
+    /// Put the host's NAME in the advert once it is known, and again
+    /// should it change.
+    fn update_txt(&mut self) {
+        let host = self.host.and_then(|h| h.name);
+        let Some((txt, published)) = self.txt.as_mut() else {
+            return;
+        };
+        if *published != host {
+            txt.set("mcu006.host", host.map(crate::server::mdns::name_hex));
+            *published = host;
+        }
     }
 
     fn update_link(&self) {
