@@ -178,41 +178,43 @@ impl Control {
     /// Send one frame once its slot comes: frames from every client go out
     /// one at a time, at most one per [`FRAME_GAP`]. The frame is built
     /// when it goes out, so a report of the remote's state is never older
-    /// than one sent before it.
-    fn send(&self, build: impl FnOnce() -> crate::engine::RawFrame) {
+    /// than one sent before it. An error if the CAN writer is gone.
+    fn send(&self, build: impl FnOnce() -> crate::engine::RawFrame) -> Result<(), String> {
         let mut next = self.next_frame.lock().unwrap_or_else(|e| e.into_inner());
         thread::sleep(next.saturating_duration_since(Instant::now()));
-        if self.sender.send_frame(build()).is_err() {
-            log::warn!("mcu006-control: the CAN writer is gone");
-        }
+        let sent = self.sender.send_frame(build());
         *next = Instant::now() + FRAME_GAP;
+        sent.map_err(|_| "the CAN writer is gone".to_string())
     }
 
     /// The held keys, the button and keypad mode, as the 1 s keepalive
-    /// sends them.
+    /// sends them. Best effort, as is the release on disconnect: with no
+    /// CAN writer there is no one to tell.
     fn send_state(&self) {
         let Ok((addr, host)) = self.route() else {
             return;
         };
-        self.send_keys(addr, host);
-        self.send_flags(addr, host);
+        let sent = self.send_keys(addr, host).and(self.send_flags(addr, host));
+        if let Err(e) = sent {
+            log::warn!("mcu006-control: {e}");
+        }
     }
 
-    fn send_keys(&self, addr: u8, host: u8) {
-        self.send(|| keyboard_report(addr, host, &self.remote().codes()));
+    fn send_keys(&self, addr: u8, host: u8) -> Result<(), String> {
+        self.send(|| keyboard_report(addr, host, &self.remote().codes()))
     }
 
     /// A pointer report without movement: the button and keypad mode.
-    fn send_flags(&self, addr: u8, host: u8) {
-        self.send_move(addr, host, 0, 0, 0);
+    fn send_flags(&self, addr: u8, host: u8) -> Result<(), String> {
+        self.send_move(addr, host, 0, 0, 0)
     }
 
     /// A pointer report: a movement, with the button and keypad mode.
-    fn send_move(&self, addr: u8, host: u8, dx: i8, dy: i8, wheel: i8) {
+    fn send_move(&self, addr: u8, host: u8, dx: i8, dy: i8, wheel: i8) -> Result<(), String> {
         self.send(|| {
             let (button, keypad) = self.remote().flags();
             pointer_report(addr, host, dx, dy, wheel, button, keypad)
-        });
+        })
     }
 }
 
@@ -295,38 +297,44 @@ fn handle(cmd: &Value, control: &Control, held: &mut Held) -> Result<(), String>
         let code = key_code(key)?;
         let down = cmd.get("down").and_then(Value::as_bool).unwrap_or(true);
         set_key(&mut control.remote(), held, code, down)?;
-        control.send_keys(addr, host);
+        control.send_keys(addr, host)?;
     } else if let Some(key) = cmd.get("tap") {
+        // The key comes back up even if the press could not be sent.
         let code = key_code(key)?;
         set_key(&mut control.remote(), held, code, true)?;
-        control.send_keys(addr, host);
-        thread::sleep(TAP);
+        let pressed = control.send_keys(addr, host);
+        if pressed.is_ok() {
+            thread::sleep(TAP);
+        }
         set_key(&mut control.remote(), held, code, false)?;
-        control.send_keys(addr, host);
+        pressed.and(control.send_keys(addr, host))?;
     } else if let Some(p) = cmd.get("pointer") {
         let dx = movement(p.get("dx"), "dx")?;
         let dy = movement(p.get("dy"), "dy")?;
         for (dx, dy) in steps(dx, dy) {
-            control.send_move(addr, host, dx, dy, 0);
+            control.send_move(addr, host, dx, dy, 0)?;
         }
     } else if let Some(n) = cmd.get("knob") {
         let n = movement(Some(n), "knob")?;
         for (wheel, _) in steps(n, 0) {
-            control.send_move(addr, host, 0, 0, wheel);
+            control.send_move(addr, host, 0, 0, wheel)?;
         }
     } else if let Some(down) = cmd.get("button") {
         let down = down.as_bool().ok_or("button takes true or false")?;
         set_button(control, held, down);
-        control.send_flags(addr, host);
+        control.send_flags(addr, host)?;
     } else if cmd.get("click").is_some() {
+        // As for a tap: the button comes back up whatever happens.
         set_button(control, held, true);
-        control.send_flags(addr, host);
-        thread::sleep(TAP);
+        let pressed = control.send_flags(addr, host);
+        if pressed.is_ok() {
+            thread::sleep(TAP);
+        }
         set_button(control, held, false);
-        control.send_flags(addr, host);
+        pressed.and(control.send_flags(addr, host))?;
     } else if let Some(on) = cmd.get("keypad") {
         control.remote().keypad = on.as_bool().ok_or("keypad takes true or false")?;
-        control.send_flags(addr, host);
+        control.send_flags(addr, host)?;
     } else {
         return Err(
             "unknown command; use key, tap, pointer, knob, button, click, keypad, \
@@ -393,8 +401,9 @@ fn release(control: &Control, held: &mut Held) {
     }
     set_button(control, held, false);
     if let Ok((addr, host)) = control.route() {
-        control.send_keys(addr, host);
-        control.send_flags(addr, host);
+        let _ = control
+            .send_keys(addr, host)
+            .and(control.send_flags(addr, host));
     }
 }
 
@@ -535,7 +544,7 @@ mod tests {
                 let control = control.clone();
                 thread::spawn(move || {
                     for _ in 0..5 {
-                        control.send_move(110, 1, 1, 0, 0);
+                        control.send_move(110, 1, 1, 0, 0).unwrap();
                     }
                 })
             })
@@ -557,6 +566,36 @@ mod tests {
             total >= FRAME_GAP * 14 - Duration::from_millis(2),
             "{total:?}"
         );
+    }
+
+    #[test]
+    fn reports_a_gone_writer_and_still_lets_the_key_up() {
+        let (sender, rx) = FrameSender::for_test();
+        drop(rx);
+        let control = Control {
+            link: Arc::new(Mutex::new(LinkState {
+                addr: Some(110),
+                host: Some(1),
+            })),
+            sender,
+            remote: Mutex::new(Remote::default()),
+            next_frame: Mutex::new(Instant::now()),
+        };
+        let mut held = Held::default();
+        for cmd in [
+            json!({"tap": "Up"}),
+            json!({"click": true}),
+            json!({"knob": 1}),
+        ] {
+            assert_eq!(
+                handle(&cmd, &control, &mut held),
+                Err("the CAN writer is gone".into()),
+                "{cmd}"
+            );
+        }
+        assert!(control.remote().codes().is_empty());
+        assert!(!control.remote().flags().0);
+        assert!(held.keys.is_empty() && !held.button);
     }
 
     #[test]
