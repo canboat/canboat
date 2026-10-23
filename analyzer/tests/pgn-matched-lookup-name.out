@@ -1,0 +1,3 @@
+{"timestamp":"2026-10-23T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":130830,"description":"Suzuki: Engine Data","fields":{"Manufacturer Code":"Suzuki Motor","Industry Code":"Marine Industry"}}
+{"timestamp":"2026-10-23T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":130900,"description":"Xantrex: AC Status","fields":{"Manufacturer Code":"Xantrex Technology","Industry Code":"Marine Industry"}}
+{"timestamp":"2026-10-23T00:00:00.000Z","prio":7,"src":0,"dst":255,"pgn":130820,"description":"Fusion: SiriusXM Signal","fields":{"Manufacturer Code":"Fusion Electronics","Industry Code":"Marine Industry","Message ID":"SiriusXM Signal","Source ID":1,"Signal":2}}

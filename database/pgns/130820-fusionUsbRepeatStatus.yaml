@@ -35,7 +35,7 @@ fields:
   name: ID
   type: LOOKUP
   bits: 32
-  description: USB repeat
+  description: USB Repeat
   match: 9
   lookup: FUSION_SETTING
 - id: status

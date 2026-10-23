@@ -897,11 +897,16 @@ extern bool fieldPrintLookup(const Field   *field,
       g_skip = true;
       return false;
     }
-    s = field->description;
-    if (s == NULL && field->lookup.type == LOOKUP_TYPE_NONE)
+    // A matched lookup is named by its lookup, as everywhere else; the
+    // field's description is only the fallback (#1083).
+    if (field->lookup.type == LOOKUP_TYPE_NONE)
     {
-      sprintf(lookfor, "%" PRId64, value);
-      s = lookfor;
+      s = field->description;
+      if (s == NULL)
+      {
+        sprintf(lookfor, "%" PRId64, value);
+        s = lookfor;
+      }
     }
   }
 
@@ -938,6 +943,10 @@ extern bool fieldPrintLookup(const Field   *field,
       }
     }
     // BIT is handled in fieldPrintBitLookup
+  }
+  if (s == NULL && field->hasMatchValue)
+  {
+    s = field->description;
   }
 
   if (s != NULL)

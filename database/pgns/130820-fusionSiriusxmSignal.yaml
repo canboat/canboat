@@ -27,7 +27,7 @@ fields:
   name: Message ID
   type: LOOKUP
   bits: 16
-  description: SiriusXm Signal
+  description: SiriusXM Signal
   match: 32809
   lookup: FUSION_STATUS_MESSAGE_ID
   primaryKey: true
