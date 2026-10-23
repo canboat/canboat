@@ -356,7 +356,7 @@ pub fn open_rw(
                 CONTROL_TIMEOUT,
             )
             .wait()
-            .map_err(|e| io::Error::other(format!("FTDI request {request}: {e}")))
+            .map_err(|e| control_error(request, e))
     };
     control(SIO_RESET, SIO_RESET_SIO, 0)?;
     control(SIO_SET_BAUDRATE, value, index)?;
@@ -381,6 +381,23 @@ pub fn open_rw(
         info.serial_number().unwrap_or("")
     );
     Ok((Box::new(reader), Box::new(writer)))
+}
+
+/// A failed FTDI control request. A stall here is the device's state, not
+/// canboat's request (#1085), so say what usually causes it.
+fn control_error(request: u8, e: TransferError) -> io::Error {
+    match e {
+        TransferError::Stall => io::Error::other(format!(
+            "FTDI request {request}: {e} (is a serial driver using it{}? Otherwise replug it)",
+            if cfg!(target_os = "macos") {
+                ", such as FTDI's VCP driver extension in System Settings > General > \
+                 Login Items & Extensions > Driver Extensions"
+            } else {
+                ""
+            }
+        )),
+        _ => io::Error::other(format!("FTDI request {request}: {e}")),
+    }
 }
 
 /// The bulk IN and OUT endpoint addresses of interface 0.
@@ -493,6 +510,20 @@ impl Write for UsbWriter {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A stalled control request says what to try (#1085); other failures
+    /// stay as they were.
+    #[test]
+    fn a_stalled_control_request_gets_a_hint() {
+        let stall = control_error(SIO_RESET, TransferError::Stall).to_string();
+        assert!(stall.starts_with("FTDI request 0: "), "{stall}");
+        assert!(
+            stall.contains("serial driver") && stall.contains("replug"),
+            "{stall}"
+        );
+        let other = control_error(SIO_RESET, TransferError::Cancelled).to_string();
+        assert!(!other.contains("replug"), "{other}");
+    }
 
     #[test]
     fn divisors_match_libftdi() {
