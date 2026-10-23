@@ -59,6 +59,20 @@ jobs:
             exit 1
           fi
 
+  # The C tools built with ASan and UBSan, run over the regression suite and
+  # every capture in samples/ (#1082).
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y clang xsltproc libxml2-utils python3-setuptools
+
+      - name: build, test and decode samples under ASan + UBSan
+        run: tools/check-sanitizers.sh
+
   build-armv7-musl:
     runs-on: ubuntu-latest
     steps:
