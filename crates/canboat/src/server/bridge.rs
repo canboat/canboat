@@ -44,7 +44,7 @@ use crate::n2kd::serving::Hub;
 use crate::n2kd::serving::tcp as serving_tcp;
 use crate::server::pipeline::{self, Hubs, Nmea0183Options};
 use crate::server::snapshot::SnapshotStore;
-use crate::server::{BridgeConfig, OpenedSource, quirks, tcp};
+use crate::server::{BridgeConfig, OpenedSource, mdns, quirks, tcp};
 
 /// An assembled live-bus pipeline: source → reassembly → decode → quirks →
 /// transmit, with an optional in-process decoded tap and an optional TCP
@@ -77,6 +77,12 @@ pub struct Bridge {
     overrides: Option<Arc<Mutex<crate::n2kd::overrides::OverrideEngine>>>,
     /// Shared by `--quirk mcu006` and its control port.
     mcu006_link: Option<quirks::mcu006::Link>,
+    /// The NAME canboat's own node claims, when it runs one.
+    #[cfg_attr(not(feature = "mdns"), allow(dead_code))]
+    node_name: Option<u64>,
+    /// The mDNS advert's TXT keys the quirks set, and the advert itself
+    /// once [`Bridge::serve`] starts it.
+    txt: mdns::Txt,
 
     /// Optional in-process decoded tap (installed by [`Bridge::decoded`]).
     decoded_tx: Option<mpsc::Sender<Arc<DecodedPgn>>>,
@@ -203,6 +209,7 @@ impl Bridge {
             pre_coalesced,
             claim_addr,
             pgn_list_status,
+            node_name,
         } = super::open_source(&config)?;
         let device_sender = supervisor.as_ref().map(|s| s.frame_sender());
 
@@ -328,6 +335,8 @@ impl Bridge {
             nmea_filter,
             overrides,
             mcu006_link,
+            node_name,
+            txt: mdns::Txt::default(),
             decoded_tx: None,
             serve_stop: Arc::new(AtomicBool::new(false)),
             tcp_joins: Vec::new(),
@@ -408,8 +417,9 @@ impl Bridge {
             .filter(|&a| a != crate::engine::ADDR_GLOBAL && a != crate::engine::ADDR_NULL)
     }
 
-    /// Spawn the TCP serving layer — the 2597–2606 ports named in the
-    /// config (any port `0` is skipped). Call once. Each listener is wired
+    /// Spawn the TCP serving layer — the 2597–2607 ports named in the
+    /// config (any port `0` is skipped) — and advertise the ones it opened
+    /// over mDNS when [`BridgeConfig::mdns`] is set. Call once. Each listener is wired
     /// to the bridge's shutdown flag, so [`Bridge::shutdown`] (or dropping
     /// the bridge) closes them all and frees the ports. Safe to call before
     /// or after [`Bridge::spawn`]; the CLI serves first so no early frames
@@ -417,6 +427,8 @@ impl Bridge {
     pub fn serve(&mut self) -> Result<()> {
         let config = &self.config;
         let stop = || Some(self.serve_stop.clone());
+        // What was opened, keyed as the advert's TXT record names it.
+        let mut served: Vec<(&'static str, u16)> = Vec::new();
         if let Some(store) = self.snapshot.as_ref() {
             self.tcp_joins.push(serving_tcp::spawn_snapshot(
                 config.bind,
@@ -425,6 +437,7 @@ impl Bridge {
                 Some(self.banner),
                 stop(),
             )?);
+            served.push(("snapshot", config.snapshot_port));
         }
         // Write-only input port (`SERVER_INPUT_STREAM`): clients write
         // PLAIN/FAST lines encoded and forwarded onto the bus. Nothing is
@@ -440,6 +453,7 @@ impl Bridge {
                 Some(sender),
                 stop(),
             )?);
+            served.push(("input", config.input_port));
         }
         // Raw output stream: every coalesced frame as a PLAIN line under a
         // `# format=FAST` header. Read-only — writes go to `--input-port`.
@@ -452,6 +466,7 @@ impl Bridge {
                 Some(serving_tcp::CANBOAT_FORMAT_FAST_HEADER),
                 stop(),
             )?);
+            served.push(("raw", config.raw_port));
         }
         if config.nmea0183_port != 0 {
             // NMEA 0183 is strictly read-only — clients trying to write
@@ -464,6 +479,7 @@ impl Bridge {
                 None,
                 stop(),
             )?);
+            served.push(("nmea0183", config.nmea0183_port));
         }
         if config.analyzer_port != 0 {
             // Analyzer-JSON stream is read-only, matching canboat C n2kd's
@@ -476,6 +492,7 @@ impl Bridge {
                 Some(self.banner),
                 stop(),
             )?);
+            served.push(("analyzer", config.analyzer_port));
         }
         if config.ais_port != 0 {
             if let Some(store) = self.snapshot.as_ref() {
@@ -485,6 +502,7 @@ impl Bridge {
                     store.core(),
                     stop(),
                 )?);
+                served.push(("ais", config.ais_port));
             } else {
                 log::warn!(
                     "--ais-port {} ignored: snapshot port is disabled, no AIS cache to dump",
@@ -504,6 +522,7 @@ impl Bridge {
                 self.json_opts.clone(),
                 stop(),
             )?);
+            served.push(("nmea0183-filter", config.nmea0183_filter_port));
         }
         // Dedicated bidirectional control port for the PGN 262658 override
         // channel. The control server applies a `Set` immediately by
@@ -519,6 +538,7 @@ impl Bridge {
                 self.json_opts.clone(),
                 stop(),
             )?);
+            served.push(("overrides", config.overrides_port));
         }
         // The emulated MCU-006's keys, pointer and knob. Its reports go
         // straight to the device writer.
@@ -533,8 +553,37 @@ impl Bridge {
                     sender.clone(),
                     stop(),
                 )?);
+            served.push(("mcu006", config.mcu006_port));
+        }
+        if config.mdns {
+            self.advertise(&served);
         }
         Ok(())
+    }
+
+    /// Advertise `served` over mDNS. A failure to start is logged, not
+    /// returned: the ports work without it.
+    fn advertise(&self, served: &[(&'static str, u16)]) {
+        #[cfg(feature = "mdns")]
+        {
+            let Some(port) = mdns::srv_port(served) else {
+                log::info!("mDNS: no port is open, nothing to advertise");
+                return;
+            };
+            let identity = self.node_name.map(|name| mdns::Identity {
+                name,
+                nmea2000: self.config.protocol == crate::engine::BusProtocol::Nmea2000,
+            });
+            let base = mdns::txt_record(identity, served, &self.config.quirk);
+            if let Err(e) = self.txt.start(self.config.bind, port, base) {
+                log::warn!("mDNS: not advertising: {e:#}");
+            }
+        }
+        #[cfg(not(feature = "mdns"))]
+        {
+            let _ = served;
+            log::info!("mDNS: not advertising, canboat was built without the `mdns` feature");
+        }
     }
 
     /// Assemble the pipeline's [`Hubs`] from the bridge's shared state.
@@ -553,6 +602,7 @@ impl Bridge {
                 if let Some(link) = &self.mcu006_link {
                     q.set_mcu006_link(link.clone());
                 }
+                q.set_txt(self.txt.clone());
                 q
             },
             device_sender: self.device_sender.clone(),
@@ -644,10 +694,12 @@ impl Bridge {
     /// supervisor to stop (which closes the frame source, draining a
     /// [`spawn`](Bridge::spawn)ed pipeline), trip every [`serve`](Bridge::serve)
     /// accept loop, and join the accept threads so their listeners are
-    /// dropped and the ports can be re-bound. Idempotent; also run on `Drop`.
+    /// dropped and the ports can be re-bound; withdraw the mDNS advert.
+    /// Idempotent; also run on `Drop`.
     /// Does not join a spawned pipeline thread — use [`wait`](Bridge::wait)
     /// for that.
     pub fn shutdown(&mut self) {
+        self.txt.stop();
         if let Some(s) = self.supervisor.take() {
             // Stops the reconnecting, and lets the gateway say goodbye.
             let _ = s.close();

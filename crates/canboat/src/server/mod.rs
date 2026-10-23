@@ -45,6 +45,9 @@
 //! | 2603 | `--raw-port`            | out | raw frame output stream |
 //! | 2605 | `--nmea0183-filter-port`| **i/o** | PGN 262657 filter control (with `--nmea0183-filter`) |
 //!
+//! The server advertises the ports it opened over mDNS / DNS-SD as
+//! `_canboat._tcp` (see [`mdns`]); `--no-mdns` turns that off.
+//!
 //! The lone exception to "every output is read-only" is 2605: the
 //! filter control channel is request/response and needs to answer the
 //! client on the same socket, so it is deliberately bidirectional. It
@@ -52,6 +55,8 @@
 
 mod bridge;
 mod mcu006_control;
+#[cfg_attr(not(feature = "mdns"), allow(dead_code))]
+mod mdns;
 mod pipeline;
 mod quirks;
 mod snapshot;
@@ -264,6 +269,15 @@ pub struct Args {
     #[arg(long, value_name = "PORT", default_value_t = 2607, help_heading = PORTS)]
     mcu006_port: u16,
 
+    /// Do not advertise the server over mDNS / DNS-SD.
+    ///
+    /// By default it is advertised as `_canboat._tcp`, with the ports it
+    /// opened, its NAME on the bus and its quirks in the TXT record, on the
+    /// --bind interface or on all of them. A canboat built without the
+    /// `mdns` feature never advertises.
+    #[arg(long, help_heading = PORTS)]
+    no_mdns: bool,
+
     /// Also write the NMEA 0183 sentences to stdout, as n2kd --nmea0183 does.
     #[arg(long, help_heading = NMEA0183)]
     nmea0183_stdout: bool,
@@ -375,6 +389,12 @@ pub struct BridgeConfig {
     pub overrides_port: u16,
     /// The `--quirk mcu006` control port; `0` = off.
     pub mcu006_port: u16,
+    /// Advertise the served ports over mDNS / DNS-SD as `_canboat._tcp`
+    /// when [`Bridge::serve`] opens them. Off by default, so an embedding
+    /// host only advertises when it asks to; `canboat server` turns it on
+    /// unless `--no-mdns`. Needs the `mdns` feature, without which it does
+    /// nothing.
+    pub mdns: bool,
     /// How field keys and PGN descriptions are spelled on the analyzer
     /// JSON / snapshot ports (`--id`). Defaults to
     /// [`CamelCase::Lower`](crate::engine::output::CamelCase::Lower).
@@ -428,6 +448,7 @@ impl Default for BridgeConfig {
             nmea0183_filter_port: 2605,
             overrides_port: 2606,
             mcu006_port: 2607,
+            mdns: false,
             // Machine-facing defaults, matching `convert` / `analyzer`
             // and what canboatjs consumers expect.
             camel_case: crate::engine::output::CamelCase::Lower,
@@ -512,6 +533,7 @@ impl From<Args> for BridgeConfig {
             nmea0183_filter_port: a.nmea0183_filter_port,
             overrides_port: a.overrides_port,
             mcu006_port: a.mcu006_port,
+            mdns: !a.no_mdns,
             camel_case: a.shape.camel_case(),
             units: a.shape.units(),
             wrap: a.shape.wrap(),
@@ -550,6 +572,8 @@ struct OpenedSource {
     /// What the gateway does with `Device::pgn_lists`; `None` when
     /// none were given.
     pgn_list_status: Option<PgnListStatus>,
+    /// The NAME canboat's own node claims, when it runs one.
+    node_name: Option<u64>,
 }
 
 // Config-dir *discovery* (the `/etc/default/canboat` vs `~/.local/canboat`
@@ -566,6 +590,10 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             .node_defaults("canboat-pipeline-rs", config.config_dir.clone())
             .reconnect(true);
         let pgn_list_status = dev.pgn_list_status();
+        let node_name = config
+            .is_node()
+            .then(|| dev.node_name(config.protocol))
+            .flatten();
         // What the gateway lacks says which, already; and the bridge
         // reconnects, so nothing else fails here.
         let handle = dev.open(config.protocol)?;
@@ -579,6 +607,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr,
             pgn_list_status,
+            node_name,
         });
     }
     if let Some(read_url) = config.canboat_csv.as_deref() {
@@ -603,6 +632,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
             pgn_list_status: unsupported_pgn_lists(config),
+            node_name: None,
         });
     }
     if let Some(path) = config.replay.as_deref() {
@@ -625,6 +655,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             pre_coalesced: Arc::new(AtomicBool::new(scan.coalesced)),
             claim_addr: None,
             pgn_list_status: unsupported_pgn_lists(config),
+            node_name: None,
         });
     }
     // stdin fallback — no device, no reconnect logic needed. We
@@ -649,6 +680,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         pre_coalesced,
         claim_addr: None,
         pgn_list_status: unsupported_pgn_lists(config),
+        node_name: None,
     })
 }
 

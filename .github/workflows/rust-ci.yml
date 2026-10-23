@@ -224,8 +224,10 @@ jobs:
       # Same list as `make rust-features`.
       - name: Clippy per library feature set
         run: |
-          for set in decode raw raw-usb io node bridge json-input nmea0183,ais \
-                     decode,io,node,bridge,nmea0183,ais,json-input; do
+          # `cli` alone is the binary without `mdns`, the one default
+          # feature it can drop.
+          for set in decode raw raw-usb io node bridge mdns json-input nmea0183,ais \
+                     decode,io,node,bridge,nmea0183,ais,json-input cli; do
             echo "::group::--features $set"
             cargo clippy -p canboat --no-default-features --features "$set" --locked -- -D warnings
             echo "::endgroup::"

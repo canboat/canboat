@@ -56,6 +56,27 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 </tbody>
 </table>
 <p>The state the filter and override ports set is kept in <code>--config-dir</code>: <code>/etc/default/canboat</code> if it is writable (the systemd/root case), otherwise <code>~/.local/canboat</code>. <code>canboat server --help</code> has the rest of the options.</p>
+<h2 id="discovery">Discovery</h2>
+<p><code>canboat server</code> advertises itself over mDNS / DNS-SD as <code>_canboat._tcp</code>, so a client on the LAN can find it, see which ports it serves and what it runs, without being told a host and port. The instance is called <code>canboat on &lt;hostname&gt;</code>, with DNS-SD's <code> (2)</code> added when two servers share a host. <code>--no-mdns</code> turns it off, for a network where multicast is unwanted.</p>
+<p>The SRV record names the analyzer port, or the first open port when that one is off. The TXT record:</p>
+<table>
+<thead><tr>
+<th>Key</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr><td><code>version</code></td><td>the canboat version</td></tr>
+<tr><td><code>name</code></td><td>canboat's own ISO NAME on the bus, 16 hex digits; only where canboat runs a node (<code>--kind socketcan</code>, <code>canalyst</code> or <code>usb-can-a</code>)</td></tr>
+<tr><td><code>serial</code></td><td>the Model Serial Code in that node's Product Information (PGN 126996), so a client can match this server with what other devices, such as a TimeZero MFD, report about the bus</td></tr>
+<tr><td><code>snapshot</code>, <code>analyzer</code>, <code>nmea0183</code>, <code>input</code>, <code>ais</code>, <code>raw</code>, <code>nmea0183-filter</code>, <code>overrides</code>, <code>mcu006</code></td><td>one key per port that is open, named after its option without <code>-port</code></td></tr>
+<tr><td><code>quirks</code></td><td>the quirks that are on, comma-separated, by name only: <code>gps-rollover=4</code> is <code>gps-rollover</code></td></tr>
+<tr><td><code>motion.name</code>, <code>mcu006.name</code></td><td>the NAME the <code>motion</code> or <code>mcu006</code> quirk claims</td></tr>
+<tr><td><code>mcu006.host</code></td><td>the NAME of the MFD the <code>mcu006</code> remote paired with, once it has; announced again when it changes</td></tr>
+</tbody>
+</table>
+<p>With <code>--bind &lt;address&gt;</code> the advert is only on that interface, as the ports are; otherwise it is on every interface that is up. It is withdrawn when the server stops on SIGINT or SIGTERM. canboat answers mDNS itself, so it needs neither Avahi nor Bonjour, and works alongside either. It is the <code>mdns</code> cargo feature, on by default; <code>cargo build --no-default-features --features cli</code> leaves it out of the binary.</p>
+<pre><code class="language-sh">dns-sd -B _canboat._tcp                      # macOS
+avahi-browse -r _canboat._tcp                # Linux</code></pre>
 <h2 id="running-it-as-a-service">Running it as a service</h2>
 <p><code>canboat server</code> is one process with nothing else to supervise, so any init system with a restart policy will do. With systemd, as a system service in <code>/etc/systemd/system/canboat.service</code>:</p>
 <pre><code class="language-ini">[Unit]

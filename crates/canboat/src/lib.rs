@@ -661,7 +661,9 @@ pub mod device {
 ///
 /// # fn main() -> anyhow::Result<()> {
 /// // Own a SocketCAN interface, tap the decoded stream, and re-serve the
-/// // 2597–2606 TCP ports so other LAN consumers keep working.
+/// // 2597–2607 TCP ports so other LAN consumers keep working. With the
+/// // `mdns` feature and `mdns: true`, `serve` also advertises them as
+/// // `_canboat._tcp`.
 /// let config = BridgeConfig {
 ///     device: Some(Device::new(Kind::SocketCan, "can0")),
 ///     ..BridgeConfig::default()
