@@ -71136,7 +71136,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Order>5</Order>
           <Id>id</Id>
           <Name>ID</Name>
-          <Description>USB repeat</Description>
+          <Description>USB Repeat</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -73391,7 +73391,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>SiriusXm Signal</Description>
+          <Description>SiriusXM Signal</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
