@@ -1175,11 +1175,11 @@ extern bool fieldPrintBitLookup(const Field   *field,
                                 size_t         startBit,
                                 size_t        *bits)
 {
-  int64_t value;
-  int64_t maxValue;
-  int64_t bitValue;
-  size_t  bit;
-  char   *sep;
+  int64_t  value;
+  int64_t  maxValue;
+  uint64_t bitValue;
+  size_t   bit;
+  char    *sep;
 
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
@@ -1225,7 +1225,7 @@ extern bool fieldPrintBitLookup(const Field   *field,
       {
         if (showJsonValue)
         {
-          mprintf("%s{\"value\":%" PRId64 ",\"name\":\"%s\"}", sep, bitValue, s);
+          mprintf("%s{\"value\":%" PRIu64 ",\"name\":\"%s\"}", sep, bitValue, s);
         }
         else if (showJson)
         {
