@@ -920,6 +920,9 @@ impl PgnBuilder {
             // The wire bits, as asked for.
             (_, EncodeValue::Raw(raw)) => return Ok(raw & all_ones(width)),
 
+            // DECIMAL: digit pairs, one byte each, not a binary number.
+            (Some(FieldType::Decimal), v) => return decimal_to_raw(f, width, v),
+
             // Lookup by label → its raw value; or a raw integer.
             (
                 Some(FieldType::Lookup) | Some(FieldType::IndirectLookup),
@@ -1028,6 +1031,71 @@ fn int_to_raw(f: &FieldInfo, n: i64) -> Result<i64, EncodeError> {
         });
     }
     Ok(n)
+}
+
+/// A DECIMAL's wire bits: each byte holds two decimal digits as a binary
+/// value 0..99, the first two digits in the first byte, the inverse of
+/// `decode_decimal`.
+///
+/// The digits are left-justified and padded with zeros on the right. DSC
+/// sends a 9-digit MMSI as a 10-digit address with a 0 added at the end
+/// (ITU-R M.585), so 512000953 goes out as 5120009530 (#1081). A digit
+/// string is taken as written. An integer has lost the leading zeros a
+/// group (0MIDXXXXX) or coast station (00MIDXXXX) MMSI starts with, so
+/// one shorter than the field is zero-filled on the left to one digit
+/// short of it first: 2241024 is coast station 002241024, 0022410240.
+fn decimal_to_raw(f: &FieldInfo, width: u32, v: EncodeValue) -> Result<u64, EncodeError> {
+    let integer = !matches!(v, EncodeValue::Text(_));
+    let digits = match v {
+        EncodeValue::Text(s) => s,
+        EncodeValue::Int(n) if n >= 0 => n.to_string(),
+        EncodeValue::Number(x) if x >= 0.0 && x.fract() == 0.0 && x < 1e19 => {
+            (x as u64).to_string()
+        }
+        EncodeValue::Int(_) | EncodeValue::Number(_) | EncodeValue::Pgn(_) => {
+            return Err(EncodeError::TypeMismatch {
+                field: f.name,
+                expected: "a positive whole number",
+            });
+        }
+        _ => {
+            return Err(EncodeError::TypeMismatch {
+                field: f.name,
+                expected: "decimal digits",
+            });
+        }
+    };
+    if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+        return Err(EncodeError::TypeMismatch {
+            field: f.name,
+            expected: "decimal digits",
+        });
+    }
+    let nbytes = width / 8;
+    let ndigits = 2 * nbytes as usize;
+    let digits = if integer && digits.len() < ndigits {
+        format!("{digits:0>w$}", w = ndigits - 1)
+    } else {
+        digits
+    };
+    if digits.len() > ndigits {
+        return Err(EncodeError::ValueOutOfRange {
+            field: f.name,
+            value: digits.parse::<f64>().unwrap_or(f64::NAN),
+            range: f.range_min.zip(f.range_max),
+        });
+    }
+    let mut raw = 0u64;
+    let mut pairs = digits.as_bytes().chunks(2);
+    for i in 0..nbytes {
+        let pair = match pairs.next() {
+            Some([hi, lo]) => (hi - b'0') * 10 + (lo - b'0'),
+            Some([hi]) => (hi - b'0') * 10,
+            _ => 0,
+        };
+        raw |= u64::from(pair) << (8 * i);
+    }
+    Ok(raw)
 }
 
 /// Invert the decoder's `raw * resolution + offset + unit_offset`.
@@ -1431,8 +1499,10 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
                 range: None,
             });
     }
-    // 0x-hex → an integer, the same as its decimal spelling.
-    if let Some(hex) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X"))
+    // 0x-hex → an integer, the same as its decimal spelling. Not on a
+    // DECIMAL, whose value is its decimal digits.
+    if f.field_type != Some(FieldType::Decimal)
+        && let Some(hex) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X"))
         && let Ok(n) = i64::from_str_radix(hex, 16)
     {
         return Ok(EncodeValue::Int(n));
@@ -1458,6 +1528,8 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
         | Some(FieldType::StringLz)
         | Some(FieldType::StringLau)
         | Some(FieldType::Variable) => Ok(EncodeValue::Text(s.to_string())),
+        // The digits as written, so a leading zero stays.
+        Some(FieldType::Decimal) => Ok(EncodeValue::Text(s.to_string())),
         _ => {
             // Numeric field: a value in the field's unit, however it is
             // spelled (`raw:` above asks for wire bits).
@@ -1539,6 +1611,68 @@ mod tests {
         // Past half a turn back, or a full turn forward, is still refused.
         assert!(wind(-3.2).is_err());
         assert!(wind(tau + 0.1).is_err());
+    }
+
+    /// A DECIMAL goes out as digit pairs and decodes back to the same
+    /// digits (#1081), where it used to go out as a binary number that
+    /// decoded as not available.
+    #[test]
+    fn a_decimal_is_digit_pairs_and_round_trips() {
+        use crate::engine::decode::FieldValue;
+        let address = |v: &str| {
+            let mut b = db().encode_for(crate::engine::pgn::DSC_CALL_INFORMATION);
+            b.push_arg("dscMessageAddress", v)?;
+            b.build()
+        };
+        let decoded = |v: &str| {
+            let frame = address(v).unwrap();
+            let decoded = db().decode(&frame).unwrap();
+            let f = decoded
+                .fields
+                .iter()
+                .find(|f| f.id() == "dscMessageAddress");
+            (frame.data[2..7].to_vec(), f.map(|f| f.value.clone()))
+        };
+
+        // Ten digits, a leading zero kept.
+        let (wire, value) = decoded("0244123456");
+        assert_eq!(wire, [2, 44, 12, 34, 56]);
+        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "0244123456"));
+        // A 9-digit MMSI takes a trailing zero, as DSC sends it.
+        let (wire, value) = decoded("512000953");
+        assert_eq!(wire, [51, 20, 0, 95, 30]);
+        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "5120009530"));
+        // The coast station in samples/pgn129808.raw: its leading zeros
+        // are part of the MMSI.
+        let (wire, value) = decoded("002241024");
+        assert_eq!(wire, [0, 22, 41, 2, 40]);
+        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "0022410240"));
+        // An integer has lost those zeros, so it is filled out to the 9
+        // digits of an MMSI first; ten digits are the whole address.
+        let int = |n: i64| {
+            let mut b = db().encode_for(crate::engine::pgn::DSC_CALL_INFORMATION);
+            b.push_by_name("DSC Message Address", n).unwrap();
+            b.build().unwrap().data[2..7].to_vec()
+        };
+        assert_eq!(int(244123456), [24, 41, 23, 45, 60]);
+        assert_eq!(int(2241024), [0, 22, 41, 2, 40]);
+        assert_eq!(int(2241024000), [22, 41, 2, 40, 0]);
+
+        // Too many digits, or not digits at all, is refused.
+        assert!(matches!(
+            address("12345678901"),
+            Err(EncodeError::ValueOutOfRange { .. })
+        ));
+        assert!(matches!(
+            address("12ab"),
+            Err(EncodeError::TypeMismatch { .. })
+        ));
+        assert!(matches!(
+            address("0x12"),
+            Err(EncodeError::TypeMismatch { .. })
+        ));
+        // raw: still writes the wire bits.
+        assert_eq!(address("raw:0xffffffffff").unwrap().data[2..7], [0xff; 5]);
     }
 
     #[test]
