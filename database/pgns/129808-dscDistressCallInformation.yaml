@@ -28,6 +28,9 @@ fields:
   name: DSC Message Address
   type: DECIMAL
   bits: 40
+  trailingZeroIsDigit:
+    field: dscFormat
+    value: 102
   description: MMSI, Geographic Area or blank
   rangeMin: 0.0
   rangeMax: 9999999999.0
@@ -137,7 +140,7 @@ samples:
   expects:
     dscFormat: "Distress"
     dscCategory: "Distress"
-    dscMessageAddress: "5120009530"
+    dscMessageAddress: "512000953"
     natureOfDistress: "Man overboard"
     subsequentCommunicationModeOr2ndTelecommand: "No reason given"
     proposedRxFrequencyChannel: ""
@@ -146,7 +149,7 @@ samples:
     latitudeOfVesselReported: -41.1014800
     longitudeOfVesselReported: 174.8676983
     timeOfPosition: 7980.0000
-    mmsiOfShipInDistress: ""
+    mmsiOfShipInDistress: ~
     dscEosSymbol: 127
     expansionEnabled: "Yes"
     callingRxFrequencyChannel: ""

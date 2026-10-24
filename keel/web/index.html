@@ -1316,6 +1316,9 @@ function fieldYaml(f, pad) {
   if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
   if (has(f.bitLengthField)) y += `${p}bitLengthField: ${f.bitLengthField}\n`;
   // Not editable here, but carried through so a rewrite keeps it.
+  if (f.trailingZeroIsDigit)
+    y += `${p}trailingZeroIsDigit:\n${p}  field: ${f.trailingZeroIsDigit.field}\n${p}  value: ${f.trailingZeroIsDigit.value}\n`;
+  // Not editable here, but carried through so a rewrite keeps it.
   if (has(f.encoding)) y += `${p}encoding: ${f.encoding}\n`;
   if (has(f.continues)) y += `${p}continues: ${yq(f.continues)}\n`;
   if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;

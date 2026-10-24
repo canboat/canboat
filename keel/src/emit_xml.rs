@@ -506,6 +506,12 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         if let Some(target) = &f.continues {
             self.xml(10, "Continues", Some(target));
         }
+        if let (Some(order), Some((_, value))) =
+            (f.trailing_zero_is_digit_order, &f.trailing_zero_is_digit)
+        {
+            self.xml_u(10, "TrailingZeroIsDigitField", order as u64);
+            self.xml(10, "TrailingZeroIsDigitValue", Some(&value.to_string()));
+        }
 
         if f.res_bits == 0 {
             self.p("          <BitLengthVariable>true</BitLengthVariable>\n");

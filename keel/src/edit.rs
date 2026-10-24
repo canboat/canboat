@@ -355,7 +355,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .map(|f| {
             let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
             format!(
-                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"continues\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"continues\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"trailingZeroIsDigit\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
                 js(&f.id),
                 js(&f.name),
                 js(&f.type_),
@@ -377,6 +377,10 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 f.range_min.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
                 f.range_max.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
                 opt_s(&f.bit_length_field),
+                f.trailing_zero_is_digit
+                    .as_ref()
+                    .map(|(field, value)| format!("{{\"field\":{},\"value\":{value}}}", js(field)))
+                    .unwrap_or_else(|| "null".into()),
                 opt_s(&f.encoding),
                 f.allow_lookup_width_mismatch,
                 f.primary_key,

@@ -1029,8 +1029,9 @@ mod tests {
         );
     }
     /// A DECIMAL's digit pairs are written as a JSON string. The DSC call
-    /// from samples/pgn129808.raw addresses 0022410240: written bare, the
-    /// leading zero made the whole record invalid JSON.
+    /// from samples/pgn129808.raw addresses coast station 002241024 (sent
+    /// as 0022410240): written bare, the leading zero made the whole record
+    /// invalid JSON.
     #[test]
     fn a_decimal_is_a_json_string() {
         let data: Vec<u8> =
@@ -1053,8 +1054,8 @@ mod tests {
         ] {
             let mut out = String::new();
             write_json(&mut out, &pgn, &opts).unwrap();
-            assert!(out.contains("\"0022410240\""), "{out}");
-            assert!(!out.contains(":0022410240"), "bare DECIMAL in {out}");
+            assert!(out.contains("\"002241024\""), "{out}");
+            assert!(!out.contains(":002241024"), "bare DECIMAL in {out}");
         }
     }
 

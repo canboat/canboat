@@ -1638,15 +1638,16 @@ mod tests {
         let (wire, value) = decoded("0244123456");
         assert_eq!(wire, [2, 44, 12, 34, 56]);
         assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "0244123456"));
-        // A 9-digit MMSI takes a trailing zero, as DSC sends it.
-        let (wire, value) = decoded("512000953");
-        assert_eq!(wire, [51, 20, 0, 95, 30]);
-        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "5120009530"));
+        // A 9-digit MMSI takes a trailing zero, as DSC sends it, and comes
+        // back without it, as the MMSI.
+        let (wire, value) = decoded("244060807");
+        assert_eq!(wire, [24, 40, 60, 80, 70]);
+        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "244060807"));
         // The coast station in samples/pgn129808.raw: its leading zeros
         // are part of the MMSI.
         let (wire, value) = decoded("002241024");
         assert_eq!(wire, [0, 22, 41, 2, 40]);
-        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "0022410240"));
+        assert!(matches!(value, Some(FieldValue::Decimal(d)) if d == "002241024"));
         // An integer has lost those zeros, so it is filled out to the 9
         // digits of an MMSI first; ten digits are the whole address.
         let int = |n: i64| {

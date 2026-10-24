@@ -26,6 +26,9 @@ fields:
   name: DSC Message Address
   type: DECIMAL
   bits: 40
+  trailingZeroIsDigit:
+    field: dscFormatSymbol
+    value: 102
   description: MMSI, Geographic Area or blank
   rangeMin: 0.0
   rangeMax: 9999999999.0
@@ -123,7 +126,7 @@ samples:
   expects:
     dscFormatSymbol: "Distress"
     dscCategorySymbol: ~
-    dscMessageAddress: "2350763930"
+    dscMessageAddress: "235076393"
     1stTelecommand: "J3E TP"
     subsequentCommunicationModeOr2ndTelecommand: "No reason given"
     proposedRxFrequencyChannel: "900069"
@@ -132,7 +135,7 @@ samples:
     latitudeOfVesselReported: -38.1000000
     longitudeOfVesselReported: 144.2000000
     timeOfPosition: 61761.0000
-    mmsiOfShipInDistress: "2350763930"
+    mmsiOfShipInDistress: "235076393"
     dscEosSymbol: 127
     expansionEnabled: "Yes"
     callingRxFrequencyChannel: "900070"

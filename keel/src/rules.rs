@@ -361,6 +361,24 @@ pub const RULES: &[Rule] = &[
                  are joined as raw bits, so a sign or an offset would have to \
                  apply to the joined value, which no decoder does.",
     },
+    Rule {
+        id: "R44",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_trailing_zero_is_digit",
+        title: "trailingZeroIsDigit names an earlier integer field at a fixed position.",
+        detail: "A DECIMAL with an odd number of digits is sent with a 0 added at \
+                 the end, which decoders drop: a DSC call's 9-digit MMSI is sent \
+                 as ten. `trailingZeroIsDigit: {field: <id>, value: <n>}` says \
+                 that when that field holds that value the last digit is part of \
+                 the value and stays: PGN 129808's address is ten digits of \
+                 geographical area when the DSC Format is 102. Only on a DECIMAL; \
+                 the field it names comes before it, at a fixed position (nothing \
+                 of variable width, no proprietary field and no repeating set in \
+                 front of it), and is an unsigned, unscaled NUMBER or LOOKUP \
+                 without an offset, so every decoder reads it by order and \
+                 compares the same raw value.",
+    },
 ];
 
 /// Human-readable inventory, grouped by scope.

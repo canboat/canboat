@@ -1129,7 +1129,12 @@ fn decode_scalar(
     ctx: &mut DecodeContext,
 ) -> FieldValue {
     match f.field_type {
-        Some(FieldType::Decimal) => decode_decimal(data, bit_offset, bit_length),
+        Some(FieldType::Decimal) => decode_decimal(
+            data,
+            bit_offset,
+            bit_length,
+            trailing_zero_is_digit(f, info, data),
+        ),
         Some(FieldType::Number) => decode_number(f, data, bit_offset, bit_length, signed, offset_k),
         Some(FieldType::Float) => decode_float(f, data, bit_offset, bit_length),
         Some(FieldType::Lookup) => decode_lookup(f, data, bit_offset, bit_length, db),
@@ -1795,13 +1800,13 @@ fn decode_iso_name(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDataba
 /// DECIMAL: each group of 8 bits is one decimal *pair*, printed as two
 /// digits — canboat's `fieldPrintDecimal` (print.c). A DSC address of
 /// `33 14 00 5F 1E` reads 5120009530, not the 40-bit integer those
-/// bytes spell.
+/// bytes spell, and that is MMSI 512000953 with the 0 that pads it.
 ///
 /// A byte that is not a valid pair (>= 100) is dropped, as the C drops
 /// it. All bits set is "not available": that is the universal canboat
 /// convention, and reading it as digits would otherwise emit nothing at
 /// all, which in the C takes the whole record down with it.
-fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32, keep_last: bool) -> FieldValue {
     let start_byte = (bit_offset / 8) as usize;
     if start_byte >= data.len() {
         return FieldValue::NotAvailable;
@@ -1852,7 +1857,34 @@ fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if out.is_empty() {
         return FieldValue::NotAvailable;
     }
+    // A value with an odd number of digits is sent with a 0 added at the
+    // end: a DSC call sends a 9-digit MMSI as ten digits (ITU-R M.585).
+    // Drop it, so the MMSI reads as it does in an MMSI field -- unless
+    // `keep_last`: the ten digits of a geographical area all count.
+    if out.ends_with('0') && !keep_last {
+        out.pop();
+    }
     FieldValue::Decimal(out)
+}
+
+/// Whether the field `f.trailing_zero_is_digit` names holds its value, so
+/// a DECIMAL's last digit is a digit, not padding. That field sits at a
+/// fixed position (keel R44), so its schema bit offset is where it is.
+fn trailing_zero_is_digit(f: &FieldInfo, info: &PgnInfo, data: &[u8]) -> bool {
+    (|| {
+        let (order, value) = f.trailing_zero_is_digit?;
+        let key = info.fields.iter().find(|x| x.order == order)?;
+        let raw = extract_bits(
+            data,
+            key.bit_offset? as usize,
+            key.bit_length? as usize,
+            false,
+            0,
+        )?
+        .raw;
+        Some(raw as i64 == value)
+    })()
+    .unwrap_or(false)
 }
 
 fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
@@ -2808,10 +2840,48 @@ mod tests {
     }
 
     #[test]
+    fn a_geographical_area_keeps_its_last_zero() {
+        // A DSC address drops the 0 that pads a 9-digit MMSI, except in a
+        // call to a geographical area (DSC Format 102), whose ten digits
+        // all count: 1520040510 is the NW quadrant from 52N 004W, 5 degrees
+        // by 10. That holds in the distress definition too (Category 112).
+        let address = |format: u8, category: u8| {
+            let mut data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![format, category];
+            data.extend_from_slice(&[0x0f, 0x14, 0x04, 0x05, 0x0a, 0x27, 0xff, 0xff]);
+            let frame = RawFrame {
+                timestamp: None,
+                prio: 3,
+                pgn: 129808,
+                src: 1,
+                dst: 255,
+                data,
+            };
+            let dec = db().decode(&frame).expect("decode");
+            dec.fields
+                .iter()
+                .find(|f| f.info.name == "DSC Message Address")
+                .map(|f| f.value.clone())
+                .expect("a DSC Message Address")
+        };
+        for category in [108, 112] {
+            match address(102, category) {
+                FieldValue::Decimal(d) => assert_eq!(d, "1520040510"),
+                other => panic!("expected ten digits, got {other:?}"),
+            }
+        }
+        // The same digits in a call to a station are an MMSI and a 0.
+        match address(120, 108) {
+            FieldValue::Decimal(d) => assert_eq!(d, "152004051"),
+            other => panic!("expected nine digits, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn decimal_is_digit_pairs_and_all_ones_is_absent() {
         // samples/pgn129808.raw. A DSC address is five bytes, each one
         // a *decimal pair*: 0x33 0x14 0x00 0x5F 0x1E reads 5120009530,
-        // not the 40-bit integer 130442859571 those bytes spell. And
+        // not the 40-bit integer 130442859571 those bytes spell, and that
+        // is MMSI 512000953 with the 0 DSC adds (ITU-R M.585). And
         // this call's `MMSI of Ship In Distress` is all ones — absent.
         let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
             0x70, 0x70, 0x33, 0x14, 0x00, 0x5f, 0x1e, 0x6e, 0x64, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -2834,7 +2904,7 @@ mod tests {
             .find(|f| f.info.name == "DSC Message Address")
             .expect("a DSC Message Address");
         match &addr.value {
-            FieldValue::Decimal(d) => assert_eq!(d, "5120009530"),
+            FieldValue::Decimal(d) => assert_eq!(d, "512000953"),
             other => panic!("expected decimal digits, got {other:?}"),
         }
 

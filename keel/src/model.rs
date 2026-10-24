@@ -135,6 +135,11 @@ pub struct Field {
     /// Id of the field holding this field's length in bits. Authored only on
     /// variable-length BINARY fields; emitted as <BitLengthField> (QUIRKS Q14).
     pub bit_length_field: Option<String>,
+    /// On a DECIMAL field: (id of an earlier field, value) for which the
+    /// last digit is part of the value, not the 0 that pads an odd number of
+    /// digits. PGN 129808's DSC address is an MMSI (9 digits and a 0) unless
+    /// the call is to a geographical area, whose ten digits all count.
+    pub trailing_zero_is_digit: Option<(String, i64)>,
     pub dynamic_field_length: bool,
     pub dynamic_field_length_overhead: u32,
     pub range_min: Option<f64>,
@@ -154,6 +159,8 @@ pub struct Field {
     pub order: u32,
     /// 1-based order of the field named by `bit_length_field`.
     pub bit_length_field_order: Option<u32>,
+    /// 1-based order of the field named by `trailing_zero_is_digit`.
+    pub trailing_zero_is_digit_order: Option<u32>,
     /// On a field that another field `continues`: where its high bits sit,
     /// as (bit offset from this field's start, bit count).
     pub res_continuation: Option<(u32, u32)>,
