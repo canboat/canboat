@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [9.1.0](https://github.com/canboat/canboat/compare/v9.0.0...v9.1.0) (2026-10-24)
+
+
+### Added
+
+* **65294:** BEP Marine 65294 carries a display brightness ([#1092](https://github.com/canboat/canboat/issues/1092)) ([52104bd](https://github.com/canboat/canboat/commit/52104bd07c3bede719af24cb8c5d4494df39c1f0))
+* **decode:** drop the 0 a DSC call adds after an MMSI, keep a geographical area's ([#1100](https://github.com/canboat/canboat/issues/1100)) ([e3b0e18](https://github.com/canboat/canboat/commit/e3b0e18a3eaa6f24242b49adfd9043767a5dd373))
+* **quirk:** mcu006, drive a TimeZero MFD as a Furuno MCU-006 remote ([#1091](https://github.com/canboat/canboat/issues/1091)) ([c5a1d1e](https://github.com/canboat/canboat/commit/c5a1d1e186e034358af0bf0803385124343a463b))
+* **server:** advertise over mDNS as _canboat._tcp ([#1094](https://github.com/canboat/canboat/issues/1094)) ([d10b2ba](https://github.com/canboat/canboat/commit/d10b2bac3afaa2dcf4503708a89bdaba64bddbf2))
+
+
+### Fixed
+
+* **analyzer:** name a matched lookup field by its lookup, as Rust does ([#1097](https://github.com/canboat/canboat/issues/1097)) ([32ad3fe](https://github.com/canboat/canboat/commit/32ad3feeb4ead0abbc98c7c1404ecea85ec7e7a3)), closes [#1083](https://github.com/canboat/canboat/issues/1083)
+* **analyzer:** no signed overflow walking a 64-bit BITLOOKUP ([#1095](https://github.com/canboat/canboat/issues/1095)) ([77373f4](https://github.com/canboat/canboat/commit/77373f4b73f565daa31f222f4f8f1b58cd421d5c))
+* **encode:** write a DECIMAL as digit pairs, not a binary number ([#1096](https://github.com/canboat/canboat/issues/1096)) ([e69b504](https://github.com/canboat/canboat/commit/e69b504e05cc6ffd91daf26b5d9399aedb417c9e))
+* **usb:** say what to try when an FTDI control request stalls ([#1098](https://github.com/canboat/canboat/issues/1098)) ([053ca21](https://github.com/canboat/canboat/commit/053ca211577c26e00a7910f04c2cbd6be3509311)), closes [#1085](https://github.com/canboat/canboat/issues/1085)
+
 ## [9.0.0](https://github.com/canboat/canboat/compare/v8.3.0...v9.0.0) (2026-10-19)
 
 
