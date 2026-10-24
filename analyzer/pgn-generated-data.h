@@ -6069,7 +6069,7 @@ Pgn pgnList[] = {
      {
       {.name = "DSC Format", .camelName = "dscFormat", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_FORMAT, .lookup.name = "DSC_FORMAT"},
       {.name = "DSC Category", .camelName = "dscCategory", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 112, .description = "Distress", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_CATEGORY, .lookup.name = "DSC_CATEGORY"},
-      {.name = "DSC Message Address", .camelName = "dscMessageAddress", .fieldType = "DECIMAL", .size = 40, .resolution = 1.0, .description = "MMSI, Geographic Area or blank", .rangeMin = 0.0, .rangeMax = 9999999999.0},
+      {.name = "DSC Message Address", .camelName = "dscMessageAddress", .fieldType = "DECIMAL", .size = 40, .resolution = 1.0, .description = "MMSI, Geographic Area or blank", .trailingZeroIsDigitOrder = 1, .trailingZeroIsDigitValue = 102, .rangeMin = 0.0, .rangeMax = 9999999999.0},
       {.name = "Nature of Distress", .camelName = "natureOfDistress", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_NATURE, .lookup.name = "DSC_NATURE"},
       {.name = "Subsequent Communication Mode or 2nd Telecommand", .camelName = "subsequentCommunicationModeOr2ndTelecommand", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_SECOND_TELECOMMAND, .lookup.name = "DSC_SECOND_TELECOMMAND"},
       {.name = "Proposed Rx Frequency/Channel", .camelName = "proposedRxFrequencyChannel", .fieldType = "STRING_FIX", .size = 48},
@@ -6105,7 +6105,7 @@ Pgn pgnList[] = {
      {
       {.name = "DSC Format Symbol", .camelName = "dscFormatSymbol", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_FORMAT, .lookup.name = "DSC_FORMAT"},
       {.name = "DSC Category Symbol", .camelName = "dscCategorySymbol", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_CATEGORY, .lookup.name = "DSC_CATEGORY"},
-      {.name = "DSC Message Address", .camelName = "dscMessageAddress", .fieldType = "DECIMAL", .size = 40, .resolution = 1.0, .description = "MMSI, Geographic Area or blank", .rangeMin = 0.0, .rangeMax = 9999999999.0},
+      {.name = "DSC Message Address", .camelName = "dscMessageAddress", .fieldType = "DECIMAL", .size = 40, .resolution = 1.0, .description = "MMSI, Geographic Area or blank", .trailingZeroIsDigitOrder = 1, .trailingZeroIsDigitValue = 102, .rangeMin = 0.0, .rangeMax = 9999999999.0},
       {.name = "1st Telecommand", .camelName = "1stTelecommand", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_FIRST_TELECOMMAND, .lookup.name = "DSC_FIRST_TELECOMMAND"},
       {.name = "Subsequent Communication Mode or 2nd Telecommand", .camelName = "subsequentCommunicationModeOr2ndTelecommand", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDSC_SECOND_TELECOMMAND, .lookup.name = "DSC_SECOND_TELECOMMAND"},
       {.name = "Proposed Rx Frequency/Channel", .camelName = "proposedRxFrequencyChannel", .fieldType = "STRING_FIX", .size = 48},

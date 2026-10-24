@@ -28,6 +28,9 @@ fields:
   name: DSC Message Address
   type: DECIMAL
   bits: 40
+  trailingZeroIsDigit:
+    field: dscFormat
+    value: 102
   description: MMSI, Geographic Area or blank
   rangeMin: 0.0
   rangeMax: 9999999999.0

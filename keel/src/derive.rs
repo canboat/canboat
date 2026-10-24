@@ -390,17 +390,22 @@ fn fill_pgn_list(db: &mut Database, protocol: Protocol) -> Result<(), String> {
             .iter()
             .map(|f| (f.id.as_str(), f.order))
             .collect();
-        let resolved: Vec<Option<u32>> = pgn
+        let resolve = |id: Option<&str>| id.and_then(|id| by_id.get(id).copied());
+        // trailingZeroIsDigit names its field the same way; R44 has the
+        // diagnostics.
+        let resolved: Vec<(Option<u32>, Option<u32>)> = pgn
             .fields
             .iter()
             .map(|f| {
-                f.bit_length_field
-                    .as_deref()
-                    .and_then(|id| by_id.get(id).copied())
+                (
+                    resolve(f.bit_length_field.as_deref()),
+                    resolve(f.trailing_zero_is_digit.as_ref().map(|(id, _)| id.as_str())),
+                )
             })
             .collect();
-        for (f, order) in pgn.fields.iter_mut().zip(resolved) {
-            f.bit_length_field_order = order;
+        for (f, (length, trailing)) in pgn.fields.iter_mut().zip(resolved) {
+            f.bit_length_field_order = length;
+            f.trailing_zero_is_digit_order = trailing;
         }
 
         fill_pgn_length(pgn)?;

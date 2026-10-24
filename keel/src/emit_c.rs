@@ -418,6 +418,12 @@ fn emit_field(db: &Database, f: &Field) -> String {
     if f.proprietary {
         parts.push(".proprietary = true".into());
     }
+    if let (Some(order), Some((_, value))) =
+        (f.trailing_zero_is_digit_order, &f.trailing_zero_is_digit)
+    {
+        parts.push(format!(".trailingZeroIsDigitOrder = {order}"));
+        parts.push(format!(".trailingZeroIsDigitValue = {value}"));
+    }
     // A value split around other fields (R43): extractNumber() joins the
     // high bits in, and printField() skips the field that holds them.
     if let Some((offset, bits)) = f.res_continuation {

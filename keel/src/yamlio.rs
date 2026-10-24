@@ -138,7 +138,7 @@ const PGN_KEYS: [&str; 16] = [
 
 /// One entry of a PGN's `fields:` list. `repeat` is handled a level up, in
 /// `fields_and_repeats`, so it is deliberately absent.
-const FIELD_KEYS: [&str; 26] = [
+const FIELD_KEYS: [&str; 27] = [
     "id",
     "name",
     "spn",
@@ -161,6 +161,7 @@ const FIELD_KEYS: [&str; 26] = [
     "allowLookupWidthMismatch",
     "specialValues",
     "bitLengthField",
+    "trailingZeroIsDigit",
     "dynamicFieldLength",
     "dynamicFieldLengthOverhead",
     "rangeMin",
@@ -168,6 +169,7 @@ const FIELD_KEYS: [&str; 26] = [
 ];
 
 const LOOKUP_INDIRECT_KEYS: [&str; 2] = ["name", "order"];
+const TRAILING_ZERO_IS_DIGIT_KEYS: [&str; 2] = ["field", "value"];
 const SAMPLE_KEYS: [&str; 2] = ["raw", "expects"];
 /// Lookup files. `note` and `valueNotes` are the lookup-level annotations from
 /// `database/REFERENCES.md` - same status as a PGN's `notes`.
@@ -394,6 +396,20 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
     if let Some(li) = get(y, "lookupIndirect") {
         check_keys(li, &LOOKUP_INDIRECT_KEYS, "lookupIndirect", ctx)?;
     }
+    let trailing_zero_is_digit = match get(y, "trailingZeroIsDigit") {
+        Some(t) => {
+            check_keys(t, &TRAILING_ZERO_IS_DIGIT_KEYS, "trailingZeroIsDigit", ctx)?;
+            match (opt_str(t, "field"), opt_i64(t, "value")) {
+                (Some(field), Some(value)) => Some((field, value)),
+                _ => {
+                    return Err(format!(
+                        "{ctx}: trailingZeroIsDigit needs a field id and an integer value"
+                    ));
+                }
+            }
+        }
+        None => None,
+    };
     // match may be an integer or a string; keep the scalar verbatim
     let match_ = get(y, "match").map(|m| match m {
         Yaml::Integer(i) => i.to_string(),
@@ -426,6 +442,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         allow_lookup_width_mismatch: opt_bool(y, "allowLookupWidthMismatch").unwrap_or(false),
         special_values: opt_special_values(y, ctx)?,
         bit_length_field: opt_str(y, "bitLengthField"),
+        trailing_zero_is_digit,
         dynamic_field_length: opt_bool(y, "dynamicFieldLength").unwrap_or(false) || overhead != 0,
         dynamic_field_length_overhead: overhead,
         range_min: opt_f64(y, "rangeMin"),

@@ -78,6 +78,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_match_values(prefix, db, pgn, &mut v); // R13
             check_field_type_overrides(prefix, db, pgn, &mut v); // R14
             check_bit_length_field(prefix, pgn, &mut v); // R15
+            check_trailing_zero_is_digit(prefix, pgn, &mut v); // R44
             check_encoding(prefix, pgn, &mut v); // R41
             check_min_length(prefix, pgn, &mut v); // R16
         }
@@ -947,6 +948,62 @@ fn check_bit_length_field(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
         if t.lookup_ref().is_some() || t.res_resolution != 1.0 || t.res_bits == 0 {
             bad(format!(
                 "field '{}': bitLengthField '{target}' ({}) is not an integer bit-count field",
+                f.id, t.type_
+            ));
+        }
+    }
+}
+
+// R44: a DECIMAL's trailingZeroIsDigit names an earlier field of fixed
+// position whose value says the last digit is a digit, not padding.
+fn check_trailing_zero_is_digit(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
+    for (i, f) in p.fields.iter().enumerate() {
+        let Some((target, _)) = &f.trailing_zero_is_digit else {
+            continue;
+        };
+        let mut bad = |msg: String| {
+            v.push(Violation {
+                rule: "R44",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: msg,
+            })
+        };
+        if f.type_ != "DECIMAL" {
+            bad(format!(
+                "field '{}': trailingZeroIsDigit only applies to a DECIMAL field",
+                f.id
+            ));
+            continue;
+        }
+        let Some(j) = p.fields.iter().position(|o| &o.id == target) else {
+            bad(format!(
+                "field '{}': trailingZeroIsDigit field '{target}' is not a field of this PGN",
+                f.id
+            ));
+            continue;
+        };
+        // Before it, and at a fixed offset: no variable-width field and no
+        // repeating set in front of it, so every decoder finds it by order.
+        let fixed = p.fields[..j].iter().all(|o| o.res_bits != 0)
+            && p.repeating1
+                .as_ref()
+                .is_none_or(|r| r.start as usize > j + 1)
+            && p.repeating2
+                .as_ref()
+                .is_none_or(|r| r.start as usize > j + 1);
+        if j >= i || !fixed {
+            bad(format!(
+                "field '{}': trailingZeroIsDigit field '{target}' must come before it, \
+                 at a fixed position",
+                f.id
+            ));
+            continue;
+        }
+        let t = &p.fields[j];
+        if t.res_resolution != 1.0 || t.res_bits == 0 || t.res_bits > 64 {
+            bad(format!(
+                "field '{}': trailingZeroIsDigit field '{target}' ({}) is not an integer field",
                 f.id, t.type_
             ));
         }

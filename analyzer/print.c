@@ -756,6 +756,10 @@ extern bool fieldPrintDecimal(const Field   *field,
   size_t   n = 0;
   bool     valid = true;
 
+  /* The whole PGN, for the field trailingZeroIsDigit names. */
+  const uint8_t *pgnData    = data;
+  size_t         pgnDataLen = dataLen;
+
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
     return false;
@@ -857,11 +861,21 @@ extern bool fieldPrintDecimal(const Field   *field,
   /*
    * A value with an odd number of digits is sent with a 0 added at the end:
    * a DSC call sends a 9-digit MMSI as ten digits (ITU-R M.585). Drop it,
-   * so the MMSI reads as it does in an MMSI field.
+   * so the MMSI reads as it does in an MMSI field -- unless the field named
+   * by trailingZeroIsDigit says this value's last digit is real, as the ten
+   * digits of a geographical area are.
    */
   if (digits[n - 1] == '0')
   {
-    digits[--n] = '\0';
+    int64_t key;
+    bool    keep = field->trailingZeroIsDigitOrder != 0
+                && extractNumberByOrder(field->pgn, field->trailingZeroIsDigitOrder, pgnData, pgnDataLen, &key)
+                && key == field->trailingZeroIsDigitValue;
+
+    if (!keep)
+    {
+      digits[--n] = '\0';
+    }
   }
 
   /*

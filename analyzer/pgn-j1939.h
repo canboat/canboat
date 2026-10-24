@@ -113,6 +113,10 @@ typedef struct
                                 *    many bits after this field's start. extractNumber() joins them in above this field's bits. */
   uint8_t continuationBits;    /* How many high bits that is; 0 = none. */
   bool    continues;           /* This field holds the high bits of an earlier field's value; it is not printed itself. */
+  uint8_t trailingZeroIsDigitOrder; /* DECIMAL only: when the field with this order (at a fixed position) holds
+                                     *    trailingZeroIsDigitValue, the last digit is part of the value instead of the
+                                     *    0 that pads an odd number of digits. 0 = none. See keel R44. */
+  int64_t trailingZeroIsDigitValue;
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;

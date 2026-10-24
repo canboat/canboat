@@ -467,6 +467,29 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:unsignedByte" name="TrailingZeroIsDigitField" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Only on a DECIMAL field, together with TrailingZeroIsDigitValue:
+            the Order of an earlier field at a fixed position (nothing of
+            variable length and no repeating set before it). A DECIMAL
+            with an odd number of digits is sent with a 0 added at the
+            end, which a decoder drops: a DSC call sends a 9-digit MMSI as
+            ten digits. When the field with this Order holds
+            TrailingZeroIsDigitValue, that last digit is part of the value
+            instead and must be kept. PGN 129808's DSC Message Address is
+            ten digits of geographical area when the DSC Format is 102.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:long" name="TrailingZeroIsDigitValue" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The raw value of the field named by TrailingZeroIsDigitField
+            for which this DECIMAL keeps its last digit.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:boolean" name="BitLengthVariable" minOccurs="0">
         <xs:annotation>
           <xs:documentation>

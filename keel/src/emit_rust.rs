@@ -94,6 +94,8 @@ struct RawField {
     lookup_indirect_enumeration: Option<String>,
     lookup_indirect_enumeration_field_order: Option<u8>,
     lookup_field_type_enumeration: Option<String>,
+    /// (field order, value): see `FieldInfo::trailing_zero_is_digit`.
+    trailing_zero_is_digit: Option<(u8, i64)>,
     match_value: Option<i64>,
     part_of_primary_key: Option<bool>,
     condition: Option<String>,
@@ -609,7 +611,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
          unit:{unit},physical_quantity:{pq},field_type:{ft},\
          lookup_enumeration:{le},lookup_bit_enumeration:{lbe},lookup_indirect_enumeration:{lie},\
          lookup_indirect_enumeration_field_order:{liefo},lookup_field_type_enumeration:{lfte},\
-         match_value:{mv},part_of_primary_key:{popk},condition:{cond},\
+         trailing_zero_is_digit:{tzd},match_value:{mv},part_of_primary_key:{popk},condition:{cond},\
          unit_offset:{unit_offset},precision:{precision},is_dynamic_length_marker:{dlm},\
          dynamic_field_length_overhead:{dflo}}},",
         order = f.order,
@@ -646,6 +648,10 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         lie = opt_str(&f.lookup_indirect_enumeration),
         liefo = opt_int(&f.lookup_indirect_enumeration_field_order),
         lfte = opt_str(&f.lookup_field_type_enumeration),
+        tzd = match f.trailing_zero_is_digit {
+            Some((order, value)) => format!("Some(({order},{value}))"),
+            None => "None".to_string(),
+        },
         mv = opt_int(&f.match_value),
         popk = opt_bool(&f.part_of_primary_key),
         cond = opt_str(&f.condition),
@@ -1150,6 +1156,10 @@ fn raw_field(
         lookup_indirect_enumeration: kind("triplet"),
         lookup_indirect_enumeration_field_order: f.lookup_indirect_order.map(|o| o as u8),
         lookup_field_type_enumeration: kind("fieldtype"),
+        trailing_zero_is_digit: f
+            .trailing_zero_is_digit_order
+            .zip(f.trailing_zero_is_digit.as_ref())
+            .map(|(order, (_, value))| (order as u8, *value)),
         match_value: db.resolve_match(f).map(|v| v as i64),
         part_of_primary_key: f.primary_key.then_some(true),
         condition: f.proprietary.then(|| "PGNIsProprietary".to_string()),

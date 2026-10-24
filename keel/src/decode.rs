@@ -533,7 +533,12 @@ fn decode_bits(
             // Each byte holds a binary 0..99 (NOT BCD), two digits; a
             // trailing 0 pads an odd number of digits and is dropped
             // (mirrors C fieldPrintDecimal).
-            let v = decimal_digits(data, ctx.bit, bits).map_or(Value::Unavailable, Value::Str);
+            let keep = f
+                .trailing_zero_is_digit_order
+                .zip(f.trailing_zero_is_digit.as_ref())
+                .is_some_and(|(order, (_, value))| ctx.by_order.get(&order) == Some(value));
+            let v =
+                decimal_digits(data, ctx.bit, bits, keep).map_or(Value::Unavailable, Value::Str);
             ctx.bit += bits;
             v
         }
@@ -617,9 +622,9 @@ fn decode_bits(
 /// Top-of-range sentinel classification, mirroring the emitter/analyzer
 /// (fieldtype.c reservedCount + explainPGNXML emission conditions).
 /// A DECIMAL's digits, without the trailing 0 that pads an odd number of
-/// them. `None` when not available - all bits set, a byte that is not a
+/// them unless `keep_last` (trailingZeroIsDigit). `None` when not available - all bits set, a byte that is not a
 /// digit pair, or a field the packet ends inside - as C `fieldPrintDecimal`.
-fn decimal_digits(data: &[u8], bit: usize, bits: usize) -> Option<String> {
+fn decimal_digits(data: &[u8], bit: usize, bits: usize, keep_last: bool) -> Option<String> {
     let bytes = (0..bits / 8)
         .map(|i| extract_bits(data, bit + i * 8, 8, false, 0).map(|e| e.raw as u8))
         .collect::<Option<Vec<u8>>>()?;
@@ -627,7 +632,7 @@ fn decimal_digits(data: &[u8], bit: usize, bits: usize) -> Option<String> {
         return None;
     }
     let mut s: String = bytes.iter().map(|b| format!("{b:02}")).collect();
-    if s.ends_with('0') {
+    if s.ends_with('0') && !keep_last {
         s.pop();
     }
     Some(s)

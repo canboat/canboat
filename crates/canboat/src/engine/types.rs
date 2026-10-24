@@ -94,6 +94,12 @@ pub struct FieldInfo {
     pub lookup_indirect_enumeration: Option<&'static str>,
     pub lookup_indirect_enumeration_field_order: Option<u8>,
     pub lookup_field_type_enumeration: Option<&'static str>,
+    /// On a DECIMAL: `(order, value)` of an earlier field at a fixed
+    /// position. When it holds that value, the last digit is part of the
+    /// value instead of the 0 that pads an odd number of digits: PGN
+    /// 129808's address keeps all ten digits in a call to a geographical
+    /// area (DSC Format 102), where elsewhere it is an MMSI and a 0.
+    pub trailing_zero_is_digit: Option<(u8, i64)>,
     /// PGN-variant disambiguation: variants of the same PGN number are
     /// distinguished by required raw field values.
     pub match_value: Option<i64>,
