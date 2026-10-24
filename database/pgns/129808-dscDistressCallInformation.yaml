@@ -16,21 +16,18 @@ fields:
   name: DSC Format
   type: LOOKUP
   bits: 8
+  description: Distress
+  match: 112
   lookup: DSC_FORMAT
 - id: dscCategory
   name: DSC Category
   type: LOOKUP
   bits: 8
-  description: Distress
-  match: 112
   lookup: DSC_CATEGORY
 - id: dscMessageAddress
   name: DSC Message Address
   type: DECIMAL
   bits: 40
-  trailingZeroIsDigit:
-    field: dscFormat
-    value: 102
   description: MMSI, Geographic Area or blank
   rangeMin: 0.0
   rangeMax: 9999999999.0
@@ -127,7 +124,10 @@ notes: |-
   https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf
 
   This is like the worst PGN ever.
-  1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
+  1. The "Nature of Distress or 1st Telecommand' field is the nature of distress only in a distress
+     alert, which has DSC Format 112 (Distress) and carries no category. A distress acknowledgement or
+     relay has DSC Category 112 (Distress) and a 1st telecommand here, with the nature of distress in
+     the 'Subsequent Communication Mode or 2nd Telecommand' field (technical corrigendum, issue 1).
   2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
   3. Field 12 'MMSI of ship in distress' may have multiple interpretations.
   4. Field 22 'DSC expansion field data' depends on field 21 for its meaning.
@@ -159,3 +159,26 @@ samples:
     dscEquipmentAssignedMessageId: ~
     dscExpansionFieldSymbol: "Enhanced position"
     dscExpansionFieldData: "08"
+- raw: "2023-01-01-00:00:00.000,4,129808,99,255,78,70,ff,17,32,4c,27,1e,6d,64,39,30,30,30,36,39,39,30,30,30,36,39,0b,01,31,38,30,30,20,48,65,6c,70,c0,66,4a,e9,80,2c,f3,55,10,fb,cf,24,17,32,4c,27,1e,7f,fd,39,30,30,30,37,30,39,30,30,30,37,30,10,fb,cf,24,eb,4e,ff,ff,68,06,01,49,6f,6e,61"  # from actisense-522.candump.log
+  expects:
+    dscFormat: "Distress"
+    dscCategory: ~
+    dscMessageAddress: "235076393"
+    natureOfDistress: "Piracy"
+    subsequentCommunicationModeOr2ndTelecommand: "No reason given"
+    proposedRxFrequencyChannel: "900069"
+    proposedTxFrequencyChannel: "900069"
+    telephoneNumber: "1800 Help"
+    latitudeOfVesselReported: -38.1000000
+    longitudeOfVesselReported: 144.2000000
+    timeOfPosition: 61761.0000
+    mmsiOfShipInDistress: "235076393"
+    dscEosSymbol: 127
+    expansionEnabled: "Yes"
+    callingRxFrequencyChannel: "900070"
+    callingTxFrequencyChannel: "900070"
+    timeOfReceipt: 61761.0000
+    dateOfReceipt: 20203
+    dscEquipmentAssignedMessageId: ~
+    dscExpansionFieldSymbol: "Additional station identification"
+    dscExpansionFieldData: "Iona"

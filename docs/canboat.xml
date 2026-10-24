@@ -50370,8 +50370,24 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Order>1</Order>
           <Id>dscFormat</Id>
           <Name>DSC Format</Name>
+          <Description>Distress</Description>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>112</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_FORMAT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>dscCategory</Id>
+          <Name>DSC Category</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -50381,22 +50397,6 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>DSC_FORMAT</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>dscCategory</Id>
-          <Name>DSC Category</Name>
-          <Description>Distress</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>112</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>DSC_CATEGORY</LookupEnumeration>
         </Field>
         <Field>
@@ -50404,8 +50404,6 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Id>dscMessageAddress</Id>
           <Name>DSC Message Address</Name>
           <Description>MMSI, Geographic Area or blank</Description>
-          <TrailingZeroIsDigitField>1</TrailingZeroIsDigitField>
-          <TrailingZeroIsDigitValue>102</TrailingZeroIsDigitValue>
           <BitLength>40</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>

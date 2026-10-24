@@ -10,8 +10,9 @@
 # last digit that is not 0 is no padding, so all ten digits stay.
 #
 # Last, a call to a geographical area (DSC Format 102): its ten digits all
-# count, a last 0 too (trailingZeroIsDigit), in the distress definition as
-# well. The same address in an individual call is an MMSI and loses it.
+# count, a last 0 too (trailingZeroIsDigit), also in a distress
+# acknowledgement (DSC Category 112), whose byte 4 is a 1st telecommand.
+# The same address in an individual call is an MMSI and loses it.
 #
 .PHONY: test-decimal
 tests: test-decimal
