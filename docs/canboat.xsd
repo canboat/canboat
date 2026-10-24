@@ -471,8 +471,10 @@ limitations under the License.
         <xs:annotation>
           <xs:documentation>
             Only on a DECIMAL field, together with TrailingZeroIsDigitValue:
-            the Order of an earlier field at a fixed position (nothing of
-            variable length and no repeating set before it). A DECIMAL
+            the Order of an earlier unsigned integer field without
+            resolution or offset, at a fixed position (nothing of variable
+            length, no proprietary field and no repeating set before it),
+            so its raw value is compared. A DECIMAL
             with an odd number of digits is sent with a 0 added at the
             end, which a decoder drops: a DSC call sends a 9-digit MMSI as
             ten digits. When the field with this Order holds

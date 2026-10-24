@@ -625,6 +625,9 @@ fn decode_bits(
 /// them unless `keep_last` (trailingZeroIsDigit). `None` when not available - all bits set, a byte that is not a
 /// digit pair, or a field the packet ends inside - as C `fieldPrintDecimal`.
 fn decimal_digits(data: &[u8], bit: usize, bits: usize, keep_last: bool) -> Option<String> {
+    if bit + bits > data.len() * 8 {
+        return None;
+    }
     let bytes = (0..bits / 8)
         .map(|i| extract_bits(data, bit + i * 8, 8, false, 0).map(|e| e.raw as u8))
         .collect::<Option<Vec<u8>>>()?;

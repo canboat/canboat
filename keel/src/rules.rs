@@ -374,8 +374,10 @@ pub const RULES: &[Rule] = &[
                  the value and stays: PGN 129808's address is ten digits of \
                  geographical area when the DSC Format is 102. Only on a DECIMAL; \
                  the field it names comes before it, at a fixed position (nothing \
-                 of variable width and no repeating set in front of it), and is \
-                 an unscaled integer, so every decoder can read it by order.",
+                 of variable width, no proprietary field and no repeating set in \
+                 front of it), and is an unsigned, unscaled NUMBER or LOOKUP \
+                 without an offset, so every decoder reads it by order and \
+                 compares the same raw value.",
     },
 ];
 
