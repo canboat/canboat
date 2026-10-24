@@ -2,7 +2,7 @@ pgn: 129808
 id: dscCallInformation
 description: DSC Call Information
 type: Fast
-variantOrder: 2
+variantOrder: 3
 priority: 4
 interval: irregular
 missing:

@@ -12686,6 +12686,82 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               Source:
               <a href="https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf">https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf</a></p><h3 id="pgn-129808">0x1FB10:
             PGN 129808
+            - DSC Distress Acknowledgement or Relay</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>DSC Category Symbol</td><td>112</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 60
+            bytes long and contains 22 fields.
+
+            
+        The 2 fields starting at field 
+        21 
+        (with name "DSC Expansion Field Symbol")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      
+              The default priority (as observed in the field) is 4.
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>DSC Format Symbol</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-DSC_FORMAT">DSC_FORMAT</a></td><td/></tr><tr><td>2</td><td>DSC Category Symbol</td><td>112:
+                  Distress</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-DSC_CATEGORY">DSC_CATEGORY</a></td><td/></tr><tr><td>3</td><td>DSC Message Address</td><td>MMSI, Geographic Area or blank</td><td><div class="xs">0 .. 9999999999</div></td><td>40 bits
+                  
+                        unsigned
+                      <a href="#ft-DECIMAL">DECIMAL</a></td><td/></tr><tr><td>4</td><td>1st Telecommand</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-DSC_FIRST_TELECOMMAND">DSC_FIRST_TELECOMMAND</a></td><td/></tr><tr><td>5</td><td>Nature of Distress</td><td>Of the ship in distress; takes the place of the subsequent communication mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-DSC_NATURE">DSC_NATURE</a></td><td/></tr><tr><td>6</td><td>Proposed Rx Frequency/Channel</td><td/><td> </td><td>48 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>7</td><td>Proposed Tx Frequency/Channel</td><td/><td> </td><td>48 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>8</td><td>Telephone Number</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>9</td><td>Latitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Time of Position</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>12</td><td>MMSI of Ship In Distress</td><td/><td><div class="xs">0 .. 9999999999</div></td><td>40 bits
+                  
+                        unsigned
+                      <a href="#ft-DECIMAL">DECIMAL</a></td><td/></tr><tr><td>13</td><td>DSC EOS Symbol</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Expansion Enabled</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>16</td><td>Calling Rx Frequency/Channel</td><td/><td> </td><td>48 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>17</td><td>Calling Tx Frequency/Channel</td><td/><td> </td><td>48 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>18</td><td>Time of Receipt</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>19</td><td>Date of Receipt</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>20</td><td>DSC Equipment Assigned Message ID</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">21<div>Set 1</div></td><td>DSC Expansion Field Symbol</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-DSC_EXPANSION_DATA">DSC_EXPANSION_DATA</a></td><td/></tr><tr><td class="repeating">22<div>Set 1</div></td><td>DSC Expansion Field Data</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf">https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf</a></p><h3 id="pgn-129808">0x1FB10:
+            PGN 129808
             - DSC Call Information</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>

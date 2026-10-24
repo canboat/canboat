@@ -50654,6 +50654,315 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>129808</PGN>
+      <Id>dscDistressAcknowledgementOrRelay</Id>
+      <Description>DSC Distress Acknowledgement or Relay</Description>
+      <Priority>4</Priority>
+      <URL>https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf</URL>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>22</FieldCount>
+      <MinLength>60</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>21</RepeatingFieldSet1StartField>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>dscFormatSymbol</Id>
+          <Name>DSC Format Symbol</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_FORMAT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>dscCategorySymbol</Id>
+          <Name>DSC Category Symbol</Name>
+          <Description>Distress</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>112</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_CATEGORY</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>dscMessageAddress</Id>
+          <Name>DSC Message Address</Name>
+          <Description>MMSI, Geographic Area or blank</Description>
+          <TrailingZeroIsDigitField>1</TrailingZeroIsDigitField>
+          <TrailingZeroIsDigitValue>102</TrailingZeroIsDigitValue>
+          <BitLength>40</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>9999999999</RangeMax>
+          <FieldType>DECIMAL</FieldType>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>1stTelecommand</Id>
+          <Name>1st Telecommand</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_FIRST_TELECOMMAND</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>natureOfDistress</Id>
+          <Name>Nature of Distress</Name>
+          <Description>Of the ship in distress; takes the place of the subsequent communication mode</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_NATURE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>proposedRxFrequencyChannel</Id>
+          <Name>Proposed Rx Frequency/Channel</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>proposedTxFrequencyChannel</Id>
+          <Name>Proposed Tx Frequency/Channel</Name>
+          <BitLength>48</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>telephoneNumber</Id>
+          <Name>Telephone Number</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_LAU</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>latitudeOfVesselReported</Id>
+          <Name>Latitude of Vessel Reported</Name>
+          <BitLength>32</BitLength>
+          <Unit>deg</Unit>
+          <Resolution>1e-07</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-90</RangeMin>
+          <RangeMax>90</RangeMax>
+          <UnknownValue>2147483647</UnknownValue>
+          <OutOfRangeValue>2147483646</OutOfRangeValue>
+          <ReservedValue>2147483645</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>longitudeOfVesselReported</Id>
+          <Name>Longitude of Vessel Reported</Name>
+          <BitLength>32</BitLength>
+          <Unit>deg</Unit>
+          <Resolution>1e-07</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-180</RangeMin>
+          <RangeMax>180</RangeMax>
+          <UnknownValue>2147483647</UnknownValue>
+          <OutOfRangeValue>2147483646</OutOfRangeValue>
+          <ReservedValue>2147483645</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>timeOfPosition</Id>
+          <Name>Time of Position</Name>
+          <Description>Seconds since midnight</Description>
+          <BitLength>32</BitLength>
+          <Unit>s</Unit>
+          <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86401</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>TIME</FieldType>
+          <PhysicalQuantity>TIME</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>mmsiOfShipInDistress</Id>
+          <Name>MMSI of Ship In Distress</Name>
+          <BitLength>40</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>9999999999</RangeMax>
+          <FieldType>DECIMAL</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>dscEosSymbol</Id>
+          <Name>DSC EOS Symbol</Name>
+          <BitLength>8</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>expansionEnabled</Id>
+          <Name>Expansion Enabled</Name>
+          <BitLength>2</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>callingRxFrequencyChannel</Id>
+          <Name>Calling Rx Frequency/Channel</Name>
+          <BitLength>48</BitLength>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>callingTxFrequencyChannel</Id>
+          <Name>Calling Tx Frequency/Channel</Name>
+          <BitLength>48</BitLength>
+          <FieldType>STRING_FIX</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>timeOfReceipt</Id>
+          <Name>Time of Receipt</Name>
+          <Description>Seconds since midnight</Description>
+          <BitLength>32</BitLength>
+          <Unit>s</Unit>
+          <Resolution>0.0001</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>86401</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>TIME</FieldType>
+          <PhysicalQuantity>TIME</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>dateOfReceipt</Id>
+          <Name>Date of Receipt</Name>
+          <BitLength>16</BitLength>
+          <Unit>d</Unit>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>DATE</FieldType>
+          <PhysicalQuantity>DATE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>dscEquipmentAssignedMessageId</Id>
+          <Name>DSC Equipment Assigned Message ID</Name>
+          <BitLength>16</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>dscExpansionFieldSymbol</Id>
+          <Name>DSC Expansion Field Symbol</Name>
+          <BitLength>8</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DSC_EXPANSION_DATA</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>dscExpansionFieldData</Id>
+          <Name>DSC Expansion Field Data</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <FieldType>STRING_LAU</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>129808</PGN>
       <Id>dscCallInformation</Id>
       <Description>DSC Call Information</Description>
       <Priority>4</Priority>

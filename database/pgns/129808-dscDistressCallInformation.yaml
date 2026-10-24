@@ -134,7 +134,8 @@ notes: |-
   5. It contains a variable length field 'Telephone number', which means that bit offsets for subsequent fields
      depend on this field's length.
 
-  We solve #1 here by having two definitions.
+  We solve #1 here by having three definitions: this one for a distress alert, DSC Distress Acknowledgement
+  or Relay for DSC Category 112, and DSC Call Information for any other call.
 samples:
 - raw: "2023-01-01-00:00:00.000,4,129808,3,255,83,70,70,33,14,00,5f,1e,6e,64,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,12,01,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,70,69,80,e7,77,b1,3a,68,c0,a6,c1,04,ff,ff,ff,ff,ff,7f,fd,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,64,0a,01,30,38"  # from pgn129808.raw
   expects:

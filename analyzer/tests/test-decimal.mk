@@ -12,7 +12,8 @@
 # Last, a call to a geographical area (DSC Format 102): its ten digits all
 # count, a last 0 too (trailingZeroIsDigit), also in a distress
 # acknowledgement (DSC Category 112), whose byte 4 is a 1st telecommand.
-# The same address in an individual call is an MMSI and loses it.
+# The same address in an individual call is an MMSI and loses it. The last
+# acknowledgement has the nature of distress in byte 5 (Man overboard).
 #
 .PHONY: test-decimal
 tests: test-decimal
