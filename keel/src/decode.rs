@@ -530,20 +530,12 @@ fn decode_bits(
             }
         }
         "DECIMAL" => {
-            // Each byte holds a binary 0..99 (NOT BCD); concatenate as
-            // two-digit groups, skipping bytes >= 100 (mirrors C
-            // fieldPrintDecimal).
-            let mut s = String::new();
-            for i in 0..(bits / 8) {
-                if let Some(e) = extract_bits(data, ctx.bit + i * 8, 8, false, 0) {
-                    let b = e.raw as u8;
-                    if b < 100 {
-                        s.push_str(&format!("{b:02}"));
-                    }
-                }
-            }
+            // Each byte holds a binary 0..99 (NOT BCD), two digits; a
+            // trailing 0 pads an odd number of digits and is dropped
+            // (mirrors C fieldPrintDecimal).
+            let v = decimal_digits(data, ctx.bit, bits).map_or(Value::Unavailable, Value::Str);
             ctx.bit += bits;
-            Value::Str(s)
+            v
         }
         "FLOAT" => {
             // 32-bit IEEE-754, no resolution scaling; NaN = unavailable
@@ -624,6 +616,23 @@ fn decode_bits(
 
 /// Top-of-range sentinel classification, mirroring the emitter/analyzer
 /// (fieldtype.c reservedCount + explainPGNXML emission conditions).
+/// A DECIMAL's digits, without the trailing 0 that pads an odd number of
+/// them. `None` when not available - all bits set, a byte that is not a
+/// digit pair, or a field the packet ends inside - as C `fieldPrintDecimal`.
+fn decimal_digits(data: &[u8], bit: usize, bits: usize) -> Option<String> {
+    let bytes = (0..bits / 8)
+        .map(|i| extract_bits(data, bit + i * 8, 8, false, 0).map(|e| e.raw as u8))
+        .collect::<Option<Vec<u8>>>()?;
+    if bytes.is_empty() || bytes.iter().all(|&b| b == 0xff) || bytes.iter().any(|&b| b >= 100) {
+        return None;
+    }
+    let mut s: String = bytes.iter().map(|b| format!("{b:02}")).collect();
+    if s.ends_with('0') {
+        s.pop();
+    }
+    Some(s)
+}
+
 /// Display decimals for a resolution, like the C printers: enough digits
 /// to show the resolution's granularity, none for integer resolutions.
 fn decimals_for(resolution: f64) -> u8 {

@@ -855,6 +855,16 @@ extern bool fieldPrintDecimal(const Field   *field,
   }
 
   /*
+   * A value with an odd number of digits is sent with a 0 added at the end:
+   * a DSC call sends a 9-digit MMSI as ten digits (ITU-R M.585). Drop it,
+   * so the MMSI reads as it does in an MMSI field.
+   */
+  if (digits[n - 1] == '0')
+  {
+    digits[--n] = '\0';
+  }
+
+  /*
    * The digit pairs are text, not a number: a DSC address such as 060173
    * keeps its leading zero, and printed bare it is not valid JSON at all.
    * Quote it in JSON, as an MMSI is.

@@ -1795,7 +1795,7 @@ fn decode_iso_name(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDataba
 /// DECIMAL: each group of 8 bits is one decimal *pair*, printed as two
 /// digits — canboat's `fieldPrintDecimal` (print.c). A DSC address of
 /// `33 14 00 5F 1E` reads 5120009530, not the 40-bit integer those
-/// bytes spell.
+/// bytes spell, and that is MMSI 512000953 with the 0 that pads it.
 ///
 /// A byte that is not a valid pair (>= 100) is dropped, as the C drops
 /// it. All bits set is "not available": that is the universal canboat
@@ -1851,6 +1851,12 @@ fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     }
     if out.is_empty() {
         return FieldValue::NotAvailable;
+    }
+    // A value with an odd number of digits is sent with a 0 added at the
+    // end: a DSC call sends a 9-digit MMSI as ten digits (ITU-R M.585).
+    // Drop it, so the MMSI reads as it does in an MMSI field.
+    if out.ends_with('0') {
+        out.pop();
     }
     FieldValue::Decimal(out)
 }
@@ -2811,7 +2817,8 @@ mod tests {
     fn decimal_is_digit_pairs_and_all_ones_is_absent() {
         // samples/pgn129808.raw. A DSC address is five bytes, each one
         // a *decimal pair*: 0x33 0x14 0x00 0x5F 0x1E reads 5120009530,
-        // not the 40-bit integer 130442859571 those bytes spell. And
+        // not the 40-bit integer 130442859571 those bytes spell, and that
+        // is MMSI 512000953 with the 0 DSC adds (ITU-R M.585). And
         // this call's `MMSI of Ship In Distress` is all ones — absent.
         let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
             0x70, 0x70, 0x33, 0x14, 0x00, 0x5f, 0x1e, 0x6e, 0x64, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -2834,7 +2841,7 @@ mod tests {
             .find(|f| f.info.name == "DSC Message Address")
             .expect("a DSC Message Address");
         match &addr.value {
-            FieldValue::Decimal(d) => assert_eq!(d, "5120009530"),
+            FieldValue::Decimal(d) => assert_eq!(d, "512000953"),
             other => panic!("expected decimal digits, got {other:?}"),
         }
 

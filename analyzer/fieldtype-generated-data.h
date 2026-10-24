@@ -202,7 +202,7 @@ FieldType fieldTypeList[] = {
 
     {.name = "DECIMAL",
      .description = "An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)",
-     .encodingDescription = "Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes). A byte that is not a digit pair (above 99), or a field the packet ends inside, makes the whole value not available.",
+     .encodingDescription = "Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes), as a DSC call sends it (ITU-R M.585); a trailing zero is taken as that padding and dropped, so it decodes as 512000953, the same as an MMSI field. The leading zeros of a group (0MIDXXXXX) or coast station (00MIDXXXX) MMSI are part of it and stay. A byte that is not a digit pair (above 99), or a field the packet ends inside, makes the whole value not available.",
      .hasSign = False,
      .pf = fieldPrintDecimal},
 

@@ -5,6 +5,10 @@
 # byte that is not a digit pair (0xab), and one the packet ends inside. Only
 # the first has a value; the others are not available, not a shorter number.
 #
+# Then the 0 a DSC call adds after a 9-digit MMSI: 2440608070 is MMSI
+# 244060807, as AIS gives it; a coast station keeps its leading zeros; and a
+# last digit that is not 0 is no padding, so all ten digits stay.
+#
 .PHONY: test-decimal
 tests: test-decimal
 test-decimal:
