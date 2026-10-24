@@ -600,6 +600,15 @@ int main(int argc, char **argv)
 
     if (r == 0)
     {
+      // A record without a timestamp (canboat format-message writes an
+      // empty first field) gets the receive time, or -fixtime's string,
+      // as the Rust analyzer does.
+      if (m.timestamp[0] == '\0')
+      {
+        char now[DATE_LENGTH];
+
+        snprintf(m.timestamp, sizeof(m.timestamp), "%s", fmtNow(now));
+      }
       if (isMsgAllowed(&m))
       {
         printCanFormat(&m);
