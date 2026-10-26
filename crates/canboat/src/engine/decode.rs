@@ -1459,6 +1459,9 @@ fn decode_variable(
         bit_offset,
         &mut sub_ctx,
     )?;
+    // A target the walk leaves out (one the payload ends inside) leaves
+    // out the VARIABLE field that carries it, as canboat C does.
+    ctx.skip_field |= sub_ctx.skip_field;
     // canboat rounds the VARIABLE field's consumption UP to whole
     // bytes — `*bits = (*bits + 7) & ~0x07` in `fieldPrintVariable`.
     // Without this, Set2 in PGN 126208 Read Fields lands 5 bits early
@@ -2923,6 +2926,26 @@ mod tests {
             FieldValue::Pgn { value, .. } => assert_eq!(*value, 65555),
             other => panic!("expected a PGN, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn a_variable_value_the_payload_ends_inside_is_left_out() {
+        // A Command for 129026's parameter 4, the 16-bit COG, with one byte
+        // of it: the parameter stays, its value is left out, as in C.
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 126208,
+            src: 1,
+            dst: 2,
+            data: smallvec::smallvec![0x01, 0x02, 0xf8, 0x01, 0xf8, 0x01, 0x04, 0x10],
+        };
+        let dec = db().decode(&frame).expect("decode");
+        assert!(dec.fields.iter().any(|f| f.info.name == "Parameter"));
+        assert!(
+            dec.fields.iter().all(|f| f.info.name != "Value"),
+            "a cut-off value is left out"
+        );
     }
 
     #[test]

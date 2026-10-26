@@ -1476,12 +1476,12 @@ static bool printField(const Field   *field,
   // A fixed-width field the payload ends inside has no value: the bits that arrived are not the
   // number that was sent (a 32-bit longitude cut to 24 bits reads as another longitude). Binary
   // data and strings are read as far as they go, as Navico's 130821 sends only the text it has.
-  if (field->size != 0 && *bits < field->size && field->ft != NULL && field->ft->pf != fieldPrintBinary
-      && field->ft->pf != fieldPrintStringFix && field->ft->pf != fieldPrintStringLZ
-      && field->ft->pf != fieldPrintStringLAU && field->ft->pf != fieldPrintVariable
-      && field->ft->pf != fieldPrintKeyValue)
+  if (field->size != 0 && field->size > dataLen * 8 - CB_MIN(startBit, dataLen * 8) && field->ft != NULL
+      && field->ft->pf != fieldPrintBinary && field->ft->pf != fieldPrintStringFix && field->ft->pf != fieldPrintStringLZ
+      && field->ft->pf != fieldPrintStringLAU && field->ft->pf != fieldPrintVariable && field->ft->pf != fieldPrintKeyValue)
   {
     logDebug("PGN %u: printField <%s>: the payload ends inside it, skipping\n", field->pgn->pgn, field->name);
+    g_skip = true; // not printed, also when this is a VARIABLE field's target
     return true;
   }
 

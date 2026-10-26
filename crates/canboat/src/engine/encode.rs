@@ -1758,12 +1758,8 @@ mod tests {
         short.data.truncate(3);
         let decoded = db.decode(&short).unwrap();
         assert!(
-            decoded
-                .fields
-                .iter()
-                .filter(|f| f.id() == "spn")
-                .all(|f| f.value.is_not_available()),
-            "a cut-off SPN has no value"
+            decoded.fields.iter().all(|f| f.id() != "spn"),
+            "a cut-off SPN is left out"
         );
 
         // A name from the SPN lookup encodes as its number.
