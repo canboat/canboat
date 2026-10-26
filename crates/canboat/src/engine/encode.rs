@@ -1752,22 +1752,18 @@ mod tests {
         ));
         assert!(decoded.fields.iter().all(|f| f.id() != "spnHigh"));
 
-        // Cut short inside the low SPN bits: no join from a partial read,
-        // so the SPN is the one byte that is there, as the C decodes it.
+        // Cut short inside the low SPN bits: the byte that is there is not
+        // the SPN, so there is none, as the C decodes it.
         let mut short = frame.clone();
         short.data.truncate(3);
         let decoded = db.decode(&short).unwrap();
-        let spn = decoded.fields.iter().find(|f| f.id() == "spn").unwrap();
         assert!(
-            matches!(
-                spn.value,
-                FieldValue::Lookup {
-                    value: 0,
-                    name: None
-                }
-            ),
-            "{:?}",
-            spn.value
+            decoded
+                .fields
+                .iter()
+                .filter(|f| f.id() == "spn")
+                .all(|f| f.value.is_not_available()),
+            "a cut-off SPN has no value"
         );
 
         // A name from the SPN lookup encodes as its number.
