@@ -1060,21 +1060,20 @@ fn decode_one_field_at(
 
     let bit_length = f.bit_length?;
 
-    // A fixed-width field the payload ends inside has no value: the bits
-    // that arrived are not the number that was sent (a 32-bit longitude
-    // cut to 24 bits reads as another longitude), so it is left out, as
-    // canboat C does. Binary data and fixed strings are read as far as
+    // A fixed-width field the payload ends inside, or before, has no
+    // value: the bits that arrived are not the number that was sent (a
+    // 32-bit longitude cut to 24 bits reads as another longitude), so it
+    // is left out, as canboat C does. Binary data and fixed strings are read as far as
     // they go, as Navico's 130821 sends only the text it has.
     let total = data.len() as u32 * 8;
-    if bit_offset < total
-        && bit_offset + bit_length > total
+    if bit_offset.saturating_add(bit_length) > total
         && !matches!(
             f.field_type,
             Some(FieldType::Binary | FieldType::StringFix | FieldType::StringLz)
         )
     {
         ctx.skip_field = true;
-        let avail = total - bit_offset;
+        let avail = total.saturating_sub(bit_offset);
         return Some((
             DecodedField {
                 info: f,
