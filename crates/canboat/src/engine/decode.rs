@@ -1984,15 +1984,10 @@ fn decode_pgn_field(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDatab
     let Some(ex) = extract_bits(data, bit_offset as usize, 24, false, 0) else {
         return FieldValue::NotAvailable;
     };
-    let raw = ex.value as u32;
-    // PDU1 (PF < 240): low byte of the PGN is the destination address,
-    // so it's masked out. PDU2: low byte is the PS and part of the PGN.
-    let pf = (raw >> 8) & 0xff;
-    let pgn = if pf < 240 {
-        raw & 0x00ff_ff00
-    } else {
-        raw & 0x00ff_ffff
-    };
+    // The PGN as the sender wrote it, as canboat C prints it. A PDU1 PGN
+    // has its destination in the low byte of the CAN ID, not here, so a
+    // nonzero low byte is what was sent and is kept rather than hidden.
+    let pgn = ex.value as u32;
     // canboat only emits a name for the PGN field when there's
     // unambiguously one variant *without* `Match` constraints — that
     // is, the PGN number alone is enough to identify the message. PGN
@@ -2873,6 +2868,31 @@ mod tests {
         match address(120, 108) {
             FieldValue::Decimal(d) => assert_eq!(d, "152004051"),
             other => panic!("expected nine digits, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_pgn_field_is_the_pgn_as_sent() {
+        // A Request group function for 0x010013: PF 0x00 makes it PDU1,
+        // but a PGN in the payload carries no destination, so its low byte
+        // is what the sender wrote and stays, as canboat C prints it.
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 126208,
+            src: 29,
+            dst: 255,
+            data: smallvec::smallvec![0x00, 0x13, 0x00, 0x01, 0xff, 0x01, 0xff, 0xff],
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let pgn = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "PGN")
+            .expect("a PGN field");
+        match &pgn.value {
+            FieldValue::Pgn { value, .. } => assert_eq!(*value, 65555),
+            other => panic!("expected a PGN, got {other:?}"),
         }
     }
 
