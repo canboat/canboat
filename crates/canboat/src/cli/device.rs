@@ -240,9 +240,11 @@ pub struct DeviceArgs {
         value_parser = |s: &str| PCodeRequest::parse(s),
         help = help::only_help(Setting::PCode, "read (get) or set (PORT=on|off,...) the P-Codes per port."),
         long_help = format!(
-            "{}
-
-With P-Codes on, the gateway sends `Actisense: System status` about once a              second, which gives the network status (PGN 262400) its bus load and error count.              `get` only reads the setting and logs it; `PORT=on|off` reads it, then writes the              ports that differ (the gateway saves it in EEPROM; nothing is written when it              already holds it).",
+            "{}\n\nWith P-Codes on, the gateway sends `Actisense: System status` about once a \
+             second, which gives the network status (PGN 262400) its bus load and error count. \
+             `get` only reads the setting and logs it; `PORT=on|off` reads it, then writes the \
+             ports that differ (the gateway saves it in EEPROM; nothing is written when it \
+             already holds it).",
             help::only_help(Setting::PCode, "read (get) or set (PORT=on|off,...) the P-Codes per port.")
         ),
         help_heading = SPECIFIC
