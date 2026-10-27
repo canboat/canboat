@@ -740,12 +740,13 @@ fn decode_fields(
             && (f.order as u32) == start
         {
             // Only mark as "entered" if the start field is
-            // actually within the payload — canboat C's main
-            // loop stops once `startBit >> 3 >= length`, so a
-            // truncated PGN payload never reaches the start
-            // field and never emits the list opener.
+            // actually within the payload, and whole — canboat C's main
+            // loop stops once `startBit >> 3 >= length`, and does not
+            // open a list whose first field the payload ends inside,
+            // so neither emits the list opener.
             let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            if (bit_offset as usize) < data.len() * 8 {
+            let total = data.len() as u32 * 8;
+            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
                 entered[0] = true;
             }
             cursor_bits = decode_repeating(
@@ -768,7 +769,8 @@ fn decode_fields(
             && (f.order as u32) == start
         {
             let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            if (bit_offset as usize) < data.len() * 8 {
+            let total = data.len() as u32 * 8;
+            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
                 entered[1] = true;
             }
             cursor_bits = decode_repeating(
@@ -1065,18 +1067,8 @@ fn decode_one_field_at(
     // 32-bit longitude cut to 24 bits reads as another longitude), so it
     // is left out, as canboat C does. Binary data and fixed strings are read as far as
     // they go, as Navico's 130821 sends only the text it has.
-    // A value whose high bits sit further on (a J1939 DTC's SPN) is only
-    // whole with those bits too.
     let total = data.len() as u32 * 8;
-    let whole = f.continuation.map_or(bit_length, |c| {
-        bit_length.max(c.bit_offset.saturating_add(c.bit_length))
-    });
-    if bit_offset.saturating_add(whole) > total
-        && !matches!(
-            f.field_type,
-            Some(FieldType::Binary | FieldType::StringFix | FieldType::StringLz)
-        )
-    {
+    if is_cut_short(f, bit_offset, total) {
         ctx.skip_field = true;
         let avail = total.saturating_sub(bit_offset);
         return Some((
@@ -1113,6 +1105,24 @@ fn decode_one_field_at(
     };
     let value = decode_scalar(f, info, data, db, at, width, signed, offset_k, ctx);
     finish_scalar(f, value, bit_offset, bit_length, ctx)
+}
+
+/// True when the payload (`total` bits) ends inside, or before, the
+/// fixed-width field `f` at `bit_offset`, or before the high bits that
+/// continue it (a J1939 DTC's SPN). Binary data and fixed strings are
+/// read as far as they go, so they are never cut short.
+fn is_cut_short(f: &FieldInfo, bit_offset: u32, total: u32) -> bool {
+    let Some(bit_length) = f.bit_length else {
+        return false;
+    };
+    let whole = f.continuation.map_or(bit_length, |c| {
+        bit_length.max(c.bit_offset.saturating_add(c.bit_length))
+    });
+    bit_offset.saturating_add(whole) > total
+        && !matches!(
+            f.field_type,
+            Some(FieldType::Binary | FieldType::StringFix | FieldType::StringLz)
+        )
 }
 
 /// The value of a field with a [`FieldInfo::continuation`]: its own
@@ -2965,12 +2975,18 @@ mod tests {
             data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00, 0x03, 0x01, 0xc8, 0x00],
         };
         let dec = db.decode(&frame).expect("decode");
-        let spns = dec
-            .fields
-            .iter()
-            .filter(|f| f.info.name == "SPN" && !matches!(f.value, FieldValue::NotAvailable))
-            .count();
-        assert_eq!(spns, 1, "only the whole DTC's SPN");
+        let spns: Vec<_> = dec.fields.iter().filter(|f| f.info.name == "SPN").collect();
+        assert_eq!(spns.len(), 1, "only the whole DTC's SPN");
+        assert_eq!(spns[0].repeat_index, Some(0), "the first DTC's");
+
+        // With the first DTC cut the same way there is no list at all.
+        let frame = RawFrame {
+            data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00],
+            ..frame
+        };
+        let dec = db.decode(&frame).expect("decode");
+        assert!(dec.fields.iter().all(|f| f.info.name != "SPN"));
+        assert_eq!(dec.has_repeating_set, [false, false], "no list");
     }
 
     #[test]
