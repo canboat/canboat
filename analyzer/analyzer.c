@@ -1396,6 +1396,24 @@ static void fillGlobalsBasedOnField(const Field *field, const uint8_t *data, siz
   }
 }
 
+/*
+ * A fixed-width field the payload ends inside has no value: the bits that arrived are not the
+ * number that was sent (a 32-bit longitude cut to 24 bits reads as another longitude). Binary
+ * data and strings are read as far as they go, as Navico's 130821 sends only the text it has.
+ */
+static bool fieldIsCutShort(const Field *field, size_t dataLen, size_t startBit)
+{
+  size_t width = (field->size != 0) ? field->size : (field->ft != NULL ? field->ft->size : 0);
+
+  if (width == 0 || width <= dataLen * 8 - CB_MIN(startBit, dataLen * 8) || field->ft == NULL)
+  {
+    return false;
+  }
+  return field->ft->pf != fieldPrintBinary && field->ft->pf != fieldPrintStringFix
+         && field->ft->pf != fieldPrintStringLZ && field->ft->pf != fieldPrintStringLAU
+         && field->ft->pf != fieldPrintVariable && field->ft->pf != fieldPrintKeyValue;
+}
+
 static bool printField(const Field   *field,
                        const char    *fieldName,
                        const uint8_t *data,
@@ -1473,14 +1491,7 @@ static bool printField(const Field   *field,
     }
   }
 
-  // A fixed-width field the payload ends inside has no value: the bits that arrived are not the
-  // number that was sent (a 32-bit longitude cut to 24 bits reads as another longitude). Binary
-  // data and strings are read as far as they go, as Navico's 130821 sends only the text it has.
-  size_t width = (field->size != 0) ? field->size : (field->ft != NULL ? field->ft->size : 0);
-
-  if (width != 0 && width > dataLen * 8 - CB_MIN(startBit, dataLen * 8) && field->ft != NULL
-      && field->ft->pf != fieldPrintBinary && field->ft->pf != fieldPrintStringFix && field->ft->pf != fieldPrintStringLZ
-      && field->ft->pf != fieldPrintStringLAU && field->ft->pf != fieldPrintVariable && field->ft->pf != fieldPrintKeyValue)
+  if (fieldIsCutShort(field, dataLen, startBit))
   {
     logDebug("PGN %u: printField <%s>: the payload ends inside it, skipping\n", field->pgn->pgn, field->name);
     g_skip = true; // not printed, also when this is a VARIABLE field's target
@@ -1750,6 +1761,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
     {
+      if (fieldIsCutShort(field, length, startBit))
+      {
+        break; // no list item to open
+      }
       if (showJson)
       {
         mprintf("%s\"list\":[{", getSep());
@@ -1764,6 +1779,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
     }
     if (pgn->repeatingCount2 > 0 && field->order == pgn->repeatingStart2 && repetition == 0)
     {
+      if (fieldIsCutShort(field, length, startBit))
+      {
+        break;
+      }
       if (showJson)
       {
         mprintf("}],\"list2\":[{");
@@ -1782,6 +1801,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       {
         i     = variableFieldStart - 1;
         field = &pgn->fieldList[i];
+        if (fieldIsCutShort(field, length, startBit))
+        {
+          break; // the payload ends inside the next item's first field: leave the item out
+        }
         repetition++;
         if (showJson)
         {

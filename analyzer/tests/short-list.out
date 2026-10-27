@@ -1,0 +1,2 @@
+{"timestamp":"2026-10-27T10:00:00.000Z","prio":6,"src":1,"dst":255,"pgn":126464,"description":"PGN List (Transmit and Receive)","fields":{"Function Code":"Transmit PGN list","list":[{"PGN":60928},{"PGN":129029}]}}
+{"timestamp":"2026-10-27T10:00:00.001Z","prio":6,"src":1,"dst":255,"pgn":126464,"description":"PGN List (Transmit and Receive)","fields":{"Function Code":"Transmit PGN list","list":[{"PGN":60928},{"PGN":129029},{"PGN":131087}]}}
