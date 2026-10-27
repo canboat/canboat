@@ -8,3 +8,5 @@ tests: test-short-list
 test-short-list:
 	$(ANALYZER) < short-list.in > $(TEMPDIR)/short-list.out -json -q -fixtime short-list
 	diff $(TEMPDIR)/short-list.out short-list.out
+	$(ANALYZER_J1939) < short-list-j1939.in > $(TEMPDIR)/short-list-j1939.out -json -q -fixtime short-list
+	diff $(TEMPDIR)/short-list-j1939.out short-list-j1939.out

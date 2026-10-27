@@ -1404,8 +1404,14 @@ static void fillGlobalsBasedOnField(const Field *field, const uint8_t *data, siz
 static bool fieldIsCutShort(const Field *field, size_t dataLen, size_t startBit)
 {
   size_t width = (field->size != 0) ? field->size : (field->ft != NULL ? field->ft->size : 0);
+  size_t avail = dataLen * 8 - CB_MIN(startBit, dataLen * 8);
 
-  if (width == 0 || width <= dataLen * 8 - CB_MIN(startBit, dataLen * 8) || field->ft == NULL)
+  // A value whose high bits sit further on (a J1939 DTC's SPN) is only whole with those bits too.
+  if (width != 0 && field->continuationBits != 0)
+  {
+    width = CB_MAX(width, (size_t) field->continuationOffset + field->continuationBits);
+  }
+  if (width == 0 || width <= avail || field->ft == NULL)
   {
     return false;
   }

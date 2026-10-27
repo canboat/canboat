@@ -1065,8 +1065,13 @@ fn decode_one_field_at(
     // 32-bit longitude cut to 24 bits reads as another longitude), so it
     // is left out, as canboat C does. Binary data and fixed strings are read as far as
     // they go, as Navico's 130821 sends only the text it has.
+    // A value whose high bits sit further on (a J1939 DTC's SPN) is only
+    // whole with those bits too.
     let total = data.len() as u32 * 8;
-    if bit_offset.saturating_add(bit_length) > total
+    let whole = f.continuation.map_or(bit_length, |c| {
+        bit_length.max(c.bit_offset.saturating_add(c.bit_length))
+    });
+    if bit_offset.saturating_add(whole) > total
         && !matches!(
             f.field_type,
             Some(FieldType::Binary | FieldType::StringFix | FieldType::StringLz)
@@ -1112,10 +1117,9 @@ fn decode_one_field_at(
 
 /// The value of a field with a [`FieldInfo::continuation`]: its own
 /// `bit_length` bits with the continuing bits above them, and the width of
-/// the two together. `None` when the field has no continuation, or when
-/// either part lies beyond the payload — the field then reads as its own
-/// bits alone, as a decoder without the attribute would read it (and as
-/// the C analyzer does).
+/// the two together. `None` when the field has no continuation; a field
+/// whose high bits lie beyond the payload is left out before this is
+/// reached, as the C analyzer does.
 fn join_continuation(
     f: &FieldInfo,
     data: &[u8],
@@ -2945,6 +2949,28 @@ mod tests {
             dec.fields.iter().all(|f| f.info.name != "Value"),
             "a cut-off value is left out"
         );
+    }
+
+    #[test]
+    fn a_split_value_without_its_high_bits_is_left_out() {
+        // A DM1 whose second DTC ends after the SPN's low 16 bits: its 3
+        // high bits are missing, so that SPN is left out, as in C.
+        let db = PgnDatabase::embedded_j1939(crate::engine::Units::Si);
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn: 65226,
+            src: 0,
+            dst: 255,
+            data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00, 0x03, 0x01, 0xc8, 0x00],
+        };
+        let dec = db.decode(&frame).expect("decode");
+        let spns = dec
+            .fields
+            .iter()
+            .filter(|f| f.info.name == "SPN" && !matches!(f.value, FieldValue::NotAvailable))
+            .count();
+        assert_eq!(spns, 1, "only the whole DTC's SPN");
     }
 
     #[test]
