@@ -23,6 +23,7 @@ const OPTIONS: &[(&str, Setting)] = &[
     ("--bitrate", Setting::Bitrate),
     ("--channel", Setting::Channel),
     ("--mode", Setting::Mode),
+    ("--pcode", Setting::PCode),
     ("--password", Setting::Password),
     ("--no-tx-rate-limit", Setting::NoTxRateLimit),
     ("--ignore-checksum", Setting::IgnoreChecksum),

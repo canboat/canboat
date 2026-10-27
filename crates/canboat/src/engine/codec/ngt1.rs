@@ -37,6 +37,11 @@
 //! sent all the same, and dropped by the gateway, so the first of each is
 //! warned about.
 //!
+//! With [`Config::pcode`] it then reads the gateway's P-Code output per
+//! port, and sets the ports named (see [`super::ngt1_pcode`]): with
+//! P-Codes on the gateway sends `Actisense: System status`, the source of
+//! the network status's bus load and error count.
+//!
 //! A gateway that answers no BEM command within [`PROBE_AFTER_MS`] is asked
 //! whether it is an Across Ocean Systems simulator ([`crate::engine::format::aos`]),
 //! which speaks this framing too. One that says so is logged, nothing more
@@ -57,6 +62,7 @@ use crate::engine::format::ngt1::{
 };
 use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
+use super::ngt1_pcode::{PCodeRequest, PCodeSync};
 use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
 use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
 use crate::engine::format_iso_ms;
@@ -116,6 +122,11 @@ pub struct Config {
     /// one across reconnects (clone the `Arc` into each session's
     /// `Config`), so a reconnect does not write again what is known.
     pub tx_list_record: Arc<Mutex<TxListRecord>>,
+    /// Read the gateway's P-Code output per port, and set the ports named
+    /// (see [`super::ngt1_pcode`]); `None` (the default) leaves it alone.
+    /// With P-Codes on the gateway sends `Actisense: System status`, which
+    /// gives the network status its bus load and error count.
+    pub pcode: Option<PCodeRequest>,
 }
 
 impl Default for Config {
@@ -125,6 +136,7 @@ impl Default for Config {
             pgn_lists: PgnLists::default(),
             extra_tx_pgns: Vec::new(),
             tx_list_record: Arc::default(),
+            pcode: None,
         }
     }
 }
@@ -167,6 +179,8 @@ pub struct Ngt1 {
     net: NetworkStatusState,
     /// Brings the gateway's Transmit PGN Enable list up to date.
     tx_list: TxListSync,
+    /// Reads, and if asked sets, the gateway's P-Codes.
+    pcode: PCodeSync,
     gate: Option<TxGate>,
     /// The operating mode to set.
     mode: OperatingMode,
@@ -246,6 +260,7 @@ impl Ngt1 {
                 errors: None,
             },
             tx_list: TxListSync::new(tx_pgns, config.tx_list_record.clone()),
+            pcode: PCodeSync::new(config.pcode.clone()),
             gate: TxGate::new("ngt1", &config.pgn_lists.tx, &config.extra_tx_pgns),
             mode: config.operating_mode,
             reported_mode: None,
@@ -322,6 +337,7 @@ impl Ngt1 {
                 info.firmware_version
             );
             self.tx_list.abandon();
+            self.pcode = PCodeSync::new(None);
             self.gate = None;
             self.aos = Some(info);
             self.probe = Probe::Done;
@@ -377,6 +393,7 @@ impl Ngt1 {
         let Some(response) = BemResponse::parse(payload) else {
             return;
         };
+        send_all(events, self.pcode.on_response(&response, now_ms));
         match response.bem {
             BEM_OPERATING_MODE => self.on_operating_mode(&response),
             BEM_PRODUCT_INFO => {
@@ -408,6 +425,7 @@ impl Ngt1 {
                 self.reported_mode = None;
                 self.product_info = ProductInfo::default();
                 self.tx_list.restart();
+                self.pcode.restart();
                 // Product Info first, as in `open`.
                 events.push(Event::Send(encode_get_product_info()));
                 events.push(Event::Send(encode_set_operating_mode(self.mode)));
@@ -599,6 +617,12 @@ impl Codec for Ngt1 {
         }
         if !self.tx_list.is_done() {
             send_all(events, self.tx_list.on_tick(now_ms));
+        }
+        if !self.pcode.is_done() {
+            // after the transmit list, so its reads and writes are not
+            // in the way, and never in the hold after Set Operating Mode
+            let ready = self.bem_seen && self.settle == Settle::Settled && self.tx_list.is_done();
+            send_all(events, self.pcode.on_tick(now_ms, ready));
         }
     }
 
@@ -1302,5 +1326,92 @@ mod aos_probe_tests {
         assert_eq!(probes(&events), 1);
         assert_eq!(d.probe, Probe::Done);
         assert!(d.aos().is_none());
+    }
+}
+
+#[cfg(test)]
+mod pcode_tests {
+    use super::*;
+    use crate::engine::format::ngt1::{NGT_MSG_SEND, encode_ngt_message};
+
+    const NOW: u64 = 1_780_082_164_826;
+
+    fn sent(events: &[Event]) -> Vec<Vec<u8>> {
+        events
+            .iter()
+            .filter_map(|e| match e {
+                Event::Send(b) => {
+                    let mut d = Ngt1Decoder::new();
+                    match &d.push_bytes(b)[..] {
+                        [NgtEvent::Message(m)] if m.command == NGT_MSG_SEND => {
+                            Some(m.payload.clone())
+                        }
+                        _ => None,
+                    }
+                }
+                _ => None,
+            })
+            .collect()
+    }
+
+    fn bem(bem: u8, data: &[u8]) -> Vec<u8> {
+        let mut payload = vec![bem, 0, 0x0e, 0x00];
+        payload.extend_from_slice(&1234u32.to_le_bytes());
+        payload.extend_from_slice(&0i32.to_le_bytes());
+        payload.extend_from_slice(data);
+        let mut wire = Vec::new();
+        encode_ngt_message(NGT_MSG_RECEIVED, &payload, &mut wire);
+        wire
+    }
+
+    fn with_pcode(request: &str) -> Ngt1 {
+        let mut d = Ngt1::new(Config {
+            pcode: Some(PCodeRequest::parse(request).unwrap()),
+            ..Default::default()
+        });
+        d.tx_list.abandon();
+        d
+    }
+
+    /// Not before the gateway has answered a BEM command and the hold
+    /// after Set Operating Mode is over; then Get, and Set for a port that
+    /// differs.
+    #[test]
+    fn reads_then_sets_once_the_gateway_is_set_up() {
+        let mut d = with_pcode("1=on");
+        d.open();
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        assert!(sent(&events).is_empty(), "no BEM answer yet");
+        d.receive(
+            &bem(BEM_OPERATING_MODE, &[0x02, 0x00]),
+            NOW + 10,
+            &mut events,
+        );
+        assert!(
+            !sent(&events).iter().any(|p| p[0] == 0x13),
+            "still in the hold"
+        );
+        events.clear();
+        d.tick(NOW + MODE_SETTLE_MS + 20, &mut events);
+        assert_eq!(sent(&events), [vec![0x13]]);
+        events.clear();
+        d.receive(&bem(0x13, &[2, 0, 0]), NOW + 1_000, &mut events);
+        assert_eq!(sent(&events), [vec![0x13, 0xff, 0x01]]);
+        events.clear();
+        d.receive(&bem(0x13, &[2, 0, 1]), NOW + 1_100, &mut events);
+        assert!(sent(&events).is_empty());
+        assert!(d.pcode.is_done());
+    }
+
+    /// Without the option nothing is asked.
+    #[test]
+    fn nothing_by_default() {
+        let mut d = Ngt1::default();
+        d.tx_list.abandon();
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_OPERATING_MODE, &[0x02, 0x00]), NOW, &mut events);
+        d.tick(NOW + 5_000, &mut events);
+        assert!(!sent(&events).iter().any(|p| p[0] == 0x13));
     }
 }

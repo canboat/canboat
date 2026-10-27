@@ -345,6 +345,12 @@ pub const NGT_MSG_RECEIVED: u8 = 0xA0;
 /// The answer carries the mode in force either way.
 pub const BEM_OPERATING_MODE: u8 = 0x11;
 
+/// BEM `0x13`, Get / Set Port P-Code
+/// ([SDK](https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/port-pcode-config.md)):
+/// with no data it reads, with one byte per port (`0` off, `1` on, `0xFF`
+/// no change) it sets; the answer is the data size, then a byte per port.
+pub const BEM_PORT_PCODE: u8 = 0x13;
+
 /// BEM `0x41`, Get Product Info
 /// ([SDK](https://github.com/Actisense/SDK/blob/main/docs/DataFormats/Binary/bem-detail/product-info.md)).
 pub const BEM_PRODUCT_INFO: u8 = 0x41;
@@ -567,6 +573,24 @@ impl std::fmt::Display for OperatingMode {
             Self::Other(code) => write!(f, "operating mode {code}"),
         }
     }
+}
+
+/// Encode BEM Get Port P-Code as a ready-to-write byte string: `A1 01 13`.
+pub fn encode_get_port_pcode() -> Vec<u8> {
+    let mut out = Vec::with_capacity(8);
+    encode_ngt_message(NGT_MSG_SEND, &[BEM_PORT_PCODE], &mut out);
+    out
+}
+
+/// Encode BEM Set Port P-Code, one byte per port (all of them), as a
+/// ready-to-write byte string.
+pub fn encode_set_port_pcode(per_port: &[u8]) -> Vec<u8> {
+    let mut payload = Vec::with_capacity(1 + per_port.len());
+    payload.push(BEM_PORT_PCODE);
+    payload.extend_from_slice(per_port);
+    let mut out = Vec::with_capacity(8 + per_port.len());
+    encode_ngt_message(NGT_MSG_SEND, &payload, &mut out);
+    out
 }
 
 /// Encode BEM Set Operating Mode as a ready-to-write byte string.
