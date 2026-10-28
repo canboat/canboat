@@ -479,13 +479,9 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             Ok(EncodeValue::Bytes(parse_hex(s)?))
         }
         // A Reserved or Spare field printed as hex (one that isn't all
-        // ones, or for spare all zeros) shows its bytes as they sat in the
-        // message: the first byte keeps its bits in place (`decode_binary`).
-        // Shift them down to the field's own bits.
-        Some(FieldType::Reserved) | Some(FieldType::Spare) => Ok(EncodeValue::Bytes(shift_down(
-            &parse_hex(s)?,
-            f.bit_start.unwrap_or(0) % 8,
-        ))),
+        // ones, or for spare all zeros): the encoder writes the bytes back
+        // where the decoder found them.
+        Some(FieldType::Reserved) | Some(FieldType::Spare) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
         // A group-function VARIABLE value: its real type lives in the
         // referenced PGN's field and is resolved at build time — pass
         // the text through, the builder retypes labels for lookups.
@@ -619,19 +615,12 @@ fn bit_by_name(db: &'static PgnDatabase, f: &'static FieldInfo, name: &str) -> R
 
 /// Parse analyzer hex-byte strings: `"d1 08 00"`, `"D108"`, with or
 /// without spaces.
-/// `bytes` read as one little-endian bit string, moved `bits` (0..8) down.
-fn shift_down(bytes: &[u8], bits: u32) -> Vec<u8> {
-    if bits == 0 {
-        return bytes.to_vec();
-    }
-    (0..bytes.len())
-        .map(|i| (bytes[i] >> bits) | bytes.get(i + 1).map_or(0, |b| b << (8 - bits)))
-        .collect()
-}
-
 fn parse_hex(s: &str) -> Result<Vec<u8>> {
     let compact: String = s.chars().filter(|c| !c.is_whitespace()).collect();
-    if !compact.len().is_multiple_of(2) || compact.is_empty() {
+    if !compact.len().is_multiple_of(2)
+        || compact.is_empty()
+        || !compact.chars().all(|c| c.is_ascii_hexdigit())
+    {
         bail!("bad hex string '{s}'");
     }
     (0..compact.len())
@@ -895,6 +884,42 @@ mod tests {
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[..2], [0xc7, 0x50]);
         assert_eq!(frame.data[6..], [0xcf, 0x2a]);
+    }
+
+    #[test]
+    fn a_conditional_reserved_is_written_where_it_was_read() {
+        // 126208 Read Fields for a proprietary PGN: the Reserved after the
+        // manufacturer code starts at bit 3 of its byte, which only the
+        // encoder knows. Printed in place as "10", it is the value 2.
+        let line = r#"{"nmeaReadFieldsGroupFunction":{"prio":3,"src":1,"dst":2,"pgn":126208,
+            "fields":{"functionCode":{"value":3},"pgn":{"value":130816},
+            "manufacturerCode":{"value":295},"reserved":"10","industryCode":{"value":4},
+            "uniqueId":1,"numberOfSelectionPairs":0,"numberOfParameters":0}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[4..6], [0x27, 0x91]);
+    }
+
+    #[test]
+    fn non_ascii_hex_is_an_error() {
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"reserved":"€a"}}}"#
+            .replace('\n', " ");
+        assert!(frame_from_json(db(), &line).is_err());
+    }
+
+    #[test]
+    fn an_unset_reserved_wider_than_64_bits_is_all_ones() {
+        // 130816 BEP CZone ZCF Bus Distribution: a 144-bit Reserved at bit 40.
+        let line = r#"{"bepMarineCzoneZcfBusDistribution":{"prio":7,"src":1,"dst":255,
+            "pgn":130816,"fields":{}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert!(
+            frame.data[5..23].iter().all(|&b| b == 0xff),
+            "{:02x?}",
+            frame.data
+        );
     }
 
     #[test]
