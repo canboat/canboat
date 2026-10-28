@@ -1,0 +1,1 @@
+{"timestamp":"2026-10-27T10:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65226,"description":"Active Trouble Codes","fields":{"Protect Lamp Status":"Off","Amber Warning Lamp Status":"Off","Red Stop Lamp Status":"Off","Malfunction Indicator Lamp Status":"Off","list":[{"SPN":"Engine Oil Pressure","FMI":3,"OC":1,"CM":0}]}}
