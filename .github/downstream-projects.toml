@@ -37,3 +37,8 @@ request = "https://github.com/canboat/canboat/issues/1069"
 repo = "open-ships/n2k"
 releases = "minor"
 request = "https://github.com/canboat/canboat/issues/1087"
+
+[[project]]
+repo = "RISE-Maritime/keelson"
+releases = "major"
+request = "https://github.com/canboat/canboat/issues/1110"
