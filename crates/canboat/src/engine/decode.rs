@@ -740,12 +740,13 @@ fn decode_fields(
             && (f.order as u32) == start
         {
             // Only mark as "entered" if the start field is
-            // actually within the payload — canboat C's main
-            // loop stops once `startBit >> 3 >= length`, so a
-            // truncated PGN payload never reaches the start
-            // field and never emits the list opener.
+            // actually within the payload, and whole — canboat C's main
+            // loop stops once `startBit >> 3 >= length`, and does not
+            // open a list whose first field the payload ends inside,
+            // so neither emits the list opener.
             let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            if (bit_offset as usize) < data.len() * 8 {
+            let total = data.len() as u32 * 8;
+            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
                 entered[0] = true;
             }
             cursor_bits = decode_repeating(
@@ -768,7 +769,8 @@ fn decode_fields(
             && (f.order as u32) == start
         {
             let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            if (bit_offset as usize) < data.len() * 8 {
+            let total = data.len() as u32 * 8;
+            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
                 entered[1] = true;
             }
             cursor_bits = decode_repeating(
@@ -1060,6 +1062,29 @@ fn decode_one_field_at(
 
     let bit_length = f.bit_length?;
 
+    // A fixed-width field the payload ends inside, or before, has no
+    // value: the bits that arrived are not the number that was sent (a
+    // 32-bit longitude cut to 24 bits reads as another longitude), so it
+    // is left out, as canboat C does. Binary data and fixed strings are read as far as
+    // they go, as Navico's 130821 sends only the text it has.
+    let total = data.len() as u32 * 8;
+    if is_cut_short(f, bit_offset, total) {
+        ctx.skip_field = true;
+        let avail = total.saturating_sub(bit_offset);
+        return Some((
+            DecodedField {
+                info: f,
+                value: FieldValue::NotAvailable,
+                bit_offset: Some(bit_offset),
+                bit_length: Some(avail),
+                repeat_index: None,
+                repeat_set: 0,
+                overrides: None,
+            },
+            avail,
+        ));
+    }
+
     // The high bits of an earlier field's value: already joined into that
     // field, so they are not a value of their own.
     if f.continues.is_some() {
@@ -1082,12 +1107,29 @@ fn decode_one_field_at(
     finish_scalar(f, value, bit_offset, bit_length, ctx)
 }
 
+/// True when the payload (`total` bits) ends inside, or before, the
+/// fixed-width field `f` at `bit_offset`, or before the high bits that
+/// continue it (a J1939 DTC's SPN). Binary data and fixed strings are
+/// read as far as they go, so they are never cut short.
+fn is_cut_short(f: &FieldInfo, bit_offset: u32, total: u32) -> bool {
+    let Some(bit_length) = f.bit_length else {
+        return false;
+    };
+    let whole = f.continuation.map_or(bit_length, |c| {
+        bit_length.max(c.bit_offset.saturating_add(c.bit_length))
+    });
+    bit_offset.saturating_add(whole) > total
+        && !matches!(
+            f.field_type,
+            Some(FieldType::Binary | FieldType::StringFix | FieldType::StringLz)
+        )
+}
+
 /// The value of a field with a [`FieldInfo::continuation`]: its own
 /// `bit_length` bits with the continuing bits above them, and the width of
-/// the two together. `None` when the field has no continuation, or when
-/// either part lies beyond the payload — the field then reads as its own
-/// bits alone, as a decoder without the attribute would read it (and as
-/// the C analyzer does).
+/// the two together. `None` when the field has no continuation; a field
+/// whose high bits lie beyond the payload is left out before this is
+/// reached, as the C analyzer does.
 fn join_continuation(
     f: &FieldInfo,
     data: &[u8],
@@ -1430,6 +1472,9 @@ fn decode_variable(
         bit_offset,
         &mut sub_ctx,
     )?;
+    // A target the walk leaves out (one the payload ends inside) leaves
+    // out the VARIABLE field that carries it, as canboat C does.
+    ctx.skip_field |= sub_ctx.skip_field;
     // canboat rounds the VARIABLE field's consumption UP to whole
     // bytes — `*bits = (*bits + 7) & ~0x07` in `fieldPrintVariable`.
     // Without this, Set2 in PGN 126208 Read Fields lands 5 bits early
@@ -2894,6 +2939,54 @@ mod tests {
             FieldValue::Pgn { value, .. } => assert_eq!(*value, 65555),
             other => panic!("expected a PGN, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn a_variable_value_the_payload_ends_inside_is_left_out() {
+        // A Command for 129026's parameter 4, the 16-bit COG, with one byte
+        // of it: the parameter stays, its value is left out, as in C.
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 126208,
+            src: 1,
+            dst: 2,
+            data: smallvec::smallvec![0x01, 0x02, 0xf8, 0x01, 0xf8, 0x01, 0x04, 0x10],
+        };
+        let dec = db().decode(&frame).expect("decode");
+        assert!(dec.fields.iter().any(|f| f.info.name == "Parameter"));
+        assert!(
+            dec.fields.iter().all(|f| f.info.name != "Value"),
+            "a cut-off value is left out"
+        );
+    }
+
+    #[test]
+    fn a_split_value_without_its_high_bits_is_left_out() {
+        // A DM1 whose second DTC ends after the SPN's low 16 bits: its 3
+        // high bits are missing, so that SPN is left out, as in C.
+        let db = PgnDatabase::embedded_j1939(crate::engine::Units::Si);
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn: 65226,
+            src: 0,
+            dst: 255,
+            data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00, 0x03, 0x01, 0xc8, 0x00],
+        };
+        let dec = db.decode(&frame).expect("decode");
+        let spns: Vec<_> = dec.fields.iter().filter(|f| f.info.name == "SPN").collect();
+        assert_eq!(spns.len(), 1, "only the whole DTC's SPN");
+        assert_eq!(spns[0].repeat_index, Some(0), "the first DTC's");
+
+        // With the first DTC cut the same way there is no list at all.
+        let frame = RawFrame {
+            data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00],
+            ..frame
+        };
+        let dec = db.decode(&frame).expect("decode");
+        assert!(dec.fields.iter().all(|f| f.info.name != "SPN"));
+        assert_eq!(dec.has_repeating_set, [false, false], "no list");
     }
 
     #[test]

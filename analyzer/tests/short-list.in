@@ -1,0 +1,4 @@
+# PGN 126464 whose payload ends inside a list item's first field.
+# The item is left out, not printed as an empty {}.
+2026-10-27-10:00:00.000,6,126464,1,255,9,00,00,ee,00,05,f8,01,0f,00
+2026-10-27-10:00:00.001,6,126464,1,255,10,00,00,ee,00,05,f8,01,0f,00,02
