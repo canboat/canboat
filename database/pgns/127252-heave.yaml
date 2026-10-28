@@ -3,10 +3,6 @@ id: heave
 description: Heave
 type: Single
 priority: 3
-missing:
-- Fields
-- FieldLengths
-- Resolution
 fields:
 - id: sid
   name: SID
@@ -14,20 +10,45 @@ fields:
 - id: heave
   name: Heave
   type: DISTANCE_FIX16_CM
+- id: delay
+  name: Delay
+  type: DURATION_UFIX16_CS
+  description: Delay added by the heave calculation
+- id: delaySource
+  name: Delay Source
+  type: LOOKUP
+  bits: 4
+  lookup: DELAY_SOURCE
 - id: reserved
   name: Reserved
   type: RESERVED
-  bits: 40
+  bits: 4
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: |-
+  Delay and Delay Source were added after NMEA 2000 v1.300, which ends the PGN at Heave. The layout
+  and the DD374 Delay Source values follow ttlappalainen/NMEA2000 (`SetN2kPGN127252`). The B&G
+  Precision-9 firmware (2.0.4) fills the message the same way: Heave in cm (value x 100), Delay
+  0xffff and Delay Source 0xf, both not available; it never writes the last two bytes, so the values
+  seen there (7f fd, 02 ff, fc ff, ...) are not content.
 samples:
 - raw: "2023-01-01-00:00:00.000,3,127252,14,255,8,ff,07,00,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
   expects:
     sid: ~
     heave: 0.07
+    delay: ~
+    delaySource: ~
 - raw: "2023-01-01-00:00:00.000,3,127252,20,255,8,00,45,10,ff,ff,ff,7f,fd"  # from merrimac-2022.raw
   expects:
     sid: 0
     heave: 41.65
+    delay: ~
+    delaySource: ~
 - raw: "2023-01-01-00:00:00.000,3,127252,20,255,8,00,9a,0e,ff,ff,ff,02,ff"  # from merrimac-2022.raw
   expects:
     sid: 0
     heave: 37.38
+    delay: ~
+    delaySource: ~

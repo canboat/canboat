@@ -630,6 +630,13 @@ LOOKUP(DC_SOURCE, 3, "Solar cell")
 LOOKUP(DC_SOURCE, 4, "Wind generator")
 LOOKUP_END
 
+LOOKUP_TYPE(DELAY_SOURCE, BITS(4))
+LOOKUP(DELAY_SOURCE, 0, "User defined")
+LOOKUP(DELAY_SOURCE, 1, "Minimum defined")
+LOOKUP(DELAY_SOURCE, 2, "Factory default")
+LOOKUP(DELAY_SOURCE, 3, "Maximum supported")
+LOOKUP_END
+
 LOOKUP_TYPE(DEVICE_CLASS, BITS(7))
 LOOKUP(DEVICE_CLASS, 0, "Reserved for 2000 Use")
 LOOKUP(DEVICE_CLASS, 10, "System tools")
