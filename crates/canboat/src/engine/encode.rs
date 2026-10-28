@@ -891,6 +891,13 @@ impl PgnBuilder {
             Some(FieldType::StringLz) => stage_string_lz(f, v),
             Some(FieldType::StringLau) => stage_string_lau(f, v),
             Some(FieldType::Binary) => stage_binary(f, v),
+            // Reserved or spare bits given as bytes (the hex the decoder
+            // prints for them) are written like BINARY, keeping their value.
+            Some(FieldType::Reserved) | Some(FieldType::Spare)
+                if matches!(v, EncodeValue::Bytes(_)) =>
+            {
+                stage_binary(f, v)
+            }
             // DYNAMIC_FIELD_VALUE (the value slot of a key/value PGN like
             // 130845) has no schema `BitLength` — its width is set by the
             // sibling KEY at decode time, so it can't be defaulted, but the

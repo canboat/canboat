@@ -39,7 +39,7 @@
 use std::io::BufRead;
 
 use crate::engine::source::FrameSource;
-use crate::engine::types::{FieldInfo, FieldType};
+use crate::engine::types::{FieldInfo, FieldRef, FieldType};
 use crate::engine::{BusProtocol, EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value};
@@ -303,7 +303,7 @@ fn stage_fields(
                         .with_context(|| format!("{key}[{idx}].{fkey}"))?
                     {
                         builder
-                            .push_in_set(set, idx, info.name, ev)
+                            .push_in_set(set, idx, info.id, ev)
                             .map_err(|e| anyhow!("{key}[{idx}].{fkey}: {e}"))?;
                     }
                 }
@@ -315,11 +315,14 @@ fn stage_fields(
             continue;
         };
         if let Some(ev) = to_encode_value(db, info, value).with_context(|| key.clone())? {
-            // `push_by_name` matches schema names; `info` was resolved
-            // from either the name or the camel id, so push by its name.
-            builder
-                .push_by_name(info.name, ev)
-                .map_err(|e| anyhow!("{key}: {e}"))?;
+            // Push the field `info` itself: several fields can share a
+            // name (a PGN's Reserved fields), and pushing by name would
+            // set the first of them.
+            let field = FieldRef {
+                pgn: builder.pgn_info(),
+                field: info,
+            };
+            builder.push(field, ev).map_err(|e| anyhow!("{key}: {e}"))?;
         }
     }
     // A record carrying neither the count field nor its list encodes
@@ -475,6 +478,14 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
             Ok(EncodeValue::Bytes(parse_hex(s)?))
         }
+        // A Reserved or Spare field printed as hex (one that isn't all
+        // ones, or for spare all zeros) shows its bytes as they sat in the
+        // message: the first byte keeps its bits in place (`decode_binary`).
+        // Shift them down to the field's own bits.
+        Some(FieldType::Reserved) | Some(FieldType::Spare) => Ok(EncodeValue::Bytes(shift_down(
+            &parse_hex(s)?,
+            f.bit_start.unwrap_or(0) % 8,
+        ))),
         // A group-function VARIABLE value: its real type lives in the
         // referenced PGN's field and is resolved at build time — pass
         // the text through, the builder retypes labels for lookups.
@@ -608,6 +619,16 @@ fn bit_by_name(db: &'static PgnDatabase, f: &'static FieldInfo, name: &str) -> R
 
 /// Parse analyzer hex-byte strings: `"d1 08 00"`, `"D108"`, with or
 /// without spaces.
+/// `bytes` read as one little-endian bit string, moved `bits` (0..8) down.
+fn shift_down(bytes: &[u8], bits: u32) -> Vec<u8> {
+    if bits == 0 {
+        return bytes.to_vec();
+    }
+    (0..bytes.len())
+        .map(|i| (bytes[i] >> bits) | bytes.get(i + 1).map_or(0, |b| b << (8 - bits)))
+        .collect()
+}
+
 fn parse_hex(s: &str) -> Result<Vec<u8>> {
     let compact: String = s.chars().filter(|c| !c.is_whitespace()).collect();
     if !compact.len().is_multiple_of(2) || compact.is_empty() {
@@ -850,6 +871,30 @@ mod tests {
             }
             other => panic!("communicationState: {other:?}"),
         }
+    }
+
+    #[test]
+    fn reserved_and_spare_hex_round_trips() {
+        // The analyzer prints a Reserved field that isn't all ones as hex
+        // (canboat#1114). It must encode back to the same bits, and each
+        // of a PGN's several Reserved fields must land in its own place.
+        let line = r#"{"heave":{"prio":3,"src":19,"dst":255,"pgn":127252,
+            "fields":{"sid":0,"heave":-0.04,"reserved":"FF FF FF 7F FD"}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xfd]
+        );
+
+        // 127258: a 4-bit Reserved in the high nibble of byte 1 is printed
+        // in place ("50"), and `reserved6` is the second Reserved field.
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"sid":199,"source":{"value":0},"reserved":"50","reserved6":"CF 2A"}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[..2], [0xc7, 0x50]);
+        assert_eq!(frame.data[6..], [0xcf, 0x2a]);
     }
 
     #[test]
