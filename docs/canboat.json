@@ -87742,23 +87742,33 @@
           },
           {
             "Order":7,
-            "Id":"reserved7",
-            "Name":"Reserved",
+            "Id":"commandType",
+            "Name":"Command Type",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":255,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_EVENT_TYPE"
           },
           {
             "Order":8,
-            "Id":"reserved8",
-            "Name":"Reserved",
+            "Id":"event",
+            "Name":"Event",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           },
           {
             "Order":9,
