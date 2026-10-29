@@ -88119,23 +88119,33 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved7</Id>
-          <Name>Reserved</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved8</Id>
-          <Name>Reserved</Name>
+          <Id>event</Id>
+          <Name>Event</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
