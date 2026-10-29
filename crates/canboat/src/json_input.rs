@@ -926,7 +926,9 @@ mod tests {
         )
         .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
-        assert_eq!(frame.data[10], 0x00);
+        let mut expected = [0xff; 18];
+        expected[5] = 0x00;
+        assert_eq!(frame.data[5..23], expected);
         let decoded = db().decode(&frame).unwrap();
         let field = decoded
             .fields
