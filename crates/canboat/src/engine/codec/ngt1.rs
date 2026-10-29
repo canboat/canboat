@@ -37,10 +37,10 @@
 //! sent all the same, and dropped by the gateway, so the first of each is
 //! warned about.
 //!
-//! With [`Config::pcode`] it then reads the gateway's P-Code output per
-//! port, and sets the ports named (see [`super::ngt1_pcode`]): with
-//! P-Codes on the gateway sends `Actisense: System status`, the source of
-//! the network status's bus load and error count.
+//! Then it reads the gateway's P-Code output per port and, by default,
+//! switches every port on ([`Config::pcode`], see [`super::ngt1_pcode`]):
+//! with P-Codes on the gateway sends `Actisense: System status`, the source
+//! of the network status's bus load and error count.
 //!
 //! A gateway that answers no BEM command within [`PROBE_AFTER_MS`] is asked
 //! whether it is an Across Ocean Systems simulator ([`crate::engine::format::aos`]),
@@ -122,11 +122,12 @@ pub struct Config {
     /// one across reconnects (clone the `Arc` into each session's
     /// `Config`), so a reconnect does not write again what is known.
     pub tx_list_record: Arc<Mutex<TxListRecord>>,
-    /// Read the gateway's P-Code output per port, and set the ports named
-    /// (see [`super::ngt1_pcode`]); `None` (the default) leaves it alone.
-    /// With P-Codes on the gateway sends `Actisense: System status`, which
-    /// gives the network status its bus load and error count.
-    pub pcode: Option<PCodeRequest>,
+    /// What to do with the gateway's P-Code output per port (see
+    /// [`super::ngt1_pcode`]): by default every port is switched on, so the
+    /// gateway sends `Actisense: System status`, which gives the network
+    /// status its bus load and error count; [`PCodeRequest::Keep`] leaves it
+    /// alone.
+    pub pcode: PCodeRequest,
 }
 
 impl Default for Config {
@@ -136,7 +137,7 @@ impl Default for Config {
             pgn_lists: PgnLists::default(),
             extra_tx_pgns: Vec::new(),
             tx_list_record: Arc::default(),
-            pcode: None,
+            pcode: PCodeRequest::default(),
         }
     }
 }
@@ -337,7 +338,7 @@ impl Ngt1 {
                 info.firmware_version
             );
             self.tx_list.abandon();
-            self.pcode = PCodeSync::new(None);
+            self.pcode = PCodeSync::new(PCodeRequest::Keep);
             self.gate = None;
             self.aos = Some(info);
             self.probe = Probe::Done;
@@ -1366,7 +1367,7 @@ mod pcode_tests {
 
     fn with_pcode(request: &str) -> Ngt1 {
         let mut d = Ngt1::new(Config {
-            pcode: Some(PCodeRequest::parse(request).unwrap()),
+            pcode: PCodeRequest::parse(request).unwrap(),
             ..Default::default()
         });
         d.tx_list.abandon();
@@ -1404,11 +1405,21 @@ mod pcode_tests {
         assert!(d.pcode.is_done());
     }
 
-    /// Without the option nothing is asked.
+    /// By default the P-Codes are read once the gateway is set up.
     #[test]
-    fn nothing_by_default() {
+    fn read_by_default() {
         let mut d = Ngt1::default();
         d.tx_list.abandon();
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_OPERATING_MODE, &[0x02, 0x00]), NOW, &mut events);
+        d.tick(NOW + MODE_SETTLE_MS + 20, &mut events);
+        assert!(sent(&events).iter().any(|p| p == &[0x13]));
+    }
+
+    /// With `keep` nothing is asked.
+    #[test]
+    fn nothing_with_keep() {
+        let mut d = with_pcode("keep");
         let mut events = Vec::new();
         d.receive(&bem(BEM_OPERATING_MODE, &[0x02, 0x00]), NOW, &mut events);
         d.tick(NOW + 5_000, &mut events);

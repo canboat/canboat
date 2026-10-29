@@ -63,7 +63,7 @@ pub struct Device {
     channel: u8,
     password: String,
     mode: OperatingMode,
-    pcode: Option<PCodeRequest>,
+    pcode: PCodeRequest,
     no_tx_rate_limit: bool,
     ignore_checksum: bool,
     rx_filter: Vec<u32>,
@@ -165,7 +165,7 @@ impl Device {
             channel: 0,
             password: String::new(),
             mode: OperatingMode::NgTransferRxAll,
-            pcode: None,
+            pcode: PCodeRequest::default(),
             no_tx_rate_limit: false,
             ignore_checksum: false,
             rx_filter: Vec::new(),
@@ -246,11 +246,11 @@ impl Device {
         self.with(Setting::Mode)
     }
 
-    /// NGT-1: read its P-Code output per port at startup, and set the
-    /// ports `request` names (see
-    /// [`crate::engine::codec::ngt1_pcode`]).
+    /// NGT-1: what to do with its P-Code output per port at startup (see
+    /// [`crate::engine::codec::ngt1_pcode`]); without this every port is
+    /// switched on.
     pub fn pcode(mut self, request: PCodeRequest) -> Self {
-        self.pcode = Some(request);
+        self.pcode = request;
         self.with(Setting::PCode)
     }
 

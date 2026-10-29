@@ -232,20 +232,23 @@ pub struct DeviceArgs {
     )]
     pub mode: Option<Ngt1Mode>,
 
-    /// The NGT-1's P-Code output per port: `get` reads and logs it,
-    /// `<port>=on|off` (comma separated) sets those ports.
+    /// The NGT-1's P-Code output per port: `on` (the default) switches
+    /// every port on, `off` every port off, `PORT=on|off` (comma separated)
+    /// those ports; `get` only reads and logs it, `keep` leaves it alone.
     #[arg(
         long,
-        value_name = "get|PORT=on|off,...",
+        value_name = "on|off|keep|get|PORT=on|off,...",
         value_parser = |s: &str| PCodeRequest::parse(s),
-        help = help::only_help(Setting::PCode, "read (get) or set (PORT=on|off,...) the P-Codes per port."),
+        help = help::only_help(Setting::PCode, "the P-Codes per port: on (default), off, keep, get, or PORT=on|off,..."),
         long_help = format!(
             "{}\n\nWith P-Codes on, the gateway sends `Actisense: System status` about once a \
              second, which gives the network status (PGN 262400) its bus load and error count. \
-             `get` only reads the setting and logs it; `PORT=on|off` reads it, then writes the \
-             ports that differ (the gateway saves it in EEPROM; nothing is written when it \
-             already holds it).",
-            help::only_help(Setting::PCode, "read (get) or set (PORT=on|off,...) the P-Codes per port.")
+             By default every port is switched on. canboat reads the setting first and writes \
+             only the ports that differ (the gateway saves it in EEPROM; nothing is written \
+             when it already holds it). `off` switches every port off, `PORT=on|off` only the \
+             ports named; `get` only reads the setting and logs it, `keep` neither reads nor \
+             writes it.",
+            help::only_help(Setting::PCode, "the P-Codes per port: on (default), off, keep, get, or PORT=on|off,...")
         ),
         help_heading = SPECIFIC
     )]

@@ -6,12 +6,14 @@
 //! `0xF2`) about once a second, with the bus load and the error counts that
 //! the synthetic network status (PGN 262400) carries.
 //!
-//! Only on request ([`super::ngt1::Config::pcode`]): once the transmit list
-//! is settled the codec reads the setting (`A1 01 13`) and logs it. With
-//! ports to set, and one of them different, it then writes the whole array,
-//! `0xFF` for each port left as it is, and logs what the gateway reports.
-//! The SDK says the gateway saves it in EEPROM at once, so nothing is
-//! written when it already holds what is asked.
+//! By default every port is switched on ([`super::ngt1::Config::pcode`]):
+//! once the transmit list is settled the codec reads the setting
+//! (`A1 01 13`) and logs it. When a port differs from what is asked it then
+//! writes the whole array, `0xFF` for each port left as it is, and logs what
+//! the gateway reports. The SDK says the gateway saves it in EEPROM at once,
+//! so nothing is written when it already holds what is asked: a gateway is
+//! written once, not at every start. [`PCodeRequest::Keep`] leaves the
+//! P-Codes alone, [`PCodeRequest::Get`] only reads them.
 //!
 //! | Sent | Answer data |
 //! |------|-------------|
@@ -19,8 +21,10 @@
 //! | Set: one byte per port, `0` off, `1` on, `0xFF` no change | as Get |
 //!
 //! A gateway that does not answer within [`ANSWER_TIMEOUT_MS`] is asked
-//! once more, then warned about; one that answers with an error is warned
-//! about. Either way the codec carries on as before.
+//! once more, then logged (a warning when the P-Codes were asked for
+//! explicitly, information with the default, as older firmware may not have
+//! the command); one that answers with an error is warned about. Either way
+//! the codec carries on as before.
 
 use crate::engine::format::ngt1::{
     BEM_PORT_PCODE, BemResponse, describe_error, encode_get_port_pcode, encode_set_port_pcode,
@@ -31,25 +35,42 @@ pub const ANSWER_TIMEOUT_MS: u64 = 3_000;
 /// How often a Get or Set is sent before giving up.
 const ATTEMPTS: u8 = 2;
 
-/// What to do with the P-Codes: read them, and set the ports named.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
-pub struct PCodeRequest {
-    /// (port, on); ports not named are left as they are.
-    pub set: Vec<(u8, bool)>,
+/// What to do with the P-Codes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PCodeRequest {
+    /// Leave them alone: neither read nor written.
+    Keep,
+    /// Read and log them only.
+    Get,
+    /// Every port on (the default) or off.
+    All(bool),
+    /// The ports named, (port, on); the others are left as they are.
+    Ports(Vec<(u8, bool)>),
+}
+
+impl Default for PCodeRequest {
+    /// Every port on, so the gateway sends `Actisense: System status`.
+    fn default() -> Self {
+        Self::All(true)
+    }
 }
 
 impl PCodeRequest {
-    /// `get`, or a comma list of `<port>=on|off`.
+    /// `on`, `off`, `keep`, `get`, or a comma list of `<port>=on|off`.
     pub fn parse(text: &str) -> Result<Self, String> {
         let text = text.trim();
-        if text.eq_ignore_ascii_case("get") {
-            return Ok(Self::default());
+        match text.to_ascii_lowercase().as_str() {
+            "on" => return Ok(Self::All(true)),
+            "off" => return Ok(Self::All(false)),
+            "keep" => return Ok(Self::Keep),
+            "get" => return Ok(Self::Get),
+            _ => {}
         }
         let mut set = Vec::new();
         for part in text.split(',') {
             let (port, value) = part
                 .split_once('=')
-                .ok_or_else(|| format!("`{part}`: give `get` or `<port>=on|off`"))?;
+                .ok_or_else(|| format!("`{part}`: give on, off, keep, get or `<port>=on|off`"))?;
             let port: u8 = port
                 .trim()
                 .parse()
@@ -64,7 +85,19 @@ impl PCodeRequest {
             }
             set.push((port, on));
         }
-        Ok(Self { set })
+        Ok(Self::Ports(set))
+    }
+
+    /// What port `port` should be, or `None` to leave it as it is.
+    fn wanted(&self, port: usize) -> Option<bool> {
+        match self {
+            Self::Keep | Self::Get => None,
+            Self::All(on) => Some(*on),
+            Self::Ports(set) => set
+                .iter()
+                .find(|&&(p, _)| p as usize == port)
+                .map(|&(_, on)| on),
+        }
     }
 }
 
@@ -79,19 +112,19 @@ enum State {
 /// Reads, and if asked sets, the gateway's P-Codes; see the module docs.
 #[derive(Debug, Clone)]
 pub struct PCodeSync {
-    wanted: Option<PCodeRequest>,
+    wanted: PCodeRequest,
     state: State,
     /// The array written, to write it again on a retry.
     written: Vec<u8>,
 }
 
 impl PCodeSync {
-    /// Nothing is done with `None`.
-    pub fn new(wanted: Option<PCodeRequest>) -> Self {
-        let state = if wanted.is_some() {
-            State::Idle
-        } else {
+    /// Nothing is done with [`PCodeRequest::Keep`].
+    pub fn new(wanted: PCodeRequest) -> Self {
+        let state = if wanted == PCodeRequest::Keep {
             State::Done
+        } else {
+            State::Idle
         };
         Self {
             wanted,
@@ -102,7 +135,7 @@ impl PCodeSync {
 
     /// The gateway restarted: read (and set) again.
     pub fn restart(&mut self) {
-        *self = Self::new(self.wanted.take());
+        *self = Self::new(std::mem::replace(&mut self.wanted, PCodeRequest::Keep));
     }
 
     /// Whether there is nothing (more) to do.
@@ -129,7 +162,13 @@ impl PCodeSync {
                     };
                     vec![encode_get_port_pcode()]
                 } else {
-                    log::warn!(
+                    let level = if self.wanted == PCodeRequest::default() {
+                        log::Level::Info
+                    } else {
+                        log::Level::Warn
+                    };
+                    log::log!(
+                        level,
                         "ngt1: no answer to Get Port P-Code (BEM 0x13); this firmware may not have it"
                     );
                     self.state = State::Done;
@@ -181,16 +220,13 @@ impl PCodeSync {
             return Vec::new();
         };
         log::info!("ngt1: P-Codes per port: {}", describe(codes));
-        let set = self
-            .wanted
-            .as_ref()
-            .map(|w| w.set.as_slice())
-            .unwrap_or(&[]);
         if setting {
-            let missed: Vec<u8> = set
-                .iter()
-                .filter(|&&(port, on)| codes.get(port as usize).map(|&c| c != 0) != Some(on))
-                .map(|&(port, _)| port)
+            let missed: Vec<usize> = (0..codes.len())
+                .filter(|&i| {
+                    self.wanted
+                        .wanted(i)
+                        .is_some_and(|on| (codes[i] != 0) != on)
+                })
                 .collect();
             if !missed.is_empty() {
                 log::warn!("ngt1: the gateway did not take the P-Code of port(s) {missed:?}");
@@ -198,7 +234,14 @@ impl PCodeSync {
             self.state = State::Done;
             return Vec::new();
         }
-        if let Some(&(port, _)) = set.iter().find(|&&(port, _)| port as usize >= codes.len()) {
+        let named = match &self.wanted {
+            PCodeRequest::Ports(set) => set.as_slice(),
+            _ => &[],
+        };
+        if let Some(&(port, _)) = named
+            .iter()
+            .find(|&&(port, _)| port as usize >= codes.len())
+        {
             log::warn!(
                 "ngt1: no P-Code set: port {port} does not exist, the gateway has {} port(s)",
                 codes.len()
@@ -207,12 +250,10 @@ impl PCodeSync {
             return Vec::new();
         }
         let array: Vec<u8> = (0..codes.len())
-            .map(
-                |i| match set.iter().find(|&&(port, _)| port as usize == i) {
-                    Some(&(_, on)) if (codes[i] != 0) != on => u8::from(on),
-                    _ => 0xff,
-                },
-            )
+            .map(|i| match self.wanted.wanted(i) {
+                Some(on) if (codes[i] != 0) != on => u8::from(on),
+                _ => 0xff,
+            })
             .collect();
         if array.iter().all(|&b| b == 0xff) {
             self.state = State::Done;
@@ -229,10 +270,11 @@ impl PCodeSync {
 }
 
 /// The per-port bytes of a Get / Set Port P-Code answer: a data size, then
-/// that many bytes.
+/// exactly that many bytes (an NGT-1 with software 2.690 answers a Get with
+/// `02 00 00`); anything shorter or longer is malformed.
 pub fn port_pcodes(data: &[u8]) -> Option<&[u8]> {
     let (&n, rest) = data.split_first()?;
-    rest.get(..n as usize)
+    (rest.len() == n as usize).then_some(rest)
 }
 
 /// `port 0 off, port 1 on`; `0xFF` in a Set is `no change`.
@@ -279,10 +321,16 @@ mod tests {
 
     #[test]
     fn parses_the_option() {
-        assert_eq!(PCodeRequest::parse("get").unwrap().set, []);
+        assert_eq!(PCodeRequest::parse("get").unwrap(), PCodeRequest::Get);
+        assert_eq!(PCodeRequest::parse("keep").unwrap(), PCodeRequest::Keep);
+        assert_eq!(PCodeRequest::parse("On").unwrap(), PCodeRequest::All(true));
         assert_eq!(
-            PCodeRequest::parse("0=on, 1=off").unwrap().set,
-            [(0, true), (1, false)]
+            PCodeRequest::parse("off").unwrap(),
+            PCodeRequest::All(false)
+        );
+        assert_eq!(
+            PCodeRequest::parse("0=on, 1=off").unwrap(),
+            PCodeRequest::Ports(vec![(0, true), (1, false)])
         );
         assert!(PCodeRequest::parse("0=maybe").is_err());
         assert!(PCodeRequest::parse("x=on").is_err());
@@ -290,8 +338,8 @@ mod tests {
     }
 
     #[test]
-    fn nothing_without_a_request() {
-        let mut s = PCodeSync::new(None);
+    fn nothing_with_keep() {
+        let mut s = PCodeSync::new(PCodeRequest::Keep);
         assert!(s.is_done());
         assert!(s.on_tick(0, true).is_empty());
     }
@@ -299,7 +347,7 @@ mod tests {
     /// The SDK's Get example: `A1 01 13`.
     #[test]
     fn reads_once_ready_and_only_logs_on_get() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::default()));
+        let mut s = PCodeSync::new(PCodeRequest::Get);
         assert!(s.on_tick(0, false).is_empty());
         let out = s.on_tick(10, true);
         assert_eq!(out.len(), 1);
@@ -312,7 +360,7 @@ mod tests {
 
     #[test]
     fn sets_only_the_port_that_differs() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::parse("0=on,1=on").unwrap()));
+        let mut s = PCodeSync::new(PCodeRequest::parse("0=on,1=on").unwrap());
         s.on_tick(0, true);
         let r = answer(0, &[2, 0, 1]);
         let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
@@ -329,7 +377,7 @@ mod tests {
 
     #[test]
     fn writes_nothing_when_it_already_holds_it() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::parse("1=on").unwrap()));
+        let mut s = PCodeSync::new(PCodeRequest::parse("1=on").unwrap());
         s.on_tick(0, true);
         // an old firmware's raw 0xff counts as on
         let r = answer(0, &[2, 0, 0xff]);
@@ -342,7 +390,7 @@ mod tests {
 
     #[test]
     fn a_port_that_does_not_exist_sets_nothing() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::parse("3=on").unwrap()));
+        let mut s = PCodeSync::new(PCodeRequest::parse("3=on").unwrap());
         s.on_tick(0, true);
         let r = answer(0, &[2, 0, 0]);
         assert!(
@@ -352,9 +400,58 @@ mod tests {
         assert!(s.is_done());
     }
 
+    /// The default switches every port on, and only the ones that are off.
+    #[test]
+    fn the_default_switches_every_port_on() {
+        let mut s = PCodeSync::new(PCodeRequest::default());
+        s.on_tick(0, true);
+        // the answer of an NGT-1 with software 2.690, both ports off
+        let r = answer(0, &[2, 0, 0]);
+        let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
+        assert_eq!(sent(&out[0]), [0x13, 0x01, 0x01]);
+        let r = answer(0, &[2, 1, 1]);
+        assert!(
+            s.on_response(&BemResponse::parse(&r).unwrap(), 20)
+                .is_empty()
+        );
+        assert!(s.is_done());
+
+        let mut s = PCodeSync::new(PCodeRequest::default());
+        s.on_tick(0, true);
+        let r = answer(0, &[2, 1, 0]);
+        let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
+        assert_eq!(sent(&out[0]), [0x13, 0xff, 0x01]);
+    }
+
+    #[test]
+    fn off_switches_every_port_off() {
+        let mut s = PCodeSync::new(PCodeRequest::All(false));
+        s.on_tick(0, true);
+        let r = answer(0, &[2, 1, 0]);
+        let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
+        assert_eq!(sent(&out[0]), [0x13, 0x00, 0xff]);
+    }
+
+    /// The size must match the bytes that follow it.
+    #[test]
+    fn an_answer_of_another_size_is_malformed() {
+        assert_eq!(port_pcodes(&[2, 0, 0]), Some(&[0u8, 0][..]));
+        assert_eq!(port_pcodes(&[2, 0]), None);
+        assert_eq!(port_pcodes(&[2, 0, 0, 0]), None);
+        assert_eq!(port_pcodes(&[]), None);
+        let mut s = PCodeSync::new(PCodeRequest::default());
+        s.on_tick(0, true);
+        let r = answer(0, &[2, 0, 0, 0]);
+        assert!(
+            s.on_response(&BemResponse::parse(&r).unwrap(), 10)
+                .is_empty()
+        );
+        assert!(s.is_done());
+    }
+
     #[test]
     fn retries_once_then_gives_up() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::default()));
+        let mut s = PCodeSync::new(PCodeRequest::Get);
         assert_eq!(s.on_tick(0, true).len(), 1);
         assert!(s.on_tick(ANSWER_TIMEOUT_MS - 1, true).is_empty());
         assert_eq!(s.on_tick(ANSWER_TIMEOUT_MS, true).len(), 1);
@@ -364,7 +461,7 @@ mod tests {
 
     #[test]
     fn a_refusal_ends_it() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::parse("0=on").unwrap()));
+        let mut s = PCodeSync::new(PCodeRequest::parse("0=on").unwrap());
         s.on_tick(0, true);
         let r = answer(-1, &[]);
         assert!(
@@ -376,7 +473,7 @@ mod tests {
 
     #[test]
     fn other_answers_are_not_ours() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::default()));
+        let mut s = PCodeSync::new(PCodeRequest::Get);
         s.on_tick(0, true);
         let mut r = answer(0, &[2, 0, 0]);
         r[0] = 0x11;
@@ -389,7 +486,7 @@ mod tests {
 
     #[test]
     fn a_restart_reads_again() {
-        let mut s = PCodeSync::new(Some(PCodeRequest::default()));
+        let mut s = PCodeSync::new(PCodeRequest::Get);
         s.on_tick(0, true);
         let r = answer(0, &[1, 1]);
         s.on_response(&BemResponse::parse(&r).unwrap(), 10);
