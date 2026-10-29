@@ -67,6 +67,11 @@ keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
 	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
 	$(KEEL) generate
+	# The analyzer was built above, against the old tables, and keel can
+	# rewrite them within the same second. make 3.81 (the stock macOS make)
+	# compares whole seconds, so it would keep the stale binary and the tests
+	# would run it. Remove it so the next build compiles the fresh tables.
+	rm -f $(ANALYZER) $(ANALYZER_J1939)
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 	xmllint --schema $(XSD2FILE) $(XML2FILE_J1939) --noout
 	xmllint --schema $(XSD2FILE) $(XML2FILE_QUICK) --noout
