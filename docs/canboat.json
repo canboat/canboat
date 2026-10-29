@@ -1188,6 +1188,16 @@
         ]
       },
       {
+        "Name":"DELAY_SOURCE",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"User defined", "Value":0},
+          {"Name":"Minimum defined", "Value":1},
+          {"Name":"Factory default", "Value":2},
+          {"Name":"Maximum supported", "Value":3}
+        ]
+      },
+      {
         "Name":"DEVICE_CLASS",
         "MaxValue":127,
         "EnumValues":[
@@ -33990,9 +34000,9 @@
         "Priority":3,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":3,
+        "FieldCount":6,
         "Length":8,
         "Fields":[
           {
@@ -34031,10 +34041,55 @@
           },
           {
             "Order":3,
+            "Id":"delay",
+            "Name":"Delay",
+            "Description":"Delay added by the heave calculation",
+            "BitLength":16,
+            "BitOffset":24,
+            "BitStart":0,
+            "Unit":"s",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
+          },
+          {
+            "Order":4,
+            "Id":"delaySource",
+            "Name":"Delay Source",
+            "BitLength":4,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"DELAY_SOURCE"
+          },
+          {
+            "Order":5,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":40,
-            "BitOffset":24,
+            "BitLength":4,
+            "BitOffset":44,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"

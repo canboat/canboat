@@ -1,0 +1,8 @@
+name: DELAY_SOURCE
+kind: pair
+bits: 4
+values:
+  0: User defined
+  1: Minimum defined
+  2: Factory default
+  3: Maximum supported

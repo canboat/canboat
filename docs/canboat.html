@@ -8428,12 +8428,12 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             PGN 127252
             - Heave</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 3 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 3.
@@ -8443,7 +8443,14 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Heave</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.68 .. 327.64</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>40 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delay</td><td>Delay added by the heave calculation</td><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>Delay Source</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                      lookup
+                      <a href="#lookup-DELAY_SOURCE">DELAY_SOURCE</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-127257">0x1F119:
             PGN 127257
             - Attitude</h3><p/><p>
@@ -24313,7 +24320,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>AC Voltage Error</td></tr><tr><td>2</td><td>AC Frequency Error</td></tr><tr><td>3</td><td>AC High Power</td></tr><tr><td>4</td><td>DC Low Voltage</td></tr><tr><td>5</td><td>DC Very Low Voltage</td></tr><tr><td>6</td><td>DC High Voltage</td></tr><tr><td>7</td><td>DC Low Battery Capacity</td></tr><tr><td>10</td><td>Out of Range</td></tr><tr><td>11</td><td>Low Run Current</td></tr><tr><td>12</td><td>Over Current</td></tr><tr><td>13</td><td>Short Circuit</td></tr><tr><td>14</td><td>Missing Commander</td></tr><tr><td>15</td><td>Reverse Current</td></tr><tr><td>16</td><td>Calibration Error</td></tr><tr><td>17</td><td>Missing Output</td></tr><tr><td>18</td><td>Systems On</td></tr><tr><td>19</td><td>AC Very High Power</td></tr><tr><td>20</td><td>AC Low Power</td></tr><tr><td>21</td><td>DC Very Low Battery Capacity</td></tr><tr><td>22</td><td>Battery Full</td></tr><tr><td>23</td><td>DC Load Shed Low</td></tr><tr><td>24</td><td>DC Load Shed Very Low</td></tr><tr><td>25</td><td>AC Load Shed Low</td></tr><tr><td>26</td><td>AC Load Shed Very Low</td></tr><tr><td>27</td><td>Reverse Polarity</td></tr><tr><td>28</td><td>Manual Override</td></tr><tr><td>29</td><td>Mastervolt</td></tr><tr><td>30</td><td>Hardware Fault</td></tr><tr><td>31</td><td>No AC Supply</td></tr><tr><td>34</td><td>PGN Switching On</td></tr><tr><td>35</td><td>Low Canbus Voltage</td></tr><tr><td>36</td><td>Blown Fuse</td></tr><tr><td>37</td><td>Manual Bypass</td></tr><tr><td>38</td><td>Generic Alarm</td></tr><tr><td>39</td><td>Battery Temperature Alarm</td></tr><tr><td>40</td><td>Temperature Sensor Error</td></tr><tr><td>41</td><td>AC IN Out Of Range</td></tr><tr><td>42</td><td>Device In Overload</td></tr><tr><td>43</td><td>High Temperature</td></tr><tr><td>44</td><td>Inverter/Charger Installation Error</td></tr><tr><td>45</td><td>Inverter Installation Error</td></tr><tr><td>46</td><td>Charger Installation Error</td></tr><tr><td>47</td><td>Cable Voltage Drop Too High</td></tr><tr><td>48</td><td>Shunt mismatch</td></tr><tr><td>49</td><td>Cooling Fan Error</td></tr><tr><td>50</td><td>Mastershunt Fuse Blown</td></tr><tr><td>51</td><td>High Temperature</td></tr><tr><td>52</td><td>Over Pressure</td></tr><tr><td>53</td><td>Low Pressure</td></tr><tr><td>54</td><td>Rapid Deflation</td></tr><tr><td>55</td><td>Inverter/Charger Over Temperature</td></tr><tr><td>56</td><td>Confirm On</td></tr><tr><td>57</td><td>Battery Safety</td></tr><tr><td>58</td><td>Stop Charging</td></tr><tr><td>59</td><td>Check Battery Relay</td></tr><tr><td>60</td><td>Battery Hardware Failure</td></tr><tr><td>61</td><td>Battery Over Current</td></tr><tr><td>62</td><td>Battery Temperature Low</td></tr><tr><td>63</td><td>Battery Temperature High</td></tr><tr><td>64</td><td>Battery Last 100</td></tr></table><h3 id="lookup-DC_SOURCE">DC_SOURCE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Battery</td></tr><tr><td>1</td><td>Alternator</td></tr><tr><td>2</td><td>Convertor</td></tr><tr><td>3</td><td>Solar cell</td></tr><tr><td>4</td><td>Wind generator</td></tr></table><h3 id="lookup-DEVICE_CLASS">DEVICE_CLASS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Battery</td></tr><tr><td>1</td><td>Alternator</td></tr><tr><td>2</td><td>Convertor</td></tr><tr><td>3</td><td>Solar cell</td></tr><tr><td>4</td><td>Wind generator</td></tr></table><h3 id="lookup-DELAY_SOURCE">DELAY_SOURCE
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>User defined</td></tr><tr><td>1</td><td>Minimum defined</td></tr><tr><td>2</td><td>Factory default</td></tr><tr><td>3</td><td>Maximum supported</td></tr></table><h3 id="lookup-DEVICE_CLASS">DEVICE_CLASS
         (0 - 127)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Reserved for 2000 Use</td></tr><tr><td>10</td><td>System tools</td></tr><tr><td>20</td><td>Safety systems</td></tr><tr><td>25</td><td>Internetwork device</td></tr><tr><td>30</td><td>Electrical Distribution</td></tr><tr><td>35</td><td>Electrical Generation</td></tr><tr><td>40</td><td>Steering and Control surfaces</td></tr><tr><td>50</td><td>Propulsion</td></tr><tr><td>60</td><td>Navigation</td></tr><tr><td>70</td><td>Communication</td></tr><tr><td>75</td><td>Sensor Communication Interface</td></tr><tr><td>80</td><td>Instrumentation/general systems</td></tr><tr><td>85</td><td>External Environment</td></tr><tr><td>90</td><td>Internal Environment</td></tr><tr><td>100</td><td>Deck + cargo + fishing equipment systems</td></tr><tr><td>110</td><td>Human Interface</td></tr><tr><td>120</td><td>Display</td></tr><tr><td>125</td><td>Entertainment</td></tr></table><h3 id="lookup-DEVICE_TEMP_STATE">DEVICE_TEMP_STATE
         (0 - 15)
