@@ -4058,12 +4058,15 @@ Pgn pgnList[] = {
 
     {"Heave",
      127252,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Heave", .camelName = "heave", .fieldType = "DISTANCE_FIX16_CM", .hasSign = true},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 40, .resolution = 1.0}
+      {.name = "Delay", .camelName = "delay", .fieldType = "DURATION_UFIX16_CS", .description = "Delay added by the heave calculation"},
+      {.name = "Delay Source", .camelName = "delaySource", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDELAY_SOURCE, .lookup.name = "DELAY_SOURCE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "heave",
      .priority = 3},

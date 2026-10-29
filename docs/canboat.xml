@@ -958,6 +958,12 @@ limitations under the License.
       <EnumPair Value="3" Name="Solar cell" />
       <EnumPair Value="4" Name="Wind generator" />
     </LookupEnumeration>
+    <LookupEnumeration Name="DELAY_SOURCE" MaxValue="15">
+      <EnumPair Value="0" Name="User defined" />
+      <EnumPair Value="1" Name="Minimum defined" />
+      <EnumPair Value="2" Name="Factory default" />
+      <EnumPair Value="3" Name="Maximum supported" />
+    </LookupEnumeration>
     <LookupEnumeration Name="DEVICE_CLASS" MaxValue="127">
       <EnumPair Value="0" Name="Reserved for 2000 Use" />
       <EnumPair Value="10" Name="System tools" />
@@ -33542,12 +33548,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -33586,10 +33589,55 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>3</Order>
+          <Id>delay</Id>
+          <Name>Delay</Name>
+          <Description>Delay added by the heave calculation</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>s</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>655.32</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>delaySource</Id>
+          <Name>Delay Source</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DELAY_SOURCE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>44</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
