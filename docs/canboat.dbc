@@ -991,7 +991,10 @@ BO_ 2582713342 PGN_127251_rateOfTurn: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582713598 PGN_127252_heave: 8 Vector__XXX
- SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved6 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved : 44|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ delaySource : 40|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ delay : 24|16@1+ (0.01,0) [0|0] "s" Vector__XXX
  SG_ heave : 8|16@1- (0.01,0) [0|0] "m" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -2466,6 +2469,7 @@ CM_ BO_ 2582711806 "Rudder";
 CM_ BO_ 2582713086 "Vessel Heading";
 CM_ BO_ 2582713342 "Rate of Turn";
 CM_ BO_ 2582713598 "Heave";
+CM_ SG_ 2582713598 delay "Delay added by the heave calculation";
 CM_ BO_ 2582714878 "Attitude";
 CM_ BO_ 2582715134 "Magnetic Variation";
 CM_ BO_ 2582774014 "Engine Parameters, Rapid Update";
@@ -3011,6 +3015,7 @@ VAL_ 2582647294 controller2State 0 "Error Active" 1 "Error Passive" 2 "Bus Off" 
 VAL_ 2582647294 controller1State 0 "Error Active" 1 "Error Passive" 2 "Bus Off" ;
 VAL_ 2582711806 directionOrder 0 "No Order" 1 "Move to starboard" 2 "Move to port" ;
 VAL_ 2582713086 reference 0 "True" 1 "Magnetic" 2 "Error" ;
+VAL_ 2582713598 delaySource 0 "User defined" 1 "Minimum defined" 2 "Factory default" 3 "Maximum supported" ;
 VAL_ 2582715134 source 0 "Manual" 1 "Automatic Chart" 2 "Automatic Table" 3 "Automatic Calculation" 4 "WMM 2000" 5 "WMM 2005" 6 "WMM 2010" 7 "WMM 2015" 8 "WMM 2020" 9 "WMM 2025" ;
 VAL_ 2582774014 instance 0 "Single Engine or Dual Engine Port" 1 "Dual Engine Starboard" ;
 VAL_ 2582775294 transmissionGear 0 "Forward" 1 "Neutral" 2 "Reverse" ;
