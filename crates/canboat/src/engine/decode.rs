@@ -1964,7 +1964,9 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length == 0 {
         return FieldValue::NotAvailable;
     }
-    let nbytes = bit_length.div_ceil(8);
+    // Every byte the field touches, including the one holding its high
+    // bits when it starts mid-byte and crosses into the next.
+    let nbytes = (start_bit + bit_length).div_ceil(8);
     let mut out = Vec::with_capacity(nbytes);
     let mut remaining = bit_length as isize;
     for i in 0..nbytes {
@@ -2959,6 +2961,20 @@ mod tests {
             dec.fields.iter().all(|f| f.info.name != "Value"),
             "a cut-off value is left out"
         );
+    }
+
+    #[test]
+    fn unaligned_binary_crossing_a_byte_keeps_its_high_bits() {
+        // 8 bits from bit 51 (as 129814's reserved8): bits 3-7 of the first
+        // byte printed in place, then the low 3 bits of the next.
+        let data = [0, 0, 0, 0, 0, 0, 0xf0, 0x07];
+        let bytes = |v| match v {
+            FieldValue::Binary(b) => b,
+            other => panic!("{other:?}"),
+        };
+        assert_eq!(bytes(decode_binary(&data, 51, 8)), [0xf0, 0x07]);
+        // One that fits in its byte stays one byte.
+        assert_eq!(bytes(decode_binary(&data, 52, 4)), [0xf0]);
     }
 
     #[test]

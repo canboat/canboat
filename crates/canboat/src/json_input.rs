@@ -868,7 +868,7 @@ mod tests {
         // (canboat#1114). It must encode back to the same bits, and each
         // of a PGN's several Reserved fields must land in its own place.
         let line = r#"{"heave":{"prio":3,"src":19,"dst":255,"pgn":127252,
-            "fields":{"sid":0,"heave":-0.04,"reserved":"FF FF FF 7F FD"}}}"#
+            "fields":{"sid":0,"heave":-0.04,"reserved6":"7F FD"}}}"#
             .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(
@@ -898,6 +898,19 @@ mod tests {
             .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[4..6], [0x27, 0x91]);
+    }
+
+    #[test]
+    fn an_unaligned_reserved_crossing_a_byte_round_trips() {
+        // 129814's reserved8 sits at bits 51-58: the analyzer prints both
+        // bytes it touches ("F0 07"), and all eight bits go back.
+        let line = r#"{"pgn":129814,"prio":6,"src":1,"dst":255,"fields":{
+            "sequenceId":24,"messageId":1,"repeatIndicator":0,
+            "destinationIndicator":1,"binaryDataFlag":1,"spare":"04",
+            "reserved8":"F0 07","aisTransceiverInformation":0}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[6..8], [0xf7, 0x07]);
     }
 
     #[test]

@@ -2181,7 +2181,9 @@ extern bool fieldPrintBinary(const Field   *field,
   }
   remaining_bits = *bits;
   s              = "";
-  for (i = 0; i < (*bits + 7) >> 3; i++)
+  // Every byte the field touches, including the one holding its high bits
+  // when it starts mid-byte and crosses into the next.
+  for (i = 0; i < (startBit + *bits + 7) >> 3; i++)
   {
     uint8_t byte = data[i];
 
