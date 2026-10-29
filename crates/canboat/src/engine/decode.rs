@@ -1754,6 +1754,9 @@ fn decode_reserved(
     offset_k: i64,
     is_reserved: bool,
 ) -> FieldValue {
+    if bit_length > 64 {
+        return decode_wide_reserved(data, bit_offset, bit_length, is_reserved);
+    }
     let Some(ex) = extract_bits(
         data,
         bit_offset as usize,
@@ -1798,6 +1801,50 @@ fn decode_reserved(
     } else {
         FieldValue::Spare {
             value: raw,
+            bytes,
+            bit_length,
+        }
+    }
+}
+
+/// A RESERVED or SPARE field wider than the 64 bits [`extract_bits`] reads,
+/// such as 130816's 144-bit Reserved: tested 64 bits at a time, then printed
+/// as bytes like any other. There is no single raw value, so `value` folds
+/// the chunks: ANDed for Reserved (all ones only when every bit is) and ORed
+/// for Spare (zero only when every bit is), which is what the formatters
+/// test to leave the field out. A field the payload ends inside is left
+/// out, as a narrower one is.
+fn decode_wide_reserved(
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+    is_reserved: bool,
+) -> FieldValue {
+    let (mut all, mut any) = (u64::MAX, 0u64);
+    let mut at = 0;
+    while at < bit_length {
+        let n = (bit_length - at).min(64);
+        let Some(ex) = extract_bits(data, (bit_offset + at) as usize, n as usize, false, 0) else {
+            return FieldValue::NotAvailable;
+        };
+        all &= if ex.value == ex.max { u64::MAX } else { ex.raw };
+        any |= ex.raw;
+        at += n;
+    }
+    let bytes = match decode_binary(data, bit_offset, bit_length) {
+        FieldValue::Binary(b) => b,
+        _ => Vec::new(),
+    };
+    if is_reserved {
+        let bytes = if all == u64::MAX { Vec::new() } else { bytes };
+        FieldValue::Reserved {
+            value: all,
+            bytes,
+            bit_length,
+        }
+    } else {
+        FieldValue::Spare {
+            value: any,
             bytes,
             bit_length,
         }

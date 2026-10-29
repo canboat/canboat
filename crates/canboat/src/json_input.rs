@@ -914,6 +914,34 @@ mod tests {
     }
 
     #[test]
+    fn a_reserved_wider_than_64_bits_round_trips() {
+        // 130816's 144-bit Reserved (bytes 5-22) with one byte cleared: the
+        // analyzer prints it, and every byte goes back where it was.
+        let mut reserved = ["FF"; 18];
+        reserved[5] = "00";
+        let line = format!(
+            r#"{{"bepMarineCzoneZcfBusDistribution":{{"pgn":130816,"prio":7,"src":1,"dst":255,
+            "fields":{{"chunkIndex":1,"flag":0,"reserved6":"{}","data":"01 02 03"}}}}}}"#,
+            reserved.join(" ")
+        )
+        .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[10], 0x00);
+        let decoded = db().decode(&frame).unwrap();
+        let field = decoded
+            .fields
+            .iter()
+            .find(|f| f.info.id == "reserved6")
+            .unwrap();
+        match &field.value {
+            crate::engine::FieldValue::Reserved { bytes, .. } => {
+                assert_eq!(bytes.as_slice(), &frame.data[5..23])
+            }
+            other => panic!("{other:?}"),
+        }
+    }
+
+    #[test]
     fn reserved_hex_longer_than_the_field_is_an_error() {
         // 127258's 4-bit Reserved shares a byte with Source: one byte.
         let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
