@@ -881,9 +881,18 @@ impl PgnBuilder {
                     write_bits(buf, next_bit, 8, u64::from(b));
                 }
             }
-            Staged::InPlace(_) | Staged::Deferred(_) => {
-                unreachable!("a VARIABLE target is never Reserved, and stage_value never defers")
+            Staged::InPlace(bytes) => {
+                let bl = target_field
+                    .bit_length
+                    .ok_or(EncodeError::NotFixedLength(target_field.name))?
+                    as usize;
+                write_in_place(buf, next_bit, bl, target_field.name, &bytes)?;
+                if !next_bit.is_multiple_of(8) {
+                    let pad = 8 - (*next_bit % 8);
+                    write_bits(buf, next_bit, pad, 0);
+                }
             }
+            Staged::Deferred(_) => unreachable!("stage_value never defers"),
         }
         Ok(())
     }
@@ -1402,8 +1411,7 @@ fn emit_field(
         }
         Some(Staged::InPlace(bytes)) => {
             let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
-            write_in_place(buf, next_bit, bl, bytes);
-            Ok(())
+            write_in_place(buf, next_bit, bl, f.name, bytes)
         }
         // A fixed-width scalar (number, lookup, PGN, float, …).
         Some(Staged::Scalar(v)) => {
@@ -1488,22 +1496,29 @@ fn stage_in_place(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> 
     let EncodeValue::Bytes(bytes) = v else {
         unreachable!("stage_value only stages Bytes in place");
     };
-    let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))?;
-    if bytes.len() > bl.div_ceil(8) as usize + 1 {
-        return Err(EncodeError::ValueOutOfRange {
-            field: f.name,
-            value: bytes.len() as f64,
-            range: None,
-        });
-    }
+    f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))?;
     Ok(Staged::InPlace(bytes))
 }
 
 /// Write `bits` bits from `bytes`, read as one little-endian bit string
 /// that starts at bit 0 of the message byte the field starts in. Bits the
-/// bytes don't reach are written as zeros.
-fn write_in_place(buf: &mut Vec<u8>, next_bit: &mut usize, bits: usize, bytes: &[u8]) {
+/// bytes don't reach are written as zeros; more bytes than the field
+/// touches is an error.
+fn write_in_place(
+    buf: &mut Vec<u8>,
+    next_bit: &mut usize,
+    bits: usize,
+    field: &'static str,
+    bytes: &[u8],
+) -> Result<(), EncodeError> {
     let shift = *next_bit % 8;
+    if bytes.len() > (shift + bits).div_ceil(8) {
+        return Err(EncodeError::ValueOutOfRange {
+            field,
+            value: bytes.len() as f64,
+            range: None,
+        });
+    }
     let bit = |i: usize| {
         let at = i + shift;
         bytes.get(at / 8).is_some_and(|b| b >> (at % 8) & 1 != 0)
@@ -1511,6 +1526,7 @@ fn write_in_place(buf: &mut Vec<u8>, next_bit: &mut usize, bits: usize, bytes: &
     for i in 0..bits {
         write_bits(buf, next_bit, 1, u64::from(bit(i)));
     }
+    Ok(())
 }
 
 /// Two's-complement / mask `value` into `bits` low bits.
@@ -1972,6 +1988,29 @@ mod tests {
                 .push_in_set(1, 0, "PRN", 1),
             Err(EncodeError::NoSuchInstance { instance: 0, .. })
         ));
+    }
+
+    #[test]
+    fn group_function_value_for_a_reserved_target_is_written_in_place() {
+        // Parameter 3 of 127258 is its 4-bit Reserved. Bytes for it take
+        // the VARIABLE path, which pads the value to a whole byte.
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127258)).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 3i64).unwrap();
+        b.push_in_set(1, i, "Value", EncodeValue::Bytes(vec![0x05]))
+            .unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        assert_eq!(frame.data[frame.data.len() - 2..], [0x03, 0x05]);
+
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127258)).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 3i64).unwrap();
+        b.push_in_set(1, i, "Value", EncodeValue::Bytes(vec![0x05, 0x00]))
+            .unwrap();
+        assert!(b.build().is_err());
     }
 
     #[test]

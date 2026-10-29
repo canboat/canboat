@@ -901,6 +901,15 @@ mod tests {
     }
 
     #[test]
+    fn reserved_hex_longer_than_the_field_is_an_error() {
+        // 127258's 4-bit Reserved shares a byte with Source: one byte.
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"reserved":"50 00"}}}"#
+            .replace('\n', " ");
+        assert!(frame_from_json(db(), &line).is_err());
+    }
+
+    #[test]
     fn non_ascii_hex_is_an_error() {
         let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
             "fields":{"reserved":"€a"}}}"#
