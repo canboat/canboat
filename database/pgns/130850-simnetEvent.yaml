@@ -43,14 +43,14 @@ fields:
   type: LOOKUP
   bits: 8
   lookup: SIMNET_NETWORK_GROUP
-- id: reserved7
-  name: Reserved
-  type: RESERVED
+- id: commandType
+  name: Command Type
+  type: LOOKUP
   bits: 8
-- id: reserved8
-  name: Reserved
-  type: RESERVED
-  bits: 8
+  lookup: SIMNET_EVENT_TYPE
+- id: event
+  name: Event
+  type: UINT8
 - id: reserved9
   name: Reserved
   type: RESERVED
@@ -78,15 +78,21 @@ samples:
     industryCode: "Marine Industry"
     address: 2
     networkGroup: ~
+    commandType: "Follow Up"
+    event: 13
 - raw: "2023-01-01-00:00:00.000,2,130850,32,255,12,41,9f,ff,ff,ff,1f,83,00,ff,ff,00,00"  # from nac3-operations.raw
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
     address: 255
     networkGroup: ~
+    commandType: "Siren"
+    event: 131
 - raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,0d,ff,ff,1a,03,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
     address: 13
     networkGroup: ~
+    commandType: 26
+    event: 3
