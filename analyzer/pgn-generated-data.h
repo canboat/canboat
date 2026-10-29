@@ -10443,7 +10443,7 @@ Pgn pgnList[] = {
       {.name = "Sats in View", .camelName = "satsInView", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "PRN", .camelName = "prn", .fieldType = "UINT8", .resolution = 1.0, .description = "1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou"},
       {.name = "Elevation", .camelName = "elevation", .fieldType = "ANGLE_FIX16", .hasSign = true},
-      {.name = "Azimuth", .camelName = "azimuth", .fieldType = "ANGLE_FIX16", .hasSign = true},
+      {.name = "Azimuth", .camelName = "azimuth", .fieldType = "ANGLE_UFIX16"},
       {.name = "SNR", .camelName = "snr", .fieldType = "SIGNALTONOISERATIO_FIX16", .hasSign = true},
       {.name = "Range residual", .camelName = "rangeResidual", .fieldType = "DISTANCE_FIX32_MMM", .hasSign = true},
       {.name = "Baseline status", .camelName = "baselineStatus", .fieldType = "BITLOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFURUNO_BASELINE_STATUS, .lookup.name = "FURUNO_BASELINE_STATUS"}
