@@ -25,3 +25,8 @@
 #![allow(clippy::approx_constant)]
 
 include!("schema_generated.rs");
+
+/// Content hash of the generated schema tables, computed by build.rs. Two
+/// processes compare it to prove they were built from the same database
+/// before trusting each other's field indices.
+pub const SCHEMA_HASH: u64 = include!(concat!(env!("OUT_DIR"), "/schema_hash.rs"));
