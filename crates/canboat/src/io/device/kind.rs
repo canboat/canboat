@@ -153,6 +153,8 @@ pub enum Setting {
     Password,
     /// The NGT-1's operating mode.
     Mode,
+    /// The NGT-1's P-Code output per port.
+    PCode,
     /// Turn off the gateway's own transmit rate limit.
     NoTxRateLimit,
     /// Accept sentences whose checksum is wrong.
@@ -177,6 +179,7 @@ impl Setting {
         Setting::Channel,
         Setting::Password,
         Setting::Mode,
+        Setting::PCode,
         Setting::NoTxRateLimit,
         Setting::IgnoreChecksum,
         Setting::RxFilter,
@@ -194,6 +197,7 @@ impl Setting {
             Setting::Channel => "channel",
             Setting::Password => "password",
             Setting::Mode => "mode",
+            Setting::PCode => "pcode",
             Setting::NoTxRateLimit => "no_tx_rate_limit",
             Setting::IgnoreChecksum => "ignore_checksum",
             Setting::RxFilter => "rx_filter",
@@ -546,7 +550,7 @@ impl Kind {
     pub fn settings(self) -> &'static [Setting] {
         use Setting::*;
         match self {
-            Kind::NGT1 => &[Baud, Mode],
+            Kind::NGT1 => &[Baud, Mode, PCode],
             Kind::Aos => &[Baud, Node, NoClaim],
             Kind::Ikonvert => &[Baud, NoTxRateLimit, RxFilter],
             Kind::Maretron => &[Password],

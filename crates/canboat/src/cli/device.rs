@@ -10,6 +10,7 @@ use std::sync::LazyLock;
 use anyhow::{Result, bail};
 
 use crate::engine::BusProtocol;
+use crate::engine::codec::ngt1_pcode::PCodeRequest;
 use crate::engine::format::ngt1::OperatingMode;
 use crate::io::device::kind::{ActisenseFormat, Kind, Setting};
 use crate::io::device::open::Device;
@@ -231,6 +232,28 @@ pub struct DeviceArgs {
     )]
     pub mode: Option<Ngt1Mode>,
 
+    /// The NGT-1's P-Code output per port: `on` (the default) switches
+    /// every port on, `off` every port off, `PORT=on|off` (comma separated)
+    /// those ports; `get` only reads and logs it, `keep` leaves it alone.
+    #[arg(
+        long,
+        value_name = "on|off|keep|get|PORT=on|off,...",
+        value_parser = |s: &str| PCodeRequest::parse(s),
+        help = help::only_help(Setting::PCode, "the P-Codes per port: on (default), off, keep, get, or PORT=on|off,..."),
+        long_help = format!(
+            "{}\n\nWith P-Codes on, the gateway sends `Actisense: System status` about once a \
+             second, which gives the network status (PGN 262400) its bus load and error count. \
+             By default every port is switched on. canboat reads the setting first and writes \
+             only the ports that differ (the gateway saves it in EEPROM; nothing is written \
+             when it already holds it). `off` switches every port off, `PORT=on|off` only the \
+             ports named; `get` only reads the setting and logs it, `keep` neither reads nor \
+             writes it.",
+            help::only_help(Setting::PCode, "the P-Codes per port: on (default), off, keep, get, or PORT=on|off,...")
+        ),
+        help_heading = SPECIFIC
+    )]
+    pub pcode: Option<PCodeRequest>,
+
     /// Turn off the gateway's transmit rate limit.
     #[arg(
         long,
@@ -364,6 +387,7 @@ impl DeviceArgs {
             ("--channel", Setting::Channel, self.channel.is_some()),
             ("--password", Setting::Password, self.password.is_some()),
             ("--mode", Setting::Mode, self.mode.is_some()),
+            ("--pcode", Setting::PCode, self.pcode.is_some()),
             (
                 "--no-tx-rate-limit",
                 Setting::NoTxRateLimit,
@@ -470,6 +494,9 @@ impl DeviceArgs {
         }
         if let Some(password) = &self.password {
             dev = dev.password(password.clone());
+        }
+        if let Some(pcode) = &self.pcode {
+            dev = dev.pcode(pcode.clone());
         }
         if let Some(mode) = self.mode {
             dev = dev.mode(mode.into());
