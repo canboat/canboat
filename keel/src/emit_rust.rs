@@ -11,8 +11,6 @@
 
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
-use std::fs;
-use std::path::{Path, PathBuf};
 
 // ---------------------------------------------------------------------
 // Build-script deserialization types.
@@ -1341,9 +1339,9 @@ fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> C
 
 /// Render the whole `schema_generated.rs` body.
 ///
-/// `root` is the repository root: the SCHEMA_HASH below is computed by
-/// walking the authored `database/*.yaml` on disk, so the emitter needs to
-/// know where they are.
+/// It has no SCHEMA_HASH: the crate's build.rs computes that from the
+/// generated files, so two PRs that change different PGNs don't both
+/// rewrite one line of this file.
 ///
 /// With `j1939` set, emits the J1939 PGN tables (from
 /// `database/j1939/pgns/`) instead — the Rust mirror of
@@ -1352,11 +1350,7 @@ fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> C
 /// constants and id constants are shared with the main schema. The two
 /// trees no longer draw on one manufacturer registry, so each carries
 /// just the enumerations its own PGNs reference.
-pub fn emit_schema(
-    db: &crate::model::Database,
-    root: &Path,
-    protocol: crate::model::Protocol,
-) -> String {
+pub fn emit_schema(db: &crate::model::Database, protocol: crate::model::Protocol) -> String {
     let canboat = from_keel(db, protocol);
 
     // The CANBOAT_BEM pseudo-PGNs (0x40000+) are ordinary members of the
@@ -1473,52 +1467,6 @@ pub fn emit_schema(
     }
 
     if protocol == crate::model::Protocol::Nmea2000 {
-        // Content hash over the authored schema source (database/**.yaml).
-        // This is the schema identity two processes
-        // would exchange to prove they were built from byte-identical schema
-        // data before trusting each other's field indices. Any edit to the
-        // database — versioned or not — changes this, so a mismatch fails the handshake loudly instead of
-        // silently mis-decoding fields. FNV-1a/64: dependency-free, stable,
-        // and drift-detection is all it needs to be (not security).
-        let schema_hash: u64 = {
-            // Hash every authored database file, path included, in a stable
-            // (sorted) order. Path as well as content, so a rename alone still
-            // moves the hash.
-            let mut files: Vec<PathBuf> = Vec::new();
-            let mut stack = vec![root.join("database")];
-            while let Some(dir) = stack.pop() {
-                let Ok(rd) = fs::read_dir(&dir) else { continue };
-                for e in rd.flatten() {
-                    let p = e.path();
-                    if p.is_dir() {
-                        stack.push(p);
-                    } else if p.extension().is_some_and(|x| x == "yaml") {
-                        files.push(p);
-                    }
-                }
-            }
-            files.sort();
-            let mut h: u64 = 0xcbf2_9ce4_8422_2325;
-            let feed = |bytes: &[u8], h: &mut u64| {
-                for &b in bytes {
-                    *h ^= b as u64;
-                    *h = h.wrapping_mul(0x0000_0100_0000_01b3);
-                }
-            };
-            for f in &files {
-                feed(
-                    f.strip_prefix(root)
-                        .unwrap_or(f)
-                        .to_string_lossy()
-                        .as_bytes(),
-                    &mut h,
-                );
-                feed(&fs::read(f).unwrap_or_default(), &mut h);
-            }
-            h
-        };
-        writeln!(out, "pub const SCHEMA_HASH: u64 = {};", schema_hash).unwrap();
-
         // The Copyright field is a multi-line banner (version, (C) line,
         // Apache license boilerplate). The (C) line is the one the C
         // tools print in their usage/verbose output — extract just that.

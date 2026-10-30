@@ -138,7 +138,7 @@ fn pseudo_pgns_have_a_document_of_their_own() {
 /// same bytes. A `HashMap` iterated without sorting would show up here.
 #[test]
 fn emission_is_deterministic() {
-    let (root, db, authored) = load();
+    let (_, db, authored) = load();
     assert_eq!(
         emit_xml::emit_xml(&db, Protocol::Nmea2000),
         emit_xml::emit_xml(&db, Protocol::Nmea2000)
@@ -156,8 +156,8 @@ fn emission_is_deterministic() {
         emit_c::emit_fieldtype_data_h(&authored)
     );
     assert_eq!(
-        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000),
-        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000)
+        emit_rust::emit_schema(&db, Protocol::Nmea2000),
+        emit_rust::emit_schema(&db, Protocol::Nmea2000)
     );
     assert_eq!(
         emit_rust::emit_fastpacket(&db),
@@ -169,7 +169,7 @@ fn emission_is_deterministic() {
 /// one table for both flavors would otherwise pass every other check.
 #[test]
 fn the_j1939_tables_differ_from_the_nmea_ones() {
-    let (root, db, _) = load();
+    let (_, db, _) = load();
     assert_ne!(
         emit_c::emit_pgn_data_h(&db, Protocol::Nmea2000),
         emit_c::emit_pgn_data_h(&db, Protocol::J1939)
@@ -179,8 +179,8 @@ fn the_j1939_tables_differ_from_the_nmea_ones() {
         emit_c::emit_lookup_h(&db, Protocol::J1939)
     );
     assert_ne!(
-        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000),
-        emit_rust::emit_schema(&db, &root, Protocol::J1939)
+        emit_rust::emit_schema(&db, Protocol::Nmea2000),
+        emit_rust::emit_schema(&db, Protocol::J1939)
     );
 }
 
@@ -189,10 +189,10 @@ fn the_j1939_tables_differ_from_the_nmea_ones() {
 /// fieldtype defaults into fields, so a non-idempotent step would compound.
 #[test]
 fn the_derive_pass_is_idempotent() {
-    let (root, mut db, _) = load();
-    let once = emit_rust::emit_schema(&db, &root, Protocol::Nmea2000);
+    let (_, mut db, _) = load();
+    let once = emit_rust::emit_schema(&db, Protocol::Nmea2000);
     derive::fill(&mut db).expect("second derive pass succeeds");
-    assert_eq!(once, emit_rust::emit_schema(&db, &root, Protocol::Nmea2000));
+    assert_eq!(once, emit_rust::emit_schema(&db, Protocol::Nmea2000));
 }
 
 /// `keel explain` renders the whole database as prose. It is not a
