@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [9.2.0](https://github.com/canboat/canboat/compare/v9.1.0...v9.2.0) (2026-10-30)
+
+
+### Added
+
+* **127252:** Heave Delay and Delay Source ([#1118](https://github.com/canboat/canboat/issues/1118)) ([2f64377](https://github.com/canboat/canboat/commit/2f64377289281915ad0b98adeadb57ca0855aa8e))
+* **130845:** the Furuno satellite azimuth is unsigned, 0 to 2π ([#1115](https://github.com/canboat/canboat/issues/1115)) ([437fca0](https://github.com/canboat/canboat/commit/437fca0679e074437d8029a936adcdd94ca63c69)), closes [#1113](https://github.com/canboat/canboat/issues/1113)
+* **130850:** name the catch-all's event type and event bytes ([#1117](https://github.com/canboat/canboat/issues/1117)) ([b84095c](https://github.com/canboat/canboat/commit/b84095c2ec98df0f160224a4fd317c84b84dc538)), closes [#1112](https://github.com/canboat/canboat/issues/1112)
+
+
+### Fixed
+
+* **make:** rebuild the analyzer after keel regenerates its tables ([#1119](https://github.com/canboat/canboat/issues/1119)) ([b2785af](https://github.com/canboat/canboat/commit/b2785af369ec9a06b57f1ce95bd6f5da5ee957f9))
+
 ## [9.1.0](https://github.com/canboat/canboat/compare/v9.0.0...v9.1.0) (2026-10-28)
 
 
