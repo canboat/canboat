@@ -166,7 +166,7 @@ jobs:
       # job's default shell expects it, and keeps Cygwin off the system
       # PATH.
       - name: Set up Cygwin
-        uses: cygwin/cygwin-install-action@v6
+        uses: cygwin/cygwin-install-action@v7
         with:
             packages: make,gcc-core,python3,diffutils
             install-dir: C:\tools\cygwin
