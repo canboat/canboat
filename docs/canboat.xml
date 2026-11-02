@@ -66175,6 +66175,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66183,6 +66184,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -66207,6 +66209,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66215,6 +66218,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -66239,6 +66243,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66247,6 +66252,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -66271,6 +66277,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66279,6 +66286,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -66303,6 +66311,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66311,6 +66320,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>15</Order>
@@ -66335,6 +66345,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66343,6 +66354,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>17</Order>
@@ -66367,6 +66379,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66375,6 +66388,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>19</Order>
@@ -66399,6 +66413,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.2</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -66407,6 +66422,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>21</Order>
@@ -77724,6 +77740,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77732,6 +77749,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -77756,6 +77774,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77764,6 +77783,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -77788,6 +77808,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77796,6 +77817,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -77820,6 +77842,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77828,6 +77851,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -77852,6 +77876,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77860,6 +77885,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>15</Order>
@@ -77884,6 +77910,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77892,6 +77919,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>17</Order>
@@ -77916,6 +77944,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77924,6 +77953,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>19</Order>
@@ -77948,6 +77978,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -77956,6 +77987,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
           <Order>21</Order>
@@ -79471,6 +79503,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>22</FieldCount>

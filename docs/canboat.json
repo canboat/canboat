@@ -66276,6 +66276,7 @@
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66283,7 +66284,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":7,
@@ -66308,6 +66310,7 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66315,7 +66318,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":9,
@@ -66340,6 +66344,7 @@
             "BitLength":8,
             "BitOffset":80,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66347,7 +66352,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":11,
@@ -66372,6 +66378,7 @@
             "BitLength":8,
             "BitOffset":104,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66379,7 +66386,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":13,
@@ -66404,6 +66412,7 @@
             "BitLength":8,
             "BitOffset":128,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66411,7 +66420,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":15,
@@ -66436,6 +66446,7 @@
             "BitLength":8,
             "BitOffset":152,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66443,7 +66454,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":17,
@@ -66468,6 +66480,7 @@
             "BitLength":8,
             "BitOffset":176,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66475,7 +66488,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":19,
@@ -66500,6 +66514,7 @@
             "BitLength":8,
             "BitOffset":200,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.2,
             "Signed":false,
             "RangeMin":0,
@@ -66507,7 +66522,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":21,
@@ -77658,6 +77674,7 @@
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77665,7 +77682,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":7,
@@ -77690,6 +77708,7 @@
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77697,7 +77716,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":9,
@@ -77722,6 +77742,7 @@
             "BitLength":8,
             "BitOffset":80,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77729,7 +77750,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":11,
@@ -77754,6 +77776,7 @@
             "BitLength":8,
             "BitOffset":104,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77761,7 +77784,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":13,
@@ -77786,6 +77810,7 @@
             "BitLength":8,
             "BitOffset":128,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77793,7 +77818,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":15,
@@ -77818,6 +77844,7 @@
             "BitLength":8,
             "BitOffset":152,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77825,7 +77852,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":17,
@@ -77850,6 +77878,7 @@
             "BitLength":8,
             "BitOffset":176,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77857,7 +77886,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":19,
@@ -77882,6 +77912,7 @@
             "BitLength":8,
             "BitOffset":200,
             "BitStart":0,
+            "Unit":"A",
             "Resolution":0.1,
             "Signed":false,
             "RangeMin":0,
@@ -77889,7 +77920,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
           {
             "Order":21,
@@ -79374,7 +79406,7 @@
         "Description":"BEP Marine: CZone Control X Plus output status",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Interval"
+        "Missing":["Fields","Interval"
         ],
         "FieldCount":22,
         "Length":27,
