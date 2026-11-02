@@ -1,0 +1,35 @@
+name: Validate CZone provisional PGN improvements
+on:
+  push:
+    branches: [feat/czone-pgn-upstream]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify PR comparison base
+        run: git show-ref --verify refs/remotes/origin/master && git merge-base HEAD origin/master
+      - name: Install CANboat generation prerequisites
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils xsltproc
+      - name: Validate PGN definitions and captured samples
+        run: keel/keel check
+      - name: Run C golden-file tests
+        run: make tests
+      - name: Generate database
+        run: make generated
+      - name: Run PR checks
+        run: make pr
+      - name: Commit generated database artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/canboat.xml docs/canboat.json docs/canboat.html docs/canboat.dbc
+          git add analyzer/*-generated-data.h crates/canboat/src/engine/*generated*.rs
+          git diff --cached --quiet || git commit -m 'build(czone): regenerate CANboat artifacts for updated PGNs'
+          if [ "$(git rev-parse HEAD)" != "${GITHUB_SHA}" ]; then git push origin HEAD:feat/czone-pgn-upstream; fi
