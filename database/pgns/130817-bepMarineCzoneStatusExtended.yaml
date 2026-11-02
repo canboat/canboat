@@ -1,18 +1,9 @@
 pgn: 130817
 id: bepMarineCzoneStatusExtended
-description: 'BEP Marine: CZone Status Extended'
+description: 'BEP Marine: CZone AC Output Interface status'
 type: Fast
 variantOrder: 5
-missing:
-- Fields
-- FieldLengths
-- Resolution
-explanation: 'Periodic extended-status frame from a CZone module. Real CZone modules use it to report per-circuit measurements
-  (e.g. breaker current); the YDAB-01 sends a stub form for module-presence purposes only. Each per-circuit record is 3 bytes:
-  byte 0 = circuit_id (8-bit), byte 1 = value low, byte 2 = bits 0..1 are value high (10-bit magnitude total) + bit 2 = sign
-  (set => positive) + bit 3 = per-frame flag (only meaningful with N>=6 records) + bits 4..7 = unknown. Value is most plausibly
-  current in 0.1 A units, but unverified. Periodic at ~2 s intervals.'
-url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md
+notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based).'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -33,14 +24,70 @@ fields:
   match: 4
   lookup: INDUSTRY_CODE
 - id: page
-  name: Page
+  name: Output Page
   type: UINT8
-  description: Observed = 0x01; possibly a status-page selector
-- id: dipswitch
-  name: Dipswitch
+- id: moduleId
+  name: ZCF Module ID
   type: UINT8
-- id: records
-  name: Records
-  type: BINARY
-  bits: 192
-  description: N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8
+- id: outputCurrent0
+  name: Output 0 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode0
+  name: Output 0 State and Level Code
+  type: UINT16
+- id: outputCurrent1
+  name: Output 1 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode1
+  name: Output 1 State and Level Code
+  type: UINT16
+- id: outputCurrent2
+  name: Output 2 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode2
+  name: Output 2 State and Level Code
+  type: UINT16
+- id: outputCurrent3
+  name: Output 3 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode3
+  name: Output 3 State and Level Code
+  type: UINT16
+- id: outputCurrent4
+  name: Output 4 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode4
+  name: Output 4 State and Level Code
+  type: UINT16
+- id: outputCurrent5
+  name: Output 5 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode5
+  name: Output 5 State and Level Code
+  type: UINT16
+- id: outputCurrent6
+  name: Output 6 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode6
+  name: Output 6 State and Level Code
+  type: UINT16
+- id: outputCurrent7
+  name: Output 7 Current
+  type: UINT8
+  resolution: 0.2
+- id: outputStateCode7
+  name: Output 7 State and Level Code
+  type: UINT16
+samples:
+- raw: "2026-11-02-00:00:00.000,6,130817,11,255,28,27,99,00,f8,00,00,04,00,00,04,00,00,04,00,00,04,00,00,04,00,00,04,00,e8,07,00,e8,0f"
+  expects:
+    page: 0
+    moduleId: 248
+    outputCurrent0: 0
