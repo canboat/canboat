@@ -1415,10 +1415,14 @@ fn write_unset(
                 write_bits(buf, next_bit, 8, u64::from(string_fix_pad(pgn)));
             }
         }
-        // Binary: all-1s (binary fields are whole bytes).
+        // Binary: all ones over its whole width, which need not be whole
+        // bytes: 129038's Communication State is 19 bits (canboat#1121).
         Some(FieldType::Binary) if f.bit_length.is_some() => {
-            for _ in 0..f.bit_length.unwrap() as usize / 8 {
-                write_bits(buf, next_bit, 8, 0xff);
+            let mut left = f.bit_length.unwrap() as usize;
+            while left > 0 {
+                let n = left.min(64);
+                write_bits(buf, next_bit, n, all_ones(n as u32));
+                left -= n;
             }
         }
         // Variable-length binary: nothing to emit.
@@ -2080,6 +2084,61 @@ mod tests {
             d.field(NAME).and_then(|f| f.value.as_str()),
             Some("MERRIMAC")
         );
+    }
+
+    /// An unset Binary field is all ones over its whole width, also when
+    /// that isn't whole bytes, and the fields after it stay in place
+    /// (canboat#1121: 129038's 19-bit Communication State got 16 bits).
+    #[test]
+    fn unset_binary_of_odd_width_is_all_ones_and_keeps_the_layout() {
+        let mut b = db().encode("aisClassAPositionReport").unwrap();
+        b.push_by_name("AIS Transceiver information", EncodeValue::Int(0))
+            .unwrap();
+        let frame = b.build().unwrap();
+        let decoded = db().decode(&frame).unwrap();
+        let field = |id: &str| {
+            &decoded
+                .fields
+                .iter()
+                .find(|f| f.info.id == id)
+                .unwrap()
+                .value
+        };
+        assert!(matches!(
+            field("aisTransceiverInformation"),
+            crate::engine::FieldValue::Lookup { value: 0, .. }
+        ));
+        assert!(matches!(
+            field("rateOfTurn"),
+            crate::engine::FieldValue::NotAvailable
+        ));
+
+        // Every Binary field of odd width in the database, unset.
+        let bit = |data: &[u8], i: usize| data[i / 8] >> (i % 8) & 1;
+        let mut seen = 0;
+        for info in db().pgns() {
+            let Some(at) = info.fields.iter().position(|f| {
+                f.field_type == Some(FieldType::Binary) && f.bit_length.is_some_and(|n| n % 8 != 0)
+            }) else {
+                continue;
+            };
+            let Ok(frame) = db().encode(info.id).and_then(|b| b.build()) else {
+                continue;
+            };
+            let f = &info.fields[at];
+            let (start, len) = (
+                f.bit_offset.unwrap() as usize,
+                f.bit_length.unwrap() as usize,
+            );
+            assert!(
+                (start..start + len).all(|i| bit(&frame.data, i) == 1),
+                "{} {}",
+                info.id,
+                f.name
+            );
+            seen += 1;
+        }
+        assert!(seen >= 6, "only {seen} PGNs checked");
     }
 
     /// Unset AIS text is all '@' too, in every PGN of the set.
