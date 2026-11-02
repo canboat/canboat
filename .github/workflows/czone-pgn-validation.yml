@@ -9,6 +9,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Install XML validation utility
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
       - name: Validate PGN definitions and captured samples
         run: keel/keel check
       - name: Generate database
