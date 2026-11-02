@@ -13,7 +13,7 @@ for pgn, order in [(130817, 6), (130822, 11), (130825, 5)]:
     target = pgn_dir / f"{pgn}-bepMarineCzoneOutputStatus.yaml"
     assert source.is_file() and pgn_dir.is_dir()
     content = source.read_text()
-    content = re.sub(r"(?m)^variantOrder: \\d+$", f"variantOrder: {order}", content)
+    content = re.sub(r"(?m)^variantOrder: [0-9]+$", f"variantOrder: {order}", content)
     assert f"variantOrder: {order}" in content
     assert not target.exists()
     target.write_text(content)
