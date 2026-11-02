@@ -3,7 +3,7 @@ id: bepMarineProprietaryPgn130822
 description: 'BEP Marine: CZone DC Output Interface status'
 type: Fast
 variantOrder: 10
-notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based).'
+notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130822-sugarshack-dc.log (captured payload, synthetic fixture timestamp). Observed codes include 1024 (off) and 2024 (on); other state codes are not exhaustively interpreted.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
