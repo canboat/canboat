@@ -3,7 +3,7 @@ id: bepMarineCzoneStatusExtended
 description: 'BEP Marine: CZone AC Output Interface status'
 type: Fast
 variantOrder: 5
-notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130817-sugarshack-ac.log (captured payload, synthetic fixture timestamp). Observed live loads support 0.2 A/count (water heater about 8.2 A/raw 41; blender about 1.4 A/raw 7); nonzero-load calibration is not in the zero-current fixture.'
+notes: 'Captured CZone module output status. Module identifier is a device identification byte (not necessarily the physical DIP-switch setting); SugarShack ACOI 01 has PGN value 0xF8 (248), CZone Configuration Tool DIP-switch 00011111 (31), and serial identifier ACOI 248; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130817-sugarshack-ac.log (captured payload, synthetic fixture timestamp). Observed live loads support 0.2 A/count (water heater about 8.2 A/raw 41; blender about 1.4 A/raw 7); nonzero-load calibration is not in the zero-current fixture.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -31,56 +31,64 @@ fields:
   type: UINT8
 - id: outputCurrent0
   name: Output 0 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode0
   name: Output 0 State and Level Code
   type: UINT16
 - id: outputCurrent1
   name: Output 1 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode1
   name: Output 1 State and Level Code
   type: UINT16
 - id: outputCurrent2
   name: Output 2 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode2
   name: Output 2 State and Level Code
   type: UINT16
 - id: outputCurrent3
   name: Output 3 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode3
   name: Output 3 State and Level Code
   type: UINT16
 - id: outputCurrent4
   name: Output 4 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode4
   name: Output 4 State and Level Code
   type: UINT16
 - id: outputCurrent5
   name: Output 5 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode5
   name: Output 5 State and Level Code
   type: UINT16
 - id: outputCurrent6
   name: Output 6 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode6
   name: Output 6 State and Level Code
   type: UINT16
 - id: outputCurrent7
   name: Output 7 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.2
 - id: outputStateCode7
   name: Output 7 State and Level Code

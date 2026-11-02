@@ -3,6 +3,8 @@ id: bepMarineProprietaryPgn130825
 description: 'BEP Marine: CZone Control X Plus output status'
 type: Fast
 variantOrder: 3
+missing:
+- Fields
 notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130825-compass-rose-control-x-plus.log (captured payload, synthetic fixture timestamp). Current/level values are raw 11-bit quantities; raw level 1000 was observed at full output, without claiming universal scaling.'
 fields:
 - id: manufacturerCode
@@ -102,3 +104,7 @@ samples:
   expects:
     moduleId: 2
     page: 0
+    outputCurrentRaw2: 1
+    outputLevelRaw0: 1000
+    outputCurrentRaw4: 5
+    outputLevelRaw5: 1000

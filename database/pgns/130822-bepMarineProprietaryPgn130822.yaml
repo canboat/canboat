@@ -31,56 +31,64 @@ fields:
   type: UINT8
 - id: outputCurrent0
   name: Output 0 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode0
   name: Output 0 State and Level Code
   type: UINT16
 - id: outputCurrent1
   name: Output 1 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode1
   name: Output 1 State and Level Code
   type: UINT16
 - id: outputCurrent2
   name: Output 2 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode2
   name: Output 2 State and Level Code
   type: UINT16
 - id: outputCurrent3
   name: Output 3 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode3
   name: Output 3 State and Level Code
   type: UINT16
 - id: outputCurrent4
   name: Output 4 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode4
   name: Output 4 State and Level Code
   type: UINT16
 - id: outputCurrent5
   name: Output 5 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode5
   name: Output 5 State and Level Code
   type: UINT16
 - id: outputCurrent6
   name: Output 6 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode6
   name: Output 6 State and Level Code
   type: UINT16
 - id: outputCurrent7
   name: Output 7 Current
-  type: UINT8
+  type: CURRENT
+  bits: 8
   resolution: 0.1
 - id: outputStateCode7
   name: Output 7 State and Level Code
