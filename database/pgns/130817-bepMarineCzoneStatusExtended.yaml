@@ -3,7 +3,7 @@ id: bepMarineCzoneStatusExtended
 description: 'BEP Marine: CZone AC Output Interface status'
 type: Fast
 variantOrder: 5
-notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based).'
+notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130817-sugarshack-ac.log (captured payload, synthetic fixture timestamp). Observed live loads support 0.2 A/count (water heater about 8.2 A/raw 41; blender about 1.4 A/raw 7); nonzero-load calibration is not in the zero-current fixture.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
