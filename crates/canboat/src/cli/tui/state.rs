@@ -990,9 +990,42 @@ fn rekey_fields(fields: &mut Map<String, Value>, info: &PgnInfo) {
 }
 
 /// Pull an integer out of `line.fields.<field>` (handles both the
-/// bare-integer JSON shape and the `-nv` `{value, name}` object).
+/// bare-integer JSON shape and the `-nv` `{value, name}` object). A lookup
+/// field from a server run with `--no-nv` is its name alone, which maps
+/// back to its code through the field's lookup; an indirect one (the
+/// Address Claim's Device Function) through its key field's code too.
 fn field_number(line: &Value, f: FieldRef) -> Option<i64> {
-    field_as_int(field_value(line, f)?)
+    let v = field_value(line, f)?;
+    if let Some(n) = field_as_int(v) {
+        return Some(n);
+    }
+    let name = v.as_str()?;
+    let db = PgnDatabase::embedded(Units::Metric);
+    let code = if let Some(table) = f.field.lookup_enumeration {
+        db.lookup(table)?
+            .values
+            .iter()
+            .find(|lv| lv.name == name)?
+            .value
+    } else {
+        let table = f.field.lookup_indirect_enumeration?;
+        let order = f.field.lookup_indirect_enumeration_field_order?;
+        let key_field = f.pgn.fields.iter().find(|x| x.order == order)?;
+        let key = u64::try_from(field_number(
+            line,
+            FieldRef {
+                pgn: f.pgn,
+                field: key_field,
+            },
+        )?)
+        .ok()?;
+        let max = f
+            .field
+            .bit_length
+            .map_or(255, |bits| (1u64 << bits.min(16)) - 1);
+        (0..=max).find(|&c| db.indirect_lookup(table, key, c) == Some(name))?
+    };
+    i64::try_from(code).ok()
 }
 
 fn fill_from_claim(dev: &mut DeviceInfo, line: &Value) {
@@ -1115,6 +1148,37 @@ mod tests {
             "pgn": 262657,
             "fields": {"Function": 0, "Source": src, "Sentence": sentence, "Muted": muted}
         })
+    }
+
+    /// A server run with `--no-nv` writes a lookup field as its name
+    /// alone; the Address Claim's codes are read back through the lookups,
+    /// the indirect Device Function too (canboat#1129).
+    #[test]
+    fn bare_lookup_names_read_back_as_codes() {
+        let mut s = state();
+        let claim = json!({
+            "prio": 6, "src": 42, "dst": 255, "pgn": 60928,
+            "description": "ISO Address Claim",
+            "fields": {
+                "uniqueNumber": 1083224, "manufacturerCode": "B & G",
+                "deviceInstanceLower": 0, "deviceInstanceUpper": 0,
+                "deviceFunction": "Atmospheric", "deviceClass": "External Environment",
+                "systemInstance": 0, "industryGroup": "Marine Industry",
+                "arbitraryAddressCapable": "Yes"
+            }
+        });
+        s.upsert(60928, 42, None, "isoAddressClaim".into(), claim);
+        let key = s
+            .src_to_name
+            .get(&42)
+            .copied()
+            .expect("NAME key from the claim");
+        assert_eq!(key.manufacturer_code, 381);
+        assert_eq!(key.unique_number, 1083224);
+        let info = &s.device_cache[&key];
+        assert_eq!(info.device_class, Some(85));
+        assert_eq!(info.device_function, Some(130));
+        assert_eq!(info.industry_group, Some(4));
     }
 
     #[test]

@@ -312,6 +312,16 @@ pub struct Args {
     #[command(flatten, next_help_heading = JSON)]
     shape: crate::cli::ShapeArgs,
 
+    /// Write a lookup field as its name alone, as `convert` does without
+    /// --nv, not as `{"value":…,"name":…}`.
+    ///
+    /// By default the analyzer and snapshot ports carry the value and the
+    /// name, as canboat C's n2kd does (it runs the analyzer with -nv). The
+    /// banner's `showLookupValues` says which. The filter and overrides
+    /// control ports always carry both.
+    #[arg(long, help_heading = JSON)]
+    no_nv: bool,
+
     /// Log more.
     #[arg(short = 'v', long, help_heading = LOGGING)]
     verbose: bool,
@@ -406,6 +416,11 @@ pub struct BridgeConfig {
     /// Nest each JSON record in `{"<pgnId>":{…}}` (`--wrap`). Off by
     /// default; canboat C ties this to `-camel`, we don't.
     pub wrap: bool,
+    /// Write a lookup field on the analyzer JSON / snapshot ports as
+    /// `{"value":…,"name":…}`, as canboat C's n2kd does (`-nv`); `false`
+    /// writes the name alone (`--no-nv`). On by default. The control
+    /// ports always write both.
+    pub name_value: bool,
     pub verbose: bool,
     pub quiet: bool,
 }
@@ -454,6 +469,7 @@ impl Default for BridgeConfig {
             camel_case: crate::engine::output::CamelCase::Lower,
             units: crate::engine::Units::Si,
             wrap: false,
+            name_value: true,
             verbose: false,
             quiet: false,
         }
@@ -537,6 +553,7 @@ impl From<Args> for BridgeConfig {
             camel_case: a.shape.camel_case(),
             units: a.shape.units(),
             wrap: a.shape.wrap(),
+            name_value: !a.no_nv,
             verbose: a.verbose,
             quiet: a.quiet,
         }

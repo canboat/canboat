@@ -237,4 +237,20 @@ mod tests {
         use clap::CommandFactory;
         Cli::command().debug_assert();
     }
+
+    /// `server` writes value/name pairs unless `--no-nv` (canboat#1129).
+    #[test]
+    fn server_no_nv_turns_the_value_name_pairs_off() {
+        let config = |extra: &[&str]| {
+            let args = ["canboat", "server", "--replay", "x.raw"]
+                .iter()
+                .chain(extra);
+            match Cli::try_parse_from(args).unwrap().command {
+                Command::Server(a) => server::BridgeConfig::from(*a),
+                other => panic!("{other:?}"),
+            }
+        };
+        assert!(config(&[]).name_value);
+        assert!(!config(&["--no-nv"]).name_value);
+    }
 }
