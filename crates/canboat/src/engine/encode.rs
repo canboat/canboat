@@ -553,15 +553,24 @@ impl PgnBuilder {
             // A repeating set starts at this field? Emit its staged
             // instances and skip past the group's schema fields.
             let mut in_set = false;
-            for (layout, instances) in [(&set1, &self.sets[0]), (&set2, &self.sets[1])] {
+            for (set, (layout, instances)) in [(&set1, &self.sets[0]), (&set2, &self.sets[1])]
+                .into_iter()
+                .enumerate()
+            {
                 if let Some((start, size, _)) = *layout
                     && idx == start
                 {
-                    // The last instance with a group-function value: only
-                    // there may a target's trailing BINARY end the message.
-                    let last_value = instances.iter().rposition(|inst| {
-                        inst.iter().any(|s| matches!(s, Some(Staged::Deferred(_))))
-                    });
+                    // The last instance with a group-function value, when no
+                    // later set follows it (126208 Write Fields' new values
+                    // follow its selection): only there may a target's
+                    // trailing BINARY end the message.
+                    let later = set == 0 && !self.sets[1].is_empty();
+                    let last_value = instances
+                        .iter()
+                        .rposition(|inst| {
+                            inst.iter().any(|s| matches!(s, Some(Staged::Deferred(_))))
+                        })
+                        .filter(|_| !later);
                     for (n, inst) in instances.iter().enumerate() {
                         for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
                             match &inst[j] {
@@ -2909,6 +2918,32 @@ mod tests {
         b.push_by_name("PGN", EncodeValue::Pgn(pgn)).unwrap();
         b.push_by_name("Unique ID", 0i64).unwrap();
         b
+    }
+
+    /// In a Write Fields the new values follow the selection, so a
+    /// selection value for the catch-all's Data does not end the message
+    /// when there are any: it is refused, not written short.
+    #[test]
+    fn a_catch_all_selection_before_new_values_is_refused() {
+        let build = |with_value: bool| {
+            let mut b = write_fields(130824);
+            b.push_by_name("Manufacturer Code", 137i64).unwrap();
+            b.push_by_name("Industry Code", 4i64).unwrap();
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "selectionParameter", Raw(4)).unwrap();
+            b.push_in_set(1, i, "selectionValue", EncodeValue::Text("00 05".into()))
+                .unwrap();
+            if with_value {
+                let i = b.add_set_instance(2).unwrap();
+                b.push_in_set(2, i, "parameter", Raw(4)).unwrap();
+                b.push_in_set(2, i, "value", EncodeValue::Text("06".into()))
+                    .unwrap();
+            }
+            b.build()
+        };
+        assert!(build(false).is_ok(), "{:?}", build(false));
+        let err = build(true).unwrap_err().to_string();
+        assert!(err.contains("must be the last parameter"), "{err}");
     }
 
     #[test]
