@@ -270,28 +270,6 @@ fn field_in_any_repeat_set(
     None
 }
 
-/// A key field's text in `msg`, as the server's own snapshot keys it: a
-/// lookup by its code. A `-nv` record carries the code; one from a server
-/// run with `--no-nv` carries the name alone, which maps back through the
-/// field's lookup, so a record from the stream and the same one from the
-/// snapshot port share their key (canboat#1129).
-fn key_text(msg: &str, key: &str, f: &crate::engine::FieldInfo) -> Option<String> {
-    let text = crate::engine::analyzer_json::lookup_text(msg, key)?;
-    if text.parse::<i64>().is_ok() {
-        return Some(text.to_string());
-    }
-    let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric);
-    let code = match (f.lookup_enumeration, f.lookup_field_type_enumeration) {
-        (Some(table), _) => db
-            .lookup(table)
-            .and_then(|t| t.values.iter().find(|lv| lv.name == text))
-            .map(|lv| lv.value),
-        (None, Some(table)) => db.field_type_lookup_by_name(table, text).map(|e| e.value),
-        _ => None,
-    };
-    Some(code.map_or_else(|| text.to_string(), |c| c.to_string()))
-}
-
 /// Classify one analyzer-JSON line into one or more
 /// [`SnapshotInput`]s and pass each to `sink`. Returns the number of
 /// records emitted (0 when the line is missing `pgn` or `src`).
@@ -343,8 +321,11 @@ where
     let repeat_set = info.and_then(repeating_pk_set);
 
     let Some(rs) = repeat_set else {
-        let secondary =
-            info.and_then(|info| composite_secondary(info, |f| key_text(line, field_key(f), f)));
+        let secondary = info.and_then(|info| {
+            composite_secondary(info, |f| {
+                crate::engine::analyzer_json::lookup_text(line, field_key(f)).map(|s| s.to_string())
+            })
+        });
         sink(SnapshotInput {
             pgn,
             src,
@@ -361,8 +342,11 @@ where
     else {
         // Repeating set declared zero iterations — store the line as
         // one record under the top-level PK alone.
-        let secondary =
-            info.and_then(|info| composite_secondary(info, |f| key_text(line, field_key(f), f)));
+        let secondary = info.and_then(|info| {
+            composite_secondary(info, |f| {
+                crate::engine::analyzer_json::lookup_text(line, field_key(f)).map(|s| s.to_string())
+            })
+        });
         sink(SnapshotInput {
             pgn,
             src,
@@ -383,8 +367,12 @@ where
             pgn_info,
             rs,
             iter as u32,
-            |f| key_text(line, field_key(f), f),
-            |f, _| key_text(elem, field_key(f), f),
+            |f| {
+                crate::engine::analyzer_json::lookup_text(line, field_key(f)).map(|s| s.to_string())
+            },
+            |f, _| {
+                crate::engine::analyzer_json::lookup_text(elem, field_key(f)).map(|s| s.to_string())
+            },
         );
         let mut spliced = String::with_capacity(line.len() - arr.len() + elem.len() + 2);
         spliced.push_str(&line[..arr_start]);
@@ -845,29 +833,6 @@ fn write_json_string(out: &mut String, s: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    /// A record keyed by a lookup gets the same key from a `-nv` line and
-    /// from a `--no-nv` one, the code the server's snapshot keys it by, so
-    /// the TUI does not keep a stale copy beside the live one
-    /// (canboat#1129). PGN 126464 is keyed by its Function Code.
-    #[test]
-    fn a_lookup_key_is_its_code_with_or_without_name_value() {
-        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
-        let data = [0x00, 0x00, 0xe8, 0x00, 0x00, 0xea, 0x00];
-        let frame = crate::engine::RawFrame::new(None, 6, 126464, 164, 128, data.to_vec());
-        let decoded = db.decode(&frame).unwrap();
-        for name_value in [true, false] {
-            let opts = crate::engine::output::JsonOptions {
-                name_value,
-                ..Default::default()
-            };
-            let mut line = String::new();
-            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
-            let mut keys = Vec::new();
-            classify_json_line(&line, |input| keys.push(input.secondary));
-            assert_eq!(keys, [Some("0".to_string())], "nv={name_value}: {line}");
-        }
-    }
 
     #[test]
     fn repeating_pk_set_detects_pgn_130824() {
