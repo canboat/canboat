@@ -44,6 +44,4 @@ The operator reported that all five circuits started and ended OFF. The names ab
 
 ## Validation
 
-The earlier revision passed `keel/keel check`, `make generated`, and `make pr`. The updated split-field definitions require regeneration and revalidation before they are merged into the PR branch. Prior validation workflow: [CZone validation workflow](https://github.com/mattsmitchell/canboat/actions/workflows/czone-pgn-validation.yml). Earlier [replacement-based research validation](https://github.com/mattsmitchell/signalk-czone-circuits/actions/runs/41383317492) also passed.
-
-No changes were made to the active Signal K CZone beta.
+The review revision was validated on the temporary fork staging branch using `keel/keel check`, `make tests`, `make generated`, and `make pr` (successful [staging run](https://github.com/mattsmitchell/canboat/actions/runs/41710651595)). The validated generated source tree was then committed to the original PR branch as `1c27be1`. The staging workflow ran against a different commit SHA, so it is not a direct CI run on the submitted commit. Upstream checks on the PR must run separately before merge.

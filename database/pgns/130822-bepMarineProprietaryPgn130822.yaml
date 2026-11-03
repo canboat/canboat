@@ -158,4 +158,5 @@ samples:
     page: 1
     outputCurrent0: 0.1
     outputLevel0: 100
+    outputUnknownFlags0: '04'
     outputCurrent6: 15.5

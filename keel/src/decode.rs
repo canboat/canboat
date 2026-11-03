@@ -741,21 +741,54 @@ fn byte_at(data: &[u8], bit: usize) -> Option<u8> {
     }
 }
 
-/// Bit-exact binary slice: extracts `bits` bits from `bit` (LSB-first per
-/// byte, like every N2K field) into bytes. Needed because reserved/binary
-/// fields frequently start at non-byte offsets.
+/// Preserve the bit positions within each source byte for BINARY fields,
+/// matching the C analyzer and canboat-rs (including partial-byte fields).
 fn slice_bits(data: &[u8], bit: usize, bits: usize) -> Vec<u8> {
-    let mut out = Vec::with_capacity(bits.div_ceil(8));
-    let mut taken = 0;
-    while taken < bits {
-        let chunk = (bits - taken).min(8);
-        match extract_bits(data, bit + taken, chunk, false, 0) {
-            Some(e) => out.push(e.raw as u8),
-            None => break,
+    let start_byte = bit / 8;
+    let start_bit = bit % 8;
+    let available = data.len().saturating_mul(8).saturating_sub(bit);
+    let bits = bits.min(available);
+    if bits == 0 {
+        return Vec::new();
+    }
+    let nbytes = (start_bit + bits).div_ceil(8);
+    let mut out = Vec::with_capacity(nbytes);
+    let mut remaining = bits as isize;
+    for i in 0..nbytes {
+        let Some(&raw) = data.get(start_byte + i) else {
+            break;
+        };
+        let mut byte = raw;
+        if i == 0 && start_bit != 0 {
+            byte >>= start_bit;
+            if (remaining as usize) + start_bit < 8 {
+                byte &= (1u8 << remaining) - 1;
+            }
+            byte <<= start_bit;
+            remaining -= (8 - start_bit) as isize;
+        } else {
+            if remaining < 8 {
+                byte &= (1u8 << remaining) - 1;
+            }
+            remaining -= 8;
         }
-        taken += chunk;
+        out.push(byte);
     }
     out
+}
+
+#[cfg(test)]
+mod binary_slice_tests {
+    use super::slice_bits;
+
+    #[test]
+    fn preserves_sub_byte_position_for_czone_and_other_pgns() {
+        assert_eq!(slice_bits(&[0x04], 2, 6), vec![0x04]);
+        assert_eq!(slice_bits(&[0x0f], 0, 4), vec![0x0f]);
+        assert_eq!(slice_bits(&[0xf0], 4, 4), vec![0xf0]);
+        assert_eq!(slice_bits(&[0xff, 0xaa], 4, 8), vec![0xf0, 0x0a]);
+        assert_eq!(slice_bits(&[0xff], 2, 6), vec![0xfc]);
+    }
 }
 
 fn slice_bytes(data: &[u8], bit: usize, nbytes: usize) -> Vec<u8> {
