@@ -842,11 +842,14 @@ impl PgnBuilder {
         // parameter pairs pick the variant (a command that sets
         // Manufacturer=Furuno must use the Furuno variant's widths, not
         // whichever definition happens to be listed first), then fall
-        // back to the leading definition, then to the range catch-all.
+        // back to the range catch-all, then to the leading definition.
+        // Not the leading definition first: for a proprietary target that
+        // is somebody's variant, so a record the decoder read with the
+        // catch-all would not encode back (canboat#1131).
         let target_info = self
             .match_target_variant(target_pgn)
-            .or_else(|| self.db.first_pgn(target_pgn))
             .or_else(|| self.db.fallback_pgn(target_pgn))
+            .or_else(|| self.db.first_pgn(target_pgn))
             .ok_or(unresolved("referenced PGN is not in the schema"))?;
         let param_idx = self.pgn.fields[start..start + size]
             .iter()
@@ -881,9 +884,31 @@ impl PgnBuilder {
                 Some(seconds) => EncodeValue::Number(seconds),
                 None => v.clone(),
             },
+            // Bytes are hex, as the decoder writes them ("00 05 64").
+            EncodeValue::Text(s)
+                if matches!(
+                    target_field.field_type,
+                    Some(FieldType::Binary) | Some(FieldType::Reserved) | Some(FieldType::Spare)
+                ) =>
+            {
+                hex_bytes(s).map_or_else(|| v.clone(), EncodeValue::Bytes)
+            }
             other => other.clone(),
         };
-        match self.stage_value(target_field, value)? {
+        // A BINARY that ends the target's definition, such as a catch-all's
+        // Data, is the rest of this message to the decoder: written as long
+        // as given, not padded to its width (canboat#1131, #1133).
+        let ends_target = target_field.field_type == Some(FieldType::Binary)
+            && target_info
+                .fields
+                .last()
+                .is_some_and(|last| std::ptr::eq(last, target_field));
+        let staged = if ends_target {
+            stage_binary(target_field, value, true)?
+        } else {
+            self.stage_value(target_field, value)?
+        };
+        match staged {
             Staged::Scalar(raw) => {
                 let bl = target_field
                     .bit_length
@@ -1313,6 +1338,19 @@ fn stage_string_lau(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
     buf.push(1); // 1 = ASCII / UTF-8
     buf.extend_from_slice(content);
     Ok(Staged::Bytes(buf))
+}
+
+/// Hex bytes as the decoder writes them, `"00 05 64"` or `"000564"`;
+/// `None` when `s` is not that.
+fn hex_bytes(s: &str) -> Option<Vec<u8>> {
+    let compact: Vec<u8> = s.bytes().filter(|c| !c.is_ascii_whitespace()).collect();
+    if compact.is_empty() || !compact.len().is_multiple_of(2) {
+        return None;
+    }
+    compact
+        .chunks(2)
+        .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).ok()?, 16).ok())
+        .collect()
 }
 
 /// Stage a `BINARY` field: raw bytes, `0x00`-padded to the declared byte
@@ -2130,21 +2168,70 @@ mod tests {
     }
 
     #[test]
-    fn variable_target_without_narrowing_pairs_keeps_the_leading_definition() {
+    fn variable_target_without_narrowing_pairs_uses_the_catch_all() {
         // A proprietary multi-variant target commanded without leading
-        // Manufacturer/Industry pairs cannot be narrowed; the encoder
-        // must fall back to the leading definition exactly as before
-        // (Maretron's Memory Capacity: 64 bits at resolution 1).
+        // Manufacturer/Industry pairs cannot be narrowed. Like the decoder,
+        // the encoder then uses the range's catch-all, not the leading
+        // definition (Maretron's, for 130833): a field the catch-all does
+        // not have cannot be set, as it would not decode (canboat#1131).
         let db = db();
         let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
         b.push_by_name("PGN", EncodeValue::Pgn(130833)).unwrap();
         let i = b.add_set_instance(1).unwrap();
         b.push_in_set(1, i, "Parameter", 5i64).unwrap();
         b.push_in_set(1, i, "Value", 3f64).unwrap();
-        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
-        // 6 header bytes + param byte + 64-bit value.
-        assert_eq!(frame.data.len(), 15, "data: {:02x?}", frame.data);
-        assert_eq!(frame.data[7], 3, "data: {:02x?}", frame.data);
+        assert!(matches!(
+            b.build(),
+            Err(EncodeError::VariableUnresolved { .. })
+        ));
+    }
+
+    /// A command to a Maretron ALM100 for 130824 that the decoder reads
+    /// with the catch-all, its parameter 4 as Data, encodes back to the
+    /// same bytes (canboat#1131).
+    #[test]
+    fn a_command_read_with_the_catch_all_encodes_back() {
+        let data = [
+            0x01, 0x08, 0xff, 0x01, 0xf8, 0x05, 0x04, 0x00, 0x05, 0x64, 0x06, 0x04, 0x00, 0x07,
+            0x17, 0x08, 0x0d, 0x50,
+        ];
+        let frame = RawFrame::new(None, 3, 126208, 128, 164, data.to_vec());
+        let decoded = db().decode(&frame).unwrap();
+        let list: Vec<_> = decoded
+            .fields
+            .iter()
+            .filter(|f| {
+                matches!(
+                    f.info.field_type,
+                    Some(FieldType::FieldIndex) | Some(FieldType::Variable)
+                )
+            })
+            .collect();
+        assert_eq!(list.len(), 2, "one parameter: {list:?}");
+        let crate::engine::FieldValue::Binary(value) = &list[1].value else {
+            panic!("parameter 4 as Data: {:?}", list[1].value);
+        };
+
+        let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130824)).unwrap();
+        b.push_by_name("Priority", 8i64).unwrap();
+        b.push_by_name("Number of Parameters", 5i64).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 4i64).unwrap();
+        b.push_in_set(
+            1,
+            i,
+            "Value",
+            EncodeValue::Text(
+                value
+                    .iter()
+                    .map(|x| format!("{x:02X}"))
+                    .collect::<Vec<_>>()
+                    .join(" "),
+            ),
+        )
+        .unwrap();
+        assert_eq!(b.build().unwrap().data.to_vec(), data);
     }
 
     #[test]
