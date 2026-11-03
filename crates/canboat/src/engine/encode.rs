@@ -40,7 +40,7 @@ use std::error::Error;
 use std::fmt;
 
 use crate::engine::decode::field_present;
-use crate::engine::types::{FieldInfo, FieldRef, FieldType, PgnInfo};
+use crate::engine::types::{FieldInfo, FieldRef, FieldType, PacketType, PgnInfo};
 
 use crate::engine::db::PgnDatabase;
 use crate::engine::frame::RawFrame;
@@ -442,6 +442,23 @@ impl PgnBuilder {
     /// Resolve repeating set `set` (1 or 2) to `(start index, size,
     /// count-field index)`, all zero-based, or `None` if this PGN does
     /// not declare that set.
+    /// Whether `f` is a BINARY field that ends a multi-frame message,
+    /// outside any repeating set, such as a catch-all's Data: it is written
+    /// only as long as the value given, as the decoder reads only the bytes
+    /// that are there, so what decodes encodes back (canboat#1133). A
+    /// single frame keeps its 8 bytes.
+    fn open_tail(&self, f: &FieldInfo) -> bool {
+        self.pgn.packet_type != PacketType::Single
+            && f.field_type == Some(FieldType::Binary)
+            && f.bit_length.is_some()
+            && self
+                .pgn
+                .fields
+                .last()
+                .is_some_and(|last| std::ptr::eq(last, f))
+            && self.set_layout(1).is_none()
+    }
+
     fn set_layout(&self, set: usize) -> Option<(usize, usize, Option<usize>)> {
         let (start, size, count) = match set {
             1 => (
@@ -582,6 +599,11 @@ impl PgnBuilder {
                 continue;
             }
             let f = &self.pgn.fields[idx];
+            // An open tail left unset is no bytes at all.
+            if self.staged[idx].is_none() && self.open_tail(f) {
+                idx += 1;
+                continue;
+            }
             // The Manufacturer / Industry header of a 126208 Read or Write
             // Fields is in the message exactly when the commanded PGN is
             // proprietary, as decode reads it: required then (bar its
@@ -645,8 +667,10 @@ impl PgnBuilder {
             let pad = 8 - (next_bit % 8);
             write_bits(&mut buf, &mut next_bit, pad, u64::MAX);
         }
+        // An open tail may end the message early, never late.
+        let open = self.pgn.fields.last().is_some_and(|f| self.open_tail(f));
         if let Some(expected) = self.pgn.length
-            && buf.len() != expected as usize
+            && (buf.len() > expected as usize || (!open && buf.len() != expected as usize))
         {
             return Err(EncodeError::LengthMismatch {
                 pgn: self.pgn.pgn,
@@ -905,7 +929,7 @@ impl PgnBuilder {
             Some(FieldType::StringFix) => stage_string_fix(f, v, string_fix_pad(self.pgn.pgn)),
             Some(FieldType::StringLz) => stage_string_lz(f, v),
             Some(FieldType::StringLau) => stage_string_lau(f, v),
-            Some(FieldType::Binary) => stage_binary(f, v),
+            Some(FieldType::Binary) => stage_binary(f, v, self.open_tail(f)),
             // Reserved or spare bits given as bytes, as the decoder prints
             // them, are written back as they were.
             Some(FieldType::Reserved) | Some(FieldType::Spare)
@@ -1293,7 +1317,9 @@ fn stage_string_lau(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
 
 /// Stage a `BINARY` field: raw bytes, `0x00`-padded to the declared byte
 /// width when the field is fixed-length.
-fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+/// `open_tail`: the field ends the message ([`PgnBuilder::open_tail`]), so
+/// a shorter value is not padded to the field's width.
+fn stage_binary(f: &FieldInfo, v: EncodeValue, open_tail: bool) -> Result<Staged, EncodeError> {
     let mut bytes = match v {
         EncodeValue::Bytes(b) => b,
         EncodeValue::NotAvailable => Vec::new(),
@@ -1339,7 +1365,9 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
                 range: None,
             });
         }
-        bytes.resize(want, 0);
+        if !open_tail {
+            bytes.resize(want, 0);
+        }
     }
     Ok(Staged::Bytes(bytes))
 }
@@ -2193,6 +2221,85 @@ mod tests {
     /// An unset Binary field is all ones over its whole width, also when
     /// that isn't whole bytes, and the fields after it stay in place
     /// (canboat#1121: 129038's 19-bit Communication State got 16 bits).
+    /// The BINARY that ends a multi-frame message is written as long as
+    /// the value given, unpadded, and left out when unset; in a single
+    /// frame it keeps its width (canboat#1133).
+    #[test]
+    fn a_trailing_binary_is_written_as_long_as_given() {
+        let built = |id: &str, fields: &[(&str, EncodeValue)]| {
+            let mut b = db().encode(id)?;
+            for (name, v) in fields {
+                b.push_by_name(name, v.clone())?;
+            }
+            b.build().map(|f| f.data.to_vec())
+        };
+        let navico = [
+            ("Manufacturer Code", EncodeValue::Int(275)),
+            ("Industry Code", EncodeValue::Int(4)),
+        ];
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let catch_all = "0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed";
+        let mut with = navico.to_vec();
+        with.push(("Data", EncodeValue::Bytes(data.clone())));
+        let out = built(catch_all, &with).unwrap();
+        assert_eq!(out.len(), 2 + data.len(), "{out:02x?}");
+        assert_eq!(out[2..], data);
+        assert_eq!(
+            built(catch_all, &navico).unwrap().len(),
+            2,
+            "unset: no bytes"
+        );
+
+        // As long as the field at most, which fits a fast-packet message.
+        let mut long = navico.to_vec();
+        long.push(("Data", EncodeValue::Bytes(vec![0; 222])));
+        assert!(built(catch_all, &long).is_err());
+        long[2] = ("Data", EncodeValue::Bytes(vec![0; 221]));
+        assert_eq!(built(catch_all, &long).unwrap().len(), 223);
+
+        // A single frame is padded to its width.
+        let single = "0xff000xffffManufacturerProprietarySingleFrameNonAddressed";
+        let mut short = navico.to_vec();
+        short.push(("Data", EncodeValue::Bytes(vec![1, 2])));
+        assert_eq!(built(single, &short).unwrap().len(), 8);
+    }
+
+    /// Decoded, then encoded again, a short Navico Bulk Report 2 and a
+    /// catch-all come back as the bytes they were.
+    #[test]
+    fn a_short_trailing_binary_round_trips() {
+        let frames = [
+            (
+                130822,
+                vec![
+                    0x13, 0x99, 0xff, 0x02, 0x00, 0x09, 0x02, 0x00, 0x01, 0x00, 0x00, 0x00, 0x66,
+                    0x6d, 0x24, 0x00, 0x04, 0x43, 0x66, 0xe7, 0x4c, 0x82, 0x50, 0xc0, 0x02, 0x01,
+                    0x00, 0xa1, 0x36, 0x00, 0x82, 0x32, 0xc0, 0x02, 0xd2, 0x44, 0xd3, 0x15, 0x00,
+                    0x91, 0x47, 0xc0, 0x03, 0x1f, 0x19, 0x36, 0xe8, 0x00, 0xc8, 0xa0, 0xc0, 0x02,
+                ],
+            ),
+            (130816, vec![0x13, 0x99, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        ];
+        for (pgn, data) in frames {
+            let frame = RawFrame::new(None, 3, pgn, 32, 255, data.clone());
+            let decoded = db().decode(&frame).unwrap();
+            let mut b = db().encode(decoded.id).unwrap();
+            for f in &decoded.fields {
+                let v = match &f.value {
+                    crate::engine::FieldValue::Binary(v) => EncodeValue::Bytes(v.to_vec()),
+                    crate::engine::FieldValue::Lookup { value, .. } => {
+                        EncodeValue::Int(*value as i64)
+                    }
+                    crate::engine::FieldValue::Number(n) => EncodeValue::Number(*n),
+                    crate::engine::FieldValue::Integer(n) => EncodeValue::Int(*n),
+                    _ => continue,
+                };
+                b.push_by_name(f.info.name, v).unwrap();
+            }
+            assert_eq!(b.build().unwrap().data.to_vec(), data, "{}", decoded.id);
+        }
+    }
+
     #[test]
     fn unset_binary_of_odd_width_is_all_ones_and_keeps_the_layout() {
         let mut b = db().encode("aisClassAPositionReport").unwrap();

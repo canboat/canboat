@@ -28719,7 +28719,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
-        "Length":230,
+        "Length":223,
         "Fields":[
           {
             "Order":1,
@@ -28817,7 +28817,7 @@
             "Order":7,
             "Id":"payload",
             "Name":"Payload",
-            "BitLength":1784,
+            "BitLength":1728,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
@@ -29115,7 +29115,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":4,
-        "Length":225,
+        "Length":223,
         "Fields":[
           {
             "Order":1,
@@ -29163,7 +29163,7 @@
             "Order":4,
             "Id":"data",
             "Name":"Data",
-            "BitLength":1784,
+            "BitLength":1768,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -62301,7 +62301,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":4,
-        "Length":225,
+        "Length":223,
         "Fields":[
           {
             "Order":1,
@@ -62349,7 +62349,7 @@
             "Order":4,
             "Id":"data",
             "Name":"Data",
-            "BitLength":1784,
+            "BitLength":1768,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -78063,7 +78063,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":9,
-        "Length":230,
+        "Length":223,
         "Fields":[
           {
             "Order":1,
@@ -78174,7 +78174,7 @@
             "Id":"data",
             "Name":"Data",
             "Description":"Raw table fragment carried by this part",
-            "BitLength":1784,
+            "BitLength":1728,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,

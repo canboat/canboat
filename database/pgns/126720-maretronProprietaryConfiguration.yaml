@@ -42,4 +42,4 @@ fields:
 - id: payload
   name: Payload
   type: BINARY
-  bits: 1784
+  bits: 1728
