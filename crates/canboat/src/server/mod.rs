@@ -320,12 +320,12 @@ pub struct Args {
     /// The banner on the analyzer and snapshot ports, `showLookupValues`,
     /// says which; the AIS port has none. The filter and overrides control
     /// ports always carry both.
-    #[arg(long, overrides_with = "nv", help_heading = JSON)]
+    #[arg(long, overrides_with_all = ["nv", "no_nv"], help_heading = JSON)]
     no_nv: bool,
 
     /// Write a lookup field as `{"value":…,"name":…}`, the default; as
     /// `convert --nv`. The last of --nv and --no-nv wins.
-    #[arg(long, overrides_with = "no_nv", help_heading = JSON)]
+    #[arg(long, overrides_with_all = ["nv", "no_nv"], help_heading = JSON)]
     nv: bool,
 
     /// Log more.

@@ -256,6 +256,9 @@ mod tests {
         assert!(config(&["--nv"]).name_value);
         assert!(config(&["--no-nv", "--nv"]).name_value);
         assert!(!config(&["--nv", "--no-nv"]).name_value);
+        // A flag given again is no error, as when a wrapper adds one.
+        assert!(!config(&["--nv", "--nv", "--no-nv"]).name_value);
+        assert!(!config(&["--no-nv", "--no-nv"]).name_value);
     }
 
     /// `convert` takes `--no-nv` too, as `server` does: the last of the
@@ -274,5 +277,7 @@ mod tests {
         assert!(!nv(&["--no-nv"]));
         assert!(!nv(&["--nv", "--no-nv"]));
         assert!(nv(&["--no-nv", "--nv"]));
+        assert!(!nv(&["--nv", "--nv", "--no-nv"]));
+        assert!(nv(&["--nv", "--nv"]));
     }
 }

@@ -272,12 +272,12 @@ pub struct Args {
     // exposes, so `convert --to json` can be diffed against canboat C.
     /// Emit lookup values as `{"value":N,"name":"..."}` instead of the
     /// bare name string. Matches canboat's `-nv`. JSON only.
-    #[arg(long, overrides_with = "no_nv")]
+    #[arg(long, overrides_with_all = ["nv", "no_nv"])]
     nv: bool,
 
     /// Emit lookup values as the bare name string, the default; as
     /// `server --no-nv`. The last of --nv and --no-nv wins.
-    #[arg(long, overrides_with = "nv")]
+    #[arg(long, overrides_with_all = ["nv", "no_nv"])]
     no_nv: bool,
 
     /// Include unavailable fields — `null` in JSON, `Unknown` in text —
