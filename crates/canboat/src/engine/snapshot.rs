@@ -899,6 +899,17 @@ mod tests {
         assert_eq!(keys[0].len(), 3);
         assert_ne!(keys[0][0], keys[0][1]);
         assert!(no_nv.contains(r#""key":"Rudder Angle""#), "{no_nv}");
+
+        // --debug writes each value through its own writer, which keeps
+        // the codes too.
+        let opts = crate::engine::output::JsonOptions {
+            name_value: false,
+            debug: true,
+            ..Default::default()
+        };
+        let mut debug = String::new();
+        crate::engine::output::write_json(&mut debug, &decoded, &opts).unwrap();
+        assert!(!debug.contains("Outside Temperature"), "{debug}");
     }
 
     #[test]

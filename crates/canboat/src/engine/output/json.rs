@@ -494,6 +494,11 @@ fn write_field_value_debug<W: fmt::Write>(
                 }
             } else {
                 match name {
+                    // As in write_field_value: a shared key name is
+                    // written as its code.
+                    Some(n) if f.part_of_primary_key() && shared_key_name(f, n) => {
+                        write!(w, "{}", value)?
+                    }
                     Some(n) => write_json_string(w, n)?,
                     None => write!(w, "{}", value)?,
                 }
