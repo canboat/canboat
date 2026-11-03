@@ -45,13 +45,13 @@ values:
   name: User 16
   type: FIX32_2
 - value: 28
-  name: Outside Temperature
+  name: Outside Temperature (F)
   type: TEMPERATURE
 - value: 29
   name: Outside Temperature
   type: TEMPERATURE
 - value: 30
-  name: Outside Temperature
+  name: Water Temperature (F)
   type: TEMPERATURE
 - value: 31
   name: Water Temperature
@@ -60,7 +60,7 @@ values:
   name: Tacking Performance
   type: PERCENTAGE_FIX16_D
 - value: 52
-  name: Magnetic Variation
+  name: Attitude Roll
   type: ANGLE_FIX16
 - value: 53
   name: Optimum Wind Angle
@@ -90,16 +90,16 @@ values:
   name: Yaw Rate
   type: ROTATION_FIX32
 - value: 73
-  name: Current Set
+  name: Heading
   type: ANGLE_UFIX16
 - value: 77
   name: Wind Speed Apparent
   type: SPEED_UFIX16_CM
 - value: 79
-  name: Wind Speed True
+  name: Wind Speed Apparent (Knots)
   type: SPEED_UFIX16_CM
 - value: 81
-  name: Wind Angle True
+  name: Wind Angle Apparent
   type: ANGLE_FIX16
 - value: 83
   name: Target TWA
@@ -108,10 +108,10 @@ values:
   name: Wind Speed True
   type: SPEED_UFIX16_CM
 - value: 86
-  name: Water Temperature
+  name: Wind Speed True 2
   type: SPEED_UFIX16_CM
 - value: 89
-  name: True Wind Direction
+  name: Wind Angle True
   type: ANGLE_FIX16
 - value: 100
   name: Trip 1 Speed Avg
@@ -129,7 +129,7 @@ values:
   name: Course
   type: ANGLE_FIX16
 - value: 109
-  name: Wind Direction
+  name: True Wind Direction
   type: ANGLE_FIX16
 - value: 111
   name: Next Leg AWA
@@ -174,7 +174,7 @@ values:
   name: Heading on Opposite Tack
   type: ANGLE_FIX16
 - value: 155
-  name: Attitude Roll
+  name: Attitude Pitch
   type: ANGLE_FIX16
 - value: 156
   name: Mast Angle
@@ -201,7 +201,7 @@ values:
   name: Depth
   type: LENGTH_UFIX32_CM
 - value: 195
-  name: Depth
+  name: Depth (Fathoms)
   type: LENGTH_UFIX32_CM
 - value: 199
   name: Aft Depth
@@ -222,7 +222,7 @@ values:
   name: Course Over Ground
   type: ANGLE_FIX16
 - value: 235
-  name: Water Speed
+  name: Speed Over Ground
   type: SPEED_UFIX16_CM
 - value: 239
   name: Remote 0
@@ -258,10 +258,10 @@ values:
   name: Layline Time
   type: DURATION_UFIX32_MS
 - value: 258
-  name: Layline Distance
+  name: Layline Distance 1
   type: LENGTH_UFIX32_CM
 - value: 259
-  name: Layline Distance
+  name: Layline Distance 2
   type: LENGTH_UFIX32_CM
 - value: 260
   name: Sailing Time to Waypoint
@@ -273,10 +273,10 @@ values:
   name: Sailing ETA
   type: DURATION_UFIX32_MS
 - value: 263
-  name: Start Line Latitude
+  name: MOB DR Latitude
   type: GEO_LAT_FIX32
 - value: 264
-  name: Start Line Longitude
+  name: MOB DR Longitude
   type: GEO_LAT_FIX32
 - value: 265
   name: Trip Time
@@ -524,3 +524,18 @@ values:
 - value: 412
   name: Starboard End Ping Time
   type: DURATION_FIX32_MS
+valueNotes:
+  28: 'the B&G channel in Fahrenheit: on the bus the same Kelvin value as 29'
+  30: 'the B&G channel in Fahrenheit: on the bus the same Kelvin value as 31'
+  52: 'Navico firmware table tH3000Data::m_cH3000FunctionInfo: ATTITUDE_ROLL'
+  73: 'Navico firmware table: HEADING'
+  79: 'the B&G channel in knots: on the bus the same m/s value as 77'
+  81: 'Navico firmware table: WIND_APP_ANGLE'
+  86: 'Navico firmware table: SPEED_WIND_TRUE, the same row as 85'
+  89: 'Navico firmware table: WIND_TRUE_ANGLE'
+  109: 'Navico firmware table: WIND_TRUE_DIRECTION'
+  155: 'Navico firmware table: ATTITUDE_PITCH'
+  195: 'the B&G channel in fathoms: on the bus the same value in cm as 194'
+  235: 'Navico firmware table: SPEED_SOG'
+  258: 'Navico firmware table: DISTANCE_TO_LAYLINES, as is 259; which is port is not known'
+  263: 'Navico firmware table: MOB_DR_POSITION; seen only with 185 and 186, MOB DR Bearing and Range'
