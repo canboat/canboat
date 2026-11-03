@@ -40,7 +40,7 @@ use std::error::Error;
 use std::fmt;
 
 use crate::engine::decode::field_present;
-use crate::engine::types::{FieldInfo, FieldRef, FieldType, PgnInfo};
+use crate::engine::types::{FieldInfo, FieldRef, FieldType, PacketType, PgnInfo};
 
 use crate::engine::db::PgnDatabase;
 use crate::engine::frame::RawFrame;
@@ -442,6 +442,23 @@ impl PgnBuilder {
     /// Resolve repeating set `set` (1 or 2) to `(start index, size,
     /// count-field index)`, all zero-based, or `None` if this PGN does
     /// not declare that set.
+    /// Whether `f` is a BINARY field that ends a multi-frame message,
+    /// outside any repeating set, such as a catch-all's Data: it is written
+    /// only as long as the value given, as the decoder reads only the bytes
+    /// that are there, so what decodes encodes back (canboat#1133). A
+    /// single frame keeps its 8 bytes.
+    fn open_tail(&self, f: &FieldInfo) -> bool {
+        self.pgn.packet_type != PacketType::Single
+            && f.field_type == Some(FieldType::Binary)
+            && f.bit_length.is_some()
+            && self
+                .pgn
+                .fields
+                .last()
+                .is_some_and(|last| std::ptr::eq(last, f))
+            && self.set_layout(1).is_none()
+    }
+
     fn set_layout(&self, set: usize) -> Option<(usize, usize, Option<usize>)> {
         let (start, size, count) = match set {
             1 => (
@@ -536,11 +553,25 @@ impl PgnBuilder {
             // A repeating set starts at this field? Emit its staged
             // instances and skip past the group's schema fields.
             let mut in_set = false;
-            for (layout, instances) in [(&set1, &self.sets[0]), (&set2, &self.sets[1])] {
+            for (set, (layout, instances)) in [(&set1, &self.sets[0]), (&set2, &self.sets[1])]
+                .into_iter()
+                .enumerate()
+            {
                 if let Some((start, size, _)) = *layout
                     && idx == start
                 {
-                    for inst in instances {
+                    // The last instance with a group-function value, when no
+                    // later set follows it (126208 Write Fields' new values
+                    // follow its selection): only there may a target's
+                    // trailing BINARY end the message.
+                    let later = set == 0 && !self.sets[1].is_empty();
+                    let last_value = instances
+                        .iter()
+                        .rposition(|inst| {
+                            inst.iter().any(|s| matches!(s, Some(Staged::Deferred(_))))
+                        })
+                        .filter(|_| !later);
+                    for (n, inst) in instances.iter().enumerate() {
                         for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
                             match &inst[j] {
                                 Some(Staged::Deferred(v)) => self.emit_variable(
@@ -551,6 +582,7 @@ impl PgnBuilder {
                                     start,
                                     size,
                                     v,
+                                    last_value == Some(n),
                                 )?,
                                 None => {
                                     let fields = &self.pgn.fields[start..start + size];
@@ -582,6 +614,11 @@ impl PgnBuilder {
                 continue;
             }
             let f = &self.pgn.fields[idx];
+            // An open tail left unset is no bytes at all.
+            if self.staged[idx].is_none() && self.open_tail(f) {
+                idx += 1;
+                continue;
+            }
             // The Manufacturer / Industry header of a 126208 Read or Write
             // Fields is in the message exactly when the commanded PGN is
             // proprietary, as decode reads it: required then (bar its
@@ -645,8 +682,10 @@ impl PgnBuilder {
             let pad = 8 - (next_bit % 8);
             write_bits(&mut buf, &mut next_bit, pad, u64::MAX);
         }
+        // An open tail may end the message early, never late.
+        let open = self.pgn.fields.last().is_some_and(|f| self.open_tail(f));
         if let Some(expected) = self.pgn.length
-            && buf.len() != expected as usize
+            && (buf.len() > expected as usize || (!open && buf.len() != expected as usize))
         {
             return Err(EncodeError::LengthMismatch {
                 pgn: self.pgn.pgn,
@@ -766,7 +805,7 @@ impl PgnBuilder {
                 if idx == 0 {
                     continue 'variant;
                 }
-                let Some(field) = cand.fields.get(idx as usize - 1) else {
+                let Some(field) = crate::engine::decode::parameter_field(cand, idx) else {
                     continue 'variant;
                 };
                 let Some(want) = field.match_value else {
@@ -806,6 +845,7 @@ impl PgnBuilder {
         start: usize,
         size: usize,
         v: &EncodeValue,
+        last: bool,
     ) -> Result<(), EncodeError> {
         let unresolved = |reason| EncodeError::VariableUnresolved {
             field: f.name,
@@ -818,11 +858,14 @@ impl PgnBuilder {
         // parameter pairs pick the variant (a command that sets
         // Manufacturer=Furuno must use the Furuno variant's widths, not
         // whichever definition happens to be listed first), then fall
-        // back to the leading definition, then to the range catch-all.
+        // back to the range catch-all, then to the leading definition.
+        // Not the leading definition first: for a proprietary target that
+        // is somebody's variant, so a record the decoder read with the
+        // catch-all would not encode back (canboat#1131).
         let target_info = self
             .match_target_variant(target_pgn)
-            .or_else(|| self.db.first_pgn(target_pgn))
             .or_else(|| self.db.fallback_pgn(target_pgn))
+            .or_else(|| self.db.first_pgn(target_pgn))
             .ok_or(unresolved("referenced PGN is not in the schema"))?;
         let param_idx = self.pgn.fields[start..start + size]
             .iter()
@@ -833,13 +876,9 @@ impl PgnBuilder {
                 _ => None,
             })
             .ok_or(unresolved("no staged FIELD_INDEX selects the target field"))?;
-        let target_field = target_info
-            .fields
-            .iter()
-            .find(|tf| (tf.order as u32) == param_idx)
-            .ok_or(unresolved(
-                "FIELD_INDEX is beyond the referenced PGN's fields",
-            ))?;
+        let target_field = crate::engine::decode::parameter_field(target_info, param_idx).ok_or(
+            unresolved("FIELD_INDEX is beyond the referenced PGN's fields"),
+        )?;
         // A label for a lookup-typed target arrives as Text (the caller
         // cannot know the target's type up front); retype it.
         let is_time = matches!(
@@ -857,9 +896,42 @@ impl PgnBuilder {
                 Some(seconds) => EncodeValue::Number(seconds),
                 None => v.clone(),
             },
+            // Bytes are hex, as the decoder writes them ("00 05 64").
+            EncodeValue::Text(s)
+                if matches!(
+                    target_field.field_type,
+                    Some(FieldType::Binary) | Some(FieldType::Reserved) | Some(FieldType::Spare)
+                ) =>
+            {
+                hex_bytes(s).map_or_else(|| v.clone(), EncodeValue::Bytes)
+            }
             other => other.clone(),
         };
-        match self.stage_value(target_field, value)? {
+        // A BINARY that ends the target's definition, such as a catch-all's
+        // Data, is written as long as given in the last parameter, which
+        // ends the message (canboat#1131, #1133). Before another, it is
+        // padded to its width, as a resolved target's decodes; a catch-all's
+        // the decoder reads to the end of the message, so it has to be last.
+        let ends_target = target_field.field_type == Some(FieldType::Binary)
+            && target_info
+                .fields
+                .last()
+                .is_some_and(|f| std::ptr::eq(f, target_field));
+        let staged = if ends_target && last {
+            stage_binary(target_field, value, true)?
+        } else if ends_target
+            && self
+                .db
+                .fallback_pgn(target_pgn)
+                .is_some_and(|catch_all| std::ptr::eq(catch_all, target_info))
+        {
+            return Err(unresolved(
+                "the catch-all's Data takes the rest of the message, so it must be the last parameter",
+            ));
+        } else {
+            self.stage_value(target_field, value)?
+        };
+        match staged {
             Staged::Scalar(raw) => {
                 let bl = target_field
                     .bit_length
@@ -905,7 +977,7 @@ impl PgnBuilder {
             Some(FieldType::StringFix) => stage_string_fix(f, v, string_fix_pad(self.pgn.pgn)),
             Some(FieldType::StringLz) => stage_string_lz(f, v),
             Some(FieldType::StringLau) => stage_string_lau(f, v),
-            Some(FieldType::Binary) => stage_binary(f, v),
+            Some(FieldType::Binary) => stage_binary(f, v, self.open_tail(f)),
             // Reserved or spare bits given as bytes, as the decoder prints
             // them, are written back as they were.
             Some(FieldType::Reserved) | Some(FieldType::Spare)
@@ -1291,9 +1363,24 @@ fn stage_string_lau(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
     Ok(Staged::Bytes(buf))
 }
 
+/// Hex bytes as the decoder writes them, `"00 05 64"` or `"000564"`;
+/// `None` when `s` is not that.
+fn hex_bytes(s: &str) -> Option<Vec<u8>> {
+    let compact: Vec<u8> = s.bytes().filter(|c| !c.is_ascii_whitespace()).collect();
+    if compact.is_empty() || !compact.len().is_multiple_of(2) {
+        return None;
+    }
+    compact
+        .chunks(2)
+        .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).ok()?, 16).ok())
+        .collect()
+}
+
 /// Stage a `BINARY` field: raw bytes, `0x00`-padded to the declared byte
 /// width when the field is fixed-length.
-fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+/// `open_tail`: the field ends the message ([`PgnBuilder::open_tail`]), so
+/// a shorter value is not padded to the field's width.
+fn stage_binary(f: &FieldInfo, v: EncodeValue, open_tail: bool) -> Result<Staged, EncodeError> {
     let mut bytes = match v {
         EncodeValue::Bytes(b) => b,
         EncodeValue::NotAvailable => Vec::new(),
@@ -1339,7 +1426,9 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
                 range: None,
             });
         }
-        bytes.resize(want, 0);
+        if !open_tail {
+            bytes.resize(want, 0);
+        }
     }
     Ok(Staged::Bytes(bytes))
 }
@@ -2102,21 +2191,92 @@ mod tests {
     }
 
     #[test]
-    fn variable_target_without_narrowing_pairs_keeps_the_leading_definition() {
+    fn variable_target_without_narrowing_pairs_uses_the_catch_all() {
         // A proprietary multi-variant target commanded without leading
-        // Manufacturer/Industry pairs cannot be narrowed; the encoder
-        // must fall back to the leading definition exactly as before
-        // (Maretron's Memory Capacity: 64 bits at resolution 1).
+        // Manufacturer/Industry pairs cannot be narrowed. Like the decoder,
+        // the encoder then uses the range's catch-all, not the leading
+        // definition (Maretron's, for 130833): a field the catch-all does
+        // not have cannot be set, as it would not decode (canboat#1131).
         let db = db();
         let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
         b.push_by_name("PGN", EncodeValue::Pgn(130833)).unwrap();
         let i = b.add_set_instance(1).unwrap();
         b.push_in_set(1, i, "Parameter", 5i64).unwrap();
         b.push_in_set(1, i, "Value", 3f64).unwrap();
-        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
-        // 6 header bytes + param byte + 64-bit value.
-        assert_eq!(frame.data.len(), 15, "data: {:02x?}", frame.data);
-        assert_eq!(frame.data[7], 3, "data: {:02x?}", frame.data);
+        assert!(matches!(
+            b.build(),
+            Err(EncodeError::VariableUnresolved { .. })
+        ));
+    }
+
+    /// The catch-all's Data takes the rest of the message, so it can only
+    /// be the last parameter; before another it is refused, not cut short.
+    #[test]
+    fn a_catch_all_data_parameter_must_be_last() {
+        let command = |values: &[&str]| {
+            let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+            b.push_by_name("PGN", EncodeValue::Pgn(130824)).unwrap();
+            for v in values {
+                let i = b.add_set_instance(1).unwrap();
+                b.push_in_set(1, i, "Parameter", 4i64).unwrap();
+                b.push_in_set(1, i, "Value", EncodeValue::Text(v.to_string()))
+                    .unwrap();
+            }
+            b.build()
+        };
+        assert!(command(&["00 05"]).is_ok());
+        assert!(matches!(
+            command(&["00 05", "06 07"]),
+            Err(EncodeError::VariableUnresolved { .. })
+        ));
+    }
+
+    /// A command to a Maretron ALM100 for 130824 that the decoder reads
+    /// with the catch-all, its parameter 4 as Data, encodes back to the
+    /// same bytes (canboat#1131).
+    #[test]
+    fn a_command_read_with_the_catch_all_encodes_back() {
+        let data = [
+            0x01, 0x08, 0xff, 0x01, 0xf8, 0x05, 0x04, 0x00, 0x05, 0x64, 0x06, 0x04, 0x00, 0x07,
+            0x17, 0x08, 0x0d, 0x50,
+        ];
+        let frame = RawFrame::new(None, 3, 126208, 128, 164, data.to_vec());
+        let decoded = db().decode(&frame).unwrap();
+        let list: Vec<_> = decoded
+            .fields
+            .iter()
+            .filter(|f| {
+                matches!(
+                    f.info.field_type,
+                    Some(FieldType::FieldIndex) | Some(FieldType::Variable)
+                )
+            })
+            .collect();
+        assert_eq!(list.len(), 2, "one parameter: {list:?}");
+        let crate::engine::FieldValue::Binary(value) = &list[1].value else {
+            panic!("parameter 4 as Data: {:?}", list[1].value);
+        };
+
+        let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130824)).unwrap();
+        b.push_by_name("Priority", 8i64).unwrap();
+        b.push_by_name("Number of Parameters", 5i64).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 4i64).unwrap();
+        b.push_in_set(
+            1,
+            i,
+            "Value",
+            EncodeValue::Text(
+                value
+                    .iter()
+                    .map(|x| format!("{x:02X}"))
+                    .collect::<Vec<_>>()
+                    .join(" "),
+            ),
+        )
+        .unwrap();
+        assert_eq!(b.build().unwrap().data.to_vec(), data);
     }
 
     #[test]
@@ -2193,6 +2353,85 @@ mod tests {
     /// An unset Binary field is all ones over its whole width, also when
     /// that isn't whole bytes, and the fields after it stay in place
     /// (canboat#1121: 129038's 19-bit Communication State got 16 bits).
+    /// The BINARY that ends a multi-frame message is written as long as
+    /// the value given, unpadded, and left out when unset; in a single
+    /// frame it keeps its width (canboat#1133).
+    #[test]
+    fn a_trailing_binary_is_written_as_long_as_given() {
+        let built = |id: &str, fields: &[(&str, EncodeValue)]| {
+            let mut b = db().encode(id)?;
+            for (name, v) in fields {
+                b.push_by_name(name, v.clone())?;
+            }
+            b.build().map(|f| f.data.to_vec())
+        };
+        let navico = [
+            ("Manufacturer Code", EncodeValue::Int(275)),
+            ("Industry Code", EncodeValue::Int(4)),
+        ];
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let catch_all = "0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed";
+        let mut with = navico.to_vec();
+        with.push(("Data", EncodeValue::Bytes(data.clone())));
+        let out = built(catch_all, &with).unwrap();
+        assert_eq!(out.len(), 2 + data.len(), "{out:02x?}");
+        assert_eq!(out[2..], data);
+        assert_eq!(
+            built(catch_all, &navico).unwrap().len(),
+            2,
+            "unset: no bytes"
+        );
+
+        // As long as the field at most, which fits a fast-packet message.
+        let mut long = navico.to_vec();
+        long.push(("Data", EncodeValue::Bytes(vec![0; 222])));
+        assert!(built(catch_all, &long).is_err());
+        long[2] = ("Data", EncodeValue::Bytes(vec![0; 221]));
+        assert_eq!(built(catch_all, &long).unwrap().len(), 223);
+
+        // A single frame is padded to its width.
+        let single = "0xff000xffffManufacturerProprietarySingleFrameNonAddressed";
+        let mut short = navico.to_vec();
+        short.push(("Data", EncodeValue::Bytes(vec![1, 2])));
+        assert_eq!(built(single, &short).unwrap().len(), 8);
+    }
+
+    /// Decoded, then encoded again, a short Navico Bulk Report 2 and a
+    /// catch-all come back as the bytes they were.
+    #[test]
+    fn a_short_trailing_binary_round_trips() {
+        let frames = [
+            (
+                130822,
+                vec![
+                    0x13, 0x99, 0xff, 0x02, 0x00, 0x09, 0x02, 0x00, 0x01, 0x00, 0x00, 0x00, 0x66,
+                    0x6d, 0x24, 0x00, 0x04, 0x43, 0x66, 0xe7, 0x4c, 0x82, 0x50, 0xc0, 0x02, 0x01,
+                    0x00, 0xa1, 0x36, 0x00, 0x82, 0x32, 0xc0, 0x02, 0xd2, 0x44, 0xd3, 0x15, 0x00,
+                    0x91, 0x47, 0xc0, 0x03, 0x1f, 0x19, 0x36, 0xe8, 0x00, 0xc8, 0xa0, 0xc0, 0x02,
+                ],
+            ),
+            (130816, vec![0x13, 0x99, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        ];
+        for (pgn, data) in frames {
+            let frame = RawFrame::new(None, 3, pgn, 32, 255, data.clone());
+            let decoded = db().decode(&frame).unwrap();
+            let mut b = db().encode(decoded.id).unwrap();
+            for f in &decoded.fields {
+                let v = match &f.value {
+                    crate::engine::FieldValue::Binary(v) => EncodeValue::Bytes(v.to_vec()),
+                    crate::engine::FieldValue::Lookup { value, .. } => {
+                        EncodeValue::Int(*value as i64)
+                    }
+                    crate::engine::FieldValue::Number(n) => EncodeValue::Number(*n),
+                    crate::engine::FieldValue::Integer(n) => EncodeValue::Int(*n),
+                    _ => continue,
+                };
+                b.push_by_name(f.info.name, v).unwrap();
+            }
+            assert_eq!(b.build().unwrap().data.to_vec(), data, "{}", decoded.id);
+        }
+    }
+
     #[test]
     fn unset_binary_of_odd_width_is_all_ones_and_keeps_the_layout() {
         let mut b = db().encode("aisClassAPositionReport").unwrap();
@@ -2679,6 +2918,32 @@ mod tests {
         b.push_by_name("PGN", EncodeValue::Pgn(pgn)).unwrap();
         b.push_by_name("Unique ID", 0i64).unwrap();
         b
+    }
+
+    /// In a Write Fields the new values follow the selection, so a
+    /// selection value for the catch-all's Data does not end the message
+    /// when there are any: it is refused, not written short.
+    #[test]
+    fn a_catch_all_selection_before_new_values_is_refused() {
+        let build = |with_value: bool| {
+            let mut b = write_fields(130824);
+            b.push_by_name("Manufacturer Code", 137i64).unwrap();
+            b.push_by_name("Industry Code", 4i64).unwrap();
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "selectionParameter", Raw(4)).unwrap();
+            b.push_in_set(1, i, "selectionValue", EncodeValue::Text("00 05".into()))
+                .unwrap();
+            if with_value {
+                let i = b.add_set_instance(2).unwrap();
+                b.push_in_set(2, i, "parameter", Raw(4)).unwrap();
+                b.push_in_set(2, i, "value", EncodeValue::Text("06".into()))
+                    .unwrap();
+            }
+            b.build()
+        };
+        assert!(build(false).is_ok(), "{:?}", build(false));
+        let err = build(true).unwrap_err().to_string();
+        assert!(err.contains("must be the last parameter"), "{err}");
     }
 
     #[test]

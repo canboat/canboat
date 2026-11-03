@@ -28202,7 +28202,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <Length>230</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28300,7 +28300,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>payload</Id>
           <Name>Payload</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1728</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -28606,7 +28606,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>225</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28654,7 +28654,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1768</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -62095,7 +62095,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>225</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -62143,7 +62143,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1768</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -78153,7 +78153,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <Length>230</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -78264,7 +78264,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Id>data</Id>
           <Name>Data</Name>
           <Description>Raw table fragment carried by this part</Description>
-          <BitLength>1784</BitLength>
+          <BitLength>1728</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>

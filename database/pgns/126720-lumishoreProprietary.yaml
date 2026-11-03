@@ -29,4 +29,4 @@ fields:
 - id: data
   name: Data
   type: BINARY
-  bits: 1784
+  bits: 1768

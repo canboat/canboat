@@ -187,6 +187,32 @@ const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
  * Note that CompanyId and IndustryCode are just normal "match" parameters, so do not
  * need to be treated really differently.
  */
+/*
+ * The field of `pgn` that a group function parameter addresses: `index` is the
+ * parameter's field number, 1-based. A number past the fixed fields continues
+ * into the definition's repeating set, as its fields repeat, when it has one
+ * set and that set ends the definition. NULL when there is no such field.
+ */
+const Field *getParameterField(const Pgn *pgn, int index)
+{
+  int start = pgn->repeatingStart1;
+  int count = pgn->repeatingCount1;
+
+  if (index < 1)
+  {
+    return NULL;
+  }
+  if (index <= (int) pgn->fieldCount)
+  {
+    return &pgn->fieldList[index - 1];
+  }
+  if (count == 0 || pgn->repeatingCount2 != 0 || start + count - 1 != (int) pgn->fieldCount)
+  {
+    return NULL;
+  }
+  return &pgn->fieldList[(index - start) % count + start - 1];
+}
+
 const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length)
 {
   const Pgn *pgn = searchForPgn(pgnId);
@@ -247,16 +273,16 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
 
     for (d = 1, param = 0; param < nparams && d < length; param++)
     {
-      int index = data[d++] - 1;
+      int index = data[d++];
 
       logDebug("getMatchingPgnByParameters: offset %d parameter #%d\n", d, index);
-      if (index >= pgn->fieldCount)
+      const Field *field = getParameterField(pgn, index);
+      if (field == NULL)
       {
         matchedFixedField = false;
         break;
       }
 
-      const Field *field = &pgn->fieldList[index];
       int          bits  = field->size;
       int          bytes = (bits + 7) >> 3;
 
