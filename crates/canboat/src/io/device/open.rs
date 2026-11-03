@@ -11,6 +11,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::engine::BusProtocol;
+use crate::engine::codec::ngt1_pcode::PCodeRequest;
 use crate::engine::codec::ngt1_tx_list::TxListRecord;
 use crate::engine::codec::raw::{self as raw_codec, CanFrame, RawCodec};
 use crate::engine::format::ngt1::OperatingMode;
@@ -62,6 +63,7 @@ pub struct Device {
     channel: u8,
     password: String,
     mode: OperatingMode,
+    pcode: PCodeRequest,
     no_tx_rate_limit: bool,
     ignore_checksum: bool,
     rx_filter: Vec<u32>,
@@ -163,6 +165,7 @@ impl Device {
             channel: 0,
             password: String::new(),
             mode: OperatingMode::NgTransferRxAll,
+            pcode: PCodeRequest::default(),
             no_tx_rate_limit: false,
             ignore_checksum: false,
             rx_filter: Vec::new(),
@@ -241,6 +244,14 @@ impl Device {
     pub fn mode(mut self, mode: OperatingMode) -> Self {
         self.mode = mode;
         self.with(Setting::Mode)
+    }
+
+    /// NGT-1: what to do with its P-Code output per port at startup (see
+    /// [`crate::engine::codec::ngt1_pcode`]); without this every port is
+    /// switched on.
+    pub fn pcode(mut self, request: PCodeRequest) -> Self {
+        self.pcode = request;
+        self.with(Setting::PCode)
     }
 
     /// iKonvert: turn off the gateway's transmit rate limit, at your own
@@ -703,6 +714,7 @@ impl Device {
                     pgn_lists: self.pgn_lists.clone(),
                     extra_tx_pgns: self.extra_tx_pgns.clone(),
                     tx_list_record: self.shared.tx_list_record.clone(),
+                    pcode: self.pcode.clone(),
                 };
                 // An AOS simulator is Kind::Aos: this gives up on one.
                 super::ngt1::run_ngt1(reader, writer, config)

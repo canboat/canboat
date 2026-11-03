@@ -213,6 +213,7 @@ pub fn canboat::bus::Device::no_tx_rate_limit(self) -> Self
 pub fn canboat::bus::Device::open(&self, canboat::schema::BusProtocol) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub fn canboat::bus::Device::open_raw(&self) -> core::io::error::Result<canboat::bus::DeviceHandle<canboat::codec::raw::CanFrame>>
 pub fn canboat::bus::Device::password(self, impl core::convert::Into<alloc::string::String>) -> Self
+pub fn canboat::bus::Device::pcode(self, canboat::bus::PCodeRequest) -> Self
 pub fn canboat::bus::Device::pgn_list_status(&self) -> core::option::Option<canboat::device::PgnListStatus>
 pub fn canboat::bus::Device::pgn_lists(self, canboat::codec::PgnLists) -> Self
 pub fn canboat::bus::Device::reconnect(self, bool) -> Self
@@ -425,6 +426,23 @@ impl core::fmt::Display for canboat::bus::OperatingMode
 pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::bus::OperatingMode
 impl core::marker::StructuralPartialEq for canboat::bus::OperatingMode
+pub enum canboat::bus::PCodeRequest
+pub canboat::bus::PCodeRequest::All(bool)
+pub canboat::bus::PCodeRequest::Get
+pub canboat::bus::PCodeRequest::Keep
+pub canboat::bus::PCodeRequest::Ports(alloc::vec::Vec<(u8, bool)>)
+impl canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::parse(&str) -> core::result::Result<Self, alloc::string::String>
+impl core::clone::Clone for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::PCodeRequest
+impl core::cmp::PartialEq for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::default() -> Self
+impl core::fmt::Debug for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bus::PCodeRequest
 #[non_exhaustive] pub enum canboat::bus::Setting
 pub canboat::bus::Setting::Baud
 pub canboat::bus::Setting::Bitrate
@@ -435,6 +453,7 @@ pub canboat::bus::Setting::Mode
 pub canboat::bus::Setting::NoClaim
 pub canboat::bus::Setting::NoTxRateLimit
 pub canboat::bus::Setting::Node
+pub canboat::bus::Setting::PCode
 pub canboat::bus::Setting::Password
 pub canboat::bus::Setting::RunNode
 pub canboat::bus::Setting::RxFilter
@@ -514,6 +533,7 @@ pub fn canboat::bus::Device::no_tx_rate_limit(self) -> Self
 pub fn canboat::bus::Device::open(&self, canboat::schema::BusProtocol) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub fn canboat::bus::Device::open_raw(&self) -> core::io::error::Result<canboat::bus::DeviceHandle<canboat::codec::raw::CanFrame>>
 pub fn canboat::bus::Device::password(self, impl core::convert::Into<alloc::string::String>) -> Self
+pub fn canboat::bus::Device::pcode(self, canboat::bus::PCodeRequest) -> Self
 pub fn canboat::bus::Device::pgn_list_status(&self) -> core::option::Option<canboat::device::PgnListStatus>
 pub fn canboat::bus::Device::pgn_lists(self, canboat::codec::PgnLists) -> Self
 pub fn canboat::bus::Device::reconnect(self, bool) -> Self
@@ -846,6 +866,23 @@ impl core::fmt::Display for canboat::bus::OperatingMode
 pub fn canboat::bus::OperatingMode::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::bus::OperatingMode
 impl core::marker::StructuralPartialEq for canboat::bus::OperatingMode
+pub enum canboat::codec::ngt1::PCodeRequest
+pub canboat::codec::ngt1::PCodeRequest::All(bool)
+pub canboat::codec::ngt1::PCodeRequest::Get
+pub canboat::codec::ngt1::PCodeRequest::Keep
+pub canboat::codec::ngt1::PCodeRequest::Ports(alloc::vec::Vec<(u8, bool)>)
+impl canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::parse(&str) -> core::result::Result<Self, alloc::string::String>
+impl core::clone::Clone for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bus::PCodeRequest
+impl core::cmp::PartialEq for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::default() -> Self
+impl core::fmt::Debug for canboat::bus::PCodeRequest
+pub fn canboat::bus::PCodeRequest::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bus::PCodeRequest
 pub struct canboat::codec::ngt1::AosInfo
 pub canboat::codec::ngt1::AosInfo::firmware_version: alloc::string::String
 pub canboat::codec::ngt1::AosInfo::hardware_version: alloc::string::String
@@ -862,6 +899,7 @@ impl core::marker::StructuralPartialEq for canboat::codec::ngt1::AosInfo
 pub struct canboat::codec::ngt1::Config
 pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
 pub canboat::codec::ngt1::Config::operating_mode: canboat::bus::OperatingMode
+pub canboat::codec::ngt1::Config::pcode: canboat::bus::PCodeRequest
 pub canboat::codec::ngt1::Config::pgn_lists: canboat::codec::PgnLists
 pub canboat::codec::ngt1::Config::tx_list_record: alloc::sync::Arc<std::sync::poison::mutex::Mutex<canboat::codec::ngt1::TxListRecord>>
 impl core::clone::Clone for canboat::codec::ngt1::Config
