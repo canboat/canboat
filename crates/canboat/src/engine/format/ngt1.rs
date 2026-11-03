@@ -596,6 +596,14 @@ pub fn encode_set_port_pcode(per_port: &[u8]) -> Vec<u8> {
     out
 }
 
+/// Encode BEM Get Operating Mode (Operating Mode with no data) as a
+/// ready-to-write byte string. The gateway answers with the mode in force.
+pub fn encode_get_operating_mode() -> Vec<u8> {
+    let mut out = Vec::with_capacity(8);
+    encode_ngt_message(NGT_MSG_SEND, &[BEM_OPERATING_MODE], &mut out);
+    out
+}
+
 /// Encode BEM Set Operating Mode as a ready-to-write byte string.
 pub fn encode_set_operating_mode(mode: OperatingMode) -> Vec<u8> {
     let [lo, hi] = mode.code().to_le_bytes();
