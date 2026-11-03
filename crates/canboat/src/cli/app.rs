@@ -252,5 +252,27 @@ mod tests {
         };
         assert!(config(&[]).name_value);
         assert!(!config(&["--no-nv"]).name_value);
+        // Both spellings, as convert has them too; the last one wins.
+        assert!(config(&["--nv"]).name_value);
+        assert!(config(&["--no-nv", "--nv"]).name_value);
+        assert!(!config(&["--nv", "--no-nv"]).name_value);
+    }
+
+    /// `convert` takes `--no-nv` too, as `server` does: the last of the
+    /// two wins.
+    #[test]
+    fn convert_takes_nv_and_no_nv() {
+        let nv = |extra: &[&str]| {
+            let args = ["canboat", "convert"].iter().chain(extra);
+            match Cli::try_parse_from(args).unwrap().command {
+                Command::Convert(a) => a.name_value(),
+                other => panic!("{other:?}"),
+            }
+        };
+        assert!(!nv(&[]));
+        assert!(nv(&["--nv"]));
+        assert!(!nv(&["--no-nv"]));
+        assert!(!nv(&["--nv", "--no-nv"]));
+        assert!(nv(&["--no-nv", "--nv"]));
     }
 }
