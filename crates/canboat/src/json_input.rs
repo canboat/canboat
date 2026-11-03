@@ -912,6 +912,12 @@ mod tests {
         assert!(frame_from_json(db, line).is_err());
         let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
         assert_eq!(frame.data[frame.data.len() - 4..], [0xff; 4]);
+        // A signed value's unknown is its largest positive value: Simnet
+        // 130845's Timezone offset (key 41) left out decodes left out
+        // again, not as -1 minute.
+        let line = r#"{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":41,"operation":1}}"#;
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[frame.data.len() - 2..], [0xff, 0x7f]);
     }
 
     #[test]
