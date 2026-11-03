@@ -3447,6 +3447,45 @@ mod tests {
     }
 
     #[test]
+    fn an_unsigned_angle_key_value_reads_past_180_degrees() {
+        // A B&G key-value frame (merrimac-2022.raw) whose `Heading on
+        // Opposite Tack` (154) is raw 0x8858 and `Wind Angle to Mast`
+        // (157) raw 0xa61c. Both keys are ANGLE_UFIX16, so they read
+        // 200.0° and 243.6°, as the C analyzer prints them, not the
+        // -175.5° and -131.8° of a signed read.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x7d, 0x99, 0x64, 0x20, 0x53, 0x00, 0x0d, 0x21, 0x67, 0x00, 0x0e, 0x41, 0x6d, 0xa1,
+            0xb2, 0x1f, 0x0f, 0x41, 0x9c, 0x51, 0x3c, 0x03, 0x69, 0x20, 0x5f, 0x7a, 0xd3, 0x20,
+            0x38, 0x21, 0x81, 0x40, 0x70, 0xd3, 0x02, 0x00, 0x9a, 0x20, 0x58, 0x88, 0x82, 0x20,
+            0x00, 0x00, 0x0a, 0x21, 0x98, 0x02, 0x0c, 0x21, 0xb8, 0x02, 0x75, 0x40, 0x20, 0x6c,
+            0xfb, 0xff, 0x09, 0x41, 0xff, 0xff, 0xff, 0xff, 0x0b, 0x41, 0xff, 0xff, 0xff, 0xff,
+            0xd0, 0x40, 0x30, 0x0e, 0xa4, 0x0d, 0x7f, 0x20, 0x00, 0x00, 0x9d, 0x20, 0x1c, 0xa6,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let mut key = None;
+        let mut angles = Vec::new();
+        for f in &dec.fields {
+            match (f.info.name, &f.value) {
+                ("Key", FieldValue::Lookup { value, .. }) => key = Some(*value),
+                ("Value", FieldValue::Number(v)) if matches!(key, Some(154 | 157)) => {
+                    angles.push((key.unwrap(), (v * 10.0).round() / 10.0));
+                }
+                _ => {}
+            }
+        }
+        assert_eq!(angles, vec![(154, 200.0), (157, 243.6)]);
+    }
+
+    #[test]
     fn dynamic_length_overhead_sizes_130823_records() {
         // A reassembled PGN 130823 directory report (the first record
         // of samples/navico-130823.raw). Each entry is
