@@ -4058,12 +4058,15 @@ Pgn pgnList[] = {
 
     {"Heave",
      127252,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Heave", .camelName = "heave", .fieldType = "DISTANCE_FIX16_CM", .hasSign = true},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 40, .resolution = 1.0}
+      {.name = "Delay", .camelName = "delay", .fieldType = "DURATION_UFIX16_CS", .description = "Delay added by the heave calculation"},
+      {.name = "Delay Source", .camelName = "delaySource", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDELAY_SOURCE, .lookup.name = "DELAY_SOURCE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "heave",
      .priority = 3},
@@ -10443,7 +10446,7 @@ Pgn pgnList[] = {
       {.name = "Sats in View", .camelName = "satsInView", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "PRN", .camelName = "prn", .fieldType = "UINT8", .resolution = 1.0, .description = "1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou"},
       {.name = "Elevation", .camelName = "elevation", .fieldType = "ANGLE_FIX16", .hasSign = true},
-      {.name = "Azimuth", .camelName = "azimuth", .fieldType = "ANGLE_FIX16", .hasSign = true},
+      {.name = "Azimuth", .camelName = "azimuth", .fieldType = "ANGLE_UFIX16"},
       {.name = "SNR", .camelName = "snr", .fieldType = "SIGNALTONOISERATIO_FIX16", .hasSign = true},
       {.name = "Range residual", .camelName = "rangeResidual", .fieldType = "DISTANCE_FIX32_MMM", .hasSign = true},
       {.name = "Baseline status", .camelName = "baselineStatus", .fieldType = "BITLOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFURUNO_BASELINE_STATUS, .lookup.name = "FURUNO_BASELINE_STATUS"}
@@ -10840,8 +10843,8 @@ Pgn pgnList[] = {
       {.name = "Address", .camelName = "address", .fieldType = "ADDRESS", .resolution = 1.0, .description = "NMEA 2000 address of commanded device", .reservedOverride = 1},
       {.name = "Reserved", .camelName = "reserved5", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Network Group", .camelName = "networkGroup", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_NETWORK_GROUP, .lookup.name = "SIMNET_NETWORK_GROUP"},
-      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
+      {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE"},
+      {.name = "Event", .camelName = "event", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved11", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},

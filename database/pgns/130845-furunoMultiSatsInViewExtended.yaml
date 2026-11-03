@@ -62,7 +62,7 @@ fields:
       type: ANGLE_FIX16
     - id: azimuth
       name: Azimuth
-      type: ANGLE_FIX16
+      type: ANGLE_UFIX16
     - id: snr
       name: SNR
       type: SIGNALTONOISERATIO_FIX16
@@ -109,43 +109,43 @@ samples:
     baselineStatus.3: ["Baseline Antenna 2-3", "Baseline Antenna 3-4", "Baseline Antenna 1-3"]
     prn.4: 6
     elevation.4: 0.6826
-    azimuth.4: -1.2333
+    azimuth.4: 5.3203
     snr.4: 46.00
     rangeResidual.4: ~
     baselineStatus.4: ["Baseline Antenna 2-3", "Baseline Antenna 3-4", "Baseline Antenna 1-3"]
     prn.5: 9
     elevation.5: 0.7743
-    azimuth.5: -2.8833
+    azimuth.5: 3.6703
     snr.5: 44.00
     rangeResidual.5: ~
     baselineStatus.5: ["Baseline Antenna 2-3", "Baseline Antenna 3-4", "Baseline Antenna 1-3"]
     prn.6: 11
     elevation.6: 0.1305
-    azimuth.6: -1.1167
+    azimuth.6: 5.4369
     snr.6: 34.00
     rangeResidual.6: ~
     baselineStatus.6: []
     prn.7: 12
     elevation.7: 0.0390
-    azimuth.7: -0.8798
+    azimuth.7: 5.6738
     snr.7: 0.00
     rangeResidual.7: ~
     baselineStatus.7: []
     prn.8: 17
     elevation.8: 0.4782
-    azimuth.8: -2.5468
+    azimuth.8: 4.0068
     snr.8: 42.00
     rangeResidual.8: ~
     baselineStatus.8: ["Baseline Antenna 2-3", "Baseline Antenna 3-4", "Baseline Antenna 1-3"]
     prn.9: 19
     elevation.9: 0.6451
-    azimuth.9: -2.0148
+    azimuth.9: 4.5388
     snr.9: 45.00
     rangeResidual.9: ~
     baselineStatus.9: ["Baseline Antenna 2-3", "Baseline Antenna 3-4", "Baseline Antenna 1-3"]
     prn.10: 25
     elevation.10: 0.0638
-    azimuth.10: -0.3044
+    azimuth.10: 6.2492
     snr.10: 0.00
     rangeResidual.10: ~
     baselineStatus.10: []
@@ -169,7 +169,7 @@ samples:
     baselineStatus.13: []
     prn.14: 65
     elevation.14: 0.9178
-    azimuth.14: -2.1107
+    azimuth.14: 4.4429
     snr.14: 42.00
     rangeResidual.14: ~
     baselineStatus.14: ["Baseline Antenna 2-3", "Baseline Antenna 1-3"]
@@ -203,7 +203,7 @@ samples:
     satsInView: 19
     prn: 167
     elevation: 0.5511
-    azimuth: -1.1329
+    azimuth: 5.4207
     snr: 44.00
     rangeResidual: ~
     baselineStatus: ["Baseline Antenna 3-4", "Baseline Antenna 4-1", "Baseline Antenna 2-4"]
@@ -219,31 +219,31 @@ samples:
     satsInView: 28
     prn: 81
     elevation: 0.2877
-    azimuth: -0.7609
+    azimuth: 5.7927
     snr: 42.00
     rangeResidual: ~
     baselineStatus: ["Baseline Antenna 1-2"]
     prn.2: 87
     elevation.2: 0.8554
-    azimuth.2: -3.2141
+    azimuth.2: 3.3395
     snr.2: 44.00
     rangeResidual.2: ~
     baselineStatus.2: ["Baseline Antenna 1-2", "Baseline Antenna 1-3"]
     prn.3: 88
     elevation.3: 1.0656
-    azimuth.3: -1.4890
+    azimuth.3: 5.0646
     snr.3: 49.00
     rangeResidual.3: ~
     baselineStatus.3: ["Baseline Antenna 1-2", "Baseline Antenna 1-3"]
     prn.4: 135
     elevation.4: 1.2052
-    azimuth.4: -3.1352
+    azimuth.4: 3.4184
     snr.4: 48.00
     rangeResidual.4: ~
     baselineStatus.4: ["Baseline Antenna 1-2", "Baseline Antenna 1-3"]
     prn.5: 140
     elevation.5: 0.3212
-    azimuth.5: -2.6507
+    azimuth.5: 3.9029
     snr.5: 42.00
     rangeResidual.5: ~
     baselineStatus.5: []
@@ -255,7 +255,7 @@ samples:
     baselineStatus.6: ["Baseline Antenna 1-2", "Baseline Antenna 4-1", "Baseline Antenna 1-3"]
     prn.7: 142
     elevation.7: 1.2512
-    azimuth.7: -2.2318
+    azimuth.7: 4.3218
     snr.7: 44.00
     rangeResidual.7: ~
     baselineStatus.7: ["Baseline Antenna 1-2", "Baseline Antenna 4-1"]
@@ -273,7 +273,7 @@ samples:
     baselineStatus.9: []
     prn.10: 167
     elevation.10: 0.5475
-    azimuth.10: -1.1321
+    azimuth.10: 5.4215
     snr.10: 44.00
     rangeResidual.10: ~
     baselineStatus.10: ["Baseline Antenna 1-2", "Baseline Antenna 4-1", "Baseline Antenna 1-3"]
