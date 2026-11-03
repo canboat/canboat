@@ -661,10 +661,13 @@ fn write_field_value_debug<W: fmt::Write>(
     w.write_char('}')
 }
 
-/// Whether key field `f`'s lookup gives `name` to more than one code.
+/// Whether key field `f`'s lookup gives `name` to more than one code. A
+/// field with a match value already says which code it is, as in the C
+/// analyzer.
 fn shared_key_name(f: &DecodedField, name: &str) -> bool {
-    crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric)
-        .lookup_name_is_shared(f.info, name)
+    f.info.match_value.is_none()
+        && crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric)
+            .lookup_name_is_shared(f.info, name)
 }
 
 fn write_field_value<W: fmt::Write>(

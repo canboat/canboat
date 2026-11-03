@@ -913,6 +913,32 @@ mod tests {
     }
 
     #[test]
+    fn a_matched_key_keeps_its_shared_name() {
+        // 126720 Seatalk Pilot Auto Turn: its command key matches 38, "Auto
+        // Turn", a name SEATALK_COMMAND also gives 17. The match already
+        // tells the records apart, so the name stays, as in the C analyzer.
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+        let data = [0x3b, 0x9f, 0x6c, 0x26, 0x00, 0x01, 0x00, 0x00, 0x00];
+        let frame = crate::engine::RawFrame::new(None, 3, 126720, 15, 255, data.to_vec());
+        let decoded = db.decode(&frame).unwrap();
+        for debug in [false, true] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value: false,
+                debug,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            let named = if debug {
+                r#""command":{"value":"Auto Turn""#
+            } else {
+                r#""command":"Auto Turn""#
+            };
+            assert!(line.contains(named), "{line}");
+        }
+    }
+
+    #[test]
     fn repeating_pk_set_detects_pgn_130824() {
         // canboat 7.1.0 lists exactly four PGNs with PartOfPrimaryKey
         // inside a repeating set — the B&G and Mercury 130824 variants
