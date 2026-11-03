@@ -1050,22 +1050,25 @@ impl PgnBuilder {
             || (is_time && matches!(e.name, "Race Timer" | "Timezone offset"));
         let res = e.resolution.unwrap_or(1.0);
         let raw = ((value - e.unit_offset) / res).round();
-        let (min, max) = if signed {
-            (
-                -(2f64.powi(bits as i32 - 1)),
-                2f64.powi(bits as i32 - 1) - 1.0,
-            )
+        // Exclusive upper bounds: 2^63 - 1 and 2^64 - 1 do not exist as f64.
+        let (min, max_excl) = if signed {
+            (-(2f64.powi(bits as i32 - 1)), 2f64.powi(bits as i32 - 1))
         } else {
-            (0.0, mask as f64)
+            (0.0, 2f64.powi(bits as i32))
         };
-        if !(min..=max).contains(&raw) {
+        if !(min..max_excl).contains(&raw) {
             return Err(EncodeError::ValueOutOfRange {
                 field: f.name,
                 value,
                 range: None,
             });
         }
-        Ok((raw as i64 as u64) & mask)
+        let wire = if signed {
+            raw as i64 as u64
+        } else {
+            raw as u64
+        };
+        Ok(wire & mask)
     }
 
     /// Emit a deferred group-function `VARIABLE` value: resolve the
@@ -1203,8 +1206,12 @@ impl PgnBuilder {
                     write_bits(buf, next_bit, pad, 0);
                 }
             }
+            // A key/value record's value takes its type from its key, which
+            // a group function does not set.
             Staged::Deferred(_) | Staged::Dynamic(_) => {
-                unreachable!("a group-function value's target is never dynamic")
+                return Err(unresolved(
+                    "the target is a key/value value, typed by a key a group function does not set",
+                ));
             }
         }
         Ok(())
@@ -3121,6 +3128,50 @@ mod tests {
         assert_eq!(&frame.data[6..9], &[0xff, 0x26, 0x00]);
         assert_eq!(frame.data[9], 0x01); // Operation = Set
         assert_eq!(frame.data[10], 0x04); // Value byte, verbatim
+    }
+
+    /// A 64-bit dynamic value takes every value its width holds, and no
+    /// more: 2^63 unsigned is not capped, 2^64 is refused, as is 2^63
+    /// signed.
+    #[test]
+    fn a_64_bit_dynamic_value_keeps_its_whole_range() {
+        let entry = |signed| crate::engine::types::LookupFieldTypeValue {
+            value: 0,
+            name: "test",
+            field_type: Some("NUMBER"),
+            bits: Some(64),
+            resolution: Some(1.0),
+            unit: None,
+            lookup_enumeration: None,
+            lookup_bit_enumeration: None,
+            signed,
+            precision: 0,
+            unit_offset: 0.0,
+        };
+        let b = db().encode("simnetKeyValue").unwrap();
+        let f = b.pgn_info().fields.last().unwrap();
+        let raw =
+            |signed, x: f64| b.dynamic_raw(f, Some(&entry(signed)), 64, &EncodeValue::Number(x));
+        assert_eq!(raw(false, 2f64.powi(63)).unwrap(), 1 << 63);
+        assert!(raw(false, 2f64.powi(64)).is_err());
+        assert!(raw(true, 2f64.powi(63)).is_err());
+        assert_eq!(raw(true, -(2f64.powi(63))).unwrap(), 1 << 63);
+    }
+
+    /// A group function addressing a key/value record's value is an
+    /// error, not a panic: its type comes from a key the group function
+    /// does not set.
+    #[test]
+    fn a_group_function_for_a_key_value_value_is_an_error() {
+        let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130845)).unwrap();
+        for (parameter, value) in [(1i64, 1857i64), (3, 4), (10, 5)] {
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "Parameter", parameter).unwrap();
+            b.push_in_set(1, i, "Value", value).unwrap();
+        }
+        let err = b.build().unwrap_err().to_string();
+        assert!(err.contains("key/value value"), "{err}");
     }
 
     #[test]
