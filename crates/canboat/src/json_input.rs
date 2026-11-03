@@ -497,9 +497,12 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
             Ok(EncodeValue::Text(s.to_string()))
         }
-        Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
-            Ok(EncodeValue::Bytes(parse_hex(s)?))
-        }
+        Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
+        // A key/value value is its bytes as hex, or a lookup name or time
+        // ("Off", "10:00:00") that the record's key gives meaning to.
+        Some(FieldType::DynamicFieldValue) => Ok(parse_hex(s)
+            .map(EncodeValue::Bytes)
+            .unwrap_or_else(|_| EncodeValue::Text(s.to_string()))),
         // A Reserved or Spare field printed as hex (one that isn't all
         // ones, or for spare all zeros): the encoder writes the bytes back
         // where the decoder found them.
@@ -904,6 +907,47 @@ mod tests {
     /// when reading what canboat decoded (`convert --from json`); for a
     /// command meant for the bus (`interface`) it is an error, so a value
     /// forgotten is not sent as "unknown".
+    /// A key/value value written as its lookup name, as plain JSON has
+    /// it, encodes by the record's key; one given as hex is its bytes.
+    #[test]
+    fn a_key_value_value_by_its_name_encodes_by_its_key() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let record = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":53760,"operation":1,"value":{value}}}}}"#
+            )
+        };
+        let by_name = frame_from_json(db, &record(r#""On""#)).unwrap().unwrap();
+        let by_hex = frame_from_json(db, &record(r#""01""#)).unwrap().unwrap();
+        assert_eq!(by_name.data, by_hex.data);
+        assert_eq!(by_name.data[by_name.data.len() - 1], 0x01);
+    }
+
+    /// A key named by a name several keys share is refused: B&G's keys
+    /// 28, 29 and 30 are each "Outside Temperature".
+    #[test]
+    fn a_shared_key_name_is_an_error() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":"Outside Temperature","length":2,"value":288.15}]}}"#;
+        let err = frame_from_json(db, line).unwrap_err();
+        assert!(format!("{err:#}").contains("more than one code"), "{err:#}");
+        let line = line.replace(r#""Outside Temperature""#, "29");
+        assert!(frame_from_json(db, &line).is_ok());
+    }
+
+    /// A record whose length leaves no value bytes, its value left out,
+    /// writes nothing for it rather than failing.
+    #[test]
+    fn a_zero_length_value_left_out_writes_nothing() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":11,"length":0},{"key":11,"length":2,"value":0}]}}"#;
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(
+            frame.data[..],
+            [0x7d, 0x99, 0x0b, 0x00, 0x0b, 0x20, 0x00, 0x00]
+        );
+    }
+
     #[test]
     fn a_value_left_out_is_an_error_unless_read_as_decoded() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);

@@ -394,6 +394,23 @@ impl PgnDatabase {
         };
         table.values.iter().find(|v| v.name == value_name)
     }
+
+    /// Every entry of field-type lookup `name` called `value_name`: more
+    /// than one where codes share a name.
+    pub(crate) fn field_type_lookups_named<'a>(
+        &self,
+        name: &str,
+        value_name: &'a str,
+    ) -> impl Iterator<Item = &'static LookupFieldTypeValue> + 'a {
+        let values: &'static [LookupFieldTypeValue] = match self
+            .field_type_lookups
+            .binary_search_by(|t| t.name.cmp(name))
+        {
+            Ok(i) => self.field_type_lookups[i].values,
+            Err(_) => &[],
+        };
+        values.iter().filter(move |v| v.name == value_name)
+    }
 }
 
 /// Iterator returned by [`PgnDatabase::pgn_variants`]. Walks the
