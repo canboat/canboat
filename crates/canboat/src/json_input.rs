@@ -182,7 +182,7 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
                 }
                 continue;
             }
-            match frame_from_json(self.db, line) {
+            match decoded_frame_from_json(self.db, line) {
                 Ok(Some(frame)) => return Ok(Some(frame)),
                 Ok(None) => continue,
                 Err(e) => {
@@ -197,6 +197,25 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
 /// Encode one analyzer-JSON line. `Ok(None)` for records that are not
 /// messages (the `{"version":…}` startup header).
 pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<RawFrame>> {
+    frame_from_json_as(db, line, false)
+}
+
+/// [`frame_from_json`] for a record canboat decoded, as `convert --from
+/// json` reads it: a key/value value the decoder left out is written as it
+/// was left out ([`PgnBuilder::read_as_decoded`]). Not for a command meant for
+/// the bus, where a value forgotten should be an error.
+pub(crate) fn decoded_frame_from_json(
+    db: &'static PgnDatabase,
+    line: &str,
+) -> Result<Option<RawFrame>> {
+    frame_from_json_as(db, line, true)
+}
+
+fn frame_from_json_as(
+    db: &'static PgnDatabase,
+    line: &str,
+    decoded: bool,
+) -> Result<Option<RawFrame>> {
     let root: Value = serde_json::from_str(line).context("parsing JSON")?;
     let root = root
         .as_object()
@@ -251,6 +270,9 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
         }
     };
 
+    if decoded {
+        builder = builder.read_as_decoded();
+    }
     if let Some(p) = record.get("prio").and_then(Value::as_u64) {
         builder = builder.priority(p as u8);
     }
@@ -829,6 +851,67 @@ mod tests {
             })
             .collect();
         assert_eq!(prns, vec![7, 11]);
+    }
+
+    /// Key/value records whose values are typed by their key decode and
+    /// encode back to the same bytes, from the -nv JSON and from the
+    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
+    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
+    /// and a Navico 130822 Object Dump whose last record the frame cuts off
+    /// (canboat#1114).
+    #[test]
+    fn key_value_records_encode_back() {
+        let frames: [(u32, &str); 4] = [
+            (
+                130824,
+                "7d,99,2b,41,26,24,ad,0c,2c,41,3f,75,b8,63,37,21,d1,35,38,21,bb,03,7e,20,9b,01,7c,20,f8,03,32,21,e4,a0,33,21,29,cd,1d,21,87,03",
+            ),
+            (
+                130824,
+                "7d,99,64,20,57,01,0d,21,48,01,0e,41,40,4e,57,12,0f,41,82,96,82,59,69,20,ef,d7,d3,20,94,c8,81,40,20,1c,00,00,9a,20,e5,9f,82,20,00,00,0a,21,80,01,0c,21,4f,02,35,20,7c,d9,7d,20,8a,01,53,20,b7,7a,75,40,e6,b2,fc,ff,09,41,46,34,03,00,0b,41,ff,ff,ff,ff,d0,40,70,89,a0,0d,1d,21,db,02,7f,20,20,01,9d,20,92,4b",
+            ),
+            // Two bytes past the 16-bit value are left out by the decoder.
+            (130845, "41,9f,ff,ff,02,ff,29,00,00,01,58,02"),
+            (
+                130822,
+                "13,99,ff,06,00,05,03,e8,52,0f,01,00,37,e1,04,02,01,00,00,04,02,21,00,00,04,02",
+            ),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 3, pgn, 30, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
+                    .unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+            }
+        }
+    }
+
+    /// A value the decoder left out is written as it was left out only
+    /// when reading what canboat decoded (`convert --from json`); for a
+    /// command meant for the bus (`interface`) it is an error, so a value
+    /// forgotten is not sent as "unknown".
+    #[test]
+    fn a_value_left_out_is_an_error_unless_read_as_decoded() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // B&G 130824, Trip 2 Time (key 267) without its value.
+        let line = r#"{"prio":3,"src":38,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":105,"length":2,"value":-1.0257},{"key":267,"length":4}]}}"#;
+        assert!(frame_from_json(db, line).is_err());
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[frame.data.len() - 4..], [0xff; 4]);
     }
 
     #[test]
