@@ -308,7 +308,7 @@ jobs:
       # job's default shell expects it, and keeps Cygwin off the system
       # PATH so the MSVC steps don't find its link.exe.
       - name: Set up Cygwin
-        uses: cygwin/cygwin-install-action@v6
+        uses: cygwin/cygwin-install-action@v7
         with:
             packages: make,gcc-core,zip
             install-dir: C:\tools\cygwin

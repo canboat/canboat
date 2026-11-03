@@ -320,6 +320,10 @@ enum Staged {
     Scalar(u64),
     /// Byte-aligned payload of exactly `bit_length / 8` bytes.
     Bytes(Vec<u8>),
+    /// A Reserved or Spare field's bytes as the decoder prints them: the
+    /// first byte keeps its bits where they sat in the message's byte, so
+    /// they are moved down by the field's bit position when written.
+    InPlace(Vec<u8>),
     /// A group-function `VARIABLE` value, staged as-given: its width,
     /// scaling and type come from the *referenced* PGN's field, which
     /// is only known at build time (the record's PGN field plus the
@@ -877,6 +881,17 @@ impl PgnBuilder {
                     write_bits(buf, next_bit, 8, u64::from(b));
                 }
             }
+            Staged::InPlace(bytes) => {
+                let bl = target_field
+                    .bit_length
+                    .ok_or(EncodeError::NotFixedLength(target_field.name))?
+                    as usize;
+                write_in_place(buf, next_bit, bl, target_field.name, &bytes)?;
+                if !next_bit.is_multiple_of(8) {
+                    let pad = 8 - (*next_bit % 8);
+                    write_bits(buf, next_bit, pad, 0);
+                }
+            }
             Staged::Deferred(_) => unreachable!("stage_value never defers"),
         }
         Ok(())
@@ -891,6 +906,13 @@ impl PgnBuilder {
             Some(FieldType::StringLz) => stage_string_lz(f, v),
             Some(FieldType::StringLau) => stage_string_lau(f, v),
             Some(FieldType::Binary) => stage_binary(f, v),
+            // Reserved or spare bits given as bytes, as the decoder prints
+            // them, are written back as they were.
+            Some(FieldType::Reserved) | Some(FieldType::Spare)
+                if matches!(v, EncodeValue::Bytes(_)) =>
+            {
+                stage_in_place(f, v)
+            }
             // DYNAMIC_FIELD_VALUE (the value slot of a key/value PGN like
             // 130845) has no schema `BitLength` — its width is set by the
             // sibling KEY at decode time, so it can't be defaulted, but the
@@ -1387,6 +1409,10 @@ fn emit_field(
             }
             Ok(())
         }
+        Some(Staged::InPlace(bytes)) => {
+            let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
+            write_in_place(buf, next_bit, bl, f.name, bytes)
+        }
         // A fixed-width scalar (number, lookup, PGN, float, …).
         Some(Staged::Scalar(v)) => {
             let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
@@ -1415,10 +1441,14 @@ fn write_unset(
                 write_bits(buf, next_bit, 8, u64::from(string_fix_pad(pgn)));
             }
         }
-        // Binary: all-1s (binary fields are whole bytes).
+        // Binary: all ones over its whole width, which need not be whole
+        // bytes: 129038's Communication State is 19 bits (canboat#1121).
         Some(FieldType::Binary) if f.bit_length.is_some() => {
-            for _ in 0..f.bit_length.unwrap() as usize / 8 {
-                write_bits(buf, next_bit, 8, 0xff);
+            let mut left = f.bit_length.unwrap() as usize;
+            while left > 0 {
+                let n = left.min(64);
+                write_bits(buf, next_bit, n, all_ones(n as u32));
+                left -= n;
             }
         }
         // Variable-length binary: nothing to emit.
@@ -1440,10 +1470,65 @@ fn write_unset(
             return Err(EncodeError::NotFixedLength(f.name));
         }
         // Every fixed-width scalar: its default at the field's bit width.
+        // One wider than 64 bits (130816's 144-bit Reserved) is all ones,
+        // or a spare all zeros, over its whole width.
         _ => {
             let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
-            write_bits(buf, next_bit, bl, default_raw(f));
+            if bl > 64 {
+                let fill = if f.field_type == Some(FieldType::Spare) {
+                    0
+                } else {
+                    u64::MAX
+                };
+                let mut left = bl;
+                while left > 0 {
+                    let n = left.min(64);
+                    write_bits(buf, next_bit, n, fill);
+                    left -= n;
+                }
+            } else {
+                write_bits(buf, next_bit, bl, default_raw(f));
+            }
         }
+    }
+    Ok(())
+}
+
+/// Stage Reserved or Spare bytes as the decoder prints them: at most the
+/// bytes the field's bits can touch.
+fn stage_in_place(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+    let EncodeValue::Bytes(bytes) = v else {
+        unreachable!("stage_value only stages Bytes in place");
+    };
+    f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))?;
+    Ok(Staged::InPlace(bytes))
+}
+
+/// Write `bits` bits from `bytes`, read as one little-endian bit string
+/// that starts at bit 0 of the message byte the field starts in. Bits the
+/// bytes don't reach are written as zeros; more bytes than the field
+/// touches is an error.
+fn write_in_place(
+    buf: &mut Vec<u8>,
+    next_bit: &mut usize,
+    bits: usize,
+    field: &'static str,
+    bytes: &[u8],
+) -> Result<(), EncodeError> {
+    let shift = *next_bit % 8;
+    if bytes.len() > (shift + bits).div_ceil(8) {
+        return Err(EncodeError::ValueOutOfRange {
+            field,
+            value: bytes.len() as f64,
+            range: None,
+        });
+    }
+    let bit = |i: usize| {
+        let at = i + shift;
+        bytes.get(at / 8).is_some_and(|b| b >> (at % 8) & 1 != 0)
+    };
+    for i in 0..bits {
+        write_bits(buf, next_bit, 1, u64::from(bit(i)));
     }
     Ok(())
 }
@@ -1910,6 +1995,29 @@ mod tests {
     }
 
     #[test]
+    fn group_function_value_for_a_reserved_target_is_written_in_place() {
+        // Parameter 3 of 127258 is its 4-bit Reserved. Bytes for it take
+        // the VARIABLE path, which pads the value to a whole byte.
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127258)).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 3i64).unwrap();
+        b.push_in_set(1, i, "Value", EncodeValue::Bytes(vec![0x05]))
+            .unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        assert_eq!(frame.data[frame.data.len() - 2..], [0x03, 0x05]);
+
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127258)).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 3i64).unwrap();
+        b.push_in_set(1, i, "Value", EncodeValue::Bytes(vec![0x05, 0x00]))
+            .unwrap();
+        assert!(b.build().is_err());
+    }
+
+    #[test]
     fn group_function_variable_values_encode_via_the_referenced_pgn() {
         // A 126208 Command Group Function for PGN 127250 (Vessel
         // Heading): parameter 2 is the Heading field, whose width
@@ -2080,6 +2188,61 @@ mod tests {
             d.field(NAME).and_then(|f| f.value.as_str()),
             Some("MERRIMAC")
         );
+    }
+
+    /// An unset Binary field is all ones over its whole width, also when
+    /// that isn't whole bytes, and the fields after it stay in place
+    /// (canboat#1121: 129038's 19-bit Communication State got 16 bits).
+    #[test]
+    fn unset_binary_of_odd_width_is_all_ones_and_keeps_the_layout() {
+        let mut b = db().encode("aisClassAPositionReport").unwrap();
+        b.push_by_name("AIS Transceiver information", EncodeValue::Int(0))
+            .unwrap();
+        let frame = b.build().unwrap();
+        let decoded = db().decode(&frame).unwrap();
+        let field = |id: &str| {
+            &decoded
+                .fields
+                .iter()
+                .find(|f| f.info.id == id)
+                .unwrap()
+                .value
+        };
+        assert!(matches!(
+            field("aisTransceiverInformation"),
+            crate::engine::FieldValue::Lookup { value: 0, .. }
+        ));
+        assert!(matches!(
+            field("rateOfTurn"),
+            crate::engine::FieldValue::NotAvailable
+        ));
+
+        // Every Binary field of odd width in the database, unset.
+        let bit = |data: &[u8], i: usize| data[i / 8] >> (i % 8) & 1;
+        let mut seen = 0;
+        for info in db().pgns() {
+            let Some(at) = info.fields.iter().position(|f| {
+                f.field_type == Some(FieldType::Binary) && f.bit_length.is_some_and(|n| n % 8 != 0)
+            }) else {
+                continue;
+            };
+            let Ok(frame) = db().encode(info.id).and_then(|b| b.build()) else {
+                continue;
+            };
+            let f = &info.fields[at];
+            let (start, len) = (
+                f.bit_offset.unwrap() as usize,
+                f.bit_length.unwrap() as usize,
+            );
+            assert!(
+                (start..start + len).all(|i| bit(&frame.data, i) == 1),
+                "{} {}",
+                info.id,
+                f.name
+            );
+            seen += 1;
+        }
+        assert!(seen >= 6, "only {seen} PGNs checked");
     }
 
     /// Unset AIS text is all '@' too, in every PGN of the set.

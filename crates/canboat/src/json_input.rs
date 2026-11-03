@@ -39,7 +39,7 @@
 use std::io::BufRead;
 
 use crate::engine::source::FrameSource;
-use crate::engine::types::{FieldInfo, FieldType};
+use crate::engine::types::{FieldInfo, FieldRef, FieldType};
 use crate::engine::{BusProtocol, EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value};
@@ -303,7 +303,7 @@ fn stage_fields(
                         .with_context(|| format!("{key}[{idx}].{fkey}"))?
                     {
                         builder
-                            .push_in_set(set, idx, info.name, ev)
+                            .push_in_set(set, idx, info.id, ev)
                             .map_err(|e| anyhow!("{key}[{idx}].{fkey}: {e}"))?;
                     }
                 }
@@ -315,11 +315,14 @@ fn stage_fields(
             continue;
         };
         if let Some(ev) = to_encode_value(db, info, value).with_context(|| key.clone())? {
-            // `push_by_name` matches schema names; `info` was resolved
-            // from either the name or the camel id, so push by its name.
-            builder
-                .push_by_name(info.name, ev)
-                .map_err(|e| anyhow!("{key}: {e}"))?;
+            // Push the field `info` itself: several fields can share a
+            // name (a PGN's Reserved fields), and pushing by name would
+            // set the first of them.
+            let field = FieldRef {
+                pgn: builder.pgn_info(),
+                field: info,
+            };
+            builder.push(field, ev).map_err(|e| anyhow!("{key}: {e}"))?;
         }
     }
     // A record carrying neither the count field nor its list encodes
@@ -475,6 +478,10 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
             Ok(EncodeValue::Bytes(parse_hex(s)?))
         }
+        // A Reserved or Spare field printed as hex (one that isn't all
+        // ones, or for spare all zeros): the encoder writes the bytes back
+        // where the decoder found them.
+        Some(FieldType::Reserved) | Some(FieldType::Spare) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
         // A group-function VARIABLE value: its real type lives in the
         // referenced PGN's field and is resolved at build time — pass
         // the text through, the builder retypes labels for lookups.
@@ -610,7 +617,10 @@ fn bit_by_name(db: &'static PgnDatabase, f: &'static FieldInfo, name: &str) -> R
 /// without spaces.
 fn parse_hex(s: &str) -> Result<Vec<u8>> {
     let compact: String = s.chars().filter(|c| !c.is_whitespace()).collect();
-    if !compact.len().is_multiple_of(2) || compact.is_empty() {
+    if !compact.len().is_multiple_of(2)
+        || compact.is_empty()
+        || !compact.chars().all(|c| c.is_ascii_hexdigit())
+    {
         bail!("bad hex string '{s}'");
     }
     (0..compact.len())
@@ -850,6 +860,118 @@ mod tests {
             }
             other => panic!("communicationState: {other:?}"),
         }
+    }
+
+    #[test]
+    fn reserved_and_spare_hex_round_trips() {
+        // The analyzer prints a Reserved field that isn't all ones as hex
+        // (canboat#1114). It must encode back to the same bits, and each
+        // of a PGN's several Reserved fields must land in its own place.
+        let line = r#"{"heave":{"prio":3,"src":19,"dst":255,"pgn":127252,
+            "fields":{"sid":0,"heave":-0.04,"reserved6":"7F FD"}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[0x00, 0xfc, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xfd]
+        );
+
+        // 127258: a 4-bit Reserved in the high nibble of byte 1 is printed
+        // in place ("50"), and `reserved6` is the second Reserved field.
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"sid":199,"source":{"value":0},"reserved":"50","reserved6":"CF 2A"}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[..2], [0xc7, 0x50]);
+        assert_eq!(frame.data[6..], [0xcf, 0x2a]);
+    }
+
+    #[test]
+    fn a_conditional_reserved_is_written_where_it_was_read() {
+        // 126208 Read Fields for a proprietary PGN: the Reserved after the
+        // manufacturer code starts at bit 3 of its byte, which only the
+        // encoder knows. Printed in place as "10", it is the value 2.
+        let line = r#"{"nmeaReadFieldsGroupFunction":{"prio":3,"src":1,"dst":2,"pgn":126208,
+            "fields":{"functionCode":{"value":3},"pgn":{"value":130816},
+            "manufacturerCode":{"value":295},"reserved":"10","industryCode":{"value":4},
+            "uniqueId":1,"numberOfSelectionPairs":0,"numberOfParameters":0}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[4..6], [0x27, 0x91]);
+    }
+
+    #[test]
+    fn an_unaligned_reserved_crossing_a_byte_round_trips() {
+        // 129814's reserved8 sits at bits 51-58: the analyzer prints both
+        // bytes it touches ("F0 07"), and all eight bits go back.
+        let line = r#"{"pgn":129814,"prio":6,"src":1,"dst":255,"fields":{
+            "sequenceId":24,"messageId":1,"repeatIndicator":0,
+            "destinationIndicator":1,"binaryDataFlag":1,"spare":"04",
+            "reserved8":"F0 07","aisTransceiverInformation":0}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.data[6..8], [0xf7, 0x07]);
+    }
+
+    #[test]
+    fn a_reserved_wider_than_64_bits_round_trips() {
+        // 130816's 144-bit Reserved (bytes 5-22) with one byte cleared: the
+        // analyzer prints it, and every byte goes back where it was.
+        let mut reserved = ["FF"; 18];
+        reserved[5] = "00";
+        let line = format!(
+            r#"{{"bepMarineCzoneZcfBusDistribution":{{"pgn":130816,"prio":7,"src":1,"dst":255,
+            "fields":{{"chunkIndex":1,"flag":0,"reserved6":"{}","data":"01 02 03"}}}}}}"#,
+            reserved.join(" ")
+        )
+        .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        let mut expected = [0xff; 18];
+        expected[5] = 0x00;
+        assert_eq!(frame.data[5..23], expected);
+        let decoded = db().decode(&frame).unwrap();
+        let field = decoded
+            .fields
+            .iter()
+            .find(|f| f.info.id == "reserved6")
+            .unwrap();
+        match &field.value {
+            crate::engine::FieldValue::Reserved { bytes, .. } => {
+                assert_eq!(bytes.as_slice(), &frame.data[5..23])
+            }
+            other => panic!("{other:?}"),
+        }
+    }
+
+    #[test]
+    fn reserved_hex_longer_than_the_field_is_an_error() {
+        // 127258's 4-bit Reserved shares a byte with Source: one byte.
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"reserved":"50 00"}}}"#
+            .replace('\n', " ");
+        assert!(frame_from_json(db(), &line).is_err());
+    }
+
+    #[test]
+    fn non_ascii_hex_is_an_error() {
+        let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
+            "fields":{"reserved":"€a"}}}"#
+            .replace('\n', " ");
+        assert!(frame_from_json(db(), &line).is_err());
+    }
+
+    #[test]
+    fn an_unset_reserved_wider_than_64_bits_is_all_ones() {
+        // 130816 BEP CZone ZCF Bus Distribution: a 144-bit Reserved at bit 40.
+        let line = r#"{"bepMarineCzoneZcfBusDistribution":{"prio":7,"src":1,"dst":255,
+            "pgn":130816,"fields":{}}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert!(
+            frame.data[5..23].iter().all(|&b| b == 0xff),
+            "{:02x?}",
+            frame.data
+        );
     }
 
     #[test]
