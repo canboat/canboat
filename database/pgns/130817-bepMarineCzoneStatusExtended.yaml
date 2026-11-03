@@ -160,6 +160,6 @@ samples:
     dipswitch: 248
     outputCurrent0: 0
     outputLevel0: 0
-    outputUnknownFlags0: '04'
+    outputUnknownFlags0: '0x04'
     outputLevel6: 100
     outputLevel7: 100
