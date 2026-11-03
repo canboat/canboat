@@ -3,7 +3,9 @@ id: bepMarineProprietaryPgn130822
 description: 'BEP Marine: CZone DC Output Interface status'
 type: Fast
 variantOrder: 10
-notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130822-sugarshack-dc.log (captured payload, synthetic fixture timestamp). Observed codes include 1024 (off) and 2024 (on); other state codes are not exhaustively interpreted.'
+missing:
+- Fields
+notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130822-sugarshack-dc.log (captured payload, synthetic fixture timestamp). Observed raw words include 1024 (0%), 2024 (100%) and intermediate dimming levels; the low 10 bits represent tenths of a percent. Higher flag-bit meanings remain unknown.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -34,70 +36,126 @@ fields:
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode0
-  name: Output 0 State and Level Code
-  type: UINT16
+- id: outputLevel0
+  name: Output 0 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags0
+  name: Output 0 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent1
   name: Output 1 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode1
-  name: Output 1 State and Level Code
-  type: UINT16
+- id: outputLevel1
+  name: Output 1 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags1
+  name: Output 1 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent2
   name: Output 2 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode2
-  name: Output 2 State and Level Code
-  type: UINT16
+- id: outputLevel2
+  name: Output 2 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags2
+  name: Output 2 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent3
   name: Output 3 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode3
-  name: Output 3 State and Level Code
-  type: UINT16
+- id: outputLevel3
+  name: Output 3 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags3
+  name: Output 3 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent4
   name: Output 4 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode4
-  name: Output 4 State and Level Code
-  type: UINT16
+- id: outputLevel4
+  name: Output 4 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags4
+  name: Output 4 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent5
   name: Output 5 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode5
-  name: Output 5 State and Level Code
-  type: UINT16
+- id: outputLevel5
+  name: Output 5 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags5
+  name: Output 5 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent6
   name: Output 6 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode6
-  name: Output 6 State and Level Code
-  type: UINT16
+- id: outputLevel6
+  name: Output 6 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags6
+  name: Output 6 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent7
   name: Output 7 Current
   type: CURRENT
   bits: 8
   resolution: 0.1
-- id: outputStateCode7
-  name: Output 7 State and Level Code
-  type: UINT16
+- id: outputLevel7
+  name: Output 7 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags7
+  name: Output 7 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 samples:
 - raw: "2026-11-02-00:00:00.000,6,130822,5,255,28,27,99,18,01,01,e8,07,00,00,04,00,00,04,00,00,04,00,00,04,00,00,04,9b,e8,07,00,00,04"
   expects:
     moduleId: 24
     page: 1
     outputCurrent0: 0.1
-    outputStateCode0: 2024
+    outputLevel0: 100
     outputCurrent6: 15.5

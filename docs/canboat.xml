@@ -66086,12 +66086,14 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <PGN>130817</PGN>
       <Id>bepMarineCzoneStatusExtended</Id>
       <Description>BEP Marine: CZone AC Output Interface status</Description>
+      <Explanation>Some Yacht Devices YDAB-01 adapters have been observed sending a shorter stub form of PGN 130817 for module presence; the full eight-output record layout described here is based on the captured ACOI status frame.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>21</FieldCount>
+      <FieldCount>29</FieldCount>
       <Length>28</Length>
       <Fields>
         <Field>
@@ -66154,8 +66156,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>moduleId</Id>
+          <Id>dipswitch</Id>
           <Name>ZCF Module ID</Name>
+          <Description>Existing field ID retained for compatibility; the observed module identifier need not equal the physical DIP-switch setting.</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -66188,22 +66191,33 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>outputStateCode0</Id>
-          <Name>Output 0 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Id>outputLevel0</Id>
+          <Name>Output 0 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>outputUnknownFlags0</Id>
+          <Name>Output 0 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>outputCurrent1</Id>
           <Name>Output 1 Current</Name>
           <BitLength>8</BitLength>
@@ -66221,23 +66235,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>outputStateCode1</Id>
-          <Name>Output 1 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>10</Order>
+          <Id>outputLevel1</Id>
+          <Name>Output 1 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
+          <Id>outputUnknownFlags1</Id>
+          <Name>Output 1 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>74</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
           <Id>outputCurrent2</Id>
           <Name>Output 2 Current</Name>
           <BitLength>8</BitLength>
@@ -66255,23 +66280,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>11</Order>
-          <Id>outputStateCode2</Id>
-          <Name>Output 2 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>13</Order>
+          <Id>outputLevel2</Id>
+          <Name>Output 2 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
+          <Order>14</Order>
+          <Id>outputUnknownFlags2</Id>
+          <Name>Output 2 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>98</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
           <Id>outputCurrent3</Id>
           <Name>Output 3 Current</Name>
           <BitLength>8</BitLength>
@@ -66289,23 +66325,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>13</Order>
-          <Id>outputStateCode3</Id>
-          <Name>Output 3 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>16</Order>
+          <Id>outputLevel3</Id>
+          <Name>Output 3 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>14</Order>
+          <Order>17</Order>
+          <Id>outputUnknownFlags3</Id>
+          <Name>Output 3 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>122</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
           <Id>outputCurrent4</Id>
           <Name>Output 4 Current</Name>
           <BitLength>8</BitLength>
@@ -66323,23 +66370,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>15</Order>
-          <Id>outputStateCode4</Id>
-          <Name>Output 4 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>19</Order>
+          <Id>outputLevel4</Id>
+          <Name>Output 4 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>16</Order>
+          <Order>20</Order>
+          <Id>outputUnknownFlags4</Id>
+          <Name>Output 4 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>146</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>21</Order>
           <Id>outputCurrent5</Id>
           <Name>Output 5 Current</Name>
           <BitLength>8</BitLength>
@@ -66357,23 +66415,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>17</Order>
-          <Id>outputStateCode5</Id>
-          <Name>Output 5 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>22</Order>
+          <Id>outputLevel5</Id>
+          <Name>Output 5 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>18</Order>
+          <Order>23</Order>
+          <Id>outputUnknownFlags5</Id>
+          <Name>Output 5 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>170</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>24</Order>
           <Id>outputCurrent6</Id>
           <Name>Output 6 Current</Name>
           <BitLength>8</BitLength>
@@ -66391,23 +66460,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>19</Order>
-          <Id>outputStateCode6</Id>
-          <Name>Output 6 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>25</Order>
+          <Id>outputLevel6</Id>
+          <Name>Output 6 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>20</Order>
+          <Order>26</Order>
+          <Id>outputUnknownFlags6</Id>
+          <Name>Output 6 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>194</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>27</Order>
           <Id>outputCurrent7</Id>
           <Name>Output 7 Current</Name>
           <BitLength>8</BitLength>
@@ -66425,20 +66505,31 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>21</Order>
-          <Id>outputStateCode7</Id>
-          <Name>Output 7 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>28</Order>
+          <Id>outputLevel7</Id>
+          <Name>Output 7 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>29</Order>
+          <Id>outputUnknownFlags7</Id>
+          <Name>Output 7 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>218</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -77654,9 +77745,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>21</FieldCount>
+      <FieldCount>29</FieldCount>
       <Length>28</Length>
       <Fields>
         <Field>
@@ -77753,22 +77845,33 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>outputStateCode0</Id>
-          <Name>Output 0 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Id>outputLevel0</Id>
+          <Name>Output 0 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>outputUnknownFlags0</Id>
+          <Name>Output 0 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>50</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>outputCurrent1</Id>
           <Name>Output 1 Current</Name>
           <BitLength>8</BitLength>
@@ -77786,23 +77889,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>outputStateCode1</Id>
-          <Name>Output 1 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>10</Order>
+          <Id>outputLevel1</Id>
+          <Name>Output 1 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
+          <Id>outputUnknownFlags1</Id>
+          <Name>Output 1 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>74</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
           <Id>outputCurrent2</Id>
           <Name>Output 2 Current</Name>
           <BitLength>8</BitLength>
@@ -77820,23 +77934,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>11</Order>
-          <Id>outputStateCode2</Id>
-          <Name>Output 2 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>13</Order>
+          <Id>outputLevel2</Id>
+          <Name>Output 2 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
+          <Order>14</Order>
+          <Id>outputUnknownFlags2</Id>
+          <Name>Output 2 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>98</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
           <Id>outputCurrent3</Id>
           <Name>Output 3 Current</Name>
           <BitLength>8</BitLength>
@@ -77854,23 +77979,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>13</Order>
-          <Id>outputStateCode3</Id>
-          <Name>Output 3 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>16</Order>
+          <Id>outputLevel3</Id>
+          <Name>Output 3 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>14</Order>
+          <Order>17</Order>
+          <Id>outputUnknownFlags3</Id>
+          <Name>Output 3 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>122</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
           <Id>outputCurrent4</Id>
           <Name>Output 4 Current</Name>
           <BitLength>8</BitLength>
@@ -77888,23 +78024,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>15</Order>
-          <Id>outputStateCode4</Id>
-          <Name>Output 4 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>19</Order>
+          <Id>outputLevel4</Id>
+          <Name>Output 4 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>16</Order>
+          <Order>20</Order>
+          <Id>outputUnknownFlags4</Id>
+          <Name>Output 4 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>146</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>21</Order>
           <Id>outputCurrent5</Id>
           <Name>Output 5 Current</Name>
           <BitLength>8</BitLength>
@@ -77922,23 +78069,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>17</Order>
-          <Id>outputStateCode5</Id>
-          <Name>Output 5 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>22</Order>
+          <Id>outputLevel5</Id>
+          <Name>Output 5 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>18</Order>
+          <Order>23</Order>
+          <Id>outputUnknownFlags5</Id>
+          <Name>Output 5 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>170</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>24</Order>
           <Id>outputCurrent6</Id>
           <Name>Output 6 Current</Name>
           <BitLength>8</BitLength>
@@ -77956,23 +78114,34 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>19</Order>
-          <Id>outputStateCode6</Id>
-          <Name>Output 6 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>25</Order>
+          <Id>outputLevel6</Id>
+          <Name>Output 6 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>20</Order>
+          <Order>26</Order>
+          <Id>outputUnknownFlags6</Id>
+          <Name>Output 6 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>194</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>27</Order>
           <Id>outputCurrent7</Id>
           <Name>Output 7 Current</Name>
           <BitLength>8</BitLength>
@@ -77990,20 +78159,31 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>21</Order>
-          <Id>outputStateCode7</Id>
-          <Name>Output 7 State and Level Code</Name>
-          <BitLength>16</BitLength>
+          <Order>28</Order>
+          <Id>outputLevel7</Id>
+          <Name>Output 7 Level</Name>
+          <BitLength>10</BitLength>
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>29</Order>
+          <Id>outputUnknownFlags7</Id>
+          <Name>Output 7 Unknown Flags (Bits 10-15)</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>218</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -79585,8 +79765,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reservedPrefix</Id>
-          <Name>Unidentified Header Byte</Name>
+          <Id>unknownHeaderByte</Id>
+          <Name>Unknown Header Byte</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>

@@ -3,6 +3,8 @@ id: bepMarineCzoneStatusExtended
 description: 'BEP Marine: CZone AC Output Interface status'
 type: Fast
 variantOrder: 5
+missing:
+- Fields
 notes: 'Captured CZone module output status. Module identifier is a device identification byte (not necessarily the physical DIP-switch setting); SugarShack ACOI 01 has PGN value 0xF8 (248), CZone Configuration Tool DIP-switch 00011111 (31), and serial identifier ACOI 248; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130817-sugarshack-ac.log (captured payload, synthetic fixture timestamp). Observed live loads support 0.2 A/count (water heater about 8.2 A/raw 41; blender about 1.4 A/raw 7); nonzero-load calibration is not in the zero-current fixture.'
 fields:
 - id: manufacturerCode
@@ -26,76 +28,137 @@ fields:
 - id: page
   name: Output Page
   type: UINT8
-- id: moduleId
+- id: dipswitch
   name: ZCF Module ID
   type: UINT8
+  description: Existing field ID retained for compatibility; the observed module identifier need not equal the physical DIP-switch setting.
 - id: outputCurrent0
   name: Output 0 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode0
-  name: Output 0 State and Level Code
-  type: UINT16
+- id: outputLevel0
+  name: Output 0 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags0
+  name: Output 0 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent1
   name: Output 1 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode1
-  name: Output 1 State and Level Code
-  type: UINT16
+- id: outputLevel1
+  name: Output 1 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags1
+  name: Output 1 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent2
   name: Output 2 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode2
-  name: Output 2 State and Level Code
-  type: UINT16
+- id: outputLevel2
+  name: Output 2 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags2
+  name: Output 2 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent3
   name: Output 3 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode3
-  name: Output 3 State and Level Code
-  type: UINT16
+- id: outputLevel3
+  name: Output 3 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags3
+  name: Output 3 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent4
   name: Output 4 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode4
-  name: Output 4 State and Level Code
-  type: UINT16
+- id: outputLevel4
+  name: Output 4 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags4
+  name: Output 4 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent5
   name: Output 5 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode5
-  name: Output 5 State and Level Code
-  type: UINT16
+- id: outputLevel5
+  name: Output 5 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags5
+  name: Output 5 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent6
   name: Output 6 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode6
-  name: Output 6 State and Level Code
-  type: UINT16
+- id: outputLevel6
+  name: Output 6 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags6
+  name: Output 6 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
 - id: outputCurrent7
   name: Output 7 Current
   type: CURRENT
   bits: 8
   resolution: 0.2
-- id: outputStateCode7
-  name: Output 7 State and Level Code
-  type: UINT16
+- id: outputLevel7
+  name: Output 7 Level
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+- id: outputUnknownFlags7
+  name: Output 7 Unknown Flags (Bits 10-15)
+  type: BINARY
+  bits: 6
+explanation: 'Some Yacht Devices YDAB-01 adapters have been observed sending a shorter stub form of PGN 130817 for module presence; the full eight-output record layout described here is based on the captured ACOI status frame.'
 samples:
 - raw: "2026-11-02-00:00:00.000,6,130817,11,255,28,27,99,00,f8,00,00,04,00,00,04,00,00,04,00,00,04,00,00,04,00,00,04,00,e8,07,00,e8,0f"
   expects:
     page: 0
-    moduleId: 248
+    dipswitch: 248
     outputCurrent0: 0
+    outputLevel0: 0
+    outputLevel6: 100
+    outputLevel7: 100

@@ -31,8 +31,8 @@ fields:
 - id: page
   name: Output Page
   type: UINT8
-- id: reservedPrefix
-  name: Unidentified Header Byte
+- id: unknownHeaderByte
+  name: Unknown Header Byte
   type: BINARY
   bits: 8
 - id: outputCurrentRaw0
