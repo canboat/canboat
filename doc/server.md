@@ -30,8 +30,9 @@ port off.
 The JSON on the snapshot, analyzer and AIS ports takes `convert`'s `--id`,
 `--units` and `--wrap`. Unlike `convert`, it writes a lookup field as its
 value and its name, `{"value":381,"name":"B & G"}`, as the C `n2kd` does (it
-runs `analyzer -nv`); `--no-nv` writes the name alone, `"B & G"`. The
-snapshot and analyzer ports start with the header `convert` writes, whose
+runs `analyzer -nv`); `--no-nv` writes the name alone, `"B & G"`. A value
+the lookup has no name for is `{"value":N}` by default and the bare number `N`
+with `--no-nv`. The snapshot and analyzer ports start with the header `convert` writes, whose
 `showLookupValues` says which; the AIS port has no header. The filter and
 override ports always write both, as `canboat tui` reads the codes.
 
