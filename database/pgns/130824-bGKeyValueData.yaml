@@ -87,7 +87,7 @@ samples:
     value.7: 1852.00
     key.8: "Heading on Opposite Tack"
     length.8: 2
-    value.8: -3.0632
+    value.8: 3.4904
     key.9: "Leeway Angle"
     length.9: 2
     value.9: 0.0000
@@ -114,7 +114,7 @@ samples:
     value.16: 0.00
     key.17: "Wind Angle to Mast"
     length.17: 2
-    value.17: -2.3012
+    value.17: 4.2524
 - raw: "2023-01-01-00:00:00.000,3,130824,24,255,32,7d,99,05,41,2b,02,03,00,02,41,63,e7,05,00,03,41,00,00,00,00,00,41,00,0d,1e,e7,01,41,00,00,00,00"  # from merrimac-2022.raw
   expects:
     manufacturerCode: "B & G"
@@ -122,10 +122,10 @@ samples:
     key: "Sailing Distance to Waypoint"
     length: 4
     value: 1971.63
-    key.2: "Layline Distance"
+    key.2: "Layline Distance 1"
     length.2: 4
     value.2: 3869.15
-    key.3: "Layline Distance"
+    key.3: "Layline Distance 2"
     length.3: 4
     value.3: 0.00
     key.4: "Layline Time"

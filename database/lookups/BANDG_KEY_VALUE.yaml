@@ -64,7 +64,7 @@ values:
   type: ANGLE_FIX16
 - value: 53
   name: Optimum Wind Angle
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 56
   name: User 1
   type: FIX32_2
@@ -100,10 +100,10 @@ values:
   type: SPEED_UFIX16_CM
 - value: 81
   name: Wind Angle Apparent
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 83
   name: Target TWA
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 85
   name: Wind Speed True
   type: SPEED_UFIX16_CM
@@ -112,7 +112,7 @@ values:
   type: SPEED_UFIX16_CM
 - value: 89
   name: Wind Angle True
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 100
   name: Trip 1 Speed Avg
   type: SPEED_UFIX16_CM
@@ -127,13 +127,13 @@ values:
   type: ANGLE_FIX16
 - value: 105
   name: Course
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 109
   name: True Wind Direction
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 111
   name: Next Leg AWA
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 113
   name: Next Leg AWS
   type: SPEED_UFIX16_CM
@@ -163,7 +163,7 @@ values:
   type: SPEED_UFIX16_CM
 - value: 132
   name: Current Set
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 135
   name: Barometric Pressure
   type: PRESSURE_UFIX16_HPA
@@ -172,7 +172,7 @@ values:
   type: DISTANCE_FIX32_CM
 - value: 154
   name: Heading on Opposite Tack
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 155
   name: Attitude Pitch
   type: ANGLE_FIX16
@@ -181,7 +181,7 @@ values:
   type: ANGLE_FIX16
 - value: 157
   name: Wind Angle to Mast
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 158
   name: Pitch Rate
   type: ROTATION_FIX32
@@ -193,7 +193,7 @@ values:
   type: UINT16
 - value: 185
   name: MOB DR Bearing
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 186
   name: MOB DR Range
   type: LENGTH_UFIX32_CM
@@ -217,10 +217,10 @@ values:
   type: LENGTH_UFIX32_CM
 - value: 211
   name: DR Bearing
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 233
   name: Course Over Ground
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 235
   name: Speed Over Ground
   type: SPEED_UFIX16_CM
@@ -301,7 +301,7 @@ values:
   type: GEO_LAT_FIX32
 - value: 272
   name: Start Line Bearing
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 273
   name: Start Line Bias
   type: ANGLE_FIX16
@@ -394,22 +394,22 @@ values:
   type: LENGTH_UFIX32_CM
 - value: 306
   name: Opposite Tack COG
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 307
   name: Opposite Tack Target Heading
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 308
   name: Mast Rake
   type: ANGLE_FIX16
 - value: 309
   name: Next Leg Bearing
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 310
   name: Next Leg Target Speed
   type: SPEED_FIX16_CM
 - value: 311
   name: Ground Wind Direction
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 312
   name: Ground Wind Speed
   type: SPEED_FIX16_CM
@@ -475,7 +475,7 @@ values:
   type: FIX32_2
 - value: 336
   name: Average True Wind Direction
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 337
   name: Wind Phase
   type: ANGLE_FIX16
@@ -502,7 +502,7 @@ values:
   type: ANGLE_FIX16
 - value: 384
   name: Pilot Net Course
-  type: ANGLE_FIX16
+  type: ANGLE_UFIX16
 - value: 385
   name: Pilot Target Wind Angle
   type: ANGLE_FIX16
@@ -528,14 +528,31 @@ valueNotes:
   28: 'the B&G channel in Fahrenheit: on the bus the same Kelvin value as 29'
   30: 'the B&G channel in Fahrenheit: on the bus the same Kelvin value as 31'
   52: 'Navico firmware table tH3000Data::m_cH3000FunctionInfo: ATTITUDE_ROLL'
+  53: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry no value above 2π'
   73: 'Navico firmware table: HEADING'
   79: 'the B&G channel in knots: on the bus the same m/s value as 77'
-  81: 'Navico firmware table: WIND_APP_ANGLE'
+  81: 'Navico firmware table: WIND_APP_ANGLE; unsigned: the SRX firmware reads it as 0 to 2π'
+  83: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
   86: 'Navico firmware table: SPEED_WIND_TRUE, the same row as 85'
-  89: 'Navico firmware table: WIND_TRUE_ANGLE'
-  109: 'Navico firmware table: WIND_TRUE_DIRECTION'
+  89: 'Navico firmware table: WIND_TRUE_ANGLE; unsigned: the SRX firmware reads it as 0 to 2π'
+  105: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  109: 'Navico firmware table: WIND_TRUE_DIRECTION; unsigned: the SRX firmware reads it as 0 to 2π'
+  111: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  132: 'unsigned: the SRX firmware reads it as 0 to 2π'
+  154: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
   155: 'Navico firmware table: ATTITUDE_PITCH'
+  157: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  185: 'unsigned: the SRX firmware reads it as 0 to 2π'
   195: 'the B&G channel in fathoms: on the bus the same value in cm as 194'
+  211: 'unsigned: the SRX firmware reads it as 0 to 2π'
+  233: 'unsigned: the SRX firmware reads it as 0 to 2π'
   235: 'Navico firmware table: SPEED_SOG'
   258: 'Navico firmware table: DISTANCE_TO_LAYLINES, as is 259; which is port is not known'
   263: 'Navico firmware table: MOB_DR_POSITION; seen only with 185 and 186, MOB DR Bearing and Range'
+  272: 'unsigned: the SRX firmware reads it as 0 to 2π'
+  306: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  307: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  309: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry no value above 2π'
+  311: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry values between 180° and 195.6°'
+  336: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry no value above 2π'
+  384: 'unsigned: the SRX firmware reads it as 0 to 2π, and captures carry no value above 2π'
