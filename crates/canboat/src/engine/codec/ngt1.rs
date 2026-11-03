@@ -466,6 +466,13 @@ impl Ngt1 {
                 // Read, never set: setting the mode would restart it again.
                 events.push(Event::Send(encode_get_product_info()));
                 events.push(Event::Send(encode_get_operating_mode()));
+                // The gateway sends this before it is done starting: after a
+                // Set its first N2K message came some 300 ms later. Hold the
+                // frames for the bus as after a Set, or longer if already so.
+                let until = now_ms + MODE_SETTLE_MS;
+                if !matches!(self.settle, Settle::Until(t) if t > until) {
+                    self.settle = Settle::Until(until);
+                }
             }
             BEM_ERROR_REPORT => log::warn!(
                 "ngt1: the gateway reports error {}",
@@ -823,22 +830,46 @@ mod settle_tests {
         wire
     }
 
-    /// Setting the mode holds frames again; a restart alone does not, as
-    /// nothing was set.
+    /// A restart holds frames for [`MODE_SETTLE_MS`], as the gateway is
+    /// not done starting when it says so; setting the mode holds them too.
     #[test]
-    fn setting_the_mode_holds_frames_and_a_restart_does_not() {
+    fn a_restart_and_setting_the_mode_hold_frames() {
         let mut d = Ngt1::default();
         let mut events = Vec::new();
         d.receive(&bem(BEM_STARTUP_STATUS, &[0x8e, 0x0a, 0]), NOW, &mut events);
-        assert_eq!(
-            d.send(&frame(59904)),
-            Ok(encode_n2k_send_frame(&frame(59904)))
-        );
-
-        d.receive(&bem(BEM_OPERATING_MODE, &[0x01, 0x00]), NOW, &mut events);
         assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
         events.clear();
         d.tick(NOW + MODE_SETTLE_MS, &mut events);
+        assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
+
+        d.receive(
+            &bem(BEM_OPERATING_MODE, &[0x01, 0x00]),
+            NOW + 1_000,
+            &mut events,
+        );
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        events.clear();
+        d.tick(NOW + 1_000 + MODE_SETTLE_MS, &mut events);
+        assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
+    }
+
+    /// A restart soon after a Set holds frames until 500 ms after the
+    /// restart, the later of the two.
+    #[test]
+    fn a_restart_after_a_set_extends_the_hold() {
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_OPERATING_MODE, &[0x01, 0x00]), NOW, &mut events);
+        d.receive(
+            &bem(BEM_STARTUP_STATUS, &[0x82, 0x0a, 0x0b, 0, 0, 0]),
+            NOW + 150,
+            &mut events,
+        );
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        events.clear();
+        d.tick(NOW + MODE_SETTLE_MS + 149, &mut events);
+        assert!(sent(&events).is_empty(), "the gateway is still starting");
+        d.tick(NOW + MODE_SETTLE_MS + 150, &mut events);
         assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
     }
 }
