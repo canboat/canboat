@@ -307,18 +307,19 @@ pub struct Args {
     #[arg(long = "config-dir", value_name = "DIR", help_heading = STATE)]
     config_dir: Option<PathBuf>,
 
-    /// The JSON on the analyzer and snapshot ports: field names, units and
-    /// wrapping. NMEA 0183 and AIS always use their own units.
+    /// The JSON on the analyzer, snapshot and AIS ports: field names, units
+    /// and wrapping. NMEA 0183 sentences always use their own units.
     #[command(flatten, next_help_heading = JSON)]
     shape: crate::cli::ShapeArgs,
 
     /// Write a lookup field as its name alone, as `convert` does without
     /// --nv, not as `{"value":…,"name":…}`.
     ///
-    /// By default the analyzer and snapshot ports carry the value and the
-    /// name, as canboat C's n2kd does (it runs the analyzer with -nv). The
-    /// banner's `showLookupValues` says which. The filter and overrides
-    /// control ports always carry both.
+    /// By default the analyzer, snapshot and AIS ports carry the value and
+    /// the name, as canboat C's n2kd does (it runs the analyzer with -nv).
+    /// The banner on the analyzer and snapshot ports, `showLookupValues`,
+    /// says which; the AIS port has none. The filter and overrides control
+    /// ports always carry both.
     #[arg(long, help_heading = JSON)]
     no_nv: bool,
 
@@ -416,7 +417,7 @@ pub struct BridgeConfig {
     /// Nest each JSON record in `{"<pgnId>":{…}}` (`--wrap`). Off by
     /// default; canboat C ties this to `-camel`, we don't.
     pub wrap: bool,
-    /// Write a lookup field on the analyzer JSON / snapshot ports as
+    /// Write a lookup field on the analyzer JSON, snapshot and AIS ports as
     /// `{"value":…,"name":…}`, as canboat C's n2kd does (`-nv`); `false`
     /// writes the name alone (`--no-nv`). On by default. The control
     /// ports always write both.
