@@ -582,13 +582,16 @@ pub fn encode_get_port_pcode() -> Vec<u8> {
     out
 }
 
-/// Encode BEM Set Port P-Code, one byte per port (all of them), as a
-/// ready-to-write byte string.
+/// Encode BEM Set Port P-Code, the number of ports and then one byte per
+/// port (all of them), as a ready-to-write byte string: the layout of the
+/// answer. The Actisense SDK sends no count, and an NGT-1 with software
+/// 2.690 refuses that with -1096 (invalid parameter length).
 pub fn encode_set_port_pcode(per_port: &[u8]) -> Vec<u8> {
-    let mut payload = Vec::with_capacity(1 + per_port.len());
+    let mut payload = Vec::with_capacity(2 + per_port.len());
     payload.push(BEM_PORT_PCODE);
+    payload.push(per_port.len() as u8);
     payload.extend_from_slice(per_port);
-    let mut out = Vec::with_capacity(8 + per_port.len());
+    let mut out = Vec::with_capacity(9 + per_port.len());
     encode_ngt_message(NGT_MSG_SEND, &payload, &mut out);
     out
 }

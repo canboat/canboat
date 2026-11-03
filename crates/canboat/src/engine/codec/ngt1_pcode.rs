@@ -18,7 +18,10 @@
 //! | Sent | Answer data |
 //! |------|-------------|
 //! | Get: — | the data size `n`, then `n` bytes, one per port: `0` off, `1` on (older firmware may report the stored raw value, e.g. `0xFF`: any non-zero is on) |
-//! | Set: one byte per port, `0` off, `1` on, `0xFF` no change | as Get |
+//! | Set: the number of ports `n`, then `n` bytes, one per port: `0` off, `1` on, `0xFF` no change | as Get |
+//!
+//! The SDK's Set has no count; an NGT-1 with software 2.690 refuses it
+//! with -1096 (invalid parameter length) and takes it with the count.
 //!
 //! A gateway that does not answer within [`ANSWER_TIMEOUT_MS`] is asked
 //! once more, then logged (a warning when the P-Codes were asked for
@@ -366,7 +369,7 @@ mod tests {
         let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
         assert_eq!(out.len(), 1);
         // port 0 off -> on; port 1 already on: no change
-        assert_eq!(sent(&out[0]), [0x13, 0x01, 0xff]);
+        assert_eq!(sent(&out[0]), [0x13, 0x02, 0x01, 0xff]);
         let r = answer(0, &[2, 1, 1]);
         assert!(
             s.on_response(&BemResponse::parse(&r).unwrap(), 20)
@@ -408,7 +411,7 @@ mod tests {
         // the answer of an NGT-1 with software 2.690, both ports off
         let r = answer(0, &[2, 0, 0]);
         let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
-        assert_eq!(sent(&out[0]), [0x13, 0x01, 0x01]);
+        assert_eq!(sent(&out[0]), [0x13, 0x02, 0x01, 0x01]);
         let r = answer(0, &[2, 1, 1]);
         assert!(
             s.on_response(&BemResponse::parse(&r).unwrap(), 20)
@@ -420,7 +423,7 @@ mod tests {
         s.on_tick(0, true);
         let r = answer(0, &[2, 1, 0]);
         let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
-        assert_eq!(sent(&out[0]), [0x13, 0xff, 0x01]);
+        assert_eq!(sent(&out[0]), [0x13, 0x02, 0xff, 0x01]);
     }
 
     #[test]
@@ -429,7 +432,7 @@ mod tests {
         s.on_tick(0, true);
         let r = answer(0, &[2, 1, 0]);
         let out = s.on_response(&BemResponse::parse(&r).unwrap(), 10);
-        assert_eq!(sent(&out[0]), [0x13, 0x00, 0xff]);
+        assert_eq!(sent(&out[0]), [0x13, 0x02, 0x00, 0xff]);
     }
 
     /// The size must match the bytes that follow it.

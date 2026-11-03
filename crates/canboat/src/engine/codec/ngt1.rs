@@ -1398,7 +1398,7 @@ mod pcode_tests {
         assert_eq!(sent(&events), [vec![0x13]]);
         events.clear();
         d.receive(&bem(0x13, &[2, 0, 0]), NOW + 1_000, &mut events);
-        assert_eq!(sent(&events), [vec![0x13, 0xff, 0x01]]);
+        assert_eq!(sent(&events), [vec![0x13, 0x02, 0xff, 0x01]]);
         events.clear();
         d.receive(&bem(0x13, &[2, 0, 1]), NOW + 1_100, &mut events);
         assert!(sent(&events).is_empty());
