@@ -234,11 +234,14 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
             // carries either the human description ("System Time") or a
             // camel id — enough to disambiguate multi-variant PGNs
             // (canboatjs-style objects always include it).
+            // That includes the range's catch-all, which the decoder
+            // falls back to when no definition of the number matches.
             let by_desc = record
                 .get("description")
                 .and_then(Value::as_str)
                 .and_then(|d| {
                     db.pgn_variants(pgn as u32)
+                        .chain(db.fallback_pgn(pgn as u32))
                         .find(|p| p.description == d || p.id == d)
                 });
             let by_match = || variant_by_match_fields(db, pgn as u32, record.get("fields"));
@@ -268,7 +271,18 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
         stage_fields(db, &mut builder, fields)?;
     }
 
-    builder.build().map(Some).map_err(|e| anyhow!("{e}"))
+    // A catch-all covers a range of PGNs: the record's own is the one
+    // on the wire, not the first of the range.
+    let catch_all = builder.pgn_info().fallback == Some(true);
+    let mut frame = builder.build().map_err(|e| anyhow!("{e}"))?;
+    if catch_all
+        && db
+            .fallback_pgn(pgn as u32)
+            .is_some_and(|c| c.pgn == frame.pgn)
+    {
+        frame.pgn = pgn as u32;
+    }
+    Ok(Some(frame))
 }
 
 /// Stage every member of a `fields` object onto the builder —
@@ -1058,6 +1072,24 @@ mod tests {
             encode(r#"{"value":600,"name":"00:10:00"}"#),
             encode("600.0")
         );
+    }
+
+    /// A record the decoder read with a range's catch-all, as a Fusion
+    /// 130820 message of no known kind, encodes back under its own PGN,
+    /// bare (by its description) or wrapped (by the catch-all's id).
+    #[test]
+    fn a_catch_all_record_encodes_back_under_its_own_pgn() {
+        for line in [
+            r#"{"pgn":130820,"prio":7,"src":51,"dst":255,"description":"0x1FF00-0x1FFFF: Manufacturer Specific fast-packet non-addressed","fields":{"manufacturerCode":419,"industryCode":4,"data":"70 80 00"}}"#,
+            r#"{"0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed":{"pgn":130820,"prio":7,"src":51,"dst":255,"fields":{"manufacturerCode":419,"industryCode":4,"data":"70 80 00"}}}"#,
+        ] {
+            let frame = frame_from_json(db(), line).unwrap().unwrap();
+            assert_eq!(frame.pgn, 130820, "{line}");
+            assert_eq!(frame.data[..], [0xa3, 0x99, 0x70, 0x80, 0x00], "{line}");
+        }
+        let line = r#"{"pgn":65450,"prio":7,"src":51,"dst":255,"description":"0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed","fields":{"manufacturerCode":419,"industryCode":4,"data":"01 02 03 04 05 06"}}"#;
+        let frame = frame_from_json(db(), line).unwrap().unwrap();
+        assert_eq!(frame.pgn, 65450);
     }
 
     #[test]
