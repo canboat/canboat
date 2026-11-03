@@ -557,7 +557,12 @@ impl PgnBuilder {
                 if let Some((start, size, _)) = *layout
                     && idx == start
                 {
-                    for inst in instances {
+                    // The last instance with a group-function value: only
+                    // there may a target's trailing BINARY end the message.
+                    let last_value = instances.iter().rposition(|inst| {
+                        inst.iter().any(|s| matches!(s, Some(Staged::Deferred(_))))
+                    });
+                    for (n, inst) in instances.iter().enumerate() {
                         for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
                             match &inst[j] {
                                 Some(Staged::Deferred(v)) => self.emit_variable(
@@ -568,6 +573,7 @@ impl PgnBuilder {
                                     start,
                                     size,
                                     v,
+                                    last_value == Some(n),
                                 )?,
                                 None => {
                                     let fields = &self.pgn.fields[start..start + size];
@@ -830,6 +836,7 @@ impl PgnBuilder {
         start: usize,
         size: usize,
         v: &EncodeValue,
+        last: bool,
     ) -> Result<(), EncodeError> {
         let unresolved = |reason| EncodeError::VariableUnresolved {
             field: f.name,
@@ -892,15 +899,26 @@ impl PgnBuilder {
             other => other.clone(),
         };
         // A BINARY that ends the target's definition, such as a catch-all's
-        // Data, is the rest of this message to the decoder: written as long
-        // as given, not padded to its width (canboat#1131, #1133).
+        // Data, is written as long as given in the last parameter, which
+        // ends the message (canboat#1131, #1133). Before another, it is
+        // padded to its width, as a resolved target's decodes; a catch-all's
+        // the decoder reads to the end of the message, so it has to be last.
         let ends_target = target_field.field_type == Some(FieldType::Binary)
             && target_info
                 .fields
                 .last()
-                .is_some_and(|last| std::ptr::eq(last, target_field));
-        let staged = if ends_target {
+                .is_some_and(|f| std::ptr::eq(f, target_field));
+        let staged = if ends_target && last {
             stage_binary(target_field, value, true)?
+        } else if ends_target
+            && self
+                .db
+                .fallback_pgn(target_pgn)
+                .is_some_and(|catch_all| std::ptr::eq(catch_all, target_info))
+        {
+            return Err(unresolved(
+                "the catch-all's Data takes the rest of the message, so it must be the last parameter",
+            ));
         } else {
             self.stage_value(target_field, value)?
         };
@@ -2178,6 +2196,28 @@ mod tests {
         b.push_in_set(1, i, "Value", 3f64).unwrap();
         assert!(matches!(
             b.build(),
+            Err(EncodeError::VariableUnresolved { .. })
+        ));
+    }
+
+    /// The catch-all's Data takes the rest of the message, so it can only
+    /// be the last parameter; before another it is refused, not cut short.
+    #[test]
+    fn a_catch_all_data_parameter_must_be_last() {
+        let command = |values: &[&str]| {
+            let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+            b.push_by_name("PGN", EncodeValue::Pgn(130824)).unwrap();
+            for v in values {
+                let i = b.add_set_instance(1).unwrap();
+                b.push_in_set(1, i, "Parameter", 4i64).unwrap();
+                b.push_in_set(1, i, "Value", EncodeValue::Text(v.to_string()))
+                    .unwrap();
+            }
+            b.build()
+        };
+        assert!(command(&["00 05"]).is_ok());
+        assert!(matches!(
+            command(&["00 05", "06 07"]),
             Err(EncodeError::VariableUnresolved { .. })
         ));
     }
