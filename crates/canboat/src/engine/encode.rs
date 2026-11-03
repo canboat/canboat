@@ -984,9 +984,13 @@ impl PgnBuilder {
         let bits = length
             .or_else(|| entry.and_then(|e| e.bit_length()))
             .ok_or(EncodeError::NotFixedLength(f.name))?;
-        // Unset is "unknown", all ones, which the decoder leaves out.
+        // Unset is "unknown", which the decoder leaves out: all ones, or
+        // for a signed value the largest positive one.
         let raw = match v {
             Some(v) => self.dynamic_raw(f, entry, bits, v)?,
+            None if bits <= 64 && entry.is_some_and(dynamic_signed) => {
+                (u64::MAX >> (64 - bits)) >> 1
+            }
             None if bits <= 64 => u64::MAX >> (64 - bits),
             None => {
                 for _ in 0..bits / 8 {
@@ -1029,10 +1033,7 @@ impl PgnBuilder {
         let Some(e) = entry else {
             return Err(mismatch);
         };
-        // Signed as the decoder reads it.
-        let signed = e.signed
-            || e.field_type.is_some_and(|ft| ft.starts_with("FIX"))
-            || (is_time && matches!(e.name, "Race Timer" | "Timezone offset"));
+        let signed = dynamic_signed(e);
         // An unscaled whole number stays exact: f64 would round a 64-bit one.
         if let EncodeValue::Int(i) = v
             && e.resolution.unwrap_or(1.0) == 1.0
@@ -1930,6 +1931,14 @@ fn all_ones(bits: u32) -> u64 {
 
 /// Append `bits` low bits of `value`, LSB-first, growing `buf` as needed
 /// — the exact layout [`crate::engine::bits::extract_bits`] reads back.
+/// Whether the decoder reads a dynamic value of type `e` as signed.
+fn dynamic_signed(e: &crate::engine::types::LookupFieldTypeValue) -> bool {
+    e.signed
+        || e.field_type.is_some_and(|ft| ft.starts_with("FIX"))
+        || (matches!(e.field_type, Some("TIME") | Some("DURATION"))
+            && matches!(e.name, "Race Timer" | "Timezone offset"))
+}
+
 fn write_bits(buf: &mut Vec<u8>, next_bit: &mut usize, bits: usize, mut value: u64) {
     for _ in 0..bits {
         let idx = *next_bit >> 3;
