@@ -790,7 +790,7 @@ impl PgnBuilder {
                 if idx == 0 {
                     continue 'variant;
                 }
-                let Some(field) = cand.fields.get(idx as usize - 1) else {
+                let Some(field) = crate::engine::decode::parameter_field(cand, idx) else {
                     continue 'variant;
                 };
                 let Some(want) = field.match_value else {
@@ -860,13 +860,9 @@ impl PgnBuilder {
                 _ => None,
             })
             .ok_or(unresolved("no staged FIELD_INDEX selects the target field"))?;
-        let target_field = target_info
-            .fields
-            .iter()
-            .find(|tf| (tf.order as u32) == param_idx)
-            .ok_or(unresolved(
-                "FIELD_INDEX is beyond the referenced PGN's fields",
-            ))?;
+        let target_field = crate::engine::decode::parameter_field(target_info, param_idx).ok_or(
+            unresolved("FIELD_INDEX is beyond the referenced PGN's fields"),
+        )?;
         // A label for a lookup-typed target arrives as Text (the caller
         // cannot know the target's type up front); retype it.
         let is_time = matches!(

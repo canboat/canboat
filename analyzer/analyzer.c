@@ -1919,12 +1919,11 @@ extern bool fieldPrintVariable(const Field   *variableField,
     }
     if (g_refPgn != NULL)
     {
-      int field = data[startBit / 8 - 1] - 1;
+      int          field    = data[startBit / 8 - 1];
+      const Field *refField = getParameterField(g_refPgn, field);
 
-      if (field >= 0 && (size_t) field < g_refPgn->fieldCount)
+      if (refField != NULL)
       {
-        const Field *refField = &g_refPgn->fieldList[field];
-
         /*
          * Only when we fell back to the catch-all: its trailing `Data` field
          * is variable-length with nothing to derive a width from, so take the
@@ -1947,7 +1946,7 @@ extern bool fieldPrintVariable(const Field   *variableField,
         *bits = (*bits + 7) & ~0x07; // round to bytes
         return r;
       }
-      logError("Field %s: PGN %d has no field # %d\n", fieldName, g_refPrn, field + 1);
+      logError("Field %s: PGN %d has no field # %d\n", fieldName, g_refPrn, field);
     }
   }
 

@@ -1320,6 +1320,35 @@ pub(crate) fn field_present(condition: Option<&str>, target_pgn: Option<u32>) ->
 /// parameters name no variant, such as a Raymarine request whose
 /// proprietary ID none of Raymarine's 126720 variants carries, that is
 /// the normal outcome, and the caller uses the catch-all.
+/// The field of `info` that a group function parameter addresses: `index`
+/// is the parameter's field number, 1-based. A number past the fixed fields
+/// continues into the definition's repeating set, as its fields repeat,
+/// when it has one set and that set ends the definition (canboat#1132),
+/// as the C's `getParameterField` does.
+pub(crate) fn parameter_field(info: &'static PgnInfo, index: u32) -> Option<&'static FieldInfo> {
+    let by_order = |n: u32| info.fields.iter().find(|f| f.order as u32 == n);
+    let fixed = info.fields.len() as u32;
+    if index == 0 {
+        return None;
+    }
+    if index <= fixed {
+        return by_order(index);
+    }
+    let (Some(start), Some(count)) = (
+        info.repeating_field_set1_start_field,
+        info.repeating_field_set1_size,
+    ) else {
+        return None;
+    };
+    if count == 0
+        || info.repeating_field_set2_size.is_some_and(|n| n > 0)
+        || start + count - 1 != fixed
+    {
+        return None;
+    }
+    by_order((index - start) % count + start)
+}
+
 fn match_pgn_by_parameters(
     db: &PgnDatabase,
     pgn_id: u32,
@@ -1353,12 +1382,11 @@ fn match_pgn_by_parameters(
             if d >= params.len() {
                 break; // truncated list: what was there matched
             }
-            let index = params[d] as usize;
+            let index = params[d];
             d += 1;
-            if index == 0 || index > cand.fields.len() {
+            let Some(field) = parameter_field(cand, u32::from(index)) else {
                 continue 'variant;
-            }
-            let field = &cand.fields[index - 1];
+            };
             let bits = field.bit_length.unwrap_or(0) as usize;
             if let Some(want) = field.match_value {
                 let Some(ex) = extract_bits(params, d * 8, bits, field.signed.unwrap_or(false), 0)
@@ -1426,10 +1454,7 @@ fn decode_variable(
             r
         }
     };
-    let target_field = target_info
-        .fields
-        .iter()
-        .find(|tf| (tf.order as u32) == target_idx)?;
+    let target_field = parameter_field(target_info, target_idx)?;
     // The catch-all's trailing `Data` field is variable-length with nothing to
     // size it, so the value is the rest of the message -- for a request or
     // command that reads as "the field starts with these bytes". Only when we
@@ -3548,6 +3573,60 @@ mod tests {
         // so the caller has to fall back rather than pick a layout.
         let params = [1u8, 0x04, 0x00];
         assert!(match_pgn_by_parameters(db(), 126720, &params).is_none());
+    }
+
+    /// A parameter past a variant's fixed fields addresses its repeating
+    /// set: an Airmar Calibrate Speed command that sets 8 pairs of data
+    /// points matches Calibrate Speed, not the catch-all (canboat#1132).
+    #[test]
+    fn parameters_in_a_repeating_set_match_the_variant() {
+        let speed = db()
+            .pgns()
+            .find(|p| p.id == "airmarCalibrateSpeed")
+            .unwrap();
+        assert_eq!(
+            parameter_field(speed, 5).unwrap().id,
+            "numberOfPairsOfDataPoints"
+        );
+        for (index, id) in [
+            (6, "inputFrequency"),
+            (7, "outputSpeed"),
+            (8, "inputFrequency"),
+            (21, "outputSpeed"),
+        ] {
+            assert_eq!(
+                parameter_field(speed, index).unwrap().id,
+                id,
+                "parameter {index}"
+            );
+        }
+        assert!(parameter_field(speed, 0).is_none());
+        let heading = db().first_pgn(127250).unwrap();
+        assert!(
+            parameter_field(heading, heading.fields.len() as u32 + 1).is_none(),
+            "no repeating set"
+        );
+
+        let data: Vec<u8> = [
+            0x01, 0x00, 0xef, 0x01, 0xf8, 0x14, 0x01, 0x87, 0x00, 0x03, 0x04, 0x04, 0x29, 0x05,
+            0x08, 0x06, 0xa0, 0x00, 0x07, 0xec, 0x13, 0x08, 0xbc, 0x02, 0x09, 0xd8, 0x27, 0x0a,
+            0x5e, 0x06, 0x0b, 0x14, 0x50, 0x0c, 0x38, 0x09, 0x0d, 0x50, 0x78, 0x0e, 0x54, 0x0b,
+            0x0f, 0x8c, 0xa0, 0x10, 0x48, 0x0d, 0x11, 0x04, 0xf1, 0x12, 0x20, 0x0d, 0x13, 0xd0,
+            0x02, 0x14, 0x30, 0x0c, 0x15, 0x37, 0x03,
+        ]
+        .to_vec();
+        let decoded = db()
+            .decode(&RawFrame::new(None, 3, 126208, 0, 35, data))
+            .unwrap();
+        let values: Vec<String> = decoded
+            .fields
+            .iter()
+            .filter(|f| f.info.field_type == Some(FieldType::Variable))
+            .map(|f| format!("{:?}", f.value))
+            .collect();
+        assert_eq!(values.len(), 20, "{values:?}");
+        assert!(values[2].contains("Calibrate Speed"), "{values:?}");
+        assert!(values[3].contains('8'), "number of pairs: {values:?}");
     }
 
     #[test]
