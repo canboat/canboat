@@ -27,6 +27,7 @@ pub mod canalyst;
 pub mod ikonvert;
 pub mod maretron;
 pub mod ngt1;
+pub mod ngt1_pcode;
 pub mod ngt1_tx_list;
 pub mod raw;
 pub(crate) mod raw_can;

@@ -144,6 +144,7 @@ the others, as `Device` refuses the setting in the library:
 | `--bitrate` | `socketcan`, `canalyst`, `usb-can-a` |
 | `--channel` | `canalyst` |
 | `--mode` | `actisense (ngt-actisense)` |
+| `--pcode` | `actisense (ngt-actisense)` |
 | `--password` | `maretron` |
 | `--no-tx-rate-limit` | `ikonvert` |
 | `--ignore-checksum` | `miniplex`, `seasmart` |
