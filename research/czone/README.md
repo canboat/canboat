@@ -5,7 +5,7 @@ This contribution improves the **existing provisional** BEP Marine PGN definitio
 | PGN | Observed device | Capture source | Decoding |
 | --- | --- | --- | --- |
 | 130817 | SugarShack AC Output Interface (ACOI), ZCF module 0xF8 | source 11 | Page, module ID, eight 3-byte slots: UINT8 current at 0.2 A/count, followed by 10-bit percentage level (0.1% units), a six-bit unknown flag group (including bit positions 10 and 11) |
-| 130822 | SugarShack DC Output Interface (COI), ZCF module 0x18 | source 5 | Module ID, page, eight 3-byte slots: UINT8 current at 0.1 A/count, followed by UINT16 state/level code |
+| 130822 | SugarShack DC Output Interface (COI), ZCF module 0x18 | source 5 | Module ID, page, eight 3-byte slots: UINT8 current at 0.1 A/count, followed by a 10-bit percentage level (0.1% units) and a six-bit group of unknown upper flags |
 | 130825 | Compass Rose Control X Plus, module 2 | source 2 | Module ID, page, unidentified header byte, eight packed slots of 11-bit raw current and 11-bit raw level |
 
 The exact captured payloads and machine-checked expectations are embedded in each active YAML definition as `samples`. The sample timestamps are **synthetic test-fixture timestamps**, not the original recording times.
@@ -28,7 +28,9 @@ For PGN 130817, live SugarShack load measurements support **0.2 A per raw count*
 
 For PGNs 130817 and 130822, the 16-bit state/level word is split into a 10-bit level in tenths of a percent, six unknown upper bits (bits 10–15) in one field. The recorded words 1024 (`0x0400`) and 2024 (`0x07e8`) decode to 0% and 100%; 4072 (`0x0fe8`) decodes to 100% with bit 11 also set. In additional SugarShack recordings, bit 10 remained set, and bit 11 was observed on AC slot 7; these observations do not establish either flag's semantic meaning. For PGN 130825, the 11-bit fields are intentionally left **raw**; level code 1000 was observed at full output but is not asserted to be a universal percentage conversion. Other 16-bit state codes and the 130825 extra header byte are not exhaustively interpreted.
 
-The unknown upper bits are deliberately grouped into one six-bit field per output: splitting them into three fields per slot would produce 45 fields per PGN, exceeding CANboat's current 33-field C analyzer limit (keel rule R11). The grouped field preserves the raw flag bits while keeping each PGN at 29 fields. The individual bit positions are documented here pending a compatible representation.\n\n## Additional dimming capture evidence
+The unknown upper bits are deliberately grouped into one six-bit field per output: splitting them into three fields per slot would produce 45 fields per PGN, exceeding CANboat's current 33-field C analyzer limit (keel rule R11). The grouped field preserves the raw flag bits while keeping each PGN at 29 fields. The individual bit positions are documented here pending a compatible representation.
+
+## Additional dimming capture evidence
 
 In `SugarShack-20260925-03.CAN`, five deliberately set lighting levels matched the low ten bits of PGN 130822 state/level words. These are observed raw-word/level pairs, not invented values: 
 
