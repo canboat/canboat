@@ -226,6 +226,11 @@ enum Probe {
 /// it, N2K messages and BEM commands alike.
 const MODE_SETTLE_MS: u64 = 500;
 
+/// How long after opening frames for the bus wait for the gateway to
+/// report its mode. An NGT-1 answers in about 15 ms; a gateway that
+/// answers no BEM command (the AOS simulator) is not waited for longer.
+const MODE_ANSWER_MS: u64 = 2_000;
+
 /// How long after Set Operating Mode a Startup Status is the restart that
 /// it causes (about 150 ms on an NGT-1 with firmware 2.690), and not a
 /// surprise.
@@ -239,6 +244,9 @@ enum Settle {
     /// [`Codec::open`] asked for the mode, which it may have to set, and
     /// has no clock; the hold runs from the first time the codec is given.
     Opened,
+    /// Held until the gateway reports its mode, so that no frame goes out
+    /// just before a Set restarts it, or at the latest until then.
+    AwaitMode(u64),
     /// Held until then.
     Until(u64),
 }
@@ -388,19 +396,24 @@ impl Ngt1 {
     /// Start or end holding frames for the bus, as the time goes by.
     fn settle(&mut self, now_ms: u64, events: &mut Vec<Event>) {
         match self.settle {
-            Settle::Opened => self.settle = Settle::Until(now_ms + MODE_SETTLE_MS),
-            Settle::Until(until) if now_ms >= until => {
-                self.settle = Settle::Settled;
-                if !self.held.is_empty() {
-                    log::debug!(
-                        "ngt1: sending {} frames held after Set Operating Mode",
-                        self.held.len()
-                    );
-                }
-                send_all(events, std::mem::take(&mut self.held));
+            Settle::Opened => self.settle = Settle::AwaitMode(now_ms + MODE_ANSWER_MS),
+            Settle::AwaitMode(until) | Settle::Until(until) if now_ms >= until => {
+                self.release(events)
             }
             _ => {}
         }
+    }
+
+    /// End holding frames for the bus: send what was held.
+    fn release(&mut self, events: &mut Vec<Event>) {
+        self.settle = Settle::Settled;
+        if !self.held.is_empty() {
+            log::debug!(
+                "ngt1: sending {} frames held since opening or Set Operating Mode",
+                self.held.len()
+            );
+        }
+        send_all(events, std::mem::take(&mut self.held));
     }
 
     /// Act on a BEM message from the gateway: pass it on as an `Actisense:
@@ -494,6 +507,10 @@ impl Ngt1 {
             // Frames already held keep their place, ahead of new ones.
             self.settle = Settle::Until(now_ms + MODE_SETTLE_MS);
             return;
+        }
+        // Nothing is set now, so nothing held since opening need wait.
+        if matches!(self.settle, Settle::AwaitMode(_)) {
+            self.release(events);
         }
         if response.error != 0 {
             log::warn!(
@@ -601,9 +618,10 @@ fn send_all(events: &mut Vec<Event>, commands: Vec<Vec<u8>>) {
 
 impl Codec for Ngt1 {
     /// Product Info and Get Operating Mode: the mode is set only when the
-    /// answer shows another one. Frames for the bus are held until
-    /// [`MODE_SETTLE_MS`] after the first [`Codec::receive`] or
-    /// [`Codec::tick`], or longer when the mode is set.
+    /// answer shows another one. Frames for the bus are held until that
+    /// answer, at most [`MODE_ANSWER_MS`] after the first
+    /// [`Codec::receive`] or [`Codec::tick`], and then for
+    /// [`MODE_SETTLE_MS`] when the mode is set.
     fn open(&mut self) -> Vec<u8> {
         self.settle = Settle::Opened;
         let mut out = encode_get_product_info();
@@ -723,22 +741,23 @@ mod settle_tests {
         );
     }
 
-    /// Frames given before and in the 500 ms after the first tick are
-    /// held, then sent in order.
+    /// Frames given after `open` are held until the gateway reports its
+    /// mode, or [`MODE_ANSWER_MS`] after the first tick when it does not,
+    /// then sent in order.
     #[test]
-    fn frames_after_open_are_held_until_the_mode_settles() {
+    fn frames_after_open_are_held_until_the_mode_is_known() {
         let mut d = Ngt1::default();
         d.open();
         assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
         let mut events = Vec::new();
         d.tick(NOW, &mut events);
-        assert!(sent(&events).is_empty());
         assert_eq!(d.send(&frame(126208)), Ok(Vec::new()));
-        d.tick(NOW + MODE_SETTLE_MS - 1, &mut events);
-        assert!(sent(&events).is_empty(), "still settling");
-        d.tick(NOW + MODE_SETTLE_MS, &mut events);
+        d.tick(NOW + MODE_ANSWER_MS - 1, &mut events);
+        assert!(sent(&events).is_empty(), "still waiting for the mode");
+        d.tick(NOW + MODE_ANSWER_MS, &mut events);
+        // The AOS probe goes out then too: nothing has answered.
         assert_eq!(
-            sent(&events),
+            sent(&events)[..2],
             [
                 &encode_n2k_send_frame(&frame(59904)),
                 &encode_n2k_send_frame(&frame(126208))
@@ -748,6 +767,41 @@ mod settle_tests {
             d.send(&frame(59904)),
             Ok(encode_n2k_send_frame(&frame(59904)))
         );
+    }
+
+    /// A gateway already in the mode releases the frames held at once.
+    #[test]
+    fn the_mode_in_force_releases_the_frames_at_once() {
+        let mut d = Ngt1::default();
+        d.open();
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        let mut events = Vec::new();
+        d.receive(&bem(BEM_OPERATING_MODE, &[0x02, 0x00]), NOW, &mut events);
+        assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
+    }
+
+    /// A gateway in another mode that answers late still has the frames
+    /// held when the mode is set, and for [`MODE_SETTLE_MS`] after.
+    #[test]
+    fn frames_stay_held_through_a_late_answer_and_the_set() {
+        let mut d = Ngt1::default();
+        d.open();
+        assert_eq!(d.send(&frame(59904)), Ok(Vec::new()));
+        let mut events = Vec::new();
+        d.tick(NOW, &mut events);
+        d.tick(NOW + MODE_SETTLE_MS + 100, &mut events);
+        d.receive(
+            &bem(BEM_OPERATING_MODE, &[0x01, 0x00]),
+            NOW + MODE_SETTLE_MS + 100,
+            &mut events,
+        );
+        assert!(
+            !sent(&events).contains(&&encode_n2k_send_frame(&frame(59904))),
+            "sent before the Set"
+        );
+        events.clear();
+        d.tick(NOW + 2 * MODE_SETTLE_MS + 100, &mut events);
+        assert_eq!(sent(&events), [&encode_n2k_send_frame(&frame(59904))]);
     }
 
     /// A refused frame is refused at once, not held.
