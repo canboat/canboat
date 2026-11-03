@@ -253,11 +253,14 @@ fn frame_from_json_as(
             // carries either the human description ("System Time") or a
             // camel id — enough to disambiguate multi-variant PGNs
             // (canboatjs-style objects always include it).
+            // That includes the range's catch-all, which the decoder
+            // falls back to when no definition of the number matches.
             let by_desc = record
                 .get("description")
                 .and_then(Value::as_str)
                 .and_then(|d| {
                     db.pgn_variants(pgn as u32)
+                        .chain(db.fallback_pgn(pgn as u32))
                         .find(|p| p.description == d || p.id == d)
                 });
             let by_match = || variant_by_match_fields(db, pgn as u32, record.get("fields"));
@@ -290,7 +293,18 @@ fn frame_from_json_as(
         stage_fields(db, &mut builder, fields)?;
     }
 
-    builder.build().map(Some).map_err(|e| anyhow!("{e}"))
+    // A catch-all covers a range of PGNs: the record's own is the one
+    // on the wire, not the first of the range.
+    let catch_all = builder.pgn_info().fallback == Some(true);
+    let mut frame = builder.build().map_err(|e| anyhow!("{e}"))?;
+    if catch_all
+        && db
+            .fallback_pgn(pgn as u32)
+            .is_some_and(|c| c.pgn == frame.pgn)
+    {
+        frame.pgn = pgn as u32;
+    }
+    Ok(Some(frame))
 }
 
 /// Stage every member of a `fields` object onto the builder —
@@ -499,9 +513,12 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
             Ok(EncodeValue::Text(s.to_string()))
         }
-        Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
-            Ok(EncodeValue::Bytes(parse_hex(s)?))
-        }
+        Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
+        // A key/value value is its bytes as hex, or a lookup name or time
+        // ("Off", "10:00:00") that the record's key gives meaning to.
+        Some(FieldType::DynamicFieldValue) => Ok(parse_hex(s)
+            .map(EncodeValue::Bytes)
+            .unwrap_or_else(|_| EncodeValue::Text(s.to_string()))),
         // A Reserved or Spare field printed as hex (one that isn't all
         // ones, or for spare all zeros): the encoder writes the bytes back
         // where the decoder found them.
@@ -906,6 +923,47 @@ mod tests {
     /// when reading what canboat decoded (`convert --from json`); for a
     /// command meant for the bus (`interface`) it is an error, so a value
     /// forgotten is not sent as "unknown".
+    /// A key/value value written as its lookup name, as plain JSON has
+    /// it, encodes by the record's key; one given as hex is its bytes.
+    #[test]
+    fn a_key_value_value_by_its_name_encodes_by_its_key() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let record = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":53760,"operation":1,"value":{value}}}}}"#
+            )
+        };
+        let by_name = frame_from_json(db, &record(r#""On""#)).unwrap().unwrap();
+        let by_hex = frame_from_json(db, &record(r#""01""#)).unwrap().unwrap();
+        assert_eq!(by_name.data, by_hex.data);
+        assert_eq!(by_name.data[by_name.data.len() - 1], 0x01);
+    }
+
+    /// A key named by a name several keys share is refused: B&G's keys
+    /// 28, 29 and 30 are each "Outside Temperature".
+    #[test]
+    fn a_shared_key_name_is_an_error() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":"Outside Temperature","length":2,"value":288.15}]}}"#;
+        let err = frame_from_json(db, line).unwrap_err();
+        assert!(format!("{err:#}").contains("more than one code"), "{err:#}");
+        let line = line.replace(r#""Outside Temperature""#, "29");
+        assert!(frame_from_json(db, &line).is_ok());
+    }
+
+    /// A record whose length leaves no value bytes, its value left out,
+    /// writes nothing for it rather than failing.
+    #[test]
+    fn a_zero_length_value_left_out_writes_nothing() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":11,"length":0},{"key":11,"length":2,"value":0}]}}"#;
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(
+            frame.data[..],
+            [0x7d, 0x99, 0x0b, 0x00, 0x0b, 0x20, 0x00, 0x00]
+        );
+    }
+
     #[test]
     fn a_value_left_out_is_an_error_unless_read_as_decoded() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
@@ -1164,6 +1222,24 @@ mod tests {
             encode(r#"{"value":600,"name":"00:10:00"}"#),
             encode("600.0")
         );
+    }
+
+    /// A record the decoder read with a range's catch-all, as a Fusion
+    /// 130820 message of no known kind, encodes back under its own PGN,
+    /// bare (by its description) or wrapped (by the catch-all's id).
+    #[test]
+    fn a_catch_all_record_encodes_back_under_its_own_pgn() {
+        for line in [
+            r#"{"pgn":130820,"prio":7,"src":51,"dst":255,"description":"0x1FF00-0x1FFFF: Manufacturer Specific fast-packet non-addressed","fields":{"manufacturerCode":419,"industryCode":4,"data":"70 80 00"}}"#,
+            r#"{"0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed":{"pgn":130820,"prio":7,"src":51,"dst":255,"fields":{"manufacturerCode":419,"industryCode":4,"data":"70 80 00"}}}"#,
+        ] {
+            let frame = frame_from_json(db(), line).unwrap().unwrap();
+            assert_eq!(frame.pgn, 130820, "{line}");
+            assert_eq!(frame.data[..], [0xa3, 0x99, 0x70, 0x80, 0x00], "{line}");
+        }
+        let line = r#"{"pgn":65450,"prio":7,"src":51,"dst":255,"description":"0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed","fields":{"manufacturerCode":419,"industryCode":4,"data":"01 02 03 04 05 06"}}"#;
+        let frame = frame_from_json(db(), line).unwrap().unwrap();
+        assert_eq!(frame.pgn, 65450);
     }
 
     #[test]

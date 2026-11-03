@@ -152,6 +152,8 @@ pub enum EncodeError {
     NoSuchField { pgn_id: &'static str, field: String },
     /// A `LOOKUP` field was given a label that isn't in its table.
     UnknownLookupLabel { field: &'static str, label: String },
+    /// A label the field's lookup gives to more than one code.
+    AmbiguousLookupLabel { field: &'static str, label: String },
     /// A value doesn't fit the field's bit width / range. `range` is the
     /// field's valid range in the schema's unit, when the value is a
     /// number outside it.
@@ -216,6 +218,12 @@ impl fmt::Display for EncodeError {
             }
             EncodeError::UnknownLookupLabel { field, label } => {
                 write!(f, "field '{field}': '{label}' is not a valid value")
+            }
+            EncodeError::AmbiguousLookupLabel { field, label } => {
+                write!(
+                    f,
+                    "field '{field}': '{label}' names more than one code; give the code"
+                )
             }
             EncodeError::ValueOutOfRange {
                 field,
@@ -988,6 +996,8 @@ impl PgnBuilder {
         // for a signed value the largest positive one.
         let raw = match v {
             Some(v) => self.dynamic_raw(f, entry, bits, v)?,
+            // A record with no value bytes: nothing to write.
+            None if bits == 0 => return Ok(()),
             None if bits <= 64 && entry.is_some_and(dynamic_signed) => {
                 (u64::MAX >> (64 - bits)) >> 1
             }
@@ -1297,14 +1307,29 @@ impl PgnBuilder {
 
             // A key/value record's key by its name, as the decoder writes
             // it without -nv: the code its field-type lookup gives it.
-            (Some(FieldType::DynamicFieldKey), EncodeValue::Lookup(label)) => f
-                .lookup_field_type_enumeration
-                .and_then(|table| self.db.field_type_lookup_by_name(table, &label))
-                .map(|e| e.value as i64)
-                .ok_or_else(|| EncodeError::UnknownLookupLabel {
-                    field: f.name,
-                    label: label.clone(),
-                })?,
+            // A name several keys share (B&G's 28, 29 and 30 are each
+            // "Outside Temperature") does not say which: give the code.
+            (Some(FieldType::DynamicFieldKey), EncodeValue::Lookup(label)) => {
+                let mut named = f
+                    .lookup_field_type_enumeration
+                    .into_iter()
+                    .flat_map(|table| self.db.field_type_lookups_named(table, &label));
+                match (named.next(), named.next()) {
+                    (Some(e), None) => e.value as i64,
+                    (Some(_), Some(_)) => {
+                        return Err(EncodeError::AmbiguousLookupLabel {
+                            field: f.name,
+                            label: label.clone(),
+                        });
+                    }
+                    (None, _) => {
+                        return Err(EncodeError::UnknownLookupLabel {
+                            field: f.name,
+                            label: label.clone(),
+                        });
+                    }
+                }
+            }
 
             // BitLookup: a raw bitmask integer (label-per-bit is phase 2).
             (Some(FieldType::BitLookup), EncodeValue::Int(n)) => n,
