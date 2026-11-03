@@ -1025,6 +1025,30 @@ impl PgnBuilder {
         let Some(e) = entry else {
             return Err(mismatch);
         };
+        // Signed as the decoder reads it.
+        let signed = e.signed
+            || e.field_type.is_some_and(|ft| ft.starts_with("FIX"))
+            || (is_time && matches!(e.name, "Race Timer" | "Timezone offset"));
+        // An unscaled whole number stays exact: f64 would round a 64-bit one.
+        if let EncodeValue::Int(i) = v
+            && e.resolution.unwrap_or(1.0) == 1.0
+            && e.unit_offset == 0.0
+        {
+            let i = i128::from(*i);
+            let (min, max_excl) = if signed {
+                (-(1i128 << (bits - 1)), 1i128 << (bits - 1))
+            } else {
+                (0, 1i128 << bits)
+            };
+            if !(min..max_excl).contains(&i) {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: i as f64,
+                    range: None,
+                });
+            }
+            return Ok((i as u64) & mask);
+        }
         let value = match v {
             EncodeValue::Raw(r) => *r as i64 as f64,
             EncodeValue::Int(i) => *i as f64,
@@ -1044,10 +1068,6 @@ impl PgnBuilder {
             }
             _ => return Err(mismatch),
         };
-        // Signed as the decoder reads it.
-        let signed = e.signed
-            || e.field_type.is_some_and(|ft| ft.starts_with("FIX"))
-            || (is_time && matches!(e.name, "Race Timer" | "Timezone offset"));
         let res = e.resolution.unwrap_or(1.0);
         let raw = ((value - e.unit_offset) / res).round();
         // Exclusive upper bounds: 2^63 - 1 and 2^64 - 1 do not exist as f64.
@@ -3132,7 +3152,7 @@ mod tests {
 
     /// A 64-bit dynamic value takes every value its width holds, and no
     /// more: 2^63 unsigned is not capped, 2^64 is refused, as is 2^63
-    /// signed.
+    /// signed, and a whole number past 2^53 stays exact.
     #[test]
     fn a_64_bit_dynamic_value_keeps_its_whole_range() {
         let entry = |signed| crate::engine::types::LookupFieldTypeValue {
@@ -3156,6 +3176,17 @@ mod tests {
         assert!(raw(false, 2f64.powi(64)).is_err());
         assert!(raw(true, 2f64.powi(63)).is_err());
         assert_eq!(raw(true, -(2f64.powi(63))).unwrap(), 1 << 63);
+        // A whole number past 2^53 keeps its low bit.
+        let int = |signed, i: i64| b.dynamic_raw(f, Some(&entry(signed)), 64, &EncodeValue::Int(i));
+        assert_eq!(int(false, (1 << 60) + 1).unwrap(), (1 << 60) + 1);
+        assert_eq!(
+            int(true, -(1 << 60) - 1).unwrap(),
+            (-(1i64 << 60) - 1) as u64
+        );
+        assert!(int(false, -1).is_err());
+        let narrow = |i: i64| b.dynamic_raw(f, Some(&entry(true)), 8, &EncodeValue::Int(i));
+        assert_eq!(narrow(-128).unwrap(), 0x80);
+        assert!(narrow(128).is_err());
     }
 
     /// A group function addressing a key/value record's value is an
