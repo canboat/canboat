@@ -656,6 +656,12 @@ fn write_field_value_debug<W: fmt::Write>(
     w.write_char('}')
 }
 
+/// Whether key field `f`'s lookup gives `name` to more than one code.
+fn shared_key_name(f: &DecodedField, name: &str) -> bool {
+    crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric)
+        .lookup_name_is_shared(f.info, name)
+}
+
 fn write_field_value<W: fmt::Write>(
     w: &mut W,
     f: &DecodedField,
@@ -726,6 +732,12 @@ fn write_field_value<W: fmt::Write>(
                 w.write_char('}')
             } else {
                 match name {
+                    // A key's name that several codes share is written as
+                    // its code, or records of different keys would read as
+                    // one, as canboat's analyzer does.
+                    Some(n) if f.part_of_primary_key() && shared_key_name(f, n) => {
+                        write!(w, "{}", value)
+                    }
                     Some(n) => write_json_string(w, n),
                     None => write!(w, "{}", value),
                 }

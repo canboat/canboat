@@ -394,6 +394,28 @@ impl PgnDatabase {
         };
         table.values.iter().find(|v| v.name == value_name)
     }
+
+    /// Whether `name` stands for more than one code in field `f`'s lookup
+    /// (B&G's key 28, 29 and 30 are each "Outside Temperature"), so the
+    /// name alone does not say which.
+    pub(crate) fn lookup_name_is_shared(&self, f: &FieldInfo, name: &str) -> bool {
+        let names: Box<dyn Iterator<Item = &str>> =
+            match (f.lookup_enumeration, f.lookup_field_type_enumeration) {
+                (Some(table), _) => match self.lookup(table) {
+                    Some(t) => Box::new(t.values.iter().map(|v| v.name)),
+                    None => return false,
+                },
+                (None, Some(table)) => match self
+                    .field_type_lookups
+                    .binary_search_by(|t| t.name.cmp(table))
+                {
+                    Ok(i) => Box::new(self.field_type_lookups[i].values.iter().map(|v| v.name)),
+                    Err(_) => return false,
+                },
+                _ => return false,
+            };
+        names.filter(|n| *n == name).nth(1).is_some()
+    }
 }
 
 /// Iterator returned by [`PgnDatabase::pgn_variants`]. Walks the

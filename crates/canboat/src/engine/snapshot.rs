@@ -869,6 +869,38 @@ mod tests {
         }
     }
 
+    /// B&G keys 28, 29 and 30 are each "Outside Temperature": with
+    /// `--no-nv` such a key is written as its code, so their records stay apart,
+    /// keyed as with `-nv`. A key whose name is its own is the name alone.
+    #[test]
+    fn a_shared_key_name_keeps_its_code_without_name_value() {
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+        // 130824 B&G: keys 28 and 29, then 11 (Rudder Angle), each 2 bytes.
+        let data = [
+            0x7d, 0x99, 0x1c, 0x20, 0x10, 0x72, 0x1d, 0x20, 0x10, 0x72, 0x0b, 0x20, 0x00, 0x00,
+        ];
+        let frame = crate::engine::RawFrame::new(None, 3, 130824, 15, 255, data.to_vec());
+        let decoded = db.decode(&frame).unwrap();
+        let mut keys = Vec::new();
+        let mut no_nv = String::new();
+        for name_value in [true, false] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            let mut these = Vec::new();
+            classify_json_line(&line, |input| these.push(input.secondary));
+            keys.push(these);
+            no_nv = line;
+        }
+        assert_eq!(keys[0], keys[1]);
+        assert_eq!(keys[0].len(), 3);
+        assert_ne!(keys[0][0], keys[0][1]);
+        assert!(no_nv.contains(r#""key":"Rudder Angle""#), "{no_nv}");
+    }
+
     #[test]
     fn repeating_pk_set_detects_pgn_130824() {
         // canboat 7.1.0 lists exactly four PGNs with PartOfPrimaryKey

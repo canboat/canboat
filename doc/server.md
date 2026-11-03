@@ -33,7 +33,9 @@ value and its name, `{"value":381,"name":"B & G"}`, as the C `n2kd` does (it
 runs `analyzer -nv`); `--no-nv` writes the name alone, `"B & G"`, and `--nv`
 says the default, as `convert` takes both too. A value
 the lookup has no name for is `{"value":N}` by default and the bare number `N`
-with `--no-nv`. The snapshot and analyzer ports start with the header `convert` writes, whose
+with `--no-nv`. A key field whose name the lookup gives to more than one
+code is written as its code, `28`, so records of B&G's three "Outside
+Temperature" keys stay apart. The snapshot and analyzer ports start with the header `convert` writes, whose
 `showLookupValues` says which; the AIS port has no header. The filter and
 override ports always write both, as `canboat tui` reads the codes.
 
