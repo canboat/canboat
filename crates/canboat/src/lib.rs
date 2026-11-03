@@ -377,6 +377,8 @@ pub mod read {
 pub mod bus {
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
+    /// The NGT-1's P-Codes per port, for [`Device::pcode`].
+    pub use crate::engine::codec::ngt1_pcode::PCodeRequest;
     /// The NGT-1's operating modes, for [`Device::mode`].
     pub use crate::engine::format::ngt1::OperatingMode;
     pub use crate::io::device::kind::{
@@ -499,6 +501,7 @@ pub mod codec {
         #[allow(deprecated)]
         pub use crate::engine::codec::ngt1::KEEPALIVE_INTERVAL;
         pub use crate::engine::codec::ngt1::{Config, Ngt1};
+        pub use crate::engine::codec::ngt1_pcode::PCodeRequest;
         pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
         /// What an AOS simulator says about itself ([`Ngt1::aos`]).
         pub use crate::engine::format::aos::AosInfo;

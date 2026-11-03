@@ -34,7 +34,7 @@ pub fn emit_artifacts(
                 "crates/canboat/src/engine/schema_generated{}.rs",
                 suffix.replace('-', "_")
             )),
-            emit_rust::emit_schema(db, root, protocol),
+            emit_rust::emit_schema(db, protocol),
         ));
         // The C analyzer covers NMEA 2000 and J1939 only.
         if protocol != Protocol::Quick {
