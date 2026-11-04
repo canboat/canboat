@@ -167,7 +167,7 @@ impl Bridge {
         // byte-identical to the regular `analyzer` port stream.
         let json_opts = JsonOptions {
             include_empty: false,
-            name_value: true,
+            name_value: config.name_value,
             debug: false,
             camel_case: config.camel_case,
             wrap: config.wrap,
@@ -519,7 +519,7 @@ impl Bridge {
                 config.bind,
                 config.nmea0183_filter_port,
                 filter.clone(),
-                self.json_opts.clone(),
+                self.control_json_opts(),
                 stop(),
             )?);
             served.push(("nmea0183-filter", config.nmea0183_filter_port));
@@ -535,7 +535,7 @@ impl Bridge {
                 config.overrides_port,
                 engine.clone(),
                 self.device_sender.clone(),
-                self.json_opts.clone(),
+                self.control_json_opts(),
                 stop(),
             )?);
             served.push(("overrides", config.overrides_port));
@@ -716,6 +716,16 @@ impl Bridge {
         self.frames_rx
             .take()
             .ok_or_else(|| anyhow!("bridge pipeline already started"))
+    }
+
+    /// The JSON shape of the filter and overrides control ports: the
+    /// analyzer port's, but always with value/name pairs, which the TUI
+    /// reads codes from whatever `--no-nv` says.
+    fn control_json_opts(&self) -> JsonOptions {
+        JsonOptions {
+            name_value: true,
+            ..self.json_opts.clone()
+        }
     }
 
     /// The by-value inputs `pipeline::run` needs, cloned off the bridge so

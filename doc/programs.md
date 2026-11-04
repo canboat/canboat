@@ -58,7 +58,8 @@ protocol, and whether lookups are written as value and name (`--no-banner`
 leaves it out). Its JSON is not quite the C `analyzer`'s: field keys are lowerCamelCase and values
 are in SI units (radians, kelvin, pascal). `--id spaces --units metric` gives
 `analyzer`'s keys and units. `--nv`, `--empty` and `--debug` match `analyzer`'s
-`-nv`, `-empty` and `-debug`; `--protocol j1939` or `quick` decodes those
+`-nv`, `-empty` and `-debug` (`--no-nv` says the default, as `server` takes
+both too); `--protocol j1939` or `quick` decodes those
 buses. `--quirk gps-rollover` corrects dates, as in
 [server.md](./server.md#device-quirks).
 

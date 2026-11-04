@@ -237,4 +237,47 @@ mod tests {
         use clap::CommandFactory;
         Cli::command().debug_assert();
     }
+
+    /// `server` writes value/name pairs unless `--no-nv` (canboat#1129).
+    #[test]
+    fn server_no_nv_turns_the_value_name_pairs_off() {
+        let config = |extra: &[&str]| {
+            let args = ["canboat", "server", "--replay", "x.raw"]
+                .iter()
+                .chain(extra);
+            match Cli::try_parse_from(args).unwrap().command {
+                Command::Server(a) => server::BridgeConfig::from(*a),
+                other => panic!("{other:?}"),
+            }
+        };
+        assert!(config(&[]).name_value);
+        assert!(!config(&["--no-nv"]).name_value);
+        // Both spellings, as convert has them too; the last one wins.
+        assert!(config(&["--nv"]).name_value);
+        assert!(config(&["--no-nv", "--nv"]).name_value);
+        assert!(!config(&["--nv", "--no-nv"]).name_value);
+        // A flag given again is no error, as when a wrapper adds one.
+        assert!(!config(&["--nv", "--nv", "--no-nv"]).name_value);
+        assert!(!config(&["--no-nv", "--no-nv"]).name_value);
+    }
+
+    /// `convert` takes `--no-nv` too, as `server` does: the last of the
+    /// two wins.
+    #[test]
+    fn convert_takes_nv_and_no_nv() {
+        let nv = |extra: &[&str]| {
+            let args = ["canboat", "convert"].iter().chain(extra);
+            match Cli::try_parse_from(args).unwrap().command {
+                Command::Convert(a) => a.name_value(),
+                other => panic!("{other:?}"),
+            }
+        };
+        assert!(!nv(&[]));
+        assert!(nv(&["--nv"]));
+        assert!(!nv(&["--no-nv"]));
+        assert!(!nv(&["--nv", "--no-nv"]));
+        assert!(nv(&["--no-nv", "--nv"]));
+        assert!(!nv(&["--nv", "--nv", "--no-nv"]));
+        assert!(nv(&["--nv", "--nv"]));
+    }
 }
