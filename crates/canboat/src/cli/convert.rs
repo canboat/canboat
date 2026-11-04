@@ -272,8 +272,13 @@ pub struct Args {
     // exposes, so `convert --to json` can be diffed against canboat C.
     /// Emit lookup values as `{"value":N,"name":"..."}` instead of the
     /// bare name string. Matches canboat's `-nv`. JSON only.
-    #[arg(long)]
+    #[arg(long, overrides_with_all = ["nv", "no_nv"])]
     nv: bool,
+
+    /// Emit lookup values as the bare name string, the default; as
+    /// `server --no-nv`. The last of --nv and --no-nv wins.
+    #[arg(long, overrides_with_all = ["nv", "no_nv"])]
+    no_nv: bool,
 
     /// Include unavailable fields — `null` in JSON, `Unknown` in text —
     /// instead of omitting them. Matches canboat's `-empty`.
@@ -336,6 +341,12 @@ impl From<GeoArg> for GeoFormat {
 }
 
 impl Args {
+    /// Whether lookups are written as value and name: `--nv`, unless a
+    /// later `--no-nv` overrides it.
+    pub(crate) fn name_value(&self) -> bool {
+        self.nv
+    }
+
     /// The input path: `--file` or the positional form, whichever was
     /// given. `None` means stdin.
     fn input(&self) -> Option<&Path> {
@@ -552,7 +563,7 @@ fn convert_decoded<W: Write>(
 ) -> Result<()> {
     let json_opts = JsonOptions {
         include_empty: args.empty,
-        name_value: args.nv,
+        name_value: args.name_value(),
         debug: args.debug,
         camel_case: args.shape.camel_case(),
         wrap: args.shape.wrap(),
@@ -576,7 +587,7 @@ fn convert_decoded<W: Write>(
         writeln!(
             out,
             "{}",
-            crate::build_info::version_banner(args.shape.is_si(), args.nv, protocol)
+            crate::build_info::version_banner(args.shape.is_si(), args.name_value(), protocol)
         )
         .context("writing JSON banner")?;
     }

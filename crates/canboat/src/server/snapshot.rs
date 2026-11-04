@@ -256,6 +256,33 @@ fn field_value_text(field: &DecodedField) -> Option<String> {
 mod tests {
     use super::*;
 
+    /// The AIS port serves the same stored lines as the snapshot port, so
+    /// it follows `--no-nv` too: a lookup as its name alone, or as its
+    /// value and name by default (canboat#1129).
+    #[test]
+    fn the_ais_snapshot_follows_name_value() {
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+        let data = [
+            0x01, 0x48, 0x93, 0x47, 0x0f, 0x55, 0x87, 0xf7, 0x51, 0x53, 0xdd, 0x14, 0x13, 0x1d,
+            0x4c, 0x9c, 0x16, 0x02, 0xaa, 0x02, 0x0a, 0x5e, 0x99, 0x01, 0x00, 0xc0, 0xf8, 0xff,
+        ];
+        let frame = crate::engine::RawFrame::new(None, 4, 129038, 41, 255, data.to_vec());
+        let decoded = Arc::new(db.decode(&frame).unwrap());
+        for name_value in [true, false] {
+            let store = SnapshotStore::new(
+                JsonOptions {
+                    name_value,
+                    ..Default::default()
+                },
+                db,
+            );
+            store.store(&decoded, Instant::now());
+            let ais = store.core().ais_snapshot();
+            assert!(ais.contains("129038"), "{ais}");
+            assert_eq!(ais.contains(r#""name":"#), name_value, "{ais}");
+        }
+    }
+
     /// `collect_iter_indexes` drives the per-iteration store loop;
     /// it must walk every iteration present in `repeat_set` exactly
     /// once, in ascending order, even when fields arrive interleaved
