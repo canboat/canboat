@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [9.2.0](https://github.com/canboat/canboat/compare/v9.1.0...v9.2.0) (2026-11-04)
+
+
+### Added
+
+* **127252:** Heave Delay and Delay Source ([#1118](https://github.com/canboat/canboat/issues/1118)) ([2f64377](https://github.com/canboat/canboat/commit/2f64377289281915ad0b98adeadb57ca0855aa8e))
+* **130845:** the Furuno satellite azimuth is unsigned, 0 to 2π ([#1115](https://github.com/canboat/canboat/issues/1115)) ([437fca0](https://github.com/canboat/canboat/commit/437fca0679e074437d8029a936adcdd94ca63c69)), closes [#1113](https://github.com/canboat/canboat/issues/1113)
+* **130850:** name the catch-all's event type and event bytes ([#1117](https://github.com/canboat/canboat/issues/1117)) ([b84095c](https://github.com/canboat/canboat/commit/b84095c2ec98df0f160224a4fd317c84b84dc538)), closes [#1112](https://github.com/canboat/canboat/issues/1112)
+* **cli:** --nv and --no-nv on both convert and server ([#1136](https://github.com/canboat/canboat/issues/1136)) ([351bc58](https://github.com/canboat/canboat/commit/351bc58479c41b60badf5a70f60c3e96e9f80bed))
+* **czone:** decode output status in BEP PGNs 130817, 130822 and 130825 ([#1128](https://github.com/canboat/canboat/issues/1128)) ([7ee2f6b](https://github.com/canboat/canboat/commit/7ee2f6bc0c9518c6998e682ef0e992c901ea7a25))
+* **encode:** encode what the decoder reads: trailing data, catch-all targets, repeating-set parameters ([#1135](https://github.com/canboat/canboat/issues/1135)) ([a613eeb](https://github.com/canboat/canboat/commit/a613eeb9997f69b563cb3c59e6905f3469882492))
+* **ngt1:** --pcode to read and set the NGT-1's P-Code output per port ([#1109](https://github.com/canboat/canboat/issues/1109)) ([47cda9d](https://github.com/canboat/canboat/commit/47cda9dd4ab6f4b45b05ceb23d32f4f702b5f4f3))
+
+
+### Fixed
+
+* **130824:** name the b&g keys as the navico firmware does ([#1140](https://github.com/canboat/canboat/issues/1140)) ([38fdc68](https://github.com/canboat/canboat/commit/38fdc68629fb5bf8912cb54066b8a11432b8b600))
+* **decode:** read a BINARY field that starts mid-byte as its value ([#1145](https://github.com/canboat/canboat/issues/1145)) ([8415d72](https://github.com/canboat/canboat/commit/8415d728823d40e394c538cbcbb9396b8fad243d))
+* **encode:** write a key/value record's value with the type its key gives it ([#1137](https://github.com/canboat/canboat/issues/1137)) ([76c6204](https://github.com/canboat/canboat/commit/76c6204514125dc153592018651697743c911df2))
+* **encode:** write an unset Binary field over its whole width ([#1130](https://github.com/canboat/canboat/issues/1130)) ([2970e0b](https://github.com/canboat/canboat/commit/2970e0b0b9c2f2a37234f49e74e0450342a549a0)), closes [#1121](https://github.com/canboat/canboat/issues/1121)
+* **json_input:** a catch-all record encodes back under its own PGN ([#1138](https://github.com/canboat/canboat/issues/1138)) ([04369c7](https://github.com/canboat/canboat/commit/04369c70ff7e33f8547c1fff9444c892b78033b2))
+* **json_input:** a count canboat decoded as unknown encodes back as unknown ([#1139](https://github.com/canboat/canboat/issues/1139)) ([59bf116](https://github.com/canboat/canboat/commit/59bf116e46da39d23a083d836ab9f30d4a6ac34d))
+* **json_input:** read Reserved and Spare hex back, and set the field named ([#1116](https://github.com/canboat/canboat/issues/1116)) ([752d81d](https://github.com/canboat/canboat/commit/752d81d394f6b3ac2c36c7ba53858d1fa6ec27b7))
+* **json:** write a bitlookup with no bits set as [], not leave it out ([#1148](https://github.com/canboat/canboat/issues/1148)) ([0702e70](https://github.com/canboat/canboat/commit/0702e707c9477ecb0cbdb2e16fc1e901e185eb0f))
+* **make:** rebuild the analyzer after keel regenerates its tables ([#1119](https://github.com/canboat/canboat/issues/1119)) ([b2785af](https://github.com/canboat/canboat/commit/b2785af369ec9a06b57f1ce95bd6f5da5ee957f9))
+* **ngt1:** read the operating mode, and set it only when it differs ([#1134](https://github.com/canboat/canboat/issues/1134)) ([9824f19](https://github.com/canboat/canboat/commit/9824f19a3a098192cd6550d050eebcacb0887e92))
+
 ## [9.1.0](https://github.com/canboat/canboat/compare/v9.0.0...v9.1.0) (2026-10-28)
 
 
