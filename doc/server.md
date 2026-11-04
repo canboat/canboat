@@ -27,6 +27,18 @@ port off.
 | `--nmea0183-filter-port` | 2605 | NMEA 0183 filter control (PGN 262657), for `canboat tui`; read and write |
 | `--overrides-port` | 2606 | PGN rate override control (PGN 262658), for `canboat tui`; read and write |
 
+The JSON on the snapshot, analyzer and AIS ports takes `convert`'s `--id`,
+`--units` and `--wrap`. Unlike `convert`, it writes a lookup field as its
+value and its name, `{"value":381,"name":"B & G"}`, as the C `n2kd` does (it
+runs `analyzer -nv`); `--no-nv` writes the name alone, `"B & G"`, and `--nv`
+says the default, as `convert` takes both too. A value
+the lookup has no name for is `{"value":N}` by default and the bare number `N`
+with `--no-nv`. A key field whose name the lookup gives to more than one
+code is written as its code, `28`, so records of B&G's three "Outside
+Temperature" keys stay apart. The snapshot and analyzer ports start with the header `convert` writes, whose
+`showLookupValues` says which; the AIS port has no header. The filter and
+override ports always write both, as `canboat tui` reads the codes.
+
 The state the filter and override ports set is kept in `--config-dir`:
 `/etc/default/canboat` if it is writable (the systemd/root case), otherwise
 `~/.local/canboat`. `canboat server --help` has the rest of the options.

@@ -167,6 +167,7 @@ pub canboat::bridge::BridgeConfig::device: core::option::Option<canboat::bus::De
 pub canboat::bridge::BridgeConfig::input_port: u16
 pub canboat::bridge::BridgeConfig::mcu006_port: u16
 pub canboat::bridge::BridgeConfig::mdns: bool
+pub canboat::bridge::BridgeConfig::name_value: bool
 pub canboat::bridge::BridgeConfig::nmea0183_filter: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::nmea0183_filter_port: u16
 pub canboat::bridge::BridgeConfig::nmea0183_port: u16
