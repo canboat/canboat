@@ -3,7 +3,7 @@
 # has no meaning outside it. Keep it off crates.io.
 publish = false
 name = "keel"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "CANboat PGN database tool: validate, generate, edit"
 license = "Apache-2.0"
