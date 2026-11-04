@@ -29,12 +29,15 @@
 //! string families (`STRING_FIX`/`LZ`/`LAU`). The key/value family
 //! ([`DynamicFieldKey`](FieldType::DynamicFieldKey) /
 //! [`DynamicFieldValue`](FieldType::DynamicFieldValue), e.g. PGN 130845
-//! `simnetKeyValue`) encodes when set explicitly: the KEY is a
-//! fixed-width scalar (set it as an `Int`), and the VALUE takes its bytes
-//! verbatim (set it as `Bytes` — the caller owns matching the width the
-//! resolved key expects). Left unset, the VALUE and the PGN 126208
-//! group-function types (`VARIABLE`, `DYNAMIC_FIELD_LENGTH`) can't be
-//! defaulted in isolation and return [`EncodeError::NotFixedLength`].
+//! `simnetKeyValue`) encodes as the decoder reads it: the KEY is a
+//! fixed-width scalar (its code, or its name), and the VALUE is either its
+//! bytes, written verbatim, or a value written with the type the key
+//! resolves to, as wide as the record's length or that type says. Left
+//! unset, a VALUE is "unknown", all ones, when its width is known; the
+//! last record of a message may also stop short, as one cut off by the
+//! end of the frame decodes. The PGN 126208 group-function
+//! `DYNAMIC_FIELD_LENGTH` can't be defaulted in isolation and returns
+//! [`EncodeError::NotFixedLength`].
 
 use std::error::Error;
 use std::fmt;
@@ -149,6 +152,8 @@ pub enum EncodeError {
     NoSuchField { pgn_id: &'static str, field: String },
     /// A `LOOKUP` field was given a label that isn't in its table.
     UnknownLookupLabel { field: &'static str, label: String },
+    /// A label the field's lookup gives to more than one code.
+    AmbiguousLookupLabel { field: &'static str, label: String },
     /// A value doesn't fit the field's bit width / range. `range` is the
     /// field's valid range in the schema's unit, when the value is a
     /// number outside it.
@@ -213,6 +218,12 @@ impl fmt::Display for EncodeError {
             }
             EncodeError::UnknownLookupLabel { field, label } => {
                 write!(f, "field '{field}': '{label}' is not a valid value")
+            }
+            EncodeError::AmbiguousLookupLabel { field, label } => {
+                write!(
+                    f,
+                    "field '{field}': '{label}' names more than one code; give the code"
+                )
             }
             EncodeError::ValueOutOfRange {
                 field,
@@ -310,6 +321,10 @@ pub struct PgnBuilder {
     /// within the set (`order - start_field`). Zero instances → the
     /// payload simply ends before the set, mirroring decode.
     sets: [Vec<Vec<Option<Staged>>>; 2],
+    /// Read the values left out as the decoder leaves them out
+    /// ([`read_as_decoded`](Self::read_as_decoded)): off, so a key/value value left
+    /// unset is refused rather than sent as "unknown".
+    decoded: bool,
 }
 
 /// A staged field value: either a scalar bit pattern (numbers, lookups,
@@ -330,6 +345,11 @@ enum Staged {
     /// instance's FIELD_INDEX select it). Resolved by
     /// [`PgnBuilder::build`] exactly as the decoder resolves it.
     Deferred(EncodeValue),
+    /// A `DYNAMIC_FIELD_VALUE` given as a value rather than as its bytes:
+    /// its type comes from the record's key, and its width from the key
+    /// or the record's length, so [`PgnBuilder::build`] writes it, as the
+    /// decoder reads it (canboat#1114).
+    Dynamic(EncodeValue),
 }
 
 impl PgnBuilder {
@@ -351,7 +371,19 @@ impl PgnBuilder {
             timestamp: None,
             staged: vec![None; pgn.fields.len()],
             sets: [Vec::new(), Vec::new()],
+            decoded: false,
         }
+    }
+
+    /// Encode a record as canboat decoded it, for `convert --from json`:
+    /// a key/value value the decoder left out as "unknown" is written as
+    /// all ones, and the last record of the message may stop short, as
+    /// one cut off by the end of the frame decodes (canboat#1114).
+    /// Without it, as for a command meant for the bus, such a value left
+    /// unset is refused.
+    pub(crate) fn read_as_decoded(mut self) -> Self {
+        self.decoded = true;
+        self
     }
 
     /// Override the CAN priority (default: the schema priority, else 6).
@@ -571,8 +603,29 @@ impl PgnBuilder {
                             inst.iter().any(|s| matches!(s, Some(Staged::Deferred(_))))
                         })
                         .filter(|_| !later);
+                    let fields = &self.pgn.fields[start..start + size];
+                    // A key/value record that ends the message may stop
+                    // short, as one cut off at the end of the frame
+                    // decodes: written only up to its last field given,
+                    // when more than its value is missing (canboat#1114).
+                    let ends_message =
+                        !later && idx_after_set_is_end(self.pgn.fields, start + size);
+                    let keyed = fields
+                        .iter()
+                        .any(|f| f.field_type == Some(FieldType::DynamicFieldValue));
                     for (n, inst) in instances.iter().enumerate() {
-                        for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
+                        let given =
+                            if self.decoded && ends_message && keyed && n + 1 == instances.len() {
+                                let given =
+                                    inst.iter().rposition(Option::is_some).map_or(0, |j| j + 1);
+                                let missing_more_than_value = fields[given..]
+                                    .iter()
+                                    .any(|f| f.field_type != Some(FieldType::DynamicFieldValue));
+                                if missing_more_than_value { given } else { size }
+                            } else {
+                                size
+                            };
+                        for (j, f) in fields[..given].iter().enumerate() {
                             match &inst[j] {
                                 Some(Staged::Deferred(v)) => self.emit_variable(
                                     &mut buf,
@@ -584,6 +637,28 @@ impl PgnBuilder {
                                     v,
                                     last_value == Some(n),
                                 )?,
+                                Some(Staged::Dynamic(v)) => self.emit_dynamic(
+                                    &mut buf,
+                                    &mut next_bit,
+                                    &self.pgn.fields[start..start + size],
+                                    inst,
+                                    j,
+                                    Some(v),
+                                    false,
+                                )?,
+                                None if self.decoded
+                                    && f.field_type == Some(FieldType::DynamicFieldValue) =>
+                                {
+                                    self.emit_dynamic(
+                                        &mut buf,
+                                        &mut next_bit,
+                                        &self.pgn.fields[start..start + size],
+                                        inst,
+                                        j,
+                                        None,
+                                        ends_message && n + 1 == instances.len(),
+                                    )?
+                                }
                                 None => {
                                     let fields = &self.pgn.fields[start..start + size];
                                     let derived = continuing_staged(fields, inst, j);
@@ -614,6 +689,35 @@ impl PgnBuilder {
                 continue;
             }
             let f = &self.pgn.fields[idx];
+            if let Some(Staged::Dynamic(v)) = &self.staged[idx] {
+                self.emit_dynamic(
+                    &mut buf,
+                    &mut next_bit,
+                    self.pgn.fields,
+                    &self.staged,
+                    idx,
+                    Some(v),
+                    false,
+                )?;
+                idx += 1;
+                continue;
+            }
+            if self.decoded
+                && self.staged[idx].is_none()
+                && f.field_type == Some(FieldType::DynamicFieldValue)
+            {
+                self.emit_dynamic(
+                    &mut buf,
+                    &mut next_bit,
+                    self.pgn.fields,
+                    &self.staged,
+                    idx,
+                    None,
+                    idx + 1 == self.pgn.fields.len(),
+                )?;
+                idx += 1;
+                continue;
+            }
             // An open tail left unset is no bytes at all.
             if self.staged[idx].is_none() && self.open_tail(f) {
                 idx += 1;
@@ -829,6 +933,175 @@ impl PgnBuilder {
         None
     }
 
+    /// Write a dynamic value given as a value: `fields[at]`, in the scope
+    /// `fields` / `staged` (the message's fields, or a repeating set's).
+    /// Its type is what the nearest earlier DYNAMIC_FIELD_KEY resolves
+    /// to, its width the nearest earlier length field's (less the header
+    /// it counts) or else the type's own, as the decoder reads it.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_dynamic(
+        &self,
+        buf: &mut Vec<u8>,
+        next_bit: &mut usize,
+        fields: &[FieldInfo],
+        staged: &[Option<Staged>],
+        at: usize,
+        v: Option<&EncodeValue>,
+        ends_message: bool,
+    ) -> Result<(), EncodeError> {
+        let f = &fields[at];
+        let scalar = |i: usize| match staged[i] {
+            Some(Staged::Scalar(n)) => Some(n),
+            _ => None,
+        };
+        let entry = (0..at)
+            .rev()
+            .find(|&i| fields[i].field_type == Some(FieldType::DynamicFieldKey))
+            .and_then(|i| {
+                let table = fields[i].lookup_field_type_enumeration?;
+                self.db.field_type_lookup(table, scalar(i)?)
+            });
+        let length = (0..at)
+            .rev()
+            .find(|&i| {
+                fields[i].field_type == Some(FieldType::DynamicFieldLength)
+                    || fields[i].is_dynamic_length_marker
+            })
+            .and_then(|i| {
+                let n = scalar(i)? as i64 - i64::from(fields[i].dynamic_field_length_overhead);
+                u32::try_from(n * 8).ok()
+            });
+        // Left out by the decoder either as "unknown" (all ones), which
+        // only a number or a time can be, or as cut off by the end of the
+        // frame: where the message ends, that is the other kinds.
+        let sentinel = entry.is_some_and(|e| {
+            e.field_type.is_some_and(|ft| {
+                ft.starts_with("NUMBER")
+                    || ft.starts_with("FIX")
+                    || ft.starts_with("UFIX")
+                    || matches!(ft, "TIME" | "DURATION")
+            })
+        });
+        if v.is_none() && ends_message && !sentinel {
+            return Ok(());
+        }
+        let bits = length
+            .or_else(|| entry.and_then(|e| e.bit_length()))
+            .ok_or(EncodeError::NotFixedLength(f.name))?;
+        // Unset is "unknown", which the decoder leaves out: all ones, or
+        // for a signed value the largest positive one.
+        let raw = match v {
+            Some(v) => self.dynamic_raw(f, entry, bits, v)?,
+            // A record with no value bytes: nothing to write.
+            None if bits == 0 => return Ok(()),
+            None if bits <= 64 && entry.is_some_and(dynamic_signed) => {
+                (u64::MAX >> (64 - bits)) >> 1
+            }
+            None if bits <= 64 => u64::MAX >> (64 - bits),
+            None => {
+                for _ in 0..bits / 8 {
+                    write_bits(buf, next_bit, 8, 0xff);
+                }
+                return Ok(());
+            }
+        };
+        write_bits(buf, next_bit, bits as usize, raw);
+        Ok(())
+    }
+
+    /// The wire bits of dynamic value `v` for the key's type `entry`,
+    /// `bits` wide: the inverse of the decoder's
+    /// `decode_dynamic_field_value`.
+    fn dynamic_raw(
+        &self,
+        f: &FieldInfo,
+        entry: Option<&crate::engine::types::LookupFieldTypeValue>,
+        bits: u32,
+        v: &EncodeValue,
+    ) -> Result<u64, EncodeError> {
+        let mismatch = EncodeError::TypeMismatch {
+            field: f.name,
+            expected: "value bytes for a dynamic (key/value) field",
+        };
+        if bits == 0 || bits > 64 {
+            return Err(mismatch);
+        }
+        let mask = u64::MAX >> (64 - bits);
+        let is_time =
+            entry.is_some_and(|e| matches!(e.field_type, Some("TIME") | Some("DURATION")));
+        // A whole number is the wire value, as -nv writes a lookup's code;
+        // but for a time it is seconds, as -nv writes a time.
+        if let EncodeValue::Raw(r) = v
+            && !is_time
+        {
+            return Ok(r & mask);
+        }
+        let Some(e) = entry else {
+            return Err(mismatch);
+        };
+        let signed = dynamic_signed(e);
+        // An unscaled whole number stays exact: f64 would round a 64-bit one.
+        if let EncodeValue::Int(i) = v
+            && e.resolution.unwrap_or(1.0) == 1.0
+            && e.unit_offset == 0.0
+        {
+            let i = i128::from(*i);
+            let (min, max_excl) = if signed {
+                (-(1i128 << (bits - 1)), 1i128 << (bits - 1))
+            } else {
+                (0, 1i128 << bits)
+            };
+            if !(min..max_excl).contains(&i) {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: i as f64,
+                    range: None,
+                });
+            }
+            return Ok((i as u64) & mask);
+        }
+        let value = match v {
+            EncodeValue::Raw(r) => *r as i64 as f64,
+            EncodeValue::Int(i) => *i as f64,
+            EncodeValue::Number(x) => *x,
+            EncodeValue::Text(s) | EncodeValue::Lookup(s) => {
+                if let Some(lv) = e
+                    .lookup_enumeration
+                    .and_then(|n| self.db.lookup(n))
+                    .and_then(|t| t.values.iter().find(|lv| lv.name == s.as_str()))
+                {
+                    return Ok(lv.value & mask);
+                }
+                match crate::engine::output::parse_time(s).filter(|_| is_time) {
+                    Some(seconds) => seconds,
+                    None => return Err(mismatch),
+                }
+            }
+            _ => return Err(mismatch),
+        };
+        let res = e.resolution.unwrap_or(1.0);
+        let raw = ((value - e.unit_offset) / res).round();
+        // Exclusive upper bounds: 2^63 - 1 and 2^64 - 1 do not exist as f64.
+        let (min, max_excl) = if signed {
+            (-(2f64.powi(bits as i32 - 1)), 2f64.powi(bits as i32 - 1))
+        } else {
+            (0.0, 2f64.powi(bits as i32))
+        };
+        if !(min..max_excl).contains(&raw) {
+            return Err(EncodeError::ValueOutOfRange {
+                field: f.name,
+                value,
+                range: None,
+            });
+        }
+        let wire = if signed {
+            raw as i64 as u64
+        } else {
+            raw as u64
+        };
+        Ok(wire & mask)
+    }
+
     /// Emit a deferred group-function `VARIABLE` value: resolve the
     /// referenced PGN (the record's staged PGN field) and the target
     /// field (this instance's staged FIELD_INDEX), stage the value with
@@ -964,7 +1237,13 @@ impl PgnBuilder {
                     write_bits(buf, next_bit, pad, 0);
                 }
             }
-            Staged::Deferred(_) => unreachable!("stage_value never defers"),
+            // A key/value record's value takes its type from its key, which
+            // a group function does not set.
+            Staged::Deferred(_) | Staged::Dynamic(_) => {
+                return Err(unresolved(
+                    "the target is a key/value value, typed by a key a group function does not set",
+                ));
+            }
         }
         Ok(())
     }
@@ -986,12 +1265,10 @@ impl PgnBuilder {
                 stage_in_place(f, v)
             }
             // DYNAMIC_FIELD_VALUE (the value slot of a key/value PGN like
-            // 130845) has no schema `BitLength` — its width is set by the
-            // sibling KEY at decode time, so it can't be defaulted, but the
-            // caller *can* supply the already-encoded value bytes. Written
-            // verbatim (variable length); the caller owns matching the
-            // width the resolved key expects. The sibling KEY field is a
-            // fixed-width scalar, so it takes the normal `Int` path below.
+            // 130845) has no schema `BitLength` — its width and type are
+            // set by the sibling KEY and length, so a value other than its
+            // bytes is written in build(). The sibling KEY field is a
+            // fixed-width scalar, so it takes the normal path below.
             Some(FieldType::DynamicFieldValue) => stage_dynamic_value(f, v),
             _ => Ok(Staged::Scalar(self.value_to_raw(f, v)?)),
         }
@@ -1023,6 +1300,33 @@ impl PgnBuilder {
                 EncodeValue::Lookup(label),
             ) => self.resolve_lookup(f, &label)? as i64,
             (Some(FieldType::Lookup) | Some(FieldType::IndirectLookup), EncodeValue::Int(n)) => n,
+
+            // A key/value record's key by its name, as the decoder writes
+            // it without -nv: the code its field-type lookup gives it.
+            // A name several keys share does not say which: give the code.
+            // No key lookup shares a name today; B&G's 28, 29 and 30 each
+            // were "Outside Temperature".
+            (Some(FieldType::DynamicFieldKey), EncodeValue::Lookup(label)) => {
+                let mut named = f
+                    .lookup_field_type_enumeration
+                    .into_iter()
+                    .flat_map(|table| self.db.field_type_lookups_named(table, &label));
+                match (named.next(), named.next()) {
+                    (Some(e), None) => e.value as i64,
+                    (Some(_), Some(_)) => {
+                        return Err(EncodeError::AmbiguousLookupLabel {
+                            field: f.name,
+                            label: label.clone(),
+                        });
+                    }
+                    (None, _) => {
+                        return Err(EncodeError::UnknownLookupLabel {
+                            field: f.name,
+                            label: label.clone(),
+                        });
+                    }
+                }
+            }
 
             // BitLookup: a raw bitmask integer (label-per-bit is phase 2).
             (Some(FieldType::BitLookup), EncodeValue::Int(n)) => n,
@@ -1433,15 +1737,25 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue, open_tail: bool) -> Result<Staged
     Ok(Staged::Bytes(bytes))
 }
 
-/// Stage a `DYNAMIC_FIELD_VALUE` field: the caller-supplied value bytes,
-/// written verbatim. Unlike `BINARY` this field carries no declared
-/// `BitLength` (its width comes from the resolved sibling KEY), so there
-/// is nothing to pad to — the bytes are the value. Only `Bytes` (or an
-/// explicit `NotAvailable` → empty) is meaningful here.
+/// Whether nothing of the message follows field `at`: no fields, or only
+/// a second repeating set's (left for its own instances to say).
+fn idx_after_set_is_end(fields: &[FieldInfo], at: usize) -> bool {
+    at >= fields.len()
+}
+
+/// Stage a `DYNAMIC_FIELD_VALUE` field: bytes are written verbatim, as
+/// this field carries no declared `BitLength` (its width comes from the
+/// resolved sibling KEY), so there is nothing to pad to. A number, label
+/// or time waits for [`PgnBuilder::build`], which knows the key.
 fn stage_dynamic_value(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     match v {
         EncodeValue::Bytes(b) => Ok(Staged::Bytes(b)),
         EncodeValue::NotAvailable => Ok(Staged::Bytes(Vec::new())),
+        EncodeValue::Raw(_)
+        | EncodeValue::Int(_)
+        | EncodeValue::Number(_)
+        | EncodeValue::Text(_)
+        | EncodeValue::Lookup(_) => Ok(Staged::Dynamic(v)),
         _ => Err(EncodeError::TypeMismatch {
             field: f.name,
             expected: "value bytes for a dynamic (key/value) field",
@@ -1511,7 +1825,9 @@ fn emit_field(
         // Deferred values are resolved by the instance walk in build();
         // one reaching here means a VARIABLE field outside a repeating
         // set, which the schema does not produce.
-        Some(Staged::Deferred(_)) => Err(EncodeError::NotFixedLength(f.name)),
+        Some(Staged::Deferred(_)) | Some(Staged::Dynamic(_)) => {
+            Err(EncodeError::NotFixedLength(f.name))
+        }
         None => write_unset(buf, next_bit, pgn, f),
     }
 }
@@ -1637,6 +1953,14 @@ fn all_ones(bits: u32) -> u64 {
 
 /// Append `bits` low bits of `value`, LSB-first, growing `buf` as needed
 /// — the exact layout [`crate::engine::bits::extract_bits`] reads back.
+/// Whether the decoder reads a dynamic value of type `e` as signed.
+fn dynamic_signed(e: &crate::engine::types::LookupFieldTypeValue) -> bool {
+    e.signed
+        || e.field_type.is_some_and(|ft| ft.starts_with("FIX"))
+        || (matches!(e.field_type, Some("TIME") | Some("DURATION"))
+            && matches!(e.name, "Race Timer" | "Timezone offset"))
+}
+
 fn write_bits(buf: &mut Vec<u8>, next_bit: &mut usize, bits: usize, mut value: u64) {
     for _ in 0..bits {
         let idx = *next_bit >> 3;
@@ -2861,15 +3185,82 @@ mod tests {
         assert_eq!(frame.data[10], 0x04); // Value byte, verbatim
     }
 
+    /// A 64-bit dynamic value takes every value its width holds, and no
+    /// more: 2^63 unsigned is not capped, 2^64 is refused, as is 2^63
+    /// signed, and a whole number past 2^53 stays exact.
     #[test]
-    fn dynamic_field_value_rejects_non_bytes() {
-        // The value slot has no declared width; a scalar can't be sized.
-        assert!(matches!(
-            db().encode("simnetKeyValue")
-                .unwrap()
-                .push_by_name("Value", EncodeValue::Int(4)),
-            Err(EncodeError::TypeMismatch { .. })
-        ));
+    fn a_64_bit_dynamic_value_keeps_its_whole_range() {
+        let entry = |signed| crate::engine::types::LookupFieldTypeValue {
+            value: 0,
+            name: "test",
+            field_type: Some("NUMBER"),
+            bits: Some(64),
+            resolution: Some(1.0),
+            unit: None,
+            lookup_enumeration: None,
+            lookup_bit_enumeration: None,
+            signed,
+            precision: 0,
+            unit_offset: 0.0,
+        };
+        let b = db().encode("simnetKeyValue").unwrap();
+        let f = b.pgn_info().fields.last().unwrap();
+        let raw =
+            |signed, x: f64| b.dynamic_raw(f, Some(&entry(signed)), 64, &EncodeValue::Number(x));
+        assert_eq!(raw(false, 2f64.powi(63)).unwrap(), 1 << 63);
+        assert!(raw(false, 2f64.powi(64)).is_err());
+        assert!(raw(true, 2f64.powi(63)).is_err());
+        assert_eq!(raw(true, -(2f64.powi(63))).unwrap(), 1 << 63);
+        // A whole number past 2^53 keeps its low bit.
+        let int = |signed, i: i64| b.dynamic_raw(f, Some(&entry(signed)), 64, &EncodeValue::Int(i));
+        assert_eq!(int(false, (1 << 60) + 1).unwrap(), (1 << 60) + 1);
+        assert_eq!(
+            int(true, -(1 << 60) - 1).unwrap(),
+            (-(1i64 << 60) - 1) as u64
+        );
+        assert!(int(false, -1).is_err());
+        let narrow = |i: i64| b.dynamic_raw(f, Some(&entry(true)), 8, &EncodeValue::Int(i));
+        assert_eq!(narrow(-128).unwrap(), 0x80);
+        assert!(narrow(128).is_err());
+    }
+
+    /// A group function addressing a key/value record's value is an
+    /// error, not a panic: its type comes from a key the group function
+    /// does not set.
+    #[test]
+    fn a_group_function_for_a_key_value_value_is_an_error() {
+        let mut b = db().encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130845)).unwrap();
+        for (parameter, value) in [(1i64, 1857i64), (3, 4), (10, 5)] {
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "Parameter", parameter).unwrap();
+            b.push_in_set(1, i, "Value", value).unwrap();
+        }
+        let err = b.build().unwrap_err().to_string();
+        assert!(err.contains("key/value value"), "{err}");
+    }
+
+    #[test]
+    fn dynamic_field_value_takes_its_type_from_the_key() {
+        // The value slot has no declared width: a value is sized and
+        // scaled by what the key resolves to (canboat#1114), here
+        // Timezone offset, a signed 16-bit duration in 60 s steps.
+        let mut b = db().encode("simnetKeyValue").unwrap();
+        b.push_by_name("Key", EncodeValue::Lookup("Timezone offset".into()))
+            .unwrap();
+        b.push_by_name("Value", EncodeValue::Number(-3600.0))
+            .unwrap();
+        let data = b.build().unwrap().data.to_vec();
+        assert_eq!(
+            data[data.len() - 2..],
+            [0xc4, 0xff],
+            "-60 in 16 bits: {data:02x?}"
+        );
+
+        // Without a key there is nothing to size it with.
+        let mut b = db().encode("simnetKeyValue").unwrap();
+        b.push_by_name("Value", EncodeValue::Int(4)).unwrap();
+        assert!(b.build().is_err());
     }
 
     #[test]

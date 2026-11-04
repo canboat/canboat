@@ -1506,6 +1506,9 @@ pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::
 impl core::fmt::Display for canboat::DecodeError
 pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 #[non_exhaustive] pub enum canboat::EncodeError
+pub canboat::EncodeError::AmbiguousLookupLabel
+pub canboat::EncodeError::AmbiguousLookupLabel::field: &'static str
+pub canboat::EncodeError::AmbiguousLookupLabel::label: alloc::string::String
 pub canboat::EncodeError::AmbiguousPgn
 pub canboat::EncodeError::AmbiguousPgn::pgn: u32
 pub canboat::EncodeError::AmbiguousPgn::variants: usize
