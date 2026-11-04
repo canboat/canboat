@@ -1307,8 +1307,9 @@ impl PgnBuilder {
 
             // A key/value record's key by its name, as the decoder writes
             // it without -nv: the code its field-type lookup gives it.
-            // A name several keys share (B&G's 28, 29 and 30 are each
-            // "Outside Temperature") does not say which: give the code.
+            // A name several keys share does not say which: give the code.
+            // No key lookup shares a name today; B&G's 28, 29 and 30 each
+            // were "Outside Temperature".
             (Some(FieldType::DynamicFieldKey), EncodeValue::Lookup(label)) => {
                 let mut named = f
                     .lookup_field_type_enumeration

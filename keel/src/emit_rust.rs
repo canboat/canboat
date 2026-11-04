@@ -412,18 +412,14 @@ fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, Comput
 fn compute_ft_units(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
     let mut v = v.clone();
     let mut c = ComputedFt {
-        // The fieldtype's own signedness is the answer. The unit test
-        // below only ever *adds* to it, for angle types that canboat
-        // spells FIX under the hood.
+        // The fieldtype's own signedness is the answer: an ANGLE_UFIX16
+        // key value runs 0 to 2π, as it does in the C analyzer.
         signed: v.signed,
         ..ComputedFt::default()
     };
     let Some(unit) = v.unit.clone() else {
         return (v, c);
     };
-    if matches!(unit.as_str(), "rad" | "rad/s" | "deg" | "deg/s") {
-        c.signed = true;
-    }
     let mut scale = |factor: f64, to: &str| {
         if let Some(r) = v.resolution.as_mut() {
             *r *= factor;
