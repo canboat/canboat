@@ -246,18 +246,6 @@ fn write_json_inner<W: fmt::Write>(
         if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty()) {
             continue;
         }
-        // Empty BITLOOKUPs (no bits set) are dropped in JSON output —
-        // canboat doesn't emit them either. The text formatter, by
-        // contrast, prints "None" for these (see write_field_value
-        // in output/text.rs).
-        if !opts.include_empty
-            && !opts.debug
-            && let FieldValue::BitField { bits, .. } = &f.value
-            && bits.is_empty()
-        {
-            continue;
-        }
-
         // Determine "where is this field going":
         // - non-repeating (repeat_set == 0): top-level field.
         // - repeat_set == 1: under "list".
@@ -506,11 +494,10 @@ fn write_field_value_debug<W: fmt::Write>(
         }
         FieldValue::BitField { value, bits } => {
             if bits.is_empty() {
-                // Empty BITLOOKUP → null in JSON. Matches canboat's
-                // `printEmpty` path for `value == 0` in
-                // `fieldPrintBitLookup` (print.c:940-945).
+                // No bits set: an empty list, as canboat's
+                // `fieldPrintBitLookup` writes it, so it reads back as 0.
                 let _ = value;
-                w.write_str("null")?;
+                w.write_str("[]")?;
             } else if opts.name_value {
                 // -nv: array of `{value, name}` objects.
                 w.write_char('[')?;
@@ -753,9 +740,11 @@ fn write_field_value<W: fmt::Write>(
         }
         FieldValue::BitField { bits, value } => {
             if bits.is_empty() {
-                // Empty BITLOOKUP → null (canboat's `printEmpty`).
+                // No bits set: an empty list, so it reads back as 0. Leaving
+                // the field out would make it unknown, which encodes as every
+                // bit set (canboat#1147).
                 let _ = value;
-                w.write_str("null")
+                w.write_str("[]")
             } else if opts.name_value {
                 // -nv: [{"value":bit_value,"name":"..."},...]
                 w.write_char('[')?;
@@ -1048,6 +1037,44 @@ mod tests {
             "{n2k}"
         );
     }
+    /// A BITLOOKUP with no bits set is an empty list, not left out: left
+    /// out it is unknown, which encodes back as every bit set. PGN 127489
+    /// from samples/dirona-actisense-serial.raw, both discrete statuses 0
+    /// (canboat#1147).
+    #[test]
+    fn a_bitlookup_with_no_bits_set_is_an_empty_list() {
+        let data: Vec<u8> = "0b,00,00,ff,ff,b9,79,46,0a,ff,ff,c8,d3,ea,00,ff,ff,ff,ff,ff,\
+             00,00,00,00,ff,ff"
+            .split(',')
+            .map(|h| u8::from_str_radix(h.trim(), 16).unwrap())
+            .collect();
+        let frame = crate::engine::RawFrame::new(None, 2, 127489, 4, 255, data);
+        let pgn = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si)
+            .decode(&frame)
+            .unwrap();
+        for (opts, want) in [
+            (JsonOptions::default(), r#""discreteStatus1":[]"#),
+            (
+                JsonOptions {
+                    name_value: true,
+                    ..Default::default()
+                },
+                r#""discreteStatus1":[]"#,
+            ),
+            (
+                JsonOptions {
+                    debug: true,
+                    ..Default::default()
+                },
+                r#""discreteStatus1":{"value":[]"#,
+            ),
+        ] {
+            let mut out = String::new();
+            write_json(&mut out, &pgn, &opts).unwrap();
+            assert!(out.contains(want), "{out}");
+        }
+    }
+
     /// A DECIMAL's digit pairs are written as a JSON string. The DSC call
     /// from samples/pgn129808.raw addresses coast station 002241024 (sent
     /// as 0022410240): written bare, the leading zero made the whole record

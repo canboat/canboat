@@ -953,6 +953,20 @@ mod tests {
         assert!(frame_from_json(db, &unknown).is_err());
     }
 
+    /// A BITLOOKUP given as an empty list, as the decoder writes one with no
+    /// bits set, encodes as 0; one left out is unknown, all ones
+    /// (canboat#1147).
+    #[test]
+    fn an_empty_bitlookup_list_encodes_as_no_bits_set() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":2,"src":4,"dst":255,"pgn":127489,"fields":{"instance":0,"discreteStatus1":[],"discreteStatus2":[]}}"#;
+        let frame = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[20..24], [0x00; 4]);
+        let line = line.replace(r#","discreteStatus1":[],"discreteStatus2":[]"#, "");
+        let frame = frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(frame.data[20..24], [0xff; 4]);
+    }
+
     /// A BINARY field that starts mid-byte is its value, from bit 0, both
     /// ways: 130829's Helm "0A" goes back to the high nibble of byte 3
     /// (canboat#1143).
