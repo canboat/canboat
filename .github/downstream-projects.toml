@@ -42,3 +42,8 @@ request = "https://github.com/canboat/canboat/issues/1087"
 repo = "RISE-Maritime/keelson"
 releases = "major"
 request = "https://github.com/canboat/canboat/issues/1110"
+
+[[project]]
+repo = "fard-draf/korri-n2k"
+releases = "minor"
+request = "https://github.com/canboat/canboat/issues/1141"
