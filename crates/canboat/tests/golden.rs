@@ -329,6 +329,17 @@ fn pgn_decimal_json() {
     );
 }
 
+/// A BINARY field that starts mid-byte (#1143, test-binary-mid-byte in
+/// analyzer/tests/Makefile) reads as its value, from bit 0.
+#[test]
+fn pgn_binary_mid_byte_json() {
+    run_case(
+        "pgn-binary-mid-byte.in",
+        "pgn-binary-mid-byte.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
 /// Below RangeMin (#983, test-below-range-min in analyzer/tests/Makefile): a latitude
 /// below -90 deg and angles below -pi are out of range, a reading at the
 /// edge or at an int16's full negative end is not. In Metric and SI.

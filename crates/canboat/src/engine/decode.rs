@@ -2021,13 +2021,9 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
         let end = declared_end.min(data.len());
         return FieldValue::Binary(data[start..end].to_vec());
     }
-    // Not byte-aligned. This is NOT a clean bit-extraction, and must not
-    // become one: `fieldPrintBinary` masks the *first* byte to the field's
-    // width but then shifts it back to where it sat in the byte, and takes
-    // every later byte whole. So PGN 130829's two 4-bit nibbles render as
-    // "0F" (low) and "F0" (high) — the high nibble keeps its position rather
-    // than being normalised down. Packing LSB-first instead reported both as
-    // "0F", losing which nibble the bits came from.
+    // Not byte-aligned: the field's bits are its value, from bit 0, as
+    // for a number field. So PGN 130829's high nibble Helm reads "0A",
+    // not "A0" where it sits in its byte (canboat#1143).
     let start_byte = bit_offset / 8;
     let start_bit = bit_offset % 8;
     // canboat clamps the width to what the payload actually holds.
@@ -2036,31 +2032,17 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length == 0 {
         return FieldValue::NotAvailable;
     }
-    // Every byte the field touches, including the one holding its high
-    // bits when it starts mid-byte and crosses into the next.
-    let nbytes = (start_bit + bit_length).div_ceil(8);
-    let mut out = Vec::with_capacity(nbytes);
-    let mut remaining = bit_length as isize;
-    for i in 0..nbytes {
-        let Some(&raw) = data.get(start_byte + i) else {
-            break;
-        };
-        let mut byte = raw;
-        if i == 0 && start_bit != 0 {
-            byte >>= start_bit;
-            if (remaining as usize) + start_bit < 8 {
-                byte &= (1u8 << remaining) - 1;
+    let out = (0..bit_length.div_ceil(8))
+        .map(|i| {
+            let at = start_byte + i;
+            let mut v = u16::from(data[at]) >> start_bit;
+            if let Some(&next) = data.get(at + 1) {
+                v |= u16::from(next) << (8 - start_bit);
             }
-            byte <<= start_bit;
-            remaining -= (8 - start_bit) as isize;
-        } else {
-            if remaining < 8 {
-                byte &= (1u8 << remaining) - 1;
-            }
-            remaining -= 8;
-        }
-        out.push(byte);
-    }
+            let bits = (bit_length - 8 * i).min(8);
+            (v & ((1u16 << bits) - 1)) as u8
+        })
+        .collect();
     FieldValue::Binary(out)
 }
 
@@ -3036,17 +3018,20 @@ mod tests {
     }
 
     #[test]
-    fn unaligned_binary_crossing_a_byte_keeps_its_high_bits() {
+    fn unaligned_binary_reads_as_its_value() {
         // 8 bits from bit 51 (as 129814's reserved8): bits 3-7 of the first
-        // byte printed in place, then the low 3 bits of the next.
+        // byte and the low 3 bits of the next, moved down to bit 0 as one
+        // byte, as a number field reads them (canboat#1143).
         let data = [0, 0, 0, 0, 0, 0, 0xf0, 0x07];
         let bytes = |v| match v {
             FieldValue::Binary(b) => b,
             other => panic!("{other:?}"),
         };
-        assert_eq!(bytes(decode_binary(&data, 51, 8)), [0xf0, 0x07]);
-        // One that fits in its byte stays one byte.
-        assert_eq!(bytes(decode_binary(&data, 52, 4)), [0xf0]);
+        assert_eq!(bytes(decode_binary(&data, 51, 8)), [0xfe]);
+        // A high nibble reads as its value, not where it sits.
+        assert_eq!(bytes(decode_binary(&data, 52, 4)), [0x0f]);
+        // 12 bits from bit 4: two bytes, the second holding the top 4 bits.
+        assert_eq!(bytes(decode_binary(&[0x21, 0x43], 4, 12)), [0x32, 0x04]);
     }
 
     #[test]
@@ -3248,11 +3233,11 @@ mod tests {
     }
 
     #[test]
-    fn reserved_bytes_keep_their_bit_position() {
+    fn reserved_bits_read_as_their_value() {
         // PGN 130824's field 2 is a 2-bit Reserved at bit 11, i.e. bits
         // 3..4 of byte 1. canboat prints it through `fieldPrintBinary`,
-        // which masks the first byte and shifts it back where it was,
-        // so a value of 0b10 renders `10` — not `02`.
+        // which moves it down to bit 0, so a value of 0b10 renders `02`
+        // (canboat#1143).
         let data: smallvec::SmallVec<[u8; 8]> =
             smallvec::smallvec![0x7d, 0x91, 0x64, 0x20, 0x2d, 0x00];
         let frame = RawFrame {
@@ -3270,7 +3255,7 @@ mod tests {
             .find(|f| f.info.name == "Reserved")
             .expect("a Reserved field");
         match &r.value {
-            FieldValue::Reserved { bytes, .. } => assert_eq!(bytes.as_slice(), &[0x10]),
+            FieldValue::Reserved { bytes, .. } => assert_eq!(bytes.as_slice(), &[0x02]),
             other => panic!("expected Reserved bytes, got {other:?}"),
         }
     }

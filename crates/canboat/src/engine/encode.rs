@@ -335,10 +335,10 @@ enum Staged {
     Scalar(u64),
     /// Byte-aligned payload of exactly `bit_length / 8` bytes.
     Bytes(Vec<u8>),
-    /// A Reserved or Spare field's bytes as the decoder prints them: the
-    /// first byte keeps its bits where they sat in the message's byte, so
-    /// they are moved down by the field's bit position when written.
-    InPlace(Vec<u8>),
+    /// A Reserved or Spare field's bytes as the decoder prints them: its
+    /// value, from bit 0, written over exactly the field's bits
+    /// (canboat#1143).
+    BitString(Vec<u8>),
     /// A group-function `VARIABLE` value, staged as-given: its width,
     /// scaling and type come from the *referenced* PGN's field, which
     /// is only known at build time (the record's PGN field plus the
@@ -1230,12 +1230,12 @@ impl PgnBuilder {
                     write_bits(buf, next_bit, 8, u64::from(b));
                 }
             }
-            Staged::InPlace(bytes) => {
+            Staged::BitString(bytes) => {
                 let bl = target_field
                     .bit_length
                     .ok_or(EncodeError::NotFixedLength(target_field.name))?
                     as usize;
-                write_in_place(buf, next_bit, bl, target_field.name, &bytes)?;
+                write_bit_string(buf, next_bit, bl, target_field.name, &bytes)?;
                 if !next_bit.is_multiple_of(8) {
                     let pad = 8 - (*next_bit % 8);
                     write_bits(buf, next_bit, pad, 0);
@@ -1266,7 +1266,7 @@ impl PgnBuilder {
             Some(FieldType::Reserved) | Some(FieldType::Spare)
                 if matches!(v, EncodeValue::Bytes(_)) =>
             {
-                stage_in_place(f, v)
+                stage_bit_string(f, v)
             }
             // DYNAMIC_FIELD_VALUE (the value slot of a key/value PGN like
             // 130845) has no schema `BitLength` — its width and type are
@@ -1816,9 +1816,9 @@ fn emit_field(
             }
             Ok(())
         }
-        Some(Staged::InPlace(bytes)) => {
+        Some(Staged::BitString(bytes)) => {
             let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
-            write_in_place(buf, next_bit, bl, f.name, bytes)
+            write_bit_string(buf, next_bit, bl, f.name, bytes)
         }
         // A fixed-width scalar (number, lookup, PGN, float, …).
         Some(Staged::Scalar(v)) => {
@@ -1904,38 +1904,33 @@ fn write_unset(
 }
 
 /// Stage Reserved or Spare bytes as the decoder prints them: at most the
-/// bytes the field's bits can touch.
-fn stage_in_place(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+/// bytes the field's bits fill.
+fn stage_bit_string(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     let EncodeValue::Bytes(bytes) = v else {
-        unreachable!("stage_value only stages Bytes in place");
+        unreachable!("stage_value only stages Bytes as a bit string");
     };
     f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))?;
-    Ok(Staged::InPlace(bytes))
+    Ok(Staged::BitString(bytes))
 }
 
 /// Write `bits` bits from `bytes`, read as one little-endian bit string
-/// that starts at bit 0 of the message byte the field starts in. Bits the
-/// bytes don't reach are written as zeros; more bytes than the field
-/// touches is an error.
-fn write_in_place(
+/// that starts at the field's first bit. Bits the bytes don't reach are
+/// written as zeros; more bytes than the field's bits fill is an error.
+fn write_bit_string(
     buf: &mut Vec<u8>,
     next_bit: &mut usize,
     bits: usize,
     field: &'static str,
     bytes: &[u8],
 ) -> Result<(), EncodeError> {
-    let shift = *next_bit % 8;
-    if bytes.len() > (shift + bits).div_ceil(8) {
+    if bytes.len() > bits.div_ceil(8) {
         return Err(EncodeError::ValueOutOfRange {
             field,
             value: bytes.len() as f64,
             range: None,
         });
     }
-    let bit = |i: usize| {
-        let at = i + shift;
-        bytes.get(at / 8).is_some_and(|b| b >> (at % 8) & 1 != 0)
-    };
+    let bit = |i: usize| bytes.get(i / 8).is_some_and(|b| b >> (i % 8) & 1 != 0);
     for i in 0..bits {
         write_bits(buf, next_bit, 1, u64::from(bit(i)));
     }
@@ -2412,7 +2407,7 @@ mod tests {
     }
 
     #[test]
-    fn group_function_value_for_a_reserved_target_is_written_in_place() {
+    fn group_function_value_for_a_reserved_target_is_written_as_its_value() {
         // Parameter 3 of 127258 is its 4-bit Reserved. Bytes for it take
         // the VARIABLE path, which pads the value to a whole byte.
         let db = db();

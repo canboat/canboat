@@ -953,6 +953,17 @@ mod tests {
         assert!(frame_from_json(db, &unknown).is_err());
     }
 
+    /// A BINARY field that starts mid-byte is its value, from bit 0, both
+    /// ways: 130829's Helm "0A" goes back to the high nibble of byte 3
+    /// (canboat#1143).
+    #[test]
+    fn a_mid_byte_binary_field_encodes_as_its_value() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":7,"src":2,"dst":255,"pgn":130829,"fields":{"manufacturerCode":144,"industryCode":4,"fieldA":"05","subHelm":"03","helm":"0A","capabilities":"01"}}"#;
+        let frame = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[..], [0x90, 0x98, 0x5f, 0xa3, 0x01]);
+    }
+
     /// A record whose length leaves no value bytes, its value left out,
     /// writes nothing for it rather than failing.
     #[test]
@@ -1043,9 +1054,9 @@ mod tests {
         );
 
         // 127258: a 4-bit Reserved in the high nibble of byte 1 is printed
-        // in place ("50"), and `reserved6` is the second Reserved field.
+        // as its value ("05"), and `reserved6` is the second Reserved field.
         let line = r#"{"magneticVariation":{"prio":7,"src":33,"dst":255,"pgn":127258,
-            "fields":{"sid":199,"source":{"value":0},"reserved":"50","reserved6":"CF 2A"}}}"#
+            "fields":{"sid":199,"source":{"value":0},"reserved":"05","reserved6":"CF 2A"}}}"#
             .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[..2], [0xc7, 0x50]);
@@ -1056,10 +1067,10 @@ mod tests {
     fn a_conditional_reserved_is_written_where_it_was_read() {
         // 126208 Read Fields for a proprietary PGN: the Reserved after the
         // manufacturer code starts at bit 3 of its byte, which only the
-        // encoder knows. Printed in place as "10", it is the value 2.
+        // encoder knows. Printed as its value, "02" (canboat#1143).
         let line = r#"{"nmeaReadFieldsGroupFunction":{"prio":3,"src":1,"dst":2,"pgn":126208,
             "fields":{"functionCode":{"value":3},"pgn":{"value":130816},
-            "manufacturerCode":{"value":295},"reserved":"10","industryCode":{"value":4},
+            "manufacturerCode":{"value":295},"reserved":"02","industryCode":{"value":4},
             "uniqueId":1,"numberOfSelectionPairs":0,"numberOfParameters":0}}}"#
             .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
@@ -1068,12 +1079,13 @@ mod tests {
 
     #[test]
     fn an_unaligned_reserved_crossing_a_byte_round_trips() {
-        // 129814's reserved8 sits at bits 51-58: the analyzer prints both
-        // bytes it touches ("F0 07"), and all eight bits go back.
+        // 129814's reserved8 sits at bits 51-58: the analyzer prints its
+        // value as one byte ("FE"), and all eight bits go back across the
+        // byte boundary. The 1-bit spare at bit 50 is "01".
         let line = r#"{"pgn":129814,"prio":6,"src":1,"dst":255,"fields":{
             "sequenceId":24,"messageId":1,"repeatIndicator":0,
-            "destinationIndicator":1,"binaryDataFlag":1,"spare":"04",
-            "reserved8":"F0 07","aisTransceiverInformation":0}}"#
+            "destinationIndicator":1,"binaryDataFlag":1,"spare":"01",
+            "reserved8":"FE","aisTransceiverInformation":0}}"#
             .replace('\n', " ");
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[6..8], [0xf7, 0x07]);
