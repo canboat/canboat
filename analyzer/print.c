@@ -2295,32 +2295,27 @@ extern bool fieldPrintBinary(const Field   *field,
   }
   remaining_bits = *bits;
   s              = "";
-  // Every byte the field touches, including the one holding its high bits
-  // when it starts mid-byte and crosses into the next.
-  for (i = 0; *bits != 0 && i < (startBit + *bits + 7) >> 3; i++)
+  // The field's bits are its value, from bit 0, as for a number field: a
+  // field that starts mid-byte takes each output byte from two source bytes.
+  for (i = 0; remaining_bits != 0; i++)
   {
-    uint8_t byte = data[i];
+    unsigned int v = data[i] >> startBit;
 
-    if (i == 0 && startBit != 0)
+    if (i + 1 < dataLen)
     {
-      byte = byte >> startBit; // Shift off older bits
-      if (remaining_bits + startBit < 8)
-      {
-        byte = byte & ((1 << remaining_bits) - 1);
-      }
-      byte = byte << startBit; // Shift zeros back in
-      remaining_bits -= (8 - startBit);
+      v |= (unsigned int) data[i + 1] << (8 - startBit);
+    }
+    if (remaining_bits < 8)
+    {
+      // only the lower remaining_bits should be used
+      v &= (1u << remaining_bits) - 1;
+      remaining_bits = 0;
     }
     else
     {
-      if (remaining_bits < 8)
-      {
-        // only the lower remaining_bits should be used
-        byte = byte & ((1 << remaining_bits) - 1);
-      }
       remaining_bits -= 8;
     }
-    mprintf("%s%2.02X", s, byte);
+    mprintf("%s%2.02X", s, v & 0xff);
     s = " ";
   }
   if (showJson)
