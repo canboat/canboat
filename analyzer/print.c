@@ -1336,7 +1336,9 @@ extern bool fieldPrintBitLookup(const Field   *field,
   {
     if (showJson)
     {
-      printEmpty(fieldName, value - maxValue);
+      // No bits set: an empty list, so it reads back as 0. Leaving the field
+      // out would make it unknown, which encodes as every bit set.
+      mprintf("[]");
     }
     else
     {

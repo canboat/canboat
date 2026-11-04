@@ -420,6 +420,9 @@ fn to_encode_value(
         Value::Object(o) => match o.get("value") {
             Some(Value::Number(n)) => Some(raw_number(f, n)?),
             Some(Value::String(s)) => Some(string_value(f, s)?),
+            // -debug writes a bit lookup as {"value":[…],"bytes":…}; the
+            // list reads as it does bare, `[]` as no bits set.
+            Some(list @ Value::Array(_)) => to_encode_value(db, f, list)?,
             _ => None,
         },
         Value::Number(n) => {
@@ -951,6 +954,46 @@ mod tests {
         assert_eq!(by_name.data, by_code.data);
         let unknown = line.replace("Outside Temperature (F channel)", "No Such Key");
         assert!(frame_from_json(db, &unknown).is_err());
+    }
+
+    /// A BITLOOKUP given as an empty list, as the decoder writes one with no
+    /// bits set, encodes as 0; one left out is unknown, all ones
+    /// (canboat#1147).
+    #[test]
+    fn an_empty_bitlookup_list_encodes_as_no_bits_set() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":2,"src":4,"dst":255,"pgn":127489,"fields":{"instance":0,"discreteStatus1":[],"discreteStatus2":[]}}"#;
+        let frame = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[20..24], [0x00; 4]);
+        let line = line.replace(r#","discreteStatus1":[],"discreteStatus2":[]"#, "");
+        let frame = frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(frame.data[20..24], [0xff; 4]);
+    }
+
+    /// Under -debug a bit lookup is {"value":[…],"bytes":…}: the list
+    /// encodes as it does bare, empty or not (canboat#1147).
+    #[test]
+    fn a_debug_bitlookup_list_encodes_its_bits() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let data: Vec<u8> = "0b,00,00,ff,ff,b9,79,46,0a,ff,ff,c8,d3,ea,00,ff,ff,ff,ff,ff,\
+             05,00,00,00,ff,ff"
+            .split(',')
+            .map(|h| u8::from_str_radix(h.trim(), 16).unwrap())
+            .collect();
+        let frame = crate::engine::RawFrame::new(None, 2, 127489, 4, 255, data.clone());
+        let decoded = db.decode(&frame).unwrap();
+        for name_value in [false, true] {
+            let opts = crate::engine::output::JsonOptions {
+                debug: true,
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            assert!(line.contains(r#""discreteStatus2":{"value":[]"#), "{line}");
+            let back = frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(back.data[..], data[..], "{line}");
+        }
     }
 
     /// A BINARY field that starts mid-byte is its value, from bit 0, both
