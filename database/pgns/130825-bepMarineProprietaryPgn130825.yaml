@@ -1,12 +1,11 @@
 pgn: 130825
 id: bepMarineProprietaryPgn130825
-description: 'BEP Marine: Proprietary PGN 130825'
+description: 'BEP Marine: CZone Control X Plus output status'
 type: Fast
 variantOrder: 3
 missing:
 - Fields
-- FieldLengths
-- Resolution
+notes: 'Captured CZone module output status. Module identifier is the ZCF module ID; output channel is page times eight plus slot index (zero-based). Evidence: samples/czone/130825-compass-rose-control-x-plus.log (captured payload, synthetic fixture timestamp). Current/level values are raw 11-bit quantities; raw level 1000 was observed at full output, without claiming universal scaling.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -26,7 +25,86 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: data
-  name: Data
+- id: moduleId
+  name: ZCF Module ID
+  type: UINT8
+- id: page
+  name: Output Page
+  type: UINT8
+- id: unknownHeaderByte
+  name: Unknown Header Byte
   type: BINARY
-  bits: 1768
+  bits: 8
+- id: outputCurrentRaw0
+  name: Output 0 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw0
+  name: Output 0 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw1
+  name: Output 1 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw1
+  name: Output 1 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw2
+  name: Output 2 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw2
+  name: Output 2 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw3
+  name: Output 3 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw3
+  name: Output 3 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw4
+  name: Output 4 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw4
+  name: Output 4 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw5
+  name: Output 5 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw5
+  name: Output 5 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw6
+  name: Output 6 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw6
+  name: Output 6 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputCurrentRaw7
+  name: Output 7 Current Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+- id: outputLevelRaw7
+  name: Output 7 Level Raw
+  type: UNSIGNED_INTEGER
+  bits: 11
+samples:
+- raw: "2026-11-02-00:00:00.000,6,130825,2,255,27,27,99,02,00,00,00,40,1f,00,d0,17,00,00,00,00,00,05,40,5f,00,d0,07,00,00,00,00,00"
+  expects:
+    moduleId: 2
+    page: 0
+    outputCurrentRaw2: 1
+    outputLevelRaw0: 1000
+    outputCurrentRaw4: 5
+    outputLevelRaw5: 1000
