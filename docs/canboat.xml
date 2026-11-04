@@ -4567,9 +4567,9 @@ limitations under the License.
       <EnumFieldType Value="25" Name="User 14" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="26" Name="User 15" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="27" Name="User 16" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
-      <EnumFieldType Value="28" Name="Outside Temperature (F)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
+      <EnumFieldType Value="28" Name="Outside Temperature (F channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="29" Name="Outside Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
-      <EnumFieldType Value="30" Name="Water Temperature (F)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
+      <EnumFieldType Value="30" Name="Water Temperature (F channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="31" Name="Water Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="50" Name="Tacking Performance" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="%" Bits="16"/>
       <EnumFieldType Value="52" Name="Attitude Roll" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
@@ -4584,7 +4584,7 @@ limitations under the License.
       <EnumFieldType Value="68" Name="Yaw Rate" FieldType="NUMBER" Signed="true" Resolution="3.125e-08" Unit="rad/s" Bits="32"/>
       <EnumFieldType Value="73" Name="Heading" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="77" Name="Wind Speed Apparent" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="79" Name="Wind Speed Apparent (Knots)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
+      <EnumFieldType Value="79" Name="Wind Speed Apparent (Knots channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="81" Name="Wind Angle Apparent" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="83" Name="Target TWA" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="85" Name="Wind Speed True" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
@@ -4619,7 +4619,7 @@ limitations under the License.
       <EnumFieldType Value="185" Name="MOB DR Bearing" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="186" Name="MOB DR Range" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="194" Name="Depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="195" Name="Depth (Fathoms)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
+      <EnumFieldType Value="195" Name="Depth (Fathoms channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="199" Name="Aft Depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="205" Name="Odometer" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="207" Name="Trip Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>

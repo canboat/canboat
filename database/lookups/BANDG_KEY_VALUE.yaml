@@ -45,13 +45,13 @@ values:
   name: User 16
   type: FIX32_2
 - value: 28
-  name: Outside Temperature (F)
+  name: Outside Temperature (F channel)
   type: TEMPERATURE
 - value: 29
   name: Outside Temperature
   type: TEMPERATURE
 - value: 30
-  name: Water Temperature (F)
+  name: Water Temperature (F channel)
   type: TEMPERATURE
 - value: 31
   name: Water Temperature
@@ -96,7 +96,7 @@ values:
   name: Wind Speed Apparent
   type: SPEED_UFIX16_CM
 - value: 79
-  name: Wind Speed Apparent (Knots)
+  name: Wind Speed Apparent (Knots channel)
   type: SPEED_UFIX16_CM
 - value: 81
   name: Wind Angle Apparent
@@ -201,7 +201,7 @@ values:
   name: Depth
   type: LENGTH_UFIX32_CM
 - value: 195
-  name: Depth (Fathoms)
+  name: Depth (Fathoms channel)
   type: LENGTH_UFIX32_CM
 - value: 199
   name: Aft Depth
