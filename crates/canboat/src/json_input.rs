@@ -937,16 +937,18 @@ mod tests {
         assert_eq!(by_name.data[by_name.data.len() - 1], 0x01);
     }
 
-    /// A key named by a name several keys share is refused: B&G's keys
-    /// 28, 29 and 30 are each "Outside Temperature".
+    /// A key given by its name encodes as its code; a name the lookup
+    /// does not have is refused.
     #[test]
-    fn a_shared_key_name_is_an_error() {
+    fn a_key_by_its_name_encodes_as_its_code() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
-        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":"Outside Temperature","length":2,"value":288.15}]}}"#;
-        let err = frame_from_json(db, line).unwrap_err();
-        assert!(format!("{err:#}").contains("more than one code"), "{err:#}");
-        let line = line.replace(r#""Outside Temperature""#, "29");
-        assert!(frame_from_json(db, &line).is_ok());
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":"Outside Temperature (F channel)","length":2,"value":288.15}]}}"#;
+        let by_name = frame_from_json(db, line).unwrap().unwrap();
+        let by_code = line.replace(r#""Outside Temperature (F channel)""#, "28");
+        let by_code = frame_from_json(db, &by_code).unwrap().unwrap();
+        assert_eq!(by_name.data, by_code.data);
+        let unknown = line.replace("Outside Temperature (F channel)", "No Such Key");
+        assert!(frame_from_json(db, &unknown).is_err());
     }
 
     /// A record whose length leaves no value bytes, its value left out,
@@ -966,7 +968,7 @@ mod tests {
     fn a_value_left_out_is_an_error_unless_read_as_decoded() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
         // B&G 130824, Trip 2 Time (key 267) without its value.
-        let line = r#"{"prio":3,"src":38,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":105,"length":2,"value":-1.0257},{"key":267,"length":4}]}}"#;
+        let line = r#"{"prio":3,"src":38,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":105,"length":2,"value":5.2575},{"key":267,"length":4}]}}"#;
         assert!(frame_from_json(db, line).is_err());
         let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
         assert_eq!(frame.data[frame.data.len() - 4..], [0xff; 4]);
