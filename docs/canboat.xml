@@ -4567,13 +4567,13 @@ limitations under the License.
       <EnumFieldType Value="25" Name="User 14" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="26" Name="User 15" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="27" Name="User 16" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
-      <EnumFieldType Value="28" Name="Outside Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
+      <EnumFieldType Value="28" Name="Outside Temperature (F channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="29" Name="Outside Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
-      <EnumFieldType Value="30" Name="Outside Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
+      <EnumFieldType Value="30" Name="Water Temperature (F channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="31" Name="Water Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="50" Name="Tacking Performance" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="%" Bits="16"/>
-      <EnumFieldType Value="52" Name="Magnetic Variation" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="53" Name="Optimum Wind Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="52" Name="Attitude Roll" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="53" Name="Optimum Wind Angle" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="56" Name="User 1" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="57" Name="User 2" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="58" Name="User 3" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
@@ -4582,21 +4582,21 @@ limitations under the License.
       <EnumFieldType Value="64" Name="Forestay" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="32"/>
       <EnumFieldType Value="65" Name="Water Speed" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="68" Name="Yaw Rate" FieldType="NUMBER" Signed="true" Resolution="3.125e-08" Unit="rad/s" Bits="32"/>
-      <EnumFieldType Value="73" Name="Current Set" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="73" Name="Heading" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="77" Name="Wind Speed Apparent" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="79" Name="Wind Speed True" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="81" Name="Wind Angle True" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="83" Name="Target TWA" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="79" Name="Wind Speed Apparent (Knots channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
+      <EnumFieldType Value="81" Name="Wind Angle Apparent" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="83" Name="Target TWA" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="85" Name="Wind Speed True" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="86" Name="Water Temperature" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="89" Name="True Wind Direction" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="86" Name="Wind Speed True 2" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
+      <EnumFieldType Value="89" Name="Wind Angle True" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="100" Name="Trip 1 Speed Avg" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="102" Name="Keel Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="103" Name="Canard Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="104" Name="Keel Trim Tab Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="105" Name="Course" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="109" Name="Wind Direction" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="111" Name="Next Leg AWA" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="105" Name="Course" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="109" Name="True Wind Direction" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="111" Name="Next Leg AWA" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="113" Name="Next Leg AWS" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="117" Name="Race Timer" FieldType="DURATION" Signed="true" Resolution="0.001" Unit="s" Bits="32"/>
       <EnumFieldType Value="124" Name="Polar Performance" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="%" Bits="16"/>
@@ -4606,27 +4606,27 @@ limitations under the License.
       <EnumFieldType Value="129" Name="DR Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="130" Name="Leeway Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="131" Name="Current Drift" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="132" Name="Current Set" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="132" Name="Current Set" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="135" Name="Barometric Pressure" FieldType="NUMBER" Signed="false" Resolution="100" Unit="Pa" Bits="16"/>
       <EnumFieldType Value="152" Name="Distance to Start Line" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="154" Name="Heading on Opposite Tack" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="155" Name="Attitude Roll" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="154" Name="Heading on Opposite Tack" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="155" Name="Attitude Pitch" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="156" Name="Mast Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="157" Name="Wind Angle to Mast" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="157" Name="Wind Angle to Mast" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="158" Name="Pitch Rate" FieldType="NUMBER" Signed="true" Resolution="3.125e-08" Unit="rad/s" Bits="32"/>
       <EnumFieldType Value="163" Name="Daggerboard Position" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="164" Name="Boom Position" FieldType="NUMBER" Signed="false" Bits="16"/>
-      <EnumFieldType Value="185" Name="MOB DR Bearing" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="185" Name="MOB DR Bearing" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="186" Name="MOB DR Range" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="194" Name="Depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="195" Name="Depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
+      <EnumFieldType Value="195" Name="Depth (Fathoms channel)" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="199" Name="Aft Depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="205" Name="Odometer" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="207" Name="Trip Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="208" Name="Trip 2 Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="211" Name="DR Bearing" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="233" Name="Course Over Ground" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="235" Name="Water Speed" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
+      <EnumFieldType Value="211" Name="DR Bearing" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="233" Name="Course Over Ground" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="235" Name="Speed Over Ground" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="239" Name="Remote 0" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="16"/>
       <EnumFieldType Value="240" Name="Remote 1" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="16"/>
       <EnumFieldType Value="241" Name="Remote 2" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="16"/>
@@ -4638,13 +4638,13 @@ limitations under the License.
       <EnumFieldType Value="247" Name="Remote 8" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="16"/>
       <EnumFieldType Value="248" Name="Remote 9" FieldType="NUMBER" Signed="false" Resolution="0.001" Bits="16"/>
       <EnumFieldType Value="256" Name="Layline Time" FieldType="DURATION" Signed="false" Resolution="0.001" Unit="s" Bits="32"/>
-      <EnumFieldType Value="258" Name="Layline Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="259" Name="Layline Distance" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
+      <EnumFieldType Value="258" Name="Layline Distance 1" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
+      <EnumFieldType Value="259" Name="Layline Distance 2" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="260" Name="Sailing Time to Waypoint" FieldType="DURATION" Signed="false" Resolution="0.001" Unit="s" Bits="32"/>
       <EnumFieldType Value="261" Name="Sailing Distance to Waypoint" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="262" Name="Sailing ETA" FieldType="DURATION" Signed="false" Resolution="0.001" Unit="s" Bits="32"/>
-      <EnumFieldType Value="263" Name="Start Line Latitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
-      <EnumFieldType Value="264" Name="Start Line Longitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
+      <EnumFieldType Value="263" Name="MOB DR Latitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
+      <EnumFieldType Value="264" Name="MOB DR Longitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
       <EnumFieldType Value="265" Name="Trip Time" FieldType="DURATION" Signed="false" Resolution="0.001" Unit="s" Bits="32"/>
       <EnumFieldType Value="266" Name="Trip 1 Speed Max" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="267" Name="Trip 2 Time" FieldType="DURATION" Signed="false" Resolution="0.001" Unit="s" Bits="32"/>
@@ -4652,7 +4652,7 @@ limitations under the License.
       <EnumFieldType Value="269" Name="Trip 2 Speed Avg" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="270" Name="Bow Latitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
       <EnumFieldType Value="271" Name="Bow Longitude" FieldType="NUMBER" Signed="true" Resolution="1e-07" Unit="deg" Bits="32"/>
-      <EnumFieldType Value="272" Name="Start Line Bearing" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="272" Name="Start Line Bearing" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="273" Name="Start Line Bias" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="274" Name="Distance to Start Line Port" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="275" Name="Distance to Start Line Starboard" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
@@ -4683,12 +4683,12 @@ limitations under the License.
       <EnumFieldType Value="301" Name="Distance Behind Start Line" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="302" Name="Distance Behind Start Line in Boat Lengths" FieldType="NUMBER" Signed="true" Resolution="0.1" Bits="16"/>
       <EnumFieldType Value="305" Name="Bias Advantage" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="32"/>
-      <EnumFieldType Value="306" Name="Opposite Tack COG" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="307" Name="Opposite Tack Target Heading" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="306" Name="Opposite Tack COG" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="307" Name="Opposite Tack Target Heading" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="308" Name="Mast Rake" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="309" Name="Next Leg Bearing" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="309" Name="Next Leg Bearing" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="310" Name="Next Leg Target Speed" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="m/s" Bits="16"/>
-      <EnumFieldType Value="311" Name="Ground Wind Direction" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="311" Name="Ground Wind Direction" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="312" Name="Ground Wind Speed" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="313" Name="Mast Cant Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="314" Name="Rudder Toe In" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
@@ -4710,7 +4710,7 @@ limitations under the License.
       <EnumFieldType Value="330" Name="User 30" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="331" Name="User 31" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
       <EnumFieldType Value="332" Name="User 32" FieldType="NUMBER" Signed="true" Resolution="0.01" Bits="32"/>
-      <EnumFieldType Value="336" Name="Average True Wind Direction" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="336" Name="Average True Wind Direction" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="337" Name="Wind Phase" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="338" Name="Wind Lift" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="364" Name="Start Line Distance To Port (Boat Lengths)" FieldType="NUMBER" Signed="true" Resolution="0.1" Bits="16"/>
@@ -4719,7 +4719,7 @@ limitations under the License.
       <EnumFieldType Value="381" Name="Gust Bear Away" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="382" Name="TWS Bear Away" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="383" Name="Heel Compensation" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="384" Name="Pilot Net Course" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="384" Name="Pilot Net Course" FieldType="NUMBER" Signed="false" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="385" Name="Pilot Target Wind Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="386" Name="Pilot Weather Helm" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="387" Name="Pilot Mean Heel" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
@@ -28202,7 +28202,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <Length>230</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28300,7 +28300,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>payload</Id>
           <Name>Payload</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1728</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -28606,7 +28606,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>225</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -28654,7 +28654,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1768</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -62095,7 +62095,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>225</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -62143,7 +62143,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Order>4</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1784</BitLength>
+          <BitLength>1768</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -78879,7 +78879,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <Length>230</Length>
+      <Length>223</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -78990,7 +78990,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Id>data</Id>
           <Name>Data</Name>
           <Description>Raw table fragment carried by this part</Description>
-          <BitLength>1784</BitLength>
+          <BitLength>1728</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>

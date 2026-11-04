@@ -7008,7 +7008,7 @@ limitations under the License.
             This
              fast-packet 
             PGN is
-            230
+            223
             bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
@@ -7029,7 +7029,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Opcode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-MARETRON_OPCODE">MARETRON_OPCODE</a></td><td/></tr><tr><td>7</td><td>Payload</td><td/><td/><td>1784 bits
+                      <a href="#lookup-MARETRON_OPCODE">MARETRON_OPCODE</a></td><td/></tr><tr><td>7</td><td>Payload</td><td/><td/><td>1728 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Carling: DC Configuration Command</h3><p>
@@ -7105,7 +7105,7 @@ limitations under the License.
             This
              fast-packet 
             PGN is
-            225
+            223
             bytes long and contains 4 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>798:
@@ -7117,7 +7117,7 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1784 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin: Day Mode</h3><p>
@@ -20337,7 +20337,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             This
              fast-packet 
             PGN is
-            230
+            223
             bytes long and contains 9 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
@@ -20359,7 +20359,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>9</td><td>Data</td><td>Raw table fragment carried by this part</td><td/><td>1784 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>9</td><td>Data</td><td>Raw table fragment carried by this part</td><td/><td>1728 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
             PGN 130824
             - B&amp;G: key-value data</h3><p>
@@ -24986,13 +24986,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>27</td><td>User 16</td><td>0.01 </td><td>32 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>28</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>28</td><td>Outside Temperature (F channel)</td><td>0.01 K</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>29</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Water Temperature (F channel)</td><td>0.01 K</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>31</td><td>Water Temperature</td><td>0.01 K</td><td>16 bits 
@@ -25001,12 +25001,12 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>50</td><td>Tacking Performance</td><td>0.1 %</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Magnetic Variation</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Attitude Roll</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>53</td><td>Optimum Wind Angle</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>56</td><td>User 1</td><td>0.01 </td><td>32 bits 
               
                     signed
@@ -25031,30 +25031,30 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>68</td><td>Yaw Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>73</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>73</td><td>Heading</td><td>0.0001 rad</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>77</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed Apparent (Knots channel)</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle Apparent</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>83</td><td>Target TWA</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>85</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Water Temperature</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Wind Speed True 2</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Trip 1 Speed Avg</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
@@ -25069,13 +25069,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>105</td><td>Course</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>109</td><td>Wind Direction</td><td>0.0001 rad</td><td>16 bits 
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>109</td><td>True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>111</td><td>Next Leg AWA</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>113</td><td>Next Leg AWS</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
@@ -25105,7 +25105,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>132</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>135</td><td>Barometric Pressure</td><td>100 Pa</td><td>16 bits 
               
                     unsigned
@@ -25114,8 +25114,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>154</td><td>Heading on Opposite Tack</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Roll</td><td>0.0001 rad</td><td>16 bits 
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Pitch</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>156</td><td>Mast Angle</td><td>0.0001 rad</td><td>16 bits 
@@ -25123,7 +25123,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>157</td><td>Wind Angle to Mast</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
               
                     signed
@@ -25135,14 +25135,14 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>185</td><td>MOB DR Bearing</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>186</td><td>MOB DR Range</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>194</td><td>Depth</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>195</td><td>Depth</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>195</td><td>Depth (Fathoms channel)</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>199</td><td>Aft Depth</td><td>0.01 m</td><td>32 bits 
@@ -25159,11 +25159,11 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>211</td><td>DR Bearing</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>233</td><td>Course Over Ground</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Speed Over Ground</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>239</td><td>Remote 0</td><td>0.001 </td><td>16 bits 
@@ -25199,10 +25199,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>256</td><td>Layline Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>258</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>258</td><td>Layline Distance 1</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>259</td><td>Layline Distance 2</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>260</td><td>Sailing Time to Waypoint</td><td>0.001 s</td><td>32 bits 
@@ -25214,10 +25214,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>262</td><td>Sailing ETA</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>263</td><td>Start Line Latitude</td><td>1e-07 deg</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>263</td><td>MOB DR Latitude</td><td>1e-07 deg</td><td>32 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>Start Line Longitude</td><td>1e-07 deg</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>MOB DR Longitude</td><td>1e-07 deg</td><td>32 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 s</td><td>32 bits 
@@ -25243,7 +25243,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>272</td><td>Start Line Bearing</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>273</td><td>Start Line Bias</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
@@ -25336,22 +25336,22 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>306</td><td>Opposite Tack COG</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>307</td><td>Opposite Tack Target Heading</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>308</td><td>Mast Rake</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>309</td><td>Next Leg Bearing</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>310</td><td>Next Leg Target Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>311</td><td>Ground Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>312</td><td>Ground Wind Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     signed
@@ -25417,7 +25417,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>336</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>337</td><td>Wind Phase</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
@@ -25444,7 +25444,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>384</td><td>Pilot Net Course</td><td>0.0001 rad</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>385</td><td>Pilot Target Wind Angle</td><td>0.0001 rad</td><td>16 bits 
               
                     signed

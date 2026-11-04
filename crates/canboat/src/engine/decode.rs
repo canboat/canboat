@@ -1320,6 +1320,35 @@ pub(crate) fn field_present(condition: Option<&str>, target_pgn: Option<u32>) ->
 /// parameters name no variant, such as a Raymarine request whose
 /// proprietary ID none of Raymarine's 126720 variants carries, that is
 /// the normal outcome, and the caller uses the catch-all.
+/// The field of `info` that a group function parameter addresses: `index`
+/// is the parameter's field number, 1-based. A number past the fixed fields
+/// continues into the definition's repeating set, as its fields repeat,
+/// when it has one set and that set ends the definition (canboat#1132),
+/// as the C's `getParameterField` does.
+pub(crate) fn parameter_field(info: &'static PgnInfo, index: u32) -> Option<&'static FieldInfo> {
+    let by_order = |n: u32| info.fields.iter().find(|f| f.order as u32 == n);
+    let fixed = info.fields.len() as u32;
+    if index == 0 {
+        return None;
+    }
+    if index <= fixed {
+        return by_order(index);
+    }
+    let (Some(start), Some(count)) = (
+        info.repeating_field_set1_start_field,
+        info.repeating_field_set1_size,
+    ) else {
+        return None;
+    };
+    if count == 0
+        || info.repeating_field_set2_size.is_some_and(|n| n > 0)
+        || start + count - 1 != fixed
+    {
+        return None;
+    }
+    by_order((index - start) % count + start)
+}
+
 fn match_pgn_by_parameters(
     db: &PgnDatabase,
     pgn_id: u32,
@@ -1353,12 +1382,11 @@ fn match_pgn_by_parameters(
             if d >= params.len() {
                 break; // truncated list: what was there matched
             }
-            let index = params[d] as usize;
+            let index = params[d];
             d += 1;
-            if index == 0 || index > cand.fields.len() {
+            let Some(field) = parameter_field(cand, u32::from(index)) else {
                 continue 'variant;
-            }
-            let field = &cand.fields[index - 1];
+            };
             let bits = field.bit_length.unwrap_or(0) as usize;
             if let Some(want) = field.match_value {
                 let Some(ex) = extract_bits(params, d * 8, bits, field.signed.unwrap_or(false), 0)
@@ -1426,10 +1454,7 @@ fn decode_variable(
             r
         }
     };
-    let target_field = target_info
-        .fields
-        .iter()
-        .find(|tf| (tf.order as u32) == target_idx)?;
+    let target_field = parameter_field(target_info, target_idx)?;
     // The catch-all's trailing `Data` field is variable-length with nothing to
     // size it, so the value is the rest of the message -- for a request or
     // command that reads as "the field starts with these bytes". Only when we
@@ -1754,6 +1779,9 @@ fn decode_reserved(
     offset_k: i64,
     is_reserved: bool,
 ) -> FieldValue {
+    if bit_length > 64 {
+        return decode_wide_reserved(data, bit_offset, bit_length, is_reserved);
+    }
     let Some(ex) = extract_bits(
         data,
         bit_offset as usize,
@@ -1798,6 +1826,50 @@ fn decode_reserved(
     } else {
         FieldValue::Spare {
             value: raw,
+            bytes,
+            bit_length,
+        }
+    }
+}
+
+/// A RESERVED or SPARE field wider than the 64 bits [`extract_bits`] reads,
+/// such as 130816's 144-bit Reserved: tested 64 bits at a time, then printed
+/// as bytes like any other. There is no single raw value, so `value` folds
+/// the chunks: ANDed for Reserved (all ones only when every bit is) and ORed
+/// for Spare (zero only when every bit is), which is what the formatters
+/// test to leave the field out. A field the payload ends inside is left
+/// out, as a narrower one is.
+fn decode_wide_reserved(
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+    is_reserved: bool,
+) -> FieldValue {
+    let (mut all, mut any) = (u64::MAX, 0u64);
+    let mut at = 0;
+    while at < bit_length {
+        let n = (bit_length - at).min(64);
+        let Some(ex) = extract_bits(data, (bit_offset + at) as usize, n as usize, false, 0) else {
+            return FieldValue::NotAvailable;
+        };
+        all &= if ex.value == ex.max { u64::MAX } else { ex.raw };
+        any |= ex.raw;
+        at += n;
+    }
+    let bytes = match decode_binary(data, bit_offset, bit_length) {
+        FieldValue::Binary(b) => b,
+        _ => Vec::new(),
+    };
+    if is_reserved {
+        let bytes = if all == u64::MAX { Vec::new() } else { bytes };
+        FieldValue::Reserved {
+            value: all,
+            bytes,
+            bit_length,
+        }
+    } else {
+        FieldValue::Spare {
+            value: any,
             bytes,
             bit_length,
         }
@@ -1964,7 +2036,9 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length == 0 {
         return FieldValue::NotAvailable;
     }
-    let nbytes = bit_length.div_ceil(8);
+    // Every byte the field touches, including the one holding its high
+    // bits when it starts mid-byte and crosses into the next.
+    let nbytes = (start_bit + bit_length).div_ceil(8);
     let mut out = Vec::with_capacity(nbytes);
     let mut remaining = bit_length as isize;
     for i in 0..nbytes {
@@ -2962,6 +3036,20 @@ mod tests {
     }
 
     #[test]
+    fn unaligned_binary_crossing_a_byte_keeps_its_high_bits() {
+        // 8 bits from bit 51 (as 129814's reserved8): bits 3-7 of the first
+        // byte printed in place, then the low 3 bits of the next.
+        let data = [0, 0, 0, 0, 0, 0, 0xf0, 0x07];
+        let bytes = |v| match v {
+            FieldValue::Binary(b) => b,
+            other => panic!("{other:?}"),
+        };
+        assert_eq!(bytes(decode_binary(&data, 51, 8)), [0xf0, 0x07]);
+        // One that fits in its byte stays one byte.
+        assert_eq!(bytes(decode_binary(&data, 52, 4)), [0xf0]);
+    }
+
+    #[test]
     fn a_split_value_without_its_high_bits_is_left_out() {
         // A DM1 whose second DTC ends after the SPN's low 16 bits: its 3
         // high bits are missing, so that SPN is left out, as in C.
@@ -3359,6 +3447,45 @@ mod tests {
     }
 
     #[test]
+    fn an_unsigned_angle_key_value_reads_past_180_degrees() {
+        // A B&G key-value frame (merrimac-2022.raw) whose `Heading on
+        // Opposite Tack` (154) is raw 0x8858 and `Wind Angle to Mast`
+        // (157) raw 0xa61c. Both keys are ANGLE_UFIX16, so they read
+        // 200.0° and 243.6°, as the C analyzer prints them, not the
+        // -175.5° and -131.8° of a signed read.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x7d, 0x99, 0x64, 0x20, 0x53, 0x00, 0x0d, 0x21, 0x67, 0x00, 0x0e, 0x41, 0x6d, 0xa1,
+            0xb2, 0x1f, 0x0f, 0x41, 0x9c, 0x51, 0x3c, 0x03, 0x69, 0x20, 0x5f, 0x7a, 0xd3, 0x20,
+            0x38, 0x21, 0x81, 0x40, 0x70, 0xd3, 0x02, 0x00, 0x9a, 0x20, 0x58, 0x88, 0x82, 0x20,
+            0x00, 0x00, 0x0a, 0x21, 0x98, 0x02, 0x0c, 0x21, 0xb8, 0x02, 0x75, 0x40, 0x20, 0x6c,
+            0xfb, 0xff, 0x09, 0x41, 0xff, 0xff, 0xff, 0xff, 0x0b, 0x41, 0xff, 0xff, 0xff, 0xff,
+            0xd0, 0x40, 0x30, 0x0e, 0xa4, 0x0d, 0x7f, 0x20, 0x00, 0x00, 0x9d, 0x20, 0x1c, 0xa6,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let mut key = None;
+        let mut angles = Vec::new();
+        for f in &dec.fields {
+            match (f.info.name, &f.value) {
+                ("Key", FieldValue::Lookup { value, .. }) => key = Some(*value),
+                ("Value", FieldValue::Number(v)) if matches!(key, Some(154 | 157)) => {
+                    angles.push((key.unwrap(), (v * 10.0).round() / 10.0));
+                }
+                _ => {}
+            }
+        }
+        assert_eq!(angles, vec![(154, 200.0), (157, 243.6)]);
+    }
+
+    #[test]
     fn dynamic_length_overhead_sizes_130823_records() {
         // A reassembled PGN 130823 directory report (the first record
         // of samples/navico-130823.raw). Each entry is
@@ -3485,6 +3612,60 @@ mod tests {
         // so the caller has to fall back rather than pick a layout.
         let params = [1u8, 0x04, 0x00];
         assert!(match_pgn_by_parameters(db(), 126720, &params).is_none());
+    }
+
+    /// A parameter past a variant's fixed fields addresses its repeating
+    /// set: an Airmar Calibrate Speed command that sets 8 pairs of data
+    /// points matches Calibrate Speed, not the catch-all (canboat#1132).
+    #[test]
+    fn parameters_in_a_repeating_set_match_the_variant() {
+        let speed = db()
+            .pgns()
+            .find(|p| p.id == "airmarCalibrateSpeed")
+            .unwrap();
+        assert_eq!(
+            parameter_field(speed, 5).unwrap().id,
+            "numberOfPairsOfDataPoints"
+        );
+        for (index, id) in [
+            (6, "inputFrequency"),
+            (7, "outputSpeed"),
+            (8, "inputFrequency"),
+            (21, "outputSpeed"),
+        ] {
+            assert_eq!(
+                parameter_field(speed, index).unwrap().id,
+                id,
+                "parameter {index}"
+            );
+        }
+        assert!(parameter_field(speed, 0).is_none());
+        let heading = db().first_pgn(127250).unwrap();
+        assert!(
+            parameter_field(heading, heading.fields.len() as u32 + 1).is_none(),
+            "no repeating set"
+        );
+
+        let data: Vec<u8> = [
+            0x01, 0x00, 0xef, 0x01, 0xf8, 0x14, 0x01, 0x87, 0x00, 0x03, 0x04, 0x04, 0x29, 0x05,
+            0x08, 0x06, 0xa0, 0x00, 0x07, 0xec, 0x13, 0x08, 0xbc, 0x02, 0x09, 0xd8, 0x27, 0x0a,
+            0x5e, 0x06, 0x0b, 0x14, 0x50, 0x0c, 0x38, 0x09, 0x0d, 0x50, 0x78, 0x0e, 0x54, 0x0b,
+            0x0f, 0x8c, 0xa0, 0x10, 0x48, 0x0d, 0x11, 0x04, 0xf1, 0x12, 0x20, 0x0d, 0x13, 0xd0,
+            0x02, 0x14, 0x30, 0x0c, 0x15, 0x37, 0x03,
+        ]
+        .to_vec();
+        let decoded = db()
+            .decode(&RawFrame::new(None, 3, 126208, 0, 35, data))
+            .unwrap();
+        let values: Vec<String> = decoded
+            .fields
+            .iter()
+            .filter(|f| f.info.field_type == Some(FieldType::Variable))
+            .map(|f| format!("{:?}", f.value))
+            .collect();
+        assert_eq!(values.len(), 20, "{values:?}");
+        assert!(values[2].contains("Calibrate Speed"), "{values:?}");
+        assert!(values[3].contains('8'), "number of pairs: {values:?}");
     }
 
     #[test]

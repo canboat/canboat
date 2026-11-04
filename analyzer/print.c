@@ -894,6 +894,69 @@ extern bool fieldPrintDecimal(const Field   *field,
   return true;
 }
 
+/*
+ * Whether the lookup of key field `field` gives the name of `value` to
+ * another code as well, as B&G's keys 28, 29 and 30 are each "Outside
+ * Temperature". Plain JSON then writes the code, so that the records of
+ * those keys can be told apart. Each lookup is scanned once.
+ */
+static bool lookupNameIsShared(const Field *field, int64_t value)
+{
+  static struct
+  {
+    const char *(*function)(size_t);
+    size_t   codes;
+    uint8_t *shared;
+  } cache[32];
+  static size_t cached;
+
+  const char *(*function)(size_t) = field->lookup.function.pair;
+  size_t i;
+
+  if (field->size > 16)
+  {
+    return false;
+  }
+  for (i = 0; i < cached && cache[i].function != function; i++)
+    ;
+  if (i == cached)
+  {
+    const Field *ftf = g_ftf; /* a FIELDTYPE lookup sets g_ftf; keep it */
+    size_t       codes = (size_t) 1 << field->size;
+    uint8_t     *shared;
+    size_t       a, b;
+
+    if (cached == sizeof cache / sizeof cache[0] || (shared = calloc(codes, 1)) == NULL)
+    {
+      return false;
+    }
+    for (a = 0; a < codes; a++)
+    {
+      const char *name = function(a);
+
+      if (name == NULL || shared[a])
+      {
+        continue;
+      }
+      for (b = a + 1; b < codes; b++)
+      {
+        const char *other = function(b);
+
+        if (other != NULL && strcmp(name, other) == 0)
+        {
+          shared[a] = shared[b] = 1;
+        }
+      }
+    }
+    g_ftf             = ftf;
+    cache[i].function = function;
+    cache[i].codes    = codes;
+    cache[i].shared   = shared;
+    cached++;
+  }
+  return value >= 0 && (size_t) value < cache[i].codes && cache[i].shared[value];
+}
+
 extern bool fieldPrintLookup(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
@@ -978,6 +1041,12 @@ extern bool fieldPrintLookup(const Field   *field,
     if (showJsonValue)
     {
       mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
+    }
+    else if (showJson && field->partOfPrimaryKey && !field->hasMatchValue
+             && (field->lookup.type == LOOKUP_TYPE_PAIR || field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
+             && lookupNameIsShared(field, value))
+    {
+      mprintf("%" PRId64, value);
     }
     else if (showJson)
     {
@@ -1145,6 +1214,31 @@ extern bool fieldPrintPGN(const Field   *field,
  * Only print reserved fields if they are NOT all ones, in that case we have an incorrect
  * PGN definition.
  */
+/*
+ * For a reserved or spare field wider than the 64 bits extractNumber reads
+ * (130816 has a 144-bit one): whether all its bits are set (ones) or all
+ * clear (!ones). False when the field runs past the end of the data.
+ */
+static bool fieldBitsAllAre(const uint8_t *data, size_t dataLen, size_t startBit, size_t bits, bool ones, bool *same)
+{
+  size_t i;
+
+  if (startBit + bits > dataLen * 8)
+  {
+    return false;
+  }
+  *same = true;
+  for (i = startBit; i < startBit + bits; i++)
+  {
+    if (((data[i >> 3] >> (i & 7)) & 1) != (ones ? 1 : 0))
+    {
+      *same = false;
+      break;
+    }
+  }
+  return true;
+}
+
 extern bool fieldPrintReserved(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
@@ -1154,7 +1248,17 @@ extern bool fieldPrintReserved(const Field   *field,
 {
   int64_t value;
   int64_t maxValue;
+  bool    same;
 
+  if (*bits > 64)
+  {
+    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, true, &same) || same)
+    {
+      g_skip = true;
+      return true;
+    }
+    return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+  }
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     // A trailing reserved field that runs off the end of a slightly short
@@ -1184,7 +1288,17 @@ extern bool fieldPrintSpare(const Field   *field,
 {
   int64_t value;
   int64_t maxValue;
+  bool    same;
 
+  if (*bits > 64)
+  {
+    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, false, &same) || same)
+    {
+      g_skip = true;
+      return true;
+    }
+    return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+  }
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
     // A trailing spare field that runs off the end of a slightly short
@@ -2181,7 +2295,9 @@ extern bool fieldPrintBinary(const Field   *field,
   }
   remaining_bits = *bits;
   s              = "";
-  for (i = 0; i < (*bits + 7) >> 3; i++)
+  // Every byte the field touches, including the one holding its high bits
+  // when it starts mid-byte and crosses into the next.
+  for (i = 0; *bits != 0 && i < (startBit + *bits + 7) >> 3; i++)
   {
     uint8_t byte = data[i];
 

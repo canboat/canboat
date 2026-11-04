@@ -3421,7 +3421,7 @@ Pgn pgnList[] = {
       {.name = "Product code", .camelName = "productCode", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMARETRON_PRODUCT_CODE, .lookup.name = "MARETRON_PRODUCT_CODE"},
       {.name = "Software code", .camelName = "softwareCode", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMARETRON_OPCODE, .lookup.name = "MARETRON_OPCODE"},
-      {.name = "Payload", .camelName = "payload", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
+      {.name = "Payload", .camelName = "payload", .fieldType = "BINARY", .size = 1728, .resolution = 1.0}
      },
      .camelDescription = "maretronProprietaryConfiguration"},
 
@@ -3459,7 +3459,7 @@ Pgn pgnList[] = {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 798, .description = "Lumishore", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}
      },
      .camelDescription = "lumishoreProprietary"},
 
@@ -7517,7 +7517,7 @@ Pgn pgnList[] = {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}
      },
      .camelDescription = "0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed",
      .fallback = true,
@@ -9601,7 +9601,7 @@ Pgn pgnList[] = {
       {.name = "Report Type", .camelName = "reportType", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 15, .description = "Boat-speed polar / performance table"},
       {.name = "Part", .camelName = "part", .fieldType = "UINT8", .resolution = 1.0, .description = "Part number; the table is split across several parts that must be concatenated in order"},
       {.name = "Spare", .camelName = "spare8", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0, .description = "Raw table fragment carried by this part"}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1728, .resolution = 1.0, .description = "Raw table fragment carried by this part"}
      },
      .camelDescription = "navicoBoatSpeedPolarTable",
      .explanation = "Boat-speed (target performance) polar table, produced only by the B&G Hercules performance processor. It is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a 3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is 8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is Hercules-only; NEON displays emit the Report Type 5 data-type directory instead."},
