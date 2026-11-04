@@ -182,7 +182,7 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
                 }
                 continue;
             }
-            match frame_from_json(self.db, line) {
+            match decoded_frame_from_json(self.db, line) {
                 Ok(Some(frame)) => return Ok(Some(frame)),
                 Ok(None) => continue,
                 Err(e) => {
@@ -197,6 +197,25 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
 /// Encode one analyzer-JSON line. `Ok(None)` for records that are not
 /// messages (the `{"version":…}` startup header).
 pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<RawFrame>> {
+    frame_from_json_as(db, line, false)
+}
+
+/// [`frame_from_json`] for a record canboat decoded, as `convert --from
+/// json` reads it: a key/value value the decoder left out is written as it
+/// was left out ([`PgnBuilder::read_as_decoded`]). Not for a command meant for
+/// the bus, where a value forgotten should be an error.
+pub(crate) fn decoded_frame_from_json(
+    db: &'static PgnDatabase,
+    line: &str,
+) -> Result<Option<RawFrame>> {
+    frame_from_json_as(db, line, true)
+}
+
+fn frame_from_json_as(
+    db: &'static PgnDatabase,
+    line: &str,
+    decoded: bool,
+) -> Result<Option<RawFrame>> {
     let root: Value = serde_json::from_str(line).context("parsing JSON")?;
     let root = root
         .as_object()
@@ -254,6 +273,9 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
         }
     };
 
+    if decoded {
+        builder = builder.read_as_decoded();
+    }
     if let Some(p) = record.get("prio").and_then(Value::as_u64) {
         builder = builder.priority(p as u8);
     }
@@ -489,9 +511,12 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
             Ok(EncodeValue::Text(s.to_string()))
         }
-        Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
-            Ok(EncodeValue::Bytes(parse_hex(s)?))
-        }
+        Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
+        // A key/value value is its bytes as hex, or a lookup name or time
+        // ("Off", "10:00:00") that the record's key gives meaning to.
+        Some(FieldType::DynamicFieldValue) => Ok(parse_hex(s)
+            .map(EncodeValue::Bytes)
+            .unwrap_or_else(|_| EncodeValue::Text(s.to_string()))),
         // A Reserved or Spare field printed as hex (one that isn't all
         // ones, or for spare all zeros): the encoder writes the bytes back
         // where the decoder found them.
@@ -843,6 +868,116 @@ mod tests {
             })
             .collect();
         assert_eq!(prns, vec![7, 11]);
+    }
+
+    /// Key/value records whose values are typed by their key decode and
+    /// encode back to the same bytes, from the -nv JSON and from the
+    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
+    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
+    /// and a Navico 130822 Object Dump whose last record the frame cuts off
+    /// (canboat#1114).
+    #[test]
+    fn key_value_records_encode_back() {
+        let frames: [(u32, &str); 4] = [
+            (
+                130824,
+                "7d,99,2b,41,26,24,ad,0c,2c,41,3f,75,b8,63,37,21,d1,35,38,21,bb,03,7e,20,9b,01,7c,20,f8,03,32,21,e4,a0,33,21,29,cd,1d,21,87,03",
+            ),
+            (
+                130824,
+                "7d,99,64,20,57,01,0d,21,48,01,0e,41,40,4e,57,12,0f,41,82,96,82,59,69,20,ef,d7,d3,20,94,c8,81,40,20,1c,00,00,9a,20,e5,9f,82,20,00,00,0a,21,80,01,0c,21,4f,02,35,20,7c,d9,7d,20,8a,01,53,20,b7,7a,75,40,e6,b2,fc,ff,09,41,46,34,03,00,0b,41,ff,ff,ff,ff,d0,40,70,89,a0,0d,1d,21,db,02,7f,20,20,01,9d,20,92,4b",
+            ),
+            // Two bytes past the 16-bit value are left out by the decoder.
+            (130845, "41,9f,ff,ff,02,ff,29,00,00,01,58,02"),
+            (
+                130822,
+                "13,99,ff,06,00,05,03,e8,52,0f,01,00,37,e1,04,02,01,00,00,04,02,21,00,00,04,02",
+            ),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 3, pgn, 30, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
+                    .unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+            }
+        }
+    }
+
+    /// A value the decoder left out is written as it was left out only
+    /// when reading what canboat decoded (`convert --from json`); for a
+    /// command meant for the bus (`interface`) it is an error, so a value
+    /// forgotten is not sent as "unknown".
+    /// A key/value value written as its lookup name, as plain JSON has
+    /// it, encodes by the record's key; one given as hex is its bytes.
+    #[test]
+    fn a_key_value_value_by_its_name_encodes_by_its_key() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let record = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":53760,"operation":1,"value":{value}}}}}"#
+            )
+        };
+        let by_name = frame_from_json(db, &record(r#""On""#)).unwrap().unwrap();
+        let by_hex = frame_from_json(db, &record(r#""01""#)).unwrap().unwrap();
+        assert_eq!(by_name.data, by_hex.data);
+        assert_eq!(by_name.data[by_name.data.len() - 1], 0x01);
+    }
+
+    /// A key given by its name encodes as its code; a name the lookup
+    /// does not have is refused.
+    #[test]
+    fn a_key_by_its_name_encodes_as_its_code() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":"Outside Temperature (F channel)","length":2,"value":288.15}]}}"#;
+        let by_name = frame_from_json(db, line).unwrap().unwrap();
+        let by_code = line.replace(r#""Outside Temperature (F channel)""#, "28");
+        let by_code = frame_from_json(db, &by_code).unwrap().unwrap();
+        assert_eq!(by_name.data, by_code.data);
+        let unknown = line.replace("Outside Temperature (F channel)", "No Such Key");
+        assert!(frame_from_json(db, &unknown).is_err());
+    }
+
+    /// A record whose length leaves no value bytes, its value left out,
+    /// writes nothing for it rather than failing.
+    #[test]
+    fn a_zero_length_value_left_out_writes_nothing() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":11,"length":0},{"key":11,"length":2,"value":0}]}}"#;
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(
+            frame.data[..],
+            [0x7d, 0x99, 0x0b, 0x00, 0x0b, 0x20, 0x00, 0x00]
+        );
+    }
+
+    #[test]
+    fn a_value_left_out_is_an_error_unless_read_as_decoded() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // B&G 130824, Trip 2 Time (key 267) without its value.
+        let line = r#"{"prio":3,"src":38,"dst":255,"pgn":130824,"fields":{"manufacturerCode":381,"industryCode":4,"list":[{"key":105,"length":2,"value":5.2575},{"key":267,"length":4}]}}"#;
+        assert!(frame_from_json(db, line).is_err());
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[frame.data.len() - 4..], [0xff; 4]);
+        // A signed value's unknown is its largest positive value: Simnet
+        // 130845's Timezone offset (key 41) left out decodes left out
+        // again, not as -1 minute.
+        let line = r#"{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":41,"operation":1}}"#;
+        let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(frame.data[frame.data.len() - 2..], [0xff, 0x7f]);
     }
 
     #[test]
