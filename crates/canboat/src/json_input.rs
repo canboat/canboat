@@ -364,7 +364,9 @@ fn stage_fields(
     // A record carrying neither the count field nor its list encodes
     // a count of zero — the builder's auto-fill. canboat#812 settled
     // this: zero over the unavailable sentinel (canboatjs writes
-    // unavailable; that difference is canboatjs-side now).
+    // unavailable; that difference is canboatjs-side now). Read as
+    // decoded, a count left out was not a number, so it stays
+    // unavailable.
     Ok(())
 }
 
@@ -978,6 +980,21 @@ mod tests {
         let line = r#"{"prio":3,"src":30,"dst":255,"pgn":130845,"fields":{"manufacturerCode":1857,"industryCode":4,"address":255,"networkGroup":2,"key":41,"operation":1}}"#;
         let frame = decoded_frame_from_json(db, line).unwrap().unwrap();
         assert_eq!(frame.data[frame.data.len() - 2..], [0xff, 0x7f]);
+    }
+
+    /// A count the decoder left out, as 129029's Reference Stations when
+    /// it is 0xff, is written back as 0xff when reading what canboat
+    /// decoded; a record written by hand still gets the number of its
+    /// instances (canboat#812).
+    #[test]
+    fn a_count_left_out_is_unavailable_when_read_as_decoded() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"prio":3,"src":21,"dst":255,"pgn":129029,"fields":{"sid":196,"gnssType":0,"method":0,"integrity":0,"numberOfSvs":9}}"#;
+        let decoded = decoded_frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(decoded.data.len(), 43);
+        assert_eq!(decoded.data[42], 0xff);
+        let by_hand = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(by_hand.data[42], 0x00);
     }
 
     #[test]

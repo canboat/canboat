@@ -378,7 +378,9 @@ impl PgnBuilder {
     /// Encode a record as canboat decoded it, for `convert --from json`:
     /// a key/value value the decoder left out as "unknown" is written as
     /// all ones, and the last record of the message may stop short, as
-    /// one cut off by the end of the frame decodes (canboat#1114).
+    /// one cut off by the end of the frame decodes, and a repeating set's
+    /// count left out is unavailable rather than the number of instances
+    /// (canboat#1114).
     /// Without it, as for a command meant for the bus, such a value left
     /// unset is refused.
     pub(crate) fn read_as_decoded(mut self) -> Self {
@@ -752,12 +754,14 @@ impl PgnBuilder {
             }
             // A declared count field left unset takes the number of
             // staged instances for its set (0 when none were added — a
-            // zero-iteration message, not "unavailable").
+            // zero-iteration message, not "unavailable"). Not in a record
+            // as canboat decoded it: the decoder leaves a count out only
+            // when it was not a number, so it is written as unavailable.
             let auto_count = [(&set1, &self.sets[0]), (&set2, &self.sets[1])]
                 .into_iter()
                 .find_map(|(layout, instances)| match *layout {
                     Some((_, _, Some(count_idx)))
-                        if count_idx == idx && self.staged[idx].is_none() =>
+                        if count_idx == idx && self.staged[idx].is_none() && !self.decoded =>
                     {
                         Some(Staged::Scalar(instances.len() as u64))
                     }
