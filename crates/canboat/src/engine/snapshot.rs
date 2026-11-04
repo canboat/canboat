@@ -869,47 +869,61 @@ mod tests {
         }
     }
 
-    /// B&G keys 28, 29 and 30 are each "Outside Temperature": with
-    /// `--no-nv` such a key is written as its code, so their records stay apart,
-    /// keyed as with `-nv`. A key whose name is its own is the name alone.
+    /// With `--no-nv` a key whose name its lookup gives to more than one
+    /// code is written as its code, so the records stay apart, keyed as
+    /// with `-nv`. No key in the database shares a name today, so this
+    /// takes 126720 Seatalk Pilot Auto Turn's command, "Auto Turn" (38, a
+    /// name SEATALK_COMMAND also gives 17), without the match value that
+    /// otherwise names it.
     #[test]
     fn a_shared_key_name_keeps_its_code_without_name_value() {
         let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
-        // 130824 B&G: keys 28 and 29, then 11 (Rudder Angle), each 2 bytes.
-        let data = [
-            0x7d, 0x99, 0x1c, 0x20, 0x10, 0x72, 0x1d, 0x20, 0x10, 0x72, 0x0b, 0x20, 0x00, 0x00,
-        ];
-        let frame = crate::engine::RawFrame::new(None, 3, 130824, 15, 255, data.to_vec());
-        let decoded = db.decode(&frame).unwrap();
-        let mut keys = Vec::new();
-        let mut no_nv = String::new();
-        for name_value in [true, false] {
+        let data = [0x3b, 0x9f, 0x6c, 0x26, 0x00, 0x01, 0x00, 0x00, 0x00];
+        let frame = crate::engine::RawFrame::new(None, 3, 126720, 15, 255, data.to_vec());
+        let mut decoded = db.decode(&frame).unwrap();
+        let command = decoded
+            .fields
+            .iter_mut()
+            .find(|f| f.info.name == "command")
+            .unwrap();
+        command.info = Box::leak(Box::new(crate::engine::FieldInfo {
+            match_value: None,
+            ..*command.info
+        }));
+        for debug in [false, true] {
             let opts = crate::engine::output::JsonOptions {
-                name_value,
+                name_value: false,
+                debug,
                 ..Default::default()
             };
             let mut line = String::new();
             crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
-            let mut these = Vec::new();
-            classify_json_line(&line, |input| these.push(input.secondary));
-            keys.push(these);
-            no_nv = line;
+            let code = if debug {
+                r#""command":{"value":38"#
+            } else {
+                r#""command":38"#
+            };
+            assert!(line.contains(code), "{line}");
         }
-        assert_eq!(keys[0], keys[1]);
-        assert_eq!(keys[0].len(), 3);
-        assert_ne!(keys[0][0], keys[0][1]);
-        assert!(no_nv.contains(r#""key":"Rudder Angle""#), "{no_nv}");
+    }
 
-        // --debug writes each value through its own writer, which keeps
-        // the codes too.
+    /// A key whose name is its own is written as the name: B&G key 28.
+    #[test]
+    fn a_key_name_of_its_own_is_written_as_the_name() {
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+        let data = [0x7d, 0x99, 0x1c, 0x20, 0x10, 0x72];
+        let frame = crate::engine::RawFrame::new(None, 3, 130824, 15, 255, data.to_vec());
+        let decoded = db.decode(&frame).unwrap();
         let opts = crate::engine::output::JsonOptions {
             name_value: false,
-            debug: true,
             ..Default::default()
         };
-        let mut debug = String::new();
-        crate::engine::output::write_json(&mut debug, &decoded, &opts).unwrap();
-        assert!(!debug.contains("Outside Temperature"), "{debug}");
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+        assert!(
+            line.contains(r#""key":"Outside Temperature (F channel)""#),
+            "{line}"
+        );
     }
 
     #[test]
