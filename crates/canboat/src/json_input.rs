@@ -981,20 +981,27 @@ mod tests {
         assert_eq!(digits.data, bare.data);
 
         // Digits too big for an unscaled key are refused, as the number is:
-        // B&G key 0 (Altitude) is a signed 16-bit number.
+        // B&G key 0 (Altitude) is a signed 16-bit number, whose top three
+        // values, 32765 to 32767, are its sentinels.
         let altitude = |value: &str| {
             format!(
                 r#"{{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{{"manufacturerCode":381,"industryCode":4,"list":[{{"key":0,"length":2,"value":{value}}}]}}}}"#
             )
         };
-        assert!(frame_from_json(db, &altitude("32768")).is_err());
-        assert!(frame_from_json(db, &altitude(r#""32768""#)).is_err());
+        for sentinel in ["32765", "32767", "32768"] {
+            assert!(
+                frame_from_json(db, &altitude(sentinel)).is_err(),
+                "{sentinel}"
+            );
+            let digits = format!(r#""{sentinel}""#);
+            assert!(frame_from_json(db, &altitude(&digits)).is_err(), "{digits}");
+        }
         assert_eq!(
-            frame_from_json(db, &altitude(r#""32767""#))
+            frame_from_json(db, &altitude(r#""32764""#))
                 .unwrap()
                 .unwrap()
                 .data,
-            frame_from_json(db, &altitude("32767"))
+            frame_from_json(db, &altitude("32764"))
                 .unwrap()
                 .unwrap()
                 .data

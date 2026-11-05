@@ -1144,6 +1144,17 @@ impl PgnBuilder {
             return Err(mismatch);
         };
         let signed = dynamic_signed(e);
+        // The top values of the width are not values but "unknown", "out of
+        // range" and "reserved", as for a number of that width anywhere
+        // (C's reservedCountForSize): a value is refused there, as a
+        // field's own range refuses it. Raw wire bits above still reach
+        // them.
+        let reserved: u64 = match bits {
+            8.. => 3,
+            4.. => 2,
+            2.. => 1,
+            _ => 0,
+        };
         // An unscaled whole number stays exact: f64 would round a 64-bit one.
         if let EncodeValue::Int(i) = v
             && e.resolution.unwrap_or(1.0) == 1.0
@@ -1155,6 +1166,7 @@ impl PgnBuilder {
             } else {
                 (0, 1i128 << bits)
             };
+            let max_excl = max_excl - i128::from(reserved);
             if !(min..max_excl).contains(&i) {
                 return Err(EncodeError::ValueOutOfRange {
                     field: f.name,
@@ -1173,8 +1185,9 @@ impl PgnBuilder {
             // value in the key's unit, as a bare number is.
             EncodeValue::Text(s) if !is_time && let Ok(n) = s.parse::<u64>() => {
                 if e.resolution.unwrap_or(1.0) == 1.0 && e.unit_offset == 0.0 {
-                    // The largest value the key's width holds, as for an Int.
-                    let max = if signed { mask >> 1 } else { mask };
+                    // The largest value the key's width holds, short of its
+                    // sentinels, as for an Int.
+                    let max = (if signed { mask >> 1 } else { mask }) - reserved;
                     if n > max {
                         return Err(EncodeError::ValueOutOfRange {
                             field: f.name,
@@ -1209,6 +1222,7 @@ impl PgnBuilder {
         } else {
             (0.0, 2f64.powi(bits as i32))
         };
+        let max_excl = max_excl - reserved as f64;
         if !(min..max_excl).contains(&raw) {
             return Err(EncodeError::ValueOutOfRange {
                 field: f.name,
