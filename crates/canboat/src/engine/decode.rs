@@ -464,14 +464,10 @@ pub struct DecodedPgn {
     /// original `RawFrame`.
     pub data: Vec<u8>,
     pub fields: Vec<DecodedField>,
-    /// `[set1, set2]` — true when the decoder reached the start
-    /// field of the corresponding repeating set during this decode.
-    /// False when the payload ran out before the set's start field
-    /// or the PGN doesn't define a set at that index. The JSON
-    /// formatter uses these to emit canboat's empty-`"list":[{}]`
-    /// placeholder when the count is zero — matching the
-    /// `"list":[{` opener that analyzer/analyzer.c:1276 emits the
-    /// moment it sees the start field.
+    /// `[set1, set2]` — true when the PGN defines the corresponding
+    /// repeating set, whether or not this message has records of it. The
+    /// JSON formatter writes such a set even when it has no records, as
+    /// `[]`.
     pub has_repeating_set: [bool; 2],
     /// `index_by_order[order - 1]` = position in `self.fields` of
     /// the top-level (non-repeating) field whose schema `order` is
@@ -739,16 +735,6 @@ fn decode_fields(
         if let (Some(start), Some(size)) = (start1, size1)
             && (f.order as u32) == start
         {
-            // Only mark as "entered" if the start field is
-            // actually within the payload, and whole — canboat C's main
-            // loop stops once `startBit >> 3 >= length`, and does not
-            // open a list whose first field the payload ends inside,
-            // so neither emits the list opener.
-            let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            let total = data.len() as u32 * 8;
-            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
-                entered[0] = true;
-            }
             cursor_bits = decode_repeating(
                 info,
                 data,
@@ -761,6 +747,7 @@ fn decode_fields(
                 cursor_bits,
                 1,
             );
+            entered[0] = true;
             i += size as usize;
             continue;
         }
@@ -768,11 +755,6 @@ fn decode_fields(
         if let (Some(start), Some(size)) = (start2, size2)
             && (f.order as u32) == start
         {
-            let bit_offset = f.bit_offset.unwrap_or(cursor_bits);
-            let total = data.len() as u32 * 8;
-            if bit_offset < total && !is_cut_short(f, bit_offset, total) {
-                entered[1] = true;
-            }
             cursor_bits = decode_repeating(
                 info,
                 data,
@@ -785,6 +767,7 @@ fn decode_fields(
                 cursor_bits,
                 2,
             );
+            entered[1] = true;
             i += size as usize;
             continue;
         }
@@ -854,14 +837,9 @@ fn decode_repeating(
     // Look up the count from the already-decoded fields when a count
     // field is set; otherwise repeat until the payload runs out
     // (matches canboat's default g_variableFieldRepeat[0] = 255 path).
-    // Canboat's `printFields` always enters the repeat block with
-    // `repetition = 1` once it reaches the set's start field, even
-    // when the count field decoded to zero (see analyzer.c:1284 vs
-    // 1300). The decremented `variableFields` counter only triggers
-    // *additional* loops, so count=0 yields exactly one iteration as
-    // long as payload remains. Match that here: floor count at 1
-    // when it's set, fall back to "iterate until payload runs out"
-    // when the count field is NotAvailable or otherwise unresolved.
+    // A count of 0 means no records: bytes after the count are
+    // padding, not a record. A count that is NotAvailable or otherwise
+    // unresolved repeats until the payload runs out.
     let raw_count: Option<u32> = count_field_order.and_then(|cf| {
         out.iter()
             .find(|d| (d.order() as u32) == cf)
@@ -871,14 +849,7 @@ fn decode_repeating(
                 _ => None,
             })
     });
-    // count=0 still produces exactly one (truncated) iteration — see
-    // the long comment above the call site. Track this case so the text
-    // formatter only labels the *first* field with " 1".
-    let count_was_zero = raw_count == Some(0);
-    let max_iters: u32 = match raw_count {
-        Some(n) => n.max(1),
-        None => u32::MAX,
-    };
+    let max_iters: u32 = raw_count.unwrap_or(u32::MAX);
 
     let set = &info.fields[start_idx..start_idx + set_size];
     if set.is_empty() {
@@ -898,7 +869,6 @@ fn decode_repeating(
         }
         let mut sub_cursor = iter_cursor;
         let mut produced_any = false;
-        let mut first_field_of_iter = true;
         for sf in set {
             if !field_present(sf.condition, ctx.target_pgn) {
                 continue;
@@ -912,18 +882,8 @@ fn decode_repeating(
                 sub_cursor
             };
             if let Some((mut d, bits)) = decode_one_field_at(sf, info, data, db, off, ctx) {
-                // Canboat's `repetition` counter is reset to 0 at the
-                // top of each loop iteration when `*variableFields == 0`
-                // — so a forced count=0 iteration only labels its first
-                // field. Drop `repeat_index` (but keep `repeat_set` for
-                // JSON list-grouping) on later fields to match.
                 d.repeat_set = set_number;
-                d.repeat_index = if count_was_zero && !first_field_of_iter {
-                    None
-                } else {
-                    Some(iter)
-                };
-                first_field_of_iter = false;
+                d.repeat_index = Some(iter);
                 sub_cursor = off + bits;
                 // The record is still real when a value is omitted for
                 // being explicitly empty, so this iteration counts as
@@ -3052,14 +3012,16 @@ mod tests {
         assert_eq!(spns.len(), 1, "only the whole DTC's SPN");
         assert_eq!(spns[0].repeat_index, Some(0), "the first DTC's");
 
-        // With the first DTC cut the same way there is no list at all.
+        // With the first DTC cut the same way the list is empty.
         let frame = RawFrame {
             data: smallvec::smallvec![0x00, 0xff, 0x64, 0x00],
             ..frame
         };
         let dec = db.decode(&frame).expect("decode");
-        assert!(dec.fields.iter().all(|f| f.info.name != "SPN"));
-        assert_eq!(dec.has_repeating_set, [false, false], "no list");
+        assert!(dec.fields.iter().all(|f| f.repeat_set == 0));
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &dec, &Default::default()).unwrap();
+        assert!(line.contains(r#""list":[]"#), "{line}");
     }
 
     #[test]

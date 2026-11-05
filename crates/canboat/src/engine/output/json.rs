@@ -299,17 +299,12 @@ fn write_json_inner<W: fmt::Write>(
     if current_set != 0 {
         fields_buf.write_str("}]")?;
     }
-    // Empty-list placeholder: canboat C unconditionally emits
-    // `"list":[{` the moment it sees the repeating set's start field,
-    // regardless of how many iterations the count produces. When the
-    // count is 0 the result is `"list":[{}]`. Mirror that here so
-    // `Reference Stations: 0` style records line up byte-for-byte.
-    // "Did we actually emit any list fields?" — match the same
-    // filtering the JSON walker applies (NotAvailable / Spare are
-    // dropped in default mode). pgn.fields.iter().any(...) by itself
-    // would over-count, because the count=0 + truncated case still
-    // pushes NotAvailable fields onto the decoded set but the JSON
-    // emits none of them.
+    // A set the PGN defines is always written: as `[]` when it has no
+    // records (a count of 0, or no bytes left for one), and as `[{}]`
+    // when it has records whose values were all left out. "Did we write
+    // any list fields?" applies the walker's own filter: NotAvailable
+    // and zero Spare are dropped in default mode, so pgn.fields alone
+    // would over-count.
     let renderable = |f: &DecodedField| {
         if let FieldValue::Spare { value, .. } = &f.value
             && *value == 0
@@ -321,25 +316,22 @@ fn write_json_inner<W: fmt::Write>(
         }
         true
     };
-    let saw_set1 = pgn
-        .fields
-        .iter()
-        .any(|f| f.repeat_set == 1 && renderable(f));
-    let saw_set2 = pgn
-        .fields
-        .iter()
-        .any(|f| f.repeat_set == 2 && renderable(f));
-    if pgn.has_repeating_set[0] && !saw_set1 {
-        if !fields_buf.is_empty() && current_set == 0 {
-            fields_buf.push_str(top_sep);
+    for (k, key) in ["\"list\":", "\"list2\":"].into_iter().enumerate() {
+        let set = k as u8 + 1;
+        if !pgn.has_repeating_set[k]
+            || pgn
+                .fields
+                .iter()
+                .any(|f| f.repeat_set == set && renderable(f))
+        {
+            continue;
         }
-        fields_buf.push_str("\"list\":[{}]");
-    }
-    if pgn.has_repeating_set[1] && !saw_set2 {
         if !fields_buf.is_empty() {
             fields_buf.push(',');
         }
-        fields_buf.push_str("\"list2\":[{}]");
+        fields_buf.push_str(key);
+        let records = pgn.fields.iter().any(|f| f.repeat_set == set);
+        fields_buf.push_str(if records { "[{}]" } else { "[]" });
     }
     if !fields_buf.is_empty() {
         w.write_str(",\"fields\":{")?;
