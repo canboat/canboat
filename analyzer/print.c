@@ -644,7 +644,22 @@ extern bool fieldPrintNumber(const Field   *field,
   if (resolution == 1.0 && field->unitOffset == 0.0)
   {
     logDebug("fieldPrintNumber <%s> print as integer %" PRId64 "\n", fieldName, value);
-    mprintf("%" PRId64, value);
+    if (showJson && *bits > 53)
+    {
+      // Wider than a double holds exactly, which is how most JSON readers read a number: give its digits.
+      if (field->hasSign)
+      {
+        mprintf("\"%" PRId64 "\"", value);
+      }
+      else
+      {
+        mprintf("\"%" PRIu64 "\"", (uint64_t) value);
+      }
+    }
+    else
+    {
+      mprintf("%" PRId64, value);
+    }
     if (!showJson && unit != NULL)
     {
       mprintf(" %s", unit);
@@ -1117,7 +1132,8 @@ extern bool fieldPrintName(const Field   *field,
   {
     if (showJson)
     {
-      mprintf("%" PRIu64, value);
+      // A NAME is 64 bits, more than a JSON number holds exactly in most readers: give its digits.
+      mprintf("\"%" PRIu64 "\"", value);
 
       if (pgn != NULL && showJsonValue)
       {

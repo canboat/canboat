@@ -441,6 +441,12 @@ fn to_encode_value(
                 Some(EncodeValue::Bytes(
                     raw.to_le_bytes()[..width.min(8)].to_vec(),
                 ))
+            } else if let Some(i) = n.as_i64() {
+                // A whole number, kept exact: a 64-bit one is more than an
+                // f64 holds.
+                Some(EncodeValue::Int(i))
+            } else if let Some(u) = n.as_u64() {
+                Some(EncodeValue::Raw(u))
             } else {
                 // A physical value in the field's display unit.
                 Some(EncodeValue::Number(
@@ -517,8 +523,15 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             Ok(EncodeValue::Text(s.to_string()))
         }
         Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
-        // A key/value value is its bytes as hex, or a lookup name or time
-        // ("Off", "10:00:00") that the record's key gives meaning to.
+        // A key/value value is its bytes as hex, or a lookup name, time or
+        // a NAME's digits ("Off", "10:00:00", "13869005477589862183") that
+        // the record's key gives meaning to. canboat writes bytes spaced
+        // ("12 34"), so unspaced digits longer than one byte are a number.
+        Some(FieldType::DynamicFieldValue)
+            if s.len() > 2 && s.bytes().all(|b| b.is_ascii_digit()) =>
+        {
+            Ok(EncodeValue::Text(s.to_string()))
+        }
         Some(FieldType::DynamicFieldValue) => Ok(parse_hex(s)
             .map(EncodeValue::Bytes)
             .unwrap_or_else(|_| EncodeValue::Text(s.to_string()))),
@@ -547,8 +560,11 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             Ok(raw) => EncodeValue::Int(raw),
             Err(_) => EncodeValue::Lookup(s.to_string()),
         }),
-        // Digit strings on numeric fields (e.g. an MMSI rendered as a
-        // string) parse back.
+        // Digit strings on numeric fields (an MMSI, or a NAME or other
+        // 64-bit number, which canboat writes as its digits, canboat#1157)
+        // parse back exactly.
+        _ if s.parse::<i64>().is_ok() => Ok(EncodeValue::Int(s.parse().unwrap_or_default())),
+        _ if s.parse::<u64>().is_ok() => Ok(EncodeValue::Raw(s.parse().unwrap_or_default())),
         _ => s.parse::<f64>().map(EncodeValue::Number).map_err(|_| {
             anyhow!(
                 "field '{}': cannot re-encode display string '{s}'; use -nv JSON input",
@@ -881,6 +897,54 @@ mod tests {
     /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
     /// and a Navico 130822 Object Dump whose last record the frame cuts off
     /// (canboat#1114).
+    /// A NAME and a 64-bit number are written as their digits, as most
+    /// JSON readers read a number as a double (canboat#1157), and read back
+    /// exactly from that and from a bare number.
+    #[test]
+    fn a_64_bit_value_is_written_as_its_digits_and_reads_back_exactly() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // 130840 Navico Data Source with its source's NAME, and Maretron's
+        // 130833 with a memory capacity of 0xF000000000000001, above
+        // i64::MAX.
+        let frames: [(u32, Vec<u8>, [&str; 2]); 2] = [
+            (
+                130840,
+                vec![
+                    0x41, 0x9f, 0xff, 0x00, 0x01, 0x34, 0xff, 0x73, 0x64, 0x43, 0xe0, 0xe7, 0x00,
+                    0x8c, 0x78, 0xc0, 0xff,
+                ],
+                [r#""source":"13"#, r#""source":{"value":"13"#],
+            ),
+            (
+                130833,
+                vec![
+                    0x89, 0x98, 0x01, 0x01, 0, 0, 0, 0, 0, 0, 0xf0, 0xe8, 0x03, 0, 0, 0, 0, 0, 0,
+                ],
+                [r#""memoryCapacity":"17293822569102704641""#; 2],
+            ),
+        ];
+        for (pgn, data, forms) in frames {
+            let frame = RawFrame::new(None, 3, pgn, 13, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let form = forms[usize::from(name_value)];
+                assert!(line.contains(form), "{pgn} nv={name_value}: {line}");
+                let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+                // Also as a bare number, as canboat wrote it before.
+                let bare = line.replace(r#""17293822569102704641""#, "17293822569102704641");
+                let back = decoded_frame_from_json(db, &bare).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} bare: {bare}");
+            }
+        }
+    }
+
     #[test]
     fn key_value_records_encode_back() {
         let frames: [(u32, &str); 4] = [

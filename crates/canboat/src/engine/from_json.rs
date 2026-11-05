@@ -164,7 +164,14 @@ fn field_value_from_json(
         // everything else is a scaled `Number`.
         Some(Number | Decimal | Address) | None => {
             if is_integer_field(fi) {
-                Some(FieldValue::Integer(json::int(line, name)?))
+                // A 64-bit unsigned value above i64::MAX is held wrapped,
+                // as the decoder holds it.
+                let v = json::int(line, name).or_else(|| {
+                    let digits = json::value(line, name)?;
+                    let digits = json::value(digits, "value").unwrap_or(digits);
+                    digits.trim().parse::<u64>().ok().map(|u| u as i64)
+                })?;
+                Some(FieldValue::Integer(v))
             } else {
                 Some(FieldValue::Number(json::number(line, name)?))
             }

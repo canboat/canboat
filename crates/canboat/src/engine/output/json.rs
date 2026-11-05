@@ -455,7 +455,7 @@ fn write_field_value_debug<W: fmt::Write>(
             };
             write_fixed_float(w, *v, p, min_w)?;
         }
-        FieldValue::Integer(v) => write!(w, "{}", v)?,
+        FieldValue::Integer(v) => write_integer(w, f, *v)?,
         FieldValue::Float(v) => write!(w, "{}", v)?,
         FieldValue::Binary(bytes) => {
             w.write_char('"')?;
@@ -572,7 +572,7 @@ fn write_field_value_debug<W: fmt::Write>(
             }
         }
         FieldValue::IsoName { value, subfields } => {
-            write!(w, "{}", value)?;
+            write!(w, "\"{}\"", value)?;
             if opts.name_value {
                 // -nv + -debug expands the embedded PGN 60928 field
                 // set like the non-debug path, but each subfield
@@ -657,6 +657,22 @@ fn shared_key_name(f: &DecodedField, name: &str) -> bool {
             .lookup_name_is_shared(f.info, name)
 }
 
+/// An integer, as its digits in a string when the field is wider than a
+/// double holds exactly (53 bits), which is how most JSON readers read a
+/// number (canboat#1157). An unsigned 64-bit value is held as an `i64`, so
+/// it is printed as the `u64` it is.
+fn write_integer<W: fmt::Write>(w: &mut W, f: &DecodedField, v: i64) -> fmt::Result {
+    let wide = f.bit_length.or(f.info.bit_length).is_some_and(|b| b > 53);
+    if !wide {
+        return write!(w, "{v}");
+    }
+    if f.info.signed.unwrap_or(false) {
+        write!(w, "\"{v}\"")
+    } else {
+        write!(w, "\"{}\"", v as u64)
+    }
+}
+
 fn write_field_value<W: fmt::Write>(
     w: &mut W,
     f: &DecodedField,
@@ -685,9 +701,11 @@ fn write_field_value<W: fmt::Write>(
             // Under -nv, primary-key fields wear an annotation matching
             // canboat's JSON: {"value":N,"key":true}.
             if opts.name_value && f.part_of_primary_key() {
-                write!(w, "{{\"value\":{},\"key\":true}}", v)
+                w.write_str("{\"value\":")?;
+                write_integer(w, f, *v)?;
+                w.write_str(",\"key\":true}")
             } else {
-                write!(w, "{}", v)
+                write_integer(w, f, *v)
             }
         }
         FieldValue::Float(v) => super::write_c_g(w, *v),
@@ -864,11 +882,12 @@ fn write_field_value<W: fmt::Write>(
             w.write_char('"')
         }
         FieldValue::IsoName { value, subfields } => {
-            // -nv: {"value":N,"name":{<recursive>}}
-            // default: bare N
+            // -nv: {"value":"N","name":{<recursive>}}
+            // default: "N", its digits, as 64 bits are more than a JSON
+            // number holds exactly in most readers (canboat#1157)
             if opts.name_value {
                 w.write_char('{')?;
-                write!(w, "\"value\":{}", value)?;
+                write!(w, "\"value\":\"{}\"", value)?;
                 w.write_str(",\"name\":{")?;
                 let mut sep = "";
                 for sf in subfields {
@@ -896,7 +915,7 @@ fn write_field_value<W: fmt::Write>(
                 w.write_char('}')?;
                 w.write_char('}')
             } else {
-                write!(w, "{}", value)
+                write!(w, "\"{}\"", value)
             }
         }
         FieldValue::NotAvailable

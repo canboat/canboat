@@ -1145,6 +1145,11 @@ impl PgnBuilder {
             EncodeValue::Raw(r) => *r as i64 as f64,
             EncodeValue::Int(i) => *i as f64,
             EncodeValue::Number(x) => *x,
+            // A NAME or other 64-bit number given as its digits, as canboat
+            // writes it, kept exact (canboat#1157).
+            EncodeValue::Text(s) if !is_time && let Ok(raw) = s.parse::<u64>() => {
+                return Ok(raw & mask);
+            }
             EncodeValue::Text(s) | EncodeValue::Lookup(s) => {
                 if let Some(lv) = e
                     .lookup_enumeration
