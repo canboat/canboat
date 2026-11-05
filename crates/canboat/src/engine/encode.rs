@@ -1173,7 +1173,16 @@ impl PgnBuilder {
             // value in the key's unit, as a bare number is.
             EncodeValue::Text(s) if !is_time && let Ok(n) = s.parse::<u64>() => {
                 if e.resolution.unwrap_or(1.0) == 1.0 && e.unit_offset == 0.0 {
-                    return Ok(n & mask);
+                    // The largest value the key's width holds, as for an Int.
+                    let max = if signed { mask >> 1 } else { mask };
+                    if n > max {
+                        return Err(EncodeError::ValueOutOfRange {
+                            field: f.name,
+                            value: n as f64,
+                            range: None,
+                        });
+                    }
+                    return Ok(n);
                 }
                 n as f64
             }
