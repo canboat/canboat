@@ -797,8 +797,9 @@ fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
 }
 
 // R24 for J1939_SPN, which derive builds from the first field (in PGN
-// order) that carries each SPN: a clash is reported on that field's PGN,
-// the file to edit, as the editor checks a candidate by its own file.
+// order) that carries each SPN: a clash is reported on the PGN of each of
+// the two fields, the files to edit, as the editor checks a candidate by
+// its own file and either one may be the edit that made the clash.
 fn check_spn_names(db: &Database, v: &mut Vec<Violation>) {
     let prefix = Protocol::J1939.check_prefix();
     let mut pgns: Vec<&Pgn> = db.pgns_j1939.iter().collect();
@@ -811,18 +812,23 @@ fn check_spn_names(db: &Database, v: &mut Vec<Violation>) {
             }
         }
     }
-    let mut seen: std::collections::HashMap<&str, u32> = std::collections::HashMap::new();
+    let mut seen: std::collections::HashMap<&str, (u32, &Pgn)> = std::collections::HashMap::new();
     for (spn, (name, p)) in spns {
-        if let Some(earlier) = seen.insert(name, spn) {
-            v.push(Violation {
-                rule: "R24",
-                error: true,
-                location: pgn_loc(prefix, p),
-                message: format!(
-                    "'{name}' names both SPN {earlier} and SPN {spn} in {}; give each its own name",
-                    crate::derive::SPN_LOOKUP
-                ),
-            });
+        if let Some((earlier, earlier_pgn)) = seen.insert(name, (spn, p)) {
+            let message = format!(
+                "'{name}' names both SPN {earlier} and SPN {spn} in {}; give each its own name",
+                crate::derive::SPN_LOOKUP
+            );
+            let mut locations = vec![pgn_loc(prefix, earlier_pgn), pgn_loc(prefix, p)];
+            locations.dedup();
+            for location in locations {
+                v.push(Violation {
+                    rule: "R24",
+                    error: true,
+                    location,
+                    message: message.clone(),
+                });
+            }
         }
     }
 }
@@ -1359,11 +1365,39 @@ mod tests {
             ],
             ..Default::default()
         };
+        let clash = "'Engine Intake Manifold' names both SPN 3562 and SPN 3563 in J1939_SPN; \
+                     give each its own name";
         assert_eq!(
             r24(&db),
             [
-                "j1939/pgns/065000-other.yaml: 'Engine Intake Manifold' names both SPN 3562 \
-                 and SPN 3563 in J1939_SPN; give each its own name"
+                format!("j1939/pgns/064976-intakeExhaust2.yaml: {clash}"),
+                format!("j1939/pgns/065000-other.yaml: {clash}"),
+            ]
+        );
+    }
+
+    #[test]
+    fn an_spn_name_clash_in_one_pgn_is_reported_once() {
+        let field = |id: &str, spn: u32| crate::model::Field {
+            id: id.into(),
+            name: "Pressure".into(),
+            spn: Some(spn),
+            ..Default::default()
+        };
+        let db = Database {
+            pgns_j1939: vec![Pgn {
+                pgn: 64976,
+                id: "intakeExhaust2".into(),
+                fields: vec![field("a", 3562), field("b", 3563)],
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        assert_eq!(
+            r24(&db),
+            [
+                "j1939/pgns/064976-intakeExhaust2.yaml: 'Pressure' names both SPN 3562 and SPN \
+              3563 in J1939_SPN; give each its own name"
             ]
         );
     }
