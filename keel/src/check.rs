@@ -60,6 +60,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
 
     check_fieldtypes(db, &mut v); // R23
     check_lookup_wiring(db, &mut v); // R08, R22 (references from BOTH trees)
+    check_lookup_names(db, &mut v); // R24
     // Each protocol's list is its own namespace (the marine and J1939 ones
     // both contain the ISO PGNs), so variant and id uniqueness are checked
     // per protocol.
@@ -748,6 +749,47 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
     }
 }
 
+// R24: a lookup gives each name to one code (under the same first value,
+// for an indirect lookup), so a value written as its name reads back as one.
+fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
+    let mut lookups: Vec<_> = db.lookups.values().collect();
+    lookups.sort_by(|a, b| a.name.cmp(&b.name));
+    for lk in lookups {
+        let named: Vec<(Option<u64>, u64, &str)> = match lk.kind.as_str() {
+            "triplet" => lk
+                .triplets
+                .iter()
+                .map(|(v1, v2, n)| (Some(*v1), *v2, n.as_str()))
+                .collect(),
+            "fieldtype" => lk
+                .fieldtypes
+                .iter()
+                .map(|e| (None, e.value, e.name.as_str()))
+                .collect(),
+            _ => lk
+                .pairs
+                .iter()
+                .map(|(c, n)| (None, *c, n.as_str()))
+                .collect(),
+        };
+        let mut seen: std::collections::HashMap<(Option<u64>, &str), u64> =
+            std::collections::HashMap::new();
+        for (first, code, name) in named {
+            if let Some(earlier) = seen.insert((first, name), code) {
+                let under = first.map_or(String::new(), |f| format!(" under {f}"));
+                v.push(Violation {
+                    rule: "R24",
+                    error: true,
+                    location: format!("lookups/{}.yaml", lk.name),
+                    message: format!(
+                        "'{name}' names both {earlier} and {code}{under}; give each its own name"
+                    ),
+                });
+            }
+        }
+    }
+}
+
 // R09: SPECIAL_VALUES overrides stay within the sentinel model.
 fn check_special_values(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     for f in &p.fields {
@@ -1195,5 +1237,81 @@ fn check_fieldtypes(db: &Database, v: &mut Vec<Violation>) {
                 message: format!("root fieldtype '{}' has no print function", ft.name),
             });
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::{FieldTypeLookupEntry, Lookup};
+
+    fn lookup(name: &str, kind: &str) -> Lookup {
+        Lookup {
+            name: name.into(),
+            kind: kind.into(),
+            bits: 8,
+            ..Default::default()
+        }
+    }
+
+    fn r24(db: &Database) -> Vec<String> {
+        let mut v = Vec::new();
+        check_lookup_names(db, &mut v);
+        v.into_iter()
+            .map(|x| format!("{}: {}", x.location, x.message))
+            .collect()
+    }
+
+    #[test]
+    fn a_name_given_to_two_codes_is_refused() {
+        let mut pair = lookup("PAIR", "pair");
+        pair.pairs = vec![
+            (13, "Shift".into()),
+            (14, "High".into()),
+            (124, "Shift".into()),
+        ];
+        let mut bit = lookup("BIT", "bit");
+        bit.pairs = vec![(0, "A".into()), (1, "A".into())];
+        let mut ft = lookup("FT", "fieldtype");
+        ft.fieldtypes = vec![
+            FieldTypeLookupEntry {
+                value: 1,
+                name: "Depth".into(),
+                ..Default::default()
+            },
+            FieldTypeLookupEntry {
+                value: 2,
+                name: "Depth".into(),
+                ..Default::default()
+            },
+        ];
+        let mut db = Database::default();
+        for lk in [pair, bit, ft] {
+            db.lookups.insert(lk.name.clone(), lk);
+        }
+        assert_eq!(
+            r24(&db),
+            [
+                "lookups/BIT.yaml: 'A' names both 0 and 1; give each its own name",
+                "lookups/FT.yaml: 'Depth' names both 1 and 2; give each its own name",
+                "lookups/PAIR.yaml: 'Shift' names both 13 and 124; give each its own name",
+            ]
+        );
+    }
+
+    #[test]
+    fn an_indirect_lookup_may_repeat_a_name_under_another_first_value() {
+        let mut triplet = lookup("TRIPLET", "triplet");
+        triplet.triplets = vec![
+            (1, 10, "Other".into()),
+            (2, 10, "Other".into()),
+            (2, 11, "Other".into()),
+        ];
+        let mut db = Database::default();
+        db.lookups.insert(triplet.name.clone(), triplet);
+        assert_eq!(
+            r24(&db),
+            ["lookups/TRIPLET.yaml: 'Other' names both 10 and 11 under 2; give each its own name"]
+        );
     }
 }

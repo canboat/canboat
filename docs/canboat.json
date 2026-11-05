@@ -1160,7 +1160,7 @@
           {"Name":"Shunt mismatch", "Value":48},
           {"Name":"Cooling Fan Error", "Value":49},
           {"Name":"Mastershunt Fuse Blown", "Value":50},
-          {"Name":"High Temperature", "Value":51},
+          {"Name":"High Temperature (51)", "Value":51},
           {"Name":"Over Pressure", "Value":52},
           {"Name":"Low Pressure", "Value":53},
           {"Name":"Rapid Deflation", "Value":54},
@@ -3800,7 +3800,7 @@
           {"Name":"GPS and DGPS Info", "Value":165},
           {"Name":"Unknown meaning", "Value":167},
           {"Name":"Alarm ON/OFF for Guard", "Value":168},
-          {"Name":"Alarm ON/OFF for Guard", "Value":171}
+          {"Name":"Alarm ON/OFF for Guard (171)", "Value":171}
         ]
       },
       {
@@ -3957,7 +3957,7 @@
           {"Name":"Cruise Speed", "Value":8},
           {"Name":"Power Steer Mode", "Value":11},
           {"Name":"Wind Type", "Value":15},
-          {"Name":"Auto Turn", "Value":17},
+          {"Name":"Auto Turn (17)", "Value":17},
           {"Name":"Calibration Lock", "Value":18},
           {"Name":"Gybe Inhibit", "Value":20},
           {"Name":"Compass Offset", "Value":21},
@@ -4286,7 +4286,7 @@
           {"Name":"CZone important", "Value":121},
           {"Name":"CZone standard", "Value":122},
           {"Name":"CZone warning", "Value":123},
-          {"Name":"True wind shift", "Value":124},
+          {"Name":"True wind shift (124)", "Value":124},
           {"Name":"EVC Com Error", "Value":125},
           {"Name":"EVC override", "Value":126},
           {"Name":"High drive temperature", "Value":127},
@@ -4346,7 +4346,7 @@
           {"Name":"Forward range", "Value":183},
           {"Name":"Alarm source missing", "Value":245},
           {"Name":"External", "Value":246},
-          {"Name":"EVC Com Error", "Value":247},
+          {"Name":"EVC Com Error (247)", "Value":247},
           {"Name":"Wind sensor battery low", "Value":248},
           {"Name":"Gasoline low", "Value":266},
           {"Name":"Gasoline high", "Value":267},

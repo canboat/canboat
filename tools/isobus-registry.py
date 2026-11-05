@@ -139,13 +139,22 @@ def main():
     print("name: J1939_MANUFACTURER_CODE")
     print("kind: pair")
     print("bits: 11")
-    print("note: Scraped from https://www.isobus.net/isobus/manufacturerCode by"
-          " tools/isobus-registry.py. This is the ISO 11783 / SAE J1939"
-          " allocation; the NMEA 2000 marine allocation of the same 11-bit"
-          " space is MANUFACTURER_CODE. See github issue #837.")
+    print("note: " + yaml_scalar(
+        "Scraped from https://www.isobus.net/isobus/manufacturerCode by"
+        " tools/isobus-registry.py. This is the ISO 11783 / SAE J1939"
+        " allocation; the NMEA 2000 marine allocation of the same 11-bit"
+        " space is MANUFACTURER_CODE. See github issue #837."))
     print("values:")
+    # The registry lists some companies under more than one code. A lookup
+    # gives each name to one code (keel rule R24), so a later code carries
+    # its number.
+    seen = set()
     for code in sorted(reg):
-        print(f"  {code}: {yaml_scalar(reg[code][0])}")
+        name = reg[code][0]
+        if name in seen:
+            name = f"{name} ({code})"
+        seen.add(reg[code][0])
+        print(f"  {code}: {yaml_scalar(name)}")
     return 0
 
 

@@ -287,6 +287,20 @@ pub const RULES: &[Rule] = &[
                  has a print function; no cycles.",
     },
     Rule {
+        id: "R24",
+        scope: Scope::CrossFile,
+        severity: "error",
+        enforced_in: "check::check_lookup_names",
+        title: "A lookup gives each name to one code.",
+        detail: "A value written as its name must read back as one code, so no \
+                 enumeration gives the same name to two values: no two codes of \
+                 a lookup, no two bits of a bit lookup, no two field types of a \
+                 field-type lookup, and no two second values under the same \
+                 first value of an indirect lookup. Where a source names two \
+                 codes alike and says nothing more, the later one carries its \
+                 code, as in \"True wind shift (124)\".",
+    },
+    Rule {
         id: "R30",
         scope: Scope::CrossRelease,
         severity: "classification (CI)",
