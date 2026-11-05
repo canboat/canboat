@@ -67340,8 +67340,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>Pa</Unit>
           <Resolution>10</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-99.9</RangeMin>
-          <RangeMax>99.9</RangeMax>
+          <RangeMin>-327680</RangeMin>
+          <RangeMax>327640</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
           <ReservedValue>32765</ReservedValue>
