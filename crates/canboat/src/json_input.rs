@@ -525,10 +525,10 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
         // A key/value value is its bytes as hex, or a lookup name, time or
         // a NAME's digits ("Off", "10:00:00", "13869005477589862183") that
-        // the record's key gives meaning to. canboat writes bytes spaced
-        // ("12 34"), so unspaced digits longer than one byte are a number.
+        // the record's key gives meaning to. Digits alone ("10") can be
+        // either a number or hex bytes, so the encoder decides by the key.
         Some(FieldType::DynamicFieldValue)
-            if s.len() > 2 && s.bytes().all(|b| b.is_ascii_digit()) =>
+            if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) =>
         {
             Ok(EncodeValue::Text(s.to_string()))
         }
@@ -943,6 +943,42 @@ mod tests {
                 assert_eq!(back.data.to_vec(), data, "{pgn} bare: {bare}");
             }
         }
+    }
+
+    /// A key/value value given as digits is a number when the record's key
+    /// makes it one, however short ("10" as a NAME), scaled by the key as a
+    /// bare number is, and hex bytes otherwise.
+    #[test]
+    fn key_value_digits_are_typed_by_the_key() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // A Navico 130822 Configuration Set whose value is a NAME of 10.
+        let data = vec![
+            0x13, 0x99, 0xff, 0x03, 0x00, 0x0a, 0x01, 0x00, 0x15, 0x00, 0x00, 0x00, 0x84, 0xca,
+            0x08, 0x00, 0x0a, 0, 0, 0, 0, 0, 0, 0,
+        ];
+        let frame = RawFrame::new(None, 3, 130822, 49, 255, data.clone());
+        let decoded = db.decode(&frame).unwrap();
+        for name_value in [true, false] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            assert!(line.contains(r#""10""#), "{line}");
+            let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+        }
+
+        // B&G 130824 Course (key 105, 0.0001 rad): "5" is 5 rad, as 5 is.
+        let record = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{{"manufacturerCode":381,"industryCode":4,"list":[{{"key":105,"length":2,"value":{value}}}]}}}}"#
+            )
+        };
+        let bare = frame_from_json(db, &record("5")).unwrap().unwrap();
+        let digits = frame_from_json(db, &record(r#""5""#)).unwrap().unwrap();
+        assert_eq!(digits.data, bare.data);
     }
 
     #[test]

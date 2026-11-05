@@ -1066,6 +1066,29 @@ impl PgnBuilder {
         if v.is_none() && ends_message && !sentinel {
             return Ok(());
         }
+        // Digits are a number when the key types the value as one (a NAME
+        // or other 64-bit number, which canboat writes as its digits), and
+        // otherwise hex bytes, as canboat writes binary data ("10").
+        if let Some(EncodeValue::Text(s)) = v
+            && s.bytes().all(|b| b.is_ascii_digit())
+            && !entry.is_some_and(|e| {
+                e.field_type.is_some_and(|ft| {
+                    ft.starts_with("NUMBER")
+                        || ft.starts_with("FIX")
+                        || ft.starts_with("UFIX")
+                        || matches!(ft, "ISO_NAME" | "LOOKUP" | "TIME" | "DURATION")
+                })
+            })
+        {
+            let bytes = hex_bytes(s).ok_or(EncodeError::TypeMismatch {
+                field: f.name,
+                expected: "hex bytes for a key/value value the key does not make a number",
+            })?;
+            for b in bytes {
+                write_bits(buf, next_bit, 8, u64::from(b));
+            }
+            return Ok(());
+        }
         let bits = length
             .or_else(|| entry.and_then(|e| e.bit_length()))
             .ok_or(EncodeError::NotFixedLength(f.name))?;
@@ -1146,9 +1169,13 @@ impl PgnBuilder {
             EncodeValue::Int(i) => *i as f64,
             EncodeValue::Number(x) => *x,
             // A NAME or other 64-bit number given as its digits, as canboat
-            // writes it, kept exact (canboat#1157).
-            EncodeValue::Text(s) if !is_time && let Ok(raw) = s.parse::<u64>() => {
-                return Ok(raw & mask);
+            // writes it: kept exact when unscaled (canboat#1157), else the
+            // value in the key's unit, as a bare number is.
+            EncodeValue::Text(s) if !is_time && let Ok(n) = s.parse::<u64>() => {
+                if e.resolution.unwrap_or(1.0) == 1.0 && e.unit_offset == 0.0 {
+                    return Ok(n & mask);
+                }
+                n as f64
             }
             EncodeValue::Text(s) | EncodeValue::Lookup(s) => {
                 if let Some(lv) = e
