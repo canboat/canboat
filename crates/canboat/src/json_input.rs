@@ -1145,6 +1145,32 @@ mod tests {
         assert_eq!(frame.data[6..], [0xcf, 0x2a]);
     }
 
+    /// A 126208 Command whose parameter is a matched field without a lookup
+    /// gives it by its description, as the decoder writes it, and the
+    /// description selects the target variant (canboat#1153).
+    #[test]
+    fn a_group_function_parameter_by_its_description_encodes() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let by = |command: &str| {
+            format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":130822,"priority":8,"numberOfParameters":3,"list":[{{"parameter":1,"value":275}},{{"parameter":3,"value":4}},{{"parameter":5,"value":{command}}}]}}}}"#
+            )
+        };
+        let frame = frame_from_json(db, &by("1")).unwrap().unwrap();
+        let by_name = frame_from_json(db, &by(r#""Source Report""#))
+            .unwrap()
+            .unwrap();
+        assert_eq!(by_name.data, frame.data);
+
+        // And what the decoder writes reads back.
+        let decoded = db.decode(&frame).unwrap();
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
+        assert!(line.contains(r#""value":"Source Report""#), "{line}");
+        let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(back.data, frame.data, "{line}");
+    }
+
     #[test]
     fn a_conditional_reserved_is_written_where_it_was_read() {
         // 126208 Read Fields for a proprietary PGN: the Reserved after the
