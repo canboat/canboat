@@ -162,6 +162,23 @@ fn field_value_from_json(
         // Plain numerics: an unscaled integer (resolution 1, no unit) is
         // an `Integer` — matching the decoder — so `as_i64` stays exact;
         // everything else is a scaled `Number`.
+        // A field that selects the variant, named by its description
+        // (canboat#1153): bare, or `-nv`'s {"value":N,"name":"…"}.
+        Some(Number) if fi.match_value.is_some() && fi.description.is_some() => {
+            let value = match nested_or_bare_int(line, name) {
+                Some(v) => v,
+                None if json::value(line, name) == fi.description => fi.match_value?,
+                None => return None,
+            };
+            Some(if Some(value) == fi.match_value {
+                FieldValue::Lookup {
+                    value: value as u64,
+                    name: fi.description,
+                }
+            } else {
+                FieldValue::Integer(value)
+            })
+        }
         Some(Number | Decimal | Address) | None => {
             if is_integer_field(fi) {
                 Some(FieldValue::Integer(json::int(line, name)?))

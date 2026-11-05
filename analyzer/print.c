@@ -634,6 +634,25 @@ extern bool fieldPrintNumber(const Field   *field,
     return true;
   }
 
+  // A field that selects its PGN variant is named by its description, which names the variant, as a
+  // lookup names its value: 130822's Command 1 is "Source Report" (#1153).
+  if (field->hasMatchValue && field->description != NULL && value == field->matchValue)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, field->description);
+    }
+    else if (showJson)
+    {
+      mprintf("\"%s\"", field->description);
+    }
+    else
+    {
+      mprintf("%s", field->description);
+    }
+    return true;
+  }
+
   logDebug("fieldPrintNumber <%s> value=%" PRIx64 " max=%" PRIx64 " resolution=%g offset=%g unit='%s'\n",
            fieldName,
            value,

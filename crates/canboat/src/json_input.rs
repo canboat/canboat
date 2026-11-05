@@ -547,6 +547,11 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             Ok(raw) => EncodeValue::Int(raw),
             Err(_) => EncodeValue::Lookup(s.to_string()),
         }),
+        // A field that selects the PGN variant, named by its description
+        // as the decoder writes it (canboat#1153).
+        _ if f.match_value.is_some() && f.description == Some(s) => {
+            Ok(EncodeValue::Int(f.match_value.unwrap_or_default()))
+        }
         // Digit strings on numeric fields (e.g. an MMSI rendered as a
         // string) parse back.
         _ => s.parse::<f64>().map(EncodeValue::Number).map_err(|_| {
@@ -628,6 +633,10 @@ fn match_field_agrees(
 ) -> Option<bool> {
     match v {
         Value::Number(n) => Some(n.as_i64()? == mv),
+        // A field without a lookup is named by its description.
+        Value::String(s) if f.lookup_enumeration.is_none() => {
+            f.description.map(|d| d == s.as_str())
+        }
         Value::String(s) => {
             let table = f.lookup_enumeration.and_then(|t| db.lookup(t))?;
             let val = table
@@ -881,6 +890,36 @@ mod tests {
     /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
     /// and a Navico 130822 Object Dump whose last record the frame cuts off
     /// (canboat#1114).
+    /// A field that selects the variant is written by its description
+    /// (canboat#1153) and reads back from it, in plain and `-nv` JSON, and
+    /// the description alone picks the variant.
+    #[test]
+    fn a_matched_field_named_by_its_description_encodes_back() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let data = vec![
+            0x13, 0x99, 0xff, 0x01, 0x00, 0x09, 0x02, 0x83, 0x0c, 0x02, 0x4b, 0x00, 0x00, 0xab,
+            0xca,
+        ];
+        let frame = RawFrame::new(None, 3, 130822, 21, 255, data.clone());
+        let decoded = db.decode(&frame).unwrap();
+        for name_value in [true, false] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            assert!(line.contains("Source Report"), "{line}");
+            let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+        }
+
+        // Without the record's description, the field's still picks it.
+        let line = r#"{"pgn":130822,"src":21,"dst":255,"fields":{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":"Source Report","address":0,"sourceSettingId":9}}"#;
+        let back = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(back.data[3], 1, "{:02x?}", back.data);
+    }
+
     #[test]
     fn key_value_records_encode_back() {
         let frames: [(u32, &str); 4] = [

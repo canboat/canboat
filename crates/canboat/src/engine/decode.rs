@@ -1104,7 +1104,26 @@ fn decode_one_field_at(
         None => (data, bit_offset, bit_length),
     };
     let value = decode_scalar(f, info, data, db, at, width, signed, offset_k, ctx);
-    finish_scalar(f, value, bit_offset, bit_length, ctx)
+    finish_scalar(f, matched_name(f, value), bit_offset, bit_length, ctx)
+}
+
+/// A field that selects its PGN variant and has no lookup is named by its
+/// description, which names the variant, as a lookup names its value: 130822's
+/// `command` 1 is "Source Report" (canboat#1153). A field without a
+/// description, or whose value is not its match (a catch-all's), stays a
+/// number.
+fn matched_name(f: &'static FieldInfo, value: FieldValue) -> FieldValue {
+    match (f.match_value, f.description, &value) {
+        (Some(mv), Some(name), FieldValue::Integer(v))
+            if *v == mv && f.lookup_enumeration.is_none() =>
+        {
+            FieldValue::Lookup {
+                value: *v as u64,
+                name: Some(name),
+            }
+        }
+        _ => value,
+    }
 }
 
 /// True when the payload (`total` bits) ends inside, or before, the

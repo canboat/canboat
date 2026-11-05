@@ -1388,6 +1388,16 @@ impl PgnBuilder {
             // DECIMAL: digit pairs, one byte each, not a binary number.
             (Some(FieldType::Decimal), v) => return decimal_to_raw(f, width, v),
 
+            // A field that selects the PGN variant, named by its
+            // description as the decoder writes it (canboat#1153).
+            (_, EncodeValue::Lookup(label))
+                if f.match_value.is_some()
+                    && f.lookup_enumeration.is_none()
+                    && f.description == Some(label.as_str()) =>
+            {
+                f.match_value.unwrap_or_default()
+            }
+
             // Lookup by label → its raw value; or a raw integer.
             (
                 Some(FieldType::Lookup) | Some(FieldType::IndirectLookup),
