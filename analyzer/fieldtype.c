@@ -163,6 +163,22 @@ getMaxRange(const char *name, uint32_t size, double resolution, bool sign, doubl
     maxValue += (int64_t) wholeOffset;
   }
 
+  // A lookup naming values in the sentinel region raises rangeMax, as keel does: Fusion's SiriusXM Com State
+  // names 255, so 253 and 254 are values too. Only the region above maxValue can hold such a value.
+  if (lookup != NULL && lookup->type == LOOKUP_TYPE_PAIR && lookup->function.pair != NULL && highbit < 64)
+  {
+    uint64_t v;
+
+    for (v = (UINT64_C(1) << highbit) - 1 + (uint64_t) wholeOffset; v > maxValue; v--)
+    {
+      if (lookup->function.pair((size_t) v) != NULL)
+      {
+        maxValue = v;
+        break;
+      }
+    }
+  }
+
   r = ((double) maxValue + (offset - wholeOffset)) * resolution;
   logDebug(
       "%s bits=%llu sign=%u maxValue=%lld res=%g offset=%g -> rangeMax %g\n", name, highbit, sign, maxValue, resolution, offset, r);
