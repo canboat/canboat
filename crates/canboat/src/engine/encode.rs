@@ -971,6 +971,22 @@ impl PgnBuilder {
     /// fields is answered by it outright. Returns `None` when nothing
     /// can be narrowed — the caller falls back to the leading
     /// definition, which for 126720 is its catch-all.
+    /// The definition of a group function's commanded PGN that its
+    /// parameters address, as [`build`](Self::build) resolves them: the
+    /// variant the staged parameters select, else the catch-all, else the
+    /// first definition. `None` when no PGN is staged or it is unknown.
+    pub(crate) fn commanded_definition(&self, target_pgn: u32) -> Option<&'static PgnInfo> {
+        self.match_target_variant(target_pgn)
+            .or_else(|| self.db.fallback_pgn(target_pgn))
+            .or_else(|| self.db.first_pgn(target_pgn))
+    }
+
+    /// [`commanded_definition`](Self::commanded_definition) for the PGN
+    /// the message's PGN field names.
+    pub(crate) fn staged_commanded_definition(&self) -> Option<&'static PgnInfo> {
+        self.commanded_definition(self.staged_target_pgn()?)
+    }
+
     fn match_target_variant(&self, target_pgn: u32) -> Option<&'static PgnInfo> {
         let first = self.db.specific_variants(target_pgn).next()?;
         if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
@@ -1217,9 +1233,7 @@ impl PgnBuilder {
         // is somebody's variant, so a record the decoder read with the
         // catch-all would not encode back (canboat#1131).
         let target_info = self
-            .match_target_variant(target_pgn)
-            .or_else(|| self.db.fallback_pgn(target_pgn))
-            .or_else(|| self.db.first_pgn(target_pgn))
+            .commanded_definition(target_pgn)
             .ok_or(unresolved("referenced PGN is not in the schema"))?;
         let param_idx = self.pgn.fields[start..start + size]
             .iter()

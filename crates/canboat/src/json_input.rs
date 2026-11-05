@@ -315,6 +315,9 @@ fn stage_fields(
     builder: &mut PgnBuilder,
     fields: &Map<String, Value>,
 ) -> Result<()> {
+    // Parameters given by `parameterId` only: (set, instance, id, the
+    // set's FIELD_INDEX field), numbered once the rest is staged.
+    let mut by_id: Vec<(usize, usize, &str, &'static str)> = Vec::new();
     for (key, value) in fields {
         let set = match key.as_str() {
             "list" => Some(1),
@@ -339,12 +342,7 @@ fn stage_fields(
                     && !inst_fields.contains_key(index_field.id)
                     && !inst_fields.contains_key(index_field.name)
                 {
-                    let index = parameter_index(db, fields, id).ok_or_else(|| {
-                        anyhow!("{key}[{idx}]: no field '{id}' in the commanded PGN")
-                    })?;
-                    builder
-                        .push_in_set(set, idx, index_field.id, EncodeValue::Int(index.into()))
-                        .map_err(|e| anyhow!("{key}[{idx}].parameterId: {e}"))?;
+                    by_id.push((set, idx, id, index_field.id));
                 }
                 for (fkey, fval) in inst_fields {
                     if fkey == "parameterId" {
@@ -386,6 +384,7 @@ fn stage_fields(
     // unavailable; that difference is canboatjs-side now). Read as
     // decoded, a count left out was not a number, so it stays
     // unavailable.
+    number_parameters_by_id(builder, &by_id)?;
     Ok(())
 }
 
@@ -410,24 +409,53 @@ fn set_fields(info: &'static PgnInfo, set: usize) -> impl Iterator<Item = &'stat
         .filter(move |f| range.contains(&u32::from(f.order)))
 }
 
-/// The parameter number of the field with id `id` in the PGN a group
-/// function commands (its `pgn` field), in the first of its definitions,
-/// or its catch-all, that has one.
-fn parameter_index(db: &'static PgnDatabase, fields: &Map<String, Value>, id: &str) -> Option<u8> {
-    let target = ["pgn", "PGN"].iter().find_map(|k| match fields.get(*k)? {
-        Value::Number(n) => n.as_u64(),
-        Value::Object(o) => o.get("value")?.as_u64(),
-        _ => None,
-    })?;
-    let target = u32::try_from(target).ok()?;
-    db.pgn_variants(target)
-        .chain(db.fallback_pgn(target))
-        .find_map(|info| {
-            (1..=255u8).find(|&i| {
-                crate::engine::decode::parameter_field(info, u32::from(i))
+/// Number the parameters given by `parameterId` alone, in the definition
+/// of the commanded PGN that the builder will address. Their numbers can
+/// themselves select another definition (a proprietary PGN's Manufacturer
+/// and Industry Code given by id), so this repeats until the definition
+/// stays the same; an id that definition doesn't have is refused, rather
+/// than numbered from another variant where the number means another
+/// field.
+fn number_parameters_by_id(
+    builder: &mut PgnBuilder,
+    by_id: &[(usize, usize, &str, &'static str)],
+) -> Result<()> {
+    if by_id.is_empty() {
+        return Ok(());
+    }
+    let mut definition = builder
+        .staged_commanded_definition()
+        .ok_or_else(|| anyhow!("parameterId: no commanded PGN to look it up in"))?;
+    for _ in 0..4 {
+        // An id the definition lacks may be found once the others select
+        // a more specific one, so it only counts when nothing changes.
+        let mut missing = None;
+        for &(set, idx, id, index_field) in by_id {
+            let Some(index) = (1..=255u8).find(|&i| {
+                crate::engine::decode::parameter_field(definition, u32::from(i))
                     .is_some_and(|f| f.id == id)
-            })
-        })
+            }) else {
+                missing = Some(id);
+                continue;
+            };
+            builder
+                .push_in_set(set, idx, index_field, EncodeValue::Int(index.into()))
+                .map_err(|e| anyhow!("parameterId '{id}': {e}"))?;
+        }
+        let selected = builder
+            .staged_commanded_definition()
+            .ok_or_else(|| anyhow!("parameterId: no commanded PGN to look it up in"))?;
+        if std::ptr::eq(selected, definition) {
+            if let Some(id) = missing {
+                bail!("parameterId '{id}': no such field in '{}'", definition.id);
+            }
+            return Ok(());
+        }
+        definition = selected;
+    }
+    bail!(
+        "parameterId: the parameters select no single definition of the commanded PGN; give parameter numbers"
+    )
 }
 
 fn find_field(builder: &PgnBuilder, key: &str) -> Option<&'static FieldInfo> {
@@ -1192,6 +1220,44 @@ mod tests {
         );
         let unknown = line.replace(r#""parameter":4"#, r#""parameterId":"nope""#);
         assert!(frame_from_json(db, &unknown).is_err());
+
+        // An id is numbered in the definition the other parameters select:
+        // Maretron's 130833 has memoryCapacity as field 5, Furuno's 130833
+        // has antennaPositionX there, so for Furuno the id is refused
+        // rather than sent as field 5.
+        let command = |maker: &str, params: &str| {
+            format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":130833,"priority":8,"numberOfParameters":3,"list":[{maker},{params}]}}}}"#
+            )
+        };
+        let maretron = r#"{"parameter":1,"value":137},{"parameter":3,"value":4}"#;
+        let furuno = r#"{"parameter":1,"value":1855},{"parameter":3,"value":4}"#;
+        let by_number = frame_from_json(db, &command(maretron, r#"{"parameter":5,"value":7}"#))
+            .unwrap()
+            .unwrap();
+        let by_id = frame_from_json(
+            db,
+            &command(maretron, r#"{"parameterId":"memoryCapacity","value":7}"#),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(by_id.data, by_number.data);
+        assert!(
+            frame_from_json(
+                db,
+                &command(furuno, r#"{"parameterId":"memoryCapacity","value":7}"#)
+            )
+            .is_err()
+        );
+        // Every parameter by id, the maker's too.
+        let all_by_id = command(
+            r#"{"parameterId":"manufacturerCode","value":137},{"parameterId":"industryCode","value":4}"#,
+            r#"{"parameterId":"memoryCapacity","value":7}"#,
+        );
+        assert_eq!(
+            frame_from_json(db, &all_by_id).unwrap().unwrap().data,
+            by_number.data
+        );
     }
 
     #[test]
