@@ -9844,7 +9844,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 1, .description = "NavPilot Status", .partOfPrimaryKey = true},
-      {.name = "Rudder Angle", .camelName = "rudderAngle", .fieldType = "ANGLE_UFIX16"},
+      {.name = "Rudder Angle", .camelName = "rudderAngle", .fieldType = "ANGLE_FIX16", .hasSign = true},
       {.name = "A", .camelName = "a", .fieldType = "INT16", .resolution = 1.0, .hasSign = true},
       {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Commanded Course", .camelName = "commandedCourse", .fieldType = "ANGLE_UFIX16"},
