@@ -8137,7 +8137,7 @@ Pgn pgnList[] = {
       {.name = "3 Axis speed smoothing", .camelName = "3AxisSpeedSmoothing", .fieldType = "DURATION_FIX32_MS", .hasSign = true},
       {.name = "FC", .camelName = "fc", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "3 axis offset", .camelName = "3AxisOffset", .fieldType = "INT16", .resolution = 0.00032, .hasSign = true, .unit = "%", .rangeMin = -12.5, .rangeMax = 12.5},
-      {.name = "Air pressure offset", .camelName = "airPressureOffset", .fieldType = "INT16", .resolution = 10.0, .hasSign = true, .unit = "Pa", .rangeMin = -99.9, .rangeMax = 99.9},
+      {.name = "Air pressure offset", .camelName = "airPressureOffset", .fieldType = "INT16", .resolution = 10.0, .hasSign = true, .unit = "Pa", .rangeMin = -9990.0, .rangeMax = 9990.0},
       {.name = "Air temperature offset", .camelName = "airTemperatureOffset", .fieldType = "FIX16_1", .hasSign = true, .unit = "K", .rangeMin = -99.9, .rangeMax = 99.9}
      },
      .camelDescription = "furunoSensorSetup",

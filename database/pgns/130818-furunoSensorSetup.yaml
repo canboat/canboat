@@ -66,8 +66,8 @@ fields:
   type: INT16
   resolution: 10.0
   unit: Pa
-  rangeMin: -99.9
-  rangeMax: 99.9
+  rangeMin: -9990
+  rangeMax: 9990
 - id: airTemperatureOffset
   name: Air temperature offset
   type: FIX16_1
