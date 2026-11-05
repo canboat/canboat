@@ -646,7 +646,12 @@ fn match_field_agrees(
                 .value;
             Some(val as i64 == mv)
         }
-        Value::Object(o) => o.get("value").and_then(Value::as_i64).map(|x| x == mv),
+        // -nv's {"value":N,…}, or -debug's {"value":"Source Report",…}: its
+        // value agrees as a bare one does.
+        Value::Object(o) => match o.get("value")? {
+            Value::Object(_) => None,
+            inner => match_field_agrees(db, f, inner, mv),
+        },
         _ => None,
     }
 }
@@ -914,6 +919,11 @@ mod tests {
             assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
         }
 
+        // Without the record's description, the field's still picks it, as
+        // -debug writes it too.
+        let debug = r#"{"pgn":130822,"src":21,"dst":255,"fields":{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":{"value":"Source Report","bytes":"01"},"address":0,"sourceSettingId":9}}"#;
+        let back = frame_from_json(db, debug).unwrap().unwrap();
+        assert_eq!(back.data[3], 1, "{:02x?}", back.data);
         // Without the record's description, the field's still picks it.
         let line = r#"{"pgn":130822,"src":21,"dst":255,"fields":{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":"Source Report","address":0,"sourceSettingId":9}}"#;
         let back = frame_from_json(db, line).unwrap().unwrap();
