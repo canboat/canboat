@@ -35,7 +35,7 @@ fields:
   primaryKey: true
 - id: rudderAngle
   name: Rudder Angle
-  type: ANGLE_UFIX16
+  type: ANGLE_FIX16
 - id: a
   name: A
   type: INT16
@@ -85,3 +85,14 @@ samples:
     commandedCourse: 2.8327
     c: ~
     d: 2286
+- raw: "2023-01-01-00:00:00.000,7,130827,5,255,13,3f,9f,01,6f,fd,ff,7f,00,ff,ff,ff,00,00"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    messageId: 1
+    rudderAngle: -0.0657
+    a: ~
+    b: 0
+    commandedCourse: ~
+    c: ~
+    d: 0
