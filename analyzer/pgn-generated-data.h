@@ -1196,7 +1196,7 @@ Pgn pgnList[] = {
       {.name = "Alarm Status", .camelName = "alarmStatus", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSEATALK_ALARM_STATUS, .lookup.name = "SEATALK_ALARM_STATUS"},
       {.name = "Alarm ID", .camelName = "alarmId", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSEATALK_ALARM_ID, .lookup.name = "SEATALK_ALARM_ID"},
       {.name = "Alarm Group", .camelName = "alarmGroup", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSEATALK_ALARM_GROUP, .lookup.name = "SEATALK_ALARM_GROUP"},
-      {.name = "Alarm Priority", .camelName = "alarmPriority", .fieldType = "BINARY", .size = 16, .resolution = 1.0}
+      {.name = "Alarm Priority", .camelName = "alarmPriority", .fieldType = "UNSIGNED_INTEGER", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "seatalkAlarm",
      .priority = 7},
@@ -2210,7 +2210,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Pilot Mode", .camelName = "pilotMode", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSEATALK_PILOT_MODE_16, .lookup.name = "SEATALK_PILOT_MODE_16"},
-      {.name = "Sub Mode", .camelName = "subMode", .fieldType = "BINARY", .size = 16, .resolution = 1.0},
+      {.name = "Sub Mode", .camelName = "subMode", .fieldType = "UNSIGNED_INTEGER", .size = 16, .resolution = 1.0},
       {.name = "Pilot Mode Data", .camelName = "pilotModeData", .fieldType = "BINARY", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
      },
@@ -4965,7 +4965,7 @@ Pgn pgnList[] = {
       {.name = "Anchor Docking Control", .camelName = "anchorDockingControl", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupOFF_ON, .lookup.name = "OFF_ON"},
       {.name = "Speed Control Type", .camelName = "speedControlType", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSPEED_TYPE, .lookup.name = "SPEED_TYPE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Speed Control", .camelName = "speedControl", .fieldType = "BINARY", .size = 8, .resolution = 1.0, .description = "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
+      {.name = "Speed Control", .camelName = "speedControl", .fieldType = "UNSIGNED_INTEGER", .size = 8, .resolution = 1.0, .description = "0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100"},
       {.name = "Power Enable", .camelName = "powerEnable", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupOFF_ON, .lookup.name = "OFF_ON"},
       {.name = "Mechanical Lock", .camelName = "mechanicalLock", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupOFF_ON, .lookup.name = "OFF_ON"},
       {.name = "Deck and Anchor Wash", .camelName = "deckAndAnchorWash", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupOFF_ON, .lookup.name = "OFF_ON"},
@@ -9935,8 +9935,8 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Reserved", .camelName = "reserved4", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
       {.name = "Field A", .camelName = "fieldA", .fieldType = "BINARY", .size = 4, .resolution = 1.0, .description = "Reserved (unused)"},
-      {.name = "Sub Helm", .camelName = "subHelm", .fieldType = "BINARY", .size = 4, .resolution = 1.0, .description = "Helm-station sub-address (Mercury multi-helm); byte 3 low nibble"},
-      {.name = "Helm", .camelName = "helm", .fieldType = "BINARY", .size = 4, .resolution = 1.0, .description = "Helm-station address (Mercury multi-helm); byte 3 high nibble"},
+      {.name = "Sub Helm", .camelName = "subHelm", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Helm-station sub-address (Mercury multi-helm); byte 3 low nibble"},
+      {.name = "Helm", .camelName = "helm", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Helm-station address (Mercury multi-helm); byte 3 high nibble"},
       {.name = "Capabilities", .camelName = "capabilities", .fieldType = "BINARY", .size = 8, .resolution = 1.0, .description = "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"}
      },
      .camelDescription = "mercuryEngineStatus",

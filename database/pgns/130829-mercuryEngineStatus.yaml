@@ -38,12 +38,12 @@ fields:
   description: Reserved (unused)
 - id: subHelm
   name: Sub Helm
-  type: BINARY
+  type: UNSIGNED_INTEGER
   bits: 4
   description: Helm-station sub-address (Mercury multi-helm); byte 3 low nibble
 - id: helm
   name: Helm
-  type: BINARY
+  type: UNSIGNED_INTEGER
   bits: 4
   description: Helm-station address (Mercury multi-helm); byte 3 high nibble
 - id: capabilities

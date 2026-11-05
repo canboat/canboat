@@ -2304,8 +2304,10 @@ limitations under the License.
                       <a href="#lookup-SEATALK_ALARM_ID">SEATALK_ALARM_ID</a></td><td/></tr><tr><td>7</td><td>Alarm Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SEATALK_ALARM_GROUP">SEATALK_ALARM_GROUP</a></td><td/></tr><tr><td>8</td><td>Alarm Priority</td><td/><td/><td>16 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65288">0xFF08:
+                      <a href="#lookup-SEATALK_ALARM_GROUP">SEATALK_ALARM_GROUP</a></td><td/></tr><tr><td>8</td><td>Alarm Priority</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65288">0xFF08:
             PGN 65288
             - Maretron: 4-20 mA</h3><p>
               This PGN description applies when the following field(s) match:
@@ -4346,8 +4348,10 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Pilot Mode</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-SEATALK_PILOT_MODE_16">SEATALK_PILOT_MODE_16</a></td><td/></tr><tr><td>5</td><td>Sub Mode</td><td/><td/><td>16 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>6</td><td>Pilot Mode Data</td><td/><td/><td>8 bits
+                      <a href="#lookup-SEATALK_PILOT_MODE_16">SEATALK_PILOT_MODE_16</a></td><td/></tr><tr><td>5</td><td>Sub Mode</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Pilot Mode Data</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65403">0xFF7B:
             PGN 65403
@@ -10323,8 +10327,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   
                       lookup
                       <a href="#lookup-SPEED_TYPE">SPEED_TYPE</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Speed Control</td><td>0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100</td><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Power Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Speed Control</td><td>0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Power Enable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>9</td><td>Mechanical Lock</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -21093,9 +21099,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Field A</td><td>Reserved (unused)</td><td/><td>4 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>6</td><td>Sub Helm</td><td>Helm-station sub-address (Mercury multi-helm); byte 3 low nibble</td><td/><td>4 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Helm</td><td>Helm-station address (Mercury multi-helm); byte 3 high nibble</td><td/><td>4 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Capabilities</td><td>Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability</td><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>6</td><td>Sub Helm</td><td>Helm-station sub-address (Mercury multi-helm); byte 3 low nibble</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Helm</td><td>Helm-station address (Mercury multi-helm); byte 3 high nibble</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Capabilities</td><td>Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability</td><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130830">0x1FF0E:
             PGN 130830
             - Maretron: Dometic HVAC Status</h3><p>
