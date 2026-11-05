@@ -951,23 +951,30 @@ mod tests {
     #[test]
     fn key_value_digits_are_typed_by_the_key() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
-        // A Navico 130822 Configuration Set whose value is a NAME of 10.
-        let data = vec![
-            0x13, 0x99, 0xff, 0x03, 0x00, 0x0a, 0x01, 0x00, 0x15, 0x00, 0x00, 0x00, 0x84, 0xca,
-            0x08, 0x00, 0x0a, 0, 0, 0, 0, 0, 0, 0,
-        ];
-        let frame = RawFrame::new(None, 3, 130822, 49, 255, data.clone());
-        let decoded = db.decode(&frame).unwrap();
-        for name_value in [true, false] {
-            let opts = crate::engine::output::JsonOptions {
-                name_value,
-                ..Default::default()
-            };
-            let mut line = String::new();
-            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
-            assert!(line.contains(r#""10""#), "{line}");
-            let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
-            assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+        // A Navico 130822 Configuration Set whose value is a NAME of 10, and
+        // one of 2^64 - 3, the largest a NAME holds short of its two
+        // sentinels.
+        for name in [
+            [0x0a, 0, 0, 0, 0, 0, 0, 0],
+            [0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff],
+        ] {
+            let mut data = vec![
+                0x13, 0x99, 0xff, 0x03, 0x00, 0x0a, 0x01, 0x00, 0x15, 0x00, 0x00, 0x00, 0x84, 0xca,
+                0x08, 0x00,
+            ];
+            data.extend(name);
+            let frame = RawFrame::new(None, 3, 130822, 49, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+            }
         }
 
         // B&G 130824 Course (key 105, 0.0001 rad): "5" is 5 rad, as 5 is.

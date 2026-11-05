@@ -1149,7 +1149,10 @@ impl PgnBuilder {
         // (C's reservedCountForSize): a value is refused there, as a
         // field's own range refuses it. Raw wire bits above still reach
         // them.
+        // A NAME reserves its top two only, as the decoder reads it (C's
+        // fieldPrintName).
         let reserved: u64 = match bits {
+            _ if e.field_type == Some("ISO_NAME") => 2,
             8.. => 3,
             4.. => 2,
             2.. => 1,
