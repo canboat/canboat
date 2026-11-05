@@ -357,6 +357,18 @@ fn pgn_below_range_min_json() {
     );
 }
 
+/// A lookup value the lookup does not name is a value unless it is one of
+/// the field's own sentinels (#1156, test-unnamed-lookup in
+/// analyzer/tests/Makefile): a 2-bit "error" of 2 is printed, not left out.
+#[test]
+fn pgn_unnamed_lookup_json() {
+    run_case(
+        "pgn-unnamed-lookup.in",
+        "pgn-unnamed-lookup.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
 /// Sentinels in a field with an offset (#984, test-offset-sentinels in
 /// analyzer/tests/Makefile): 127513 Peukert Exponent 0xfd, 0xfe and 0xff
 /// have no value, while 1.25 and the top value 1.5 decode.

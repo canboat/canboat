@@ -34,25 +34,20 @@ fn sentinel_field_value(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
     }
 }
 
-/// The tail of canboat's `fieldPrintLookup` for a value the
-/// enumeration does not name: one in the top band of the field's width
-/// is unavailable rather than a bare number —
-///
-/// ```text
-///     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
-/// ```
-///
-/// so a 2-bit lookup reserves its top value and anything wider its top
-/// two. Shared, because the C reaches a *dynamic* LOOKUP through the
-/// very same `fieldPrintLookup` as a static one; PGN 127501's
-/// `Indicator11` and PGN 130845's `Auto calibration mode` are the same
-/// rule seen from the two paths.
-fn unnamed_lookup_value(ex: Extracted, bits: u32) -> FieldValue {
-    if bits > 1 {
-        let band = if bits > 2 { 2 } else { 1 };
-        if ex.value >= ex.max - band {
-            return FieldValue::NotAvailable;
-        }
+/// A value a key/value record's LOOKUP doesn't name. Such a value has no
+/// range of its own, so the top-of-range sentinels of the width it is
+/// read at are not available, as for a number read through a key (C's
+/// `reservedCountForSize`): PGN 130845's `Auto calibration mode` reads
+/// 0xFF on a Read request. Any other value is a value.
+fn unnamed_dynamic_lookup_value(ex: Extracted, bits: u32) -> FieldValue {
+    let reserved = match bits {
+        8.. => 3,
+        4.. => 2,
+        2.. => 1,
+        _ => 0,
+    };
+    if ex.value > ex.max - reserved {
+        return FieldValue::NotAvailable;
     }
     FieldValue::Lookup {
         value: ex.raw,
@@ -1647,8 +1642,12 @@ fn decode_lookup(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
-    // Still nothing, and the table does not name this value.
-    unnamed_lookup_value(ex, bit_length)
+    // Not a sentinel of this field, so a value, named or not: a 2-bit
+    // "error" of 2 is reported, not left out (canboat#1156).
+    FieldValue::Lookup {
+        value: raw,
+        name: None,
+    }
 }
 
 /// INDIRECT_LOOKUP: resolve `(value1, value2)` where `value1` is
@@ -2526,7 +2525,7 @@ fn decode_dynamic_field_value(
                     // Read request, which SIMNET_COMPASS_AUTOCAL_MODE does
                     // not name, and canboat omits the field rather than
                     // reporting `{"value":255}`.
-                    None => unnamed_lookup_value(ex, bits),
+                    None => unnamed_dynamic_lookup_value(ex, bits),
                 }
             }
             None => decode_binary(data, bit_offset, bits),

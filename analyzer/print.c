@@ -1059,7 +1059,9 @@ extern bool fieldPrintLookup(const Field   *field,
   }
   else
   {
-    if (*bits > 1 && (value >= maxValue - (*bits > 2 ? 2 : 1)))
+    // Only the field's own top-of-range sentinels are not available; any
+    // other value the lookup doesn't name is a value (a 2-bit "error" of 2).
+    if (*bits > 1 && value > maxValue - field->reservedCount)
     {
       printEmpty(fieldName, value - maxValue);
     }
@@ -2380,10 +2382,10 @@ extern bool fieldPrintKeyValue(const Field   *field,
       }
 
       // The field a key resolves to is not one of pgnList's fields, so the pass in fieldtype.c that
-      // gives every field its reservedCount never reaches it: give a number or a time the
+      // gives every field its reservedCount never reaches it: give a number, a time or a lookup the
       // top-of-range sentinels of the width it is read at, as any field of that width has. An unset
       // B&G Trip 2 Time (0xffffffff) is then Unknown rather than 1193:02:47.295.
-      if (f.ft->pf == fieldPrintNumber || f.ft->pf == fieldPrintTime)
+      if (f.ft->pf == fieldPrintNumber || f.ft->pf == fieldPrintTime || f.ft->pf == fieldPrintLookup)
       {
         f.reservedCount = reservedCountForSize((uint32_t) *bits);
       }
