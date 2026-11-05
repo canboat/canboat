@@ -350,6 +350,10 @@ enum Staged {
     /// or the record's length, so [`PgnBuilder::build`] writes it, as the
     /// decoder reads it (canboat#1114).
     Dynamic(EncodeValue),
+    /// An `INDIRECT_LOOKUP` given by name: its code depends on the value
+    /// of its key field, which may be set after it (60928's Device Class
+    /// follows Device Function), so [`PgnBuilder::build`] looks it up.
+    Indirect(String),
 }
 
 impl PgnBuilder {
@@ -578,6 +582,10 @@ impl PgnBuilder {
     /// there, mirroring decode); a declared count field left unset is
     /// filled with the instance count.
     pub fn build(&self) -> Result<RawFrame, EncodeError> {
+        let indirect = |s: &Option<Staged>| matches!(s, Some(Staged::Indirect(_)));
+        if self.staged.iter().any(indirect) || self.sets.iter().flatten().flatten().any(indirect) {
+            return self.with_indirect_resolved()?.build();
+        }
         let mut buf: Vec<u8> = Vec::new();
         let mut next_bit = 0usize;
         let set1 = self.set_layout(1);
@@ -809,6 +817,75 @@ impl PgnBuilder {
             dst: self.dst,
             data: buf.into_iter().collect(),
         })
+    }
+
+    /// A copy with every `INDIRECT_LOOKUP` name replaced by its code,
+    /// looked up under the value of its key field: in the same record
+    /// when the key is in the field's repeating set, else at the top.
+    fn with_indirect_resolved(&self) -> Result<Self, EncodeError> {
+        let mut out = Self {
+            db: self.db,
+            pgn: self.pgn,
+            prio: self.prio,
+            src: self.src,
+            dst: self.dst,
+            timestamp: self.timestamp.clone(),
+            staged: self.staged.clone(),
+            sets: self.sets.clone(),
+            decoded: self.decoded,
+        };
+        for idx in 0..self.pgn.fields.len() {
+            if let Some(Staged::Indirect(label)) = &self.staged[idx] {
+                let code = self.indirect_code(idx, 0, &self.staged, label)?;
+                out.staged[idx] = Some(Staged::Scalar(code));
+            }
+        }
+        for set in 1..=2 {
+            let Some((start, _, _)) = self.set_layout(set) else {
+                continue;
+            };
+            for (n, inst) in self.sets[set - 1].iter().enumerate() {
+                for (j, s) in inst.iter().enumerate() {
+                    if let Some(Staged::Indirect(label)) = s {
+                        let code = self.indirect_code(start + j, start, inst, label)?;
+                        out.sets[set - 1][n][j] = Some(Staged::Scalar(code));
+                    }
+                }
+            }
+        }
+        Ok(out)
+    }
+
+    /// The code that INDIRECT_LOOKUP field `idx` names `label` under its
+    /// key's value. `record` holds the staged values from field `start`
+    /// on: a set's record, or every field (`start` 0).
+    fn indirect_code(
+        &self,
+        idx: usize,
+        start: usize,
+        record: &[Option<Staged>],
+        label: &str,
+    ) -> Result<u64, EncodeError> {
+        let f = &self.pgn.fields[idx];
+        let key = f
+            .lookup_indirect_enumeration_field_order
+            .and_then(|order| (order as usize).checked_sub(1));
+        let key_value = key.and_then(|k| match k.checked_sub(start).and_then(|j| record.get(j)) {
+            Some(s) => s.as_ref(),
+            None => self.staged.get(k).and_then(Option::as_ref),
+        });
+        let Some(Staged::Scalar(value1)) = key_value else {
+            return Err(EncodeError::TypeMismatch {
+                field: f.name,
+                expected: "its key field's value, to look up a name under",
+            });
+        };
+        f.lookup_indirect_enumeration
+            .and_then(|table| self.db.indirect_lookup_code(table, *value1, label))
+            .ok_or_else(|| EncodeError::UnknownLookupLabel {
+                field: f.name,
+                label: label.to_string(),
+            })
     }
 
     /// The resolved PGN this builder targets (for CLI help / listing).
@@ -1248,6 +1325,13 @@ impl PgnBuilder {
                     "the target is a key/value value, typed by a key a group function does not set",
                 ));
             }
+            // Its key is another field of the target PGN, which a group
+            // function need not set.
+            Staged::Indirect(_) => {
+                return Err(unresolved(
+                    "the target is an indirect lookup given by name; give its code",
+                ));
+            }
         }
         Ok(())
     }
@@ -1274,6 +1358,12 @@ impl PgnBuilder {
             // bytes is written in build(). The sibling KEY field is a
             // fixed-width scalar, so it takes the normal path below.
             Some(FieldType::DynamicFieldValue) => stage_dynamic_value(f, v),
+            Some(FieldType::IndirectLookup) if matches!(v, EncodeValue::Lookup(_)) => {
+                let EncodeValue::Lookup(label) = v else {
+                    unreachable!()
+                };
+                Ok(Staged::Indirect(label))
+            }
             _ => Ok(Staged::Scalar(self.value_to_raw(f, v)?)),
         }
     }
@@ -1829,7 +1919,7 @@ fn emit_field(
         // Deferred values are resolved by the instance walk in build();
         // one reaching here means a VARIABLE field outside a repeating
         // set, which the schema does not produce.
-        Some(Staged::Deferred(_)) | Some(Staged::Dynamic(_)) => {
+        Some(Staged::Deferred(_)) | Some(Staged::Dynamic(_)) | Some(Staged::Indirect(_)) => {
             Err(EncodeError::NotFixedLength(f.name))
         }
         None => write_unset(buf, next_bit, pgn, f),
@@ -2622,6 +2712,36 @@ mod tests {
                 .push_by_name("Reference", EncodeValue::Lookup("Nonsense".into())),
             Err(EncodeError::UnknownLookupLabel { .. })
         ));
+    }
+
+    #[test]
+    fn an_indirect_lookup_name_is_looked_up_under_its_key() {
+        // 60928 Device Function by name, its key Device Class set after
+        // it, as a JSON line without -nv gives them (canboat#1155).
+        let label = |s: &str| EncodeValue::Lookup(s.into());
+        let mut b = db().encode("isoAddressClaim").unwrap();
+        b.push_by_name("Device Function", label("Integrated Navigation System"))
+            .unwrap()
+            .push_by_name("Device Class", label("Navigation"))
+            .unwrap();
+        let frame = b.build().unwrap();
+        assert_eq!(frame.data[5], 175, "Device Function");
+        assert_eq!(frame.data[6] >> 1, 60, "Device Class");
+
+        // A name its key's value doesn't list, or no key at all.
+        let mut b = db().encode("isoAddressClaim").unwrap();
+        b.push_by_name("Device Function", label("Integrated Navigation System"))
+            .unwrap()
+            .push_by_name("Device Class", label("Propulsion"))
+            .unwrap();
+        assert!(matches!(
+            b.build(),
+            Err(EncodeError::UnknownLookupLabel { .. })
+        ));
+        let mut b = db().encode("isoAddressClaim").unwrap();
+        b.push_by_name("Device Function", label("Integrated Navigation System"))
+            .unwrap();
+        assert!(matches!(b.build(), Err(EncodeError::TypeMismatch { .. })));
     }
 
     #[test]
