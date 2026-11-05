@@ -57,7 +57,7 @@ pub fn json_to_decoded(line: &str, db: &PgnDatabase) -> Option<DecodedPgn> {
 
     let mut fields = Vec::with_capacity(info.fields.len());
     for fi in info.fields {
-        if let Some(value) = field_value_from_json(line, fi, db, use_camel) {
+        if let Some(value) = field_value_from_json(line, fi, info.fields, db, use_camel) {
             fields.push(DecodedField {
                 info: fi,
                 value,
@@ -96,6 +96,7 @@ pub fn json_to_decoded(line: &str, db: &PgnDatabase) -> Option<DecodedPgn> {
 fn field_value_from_json(
     line: &str,
     fi: &FieldInfo,
+    fields: &[FieldInfo],
     db: &PgnDatabase,
     use_camel: bool,
 ) -> Option<FieldValue> {
@@ -113,6 +114,19 @@ fn field_value_from_json(
                 // captures): resolve the bare name-string against the
                 // field's lookup enumeration. Production `.j2k` is
                 // always `-nv`, so this is the slow path.
+                None if fi.field_type == Some(IndirectLookup) => {
+                    // The name is listed under the value of its key
+                    // field, which the line also carries.
+                    let order = fi.lookup_indirect_enumeration_field_order?;
+                    let key = fields.iter().find(|k| k.order == order)?;
+                    let Some(FieldValue::Lookup { value: value1, .. }) =
+                        field_value_from_json(line, key, fields, db, use_camel)
+                    else {
+                        return None;
+                    };
+                    let label = json::value(line, name)?;
+                    db.indirect_lookup_code(fi.lookup_indirect_enumeration?, value1, label)?
+                }
                 None => resolve_lookup_name(db, fi, json::value(line, name)?)?,
             };
             Some(FieldValue::Lookup { value, name: None })
@@ -165,10 +179,7 @@ fn field_value_from_json(
 /// Reverse-resolve a lookup `name`-string to its enum integer via the
 /// field's lookup enumeration. Only reached for non-`-nv` input.
 fn resolve_lookup_name(db: &PgnDatabase, fi: &FieldInfo, name: &str) -> Option<u64> {
-    let table = fi
-        .lookup_enumeration
-        .or(fi.lookup_bit_enumeration)
-        .or(fi.lookup_indirect_enumeration)?;
+    let table = fi.lookup_enumeration.or(fi.lookup_bit_enumeration)?;
     db.lookup(table)?
         .values
         .iter()
@@ -231,6 +242,21 @@ mod tests {
         assert_eq!(field_f64(&c, "windAngle"), Some(1.2));
         // The lookup keyed by camel id resolves to the same integer.
         assert_eq!(field_f64(&b, "reference"), field_f64(&c, "reference"));
+    }
+
+    #[test]
+    fn an_indirect_lookup_name_is_read_under_its_key() {
+        // 60928 Device Function is listed under Device Class, which the
+        // line gives after it (canboat#1155).
+        let db = crate::engine::PgnDatabase::embedded(Units::Si);
+        let line = r#"{"pgn":60928,"src":178,"dst":255,"description":"ISO Address Claim","fields":{"deviceFunction":"Integrated Navigation System","deviceClass":"Navigation"}}"#;
+        let d = json_to_decoded(line, db).expect("decodes");
+        let code = |id| match d.fields.iter().find(|f| f.info.id == id).map(|f| &f.value) {
+            Some(FieldValue::Lookup { value, .. }) => Some(*value),
+            _ => None,
+        };
+        assert_eq!(code("deviceFunction"), Some(175));
+        assert_eq!(code("deviceClass"), Some(60));
     }
 
     #[test]
