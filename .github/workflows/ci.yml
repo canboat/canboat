@@ -83,7 +83,7 @@ jobs:
 
       - name: Install QEMU and build tools for ARMv7 musl
         run: |
-          sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf make autoconf
+          sudo apt-get install -y qemu-user-binfmt gcc-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf make autoconf
 
       - name: Setup musl cross compiler
         run: |
