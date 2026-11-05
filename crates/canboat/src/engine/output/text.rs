@@ -467,6 +467,7 @@ mod tests {
                 ]
             },
             has_repeating_set: [false, false],
+            repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
         }
     }
