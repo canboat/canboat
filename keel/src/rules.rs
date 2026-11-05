@@ -296,7 +296,9 @@ pub const RULES: &[Rule] = &[
                  enumeration gives the same name to two values: no two codes of \
                  a lookup, no two bits of a bit lookup, no two field types of a \
                  field-type lookup, and no two second values under the same \
-                 first value of an indirect lookup. Where a source names two \
+                 first value of an indirect lookup. J1939_SPN takes its names \
+                 from J1939 fields, so a clash there is reported on the PGN \
+                 whose field names the later SPN. Where a source names two \
                  codes alike and says nothing more, the later one carries its \
                  code, as in \"True wind shift (124)\".",
     },

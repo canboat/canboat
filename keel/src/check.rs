@@ -752,8 +752,14 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
 // R24: a lookup gives each name to one code (under the same first value,
 // for an indirect lookup), so a value written as its name reads back as one.
 fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
-    let mut lookups: Vec<_> = db.lookups.values().collect();
+    let mut lookups: Vec<_> = db
+        .lookups
+        .values()
+        // Generated from field names: reported where the name is written.
+        .filter(|lk| lk.name != crate::derive::SPN_LOOKUP)
+        .collect();
     lookups.sort_by(|a, b| a.name.cmp(&b.name));
+    check_spn_names(db, v);
     for lk in lookups {
         let named: Vec<(Option<u64>, u64, &str)> = match lk.kind.as_str() {
             "triplet" => lk
@@ -786,6 +792,37 @@ fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
                     ),
                 });
             }
+        }
+    }
+}
+
+// R24 for J1939_SPN, which derive builds from the first field (in PGN
+// order) that carries each SPN: a clash is reported on that field's PGN,
+// the file to edit, as the editor checks a candidate by its own file.
+fn check_spn_names(db: &Database, v: &mut Vec<Violation>) {
+    let prefix = Protocol::J1939.check_prefix();
+    let mut pgns: Vec<&Pgn> = db.pgns_j1939.iter().collect();
+    pgns.sort_by_key(|p| p.pgn);
+    let mut spns: std::collections::BTreeMap<u32, (&str, &Pgn)> = std::collections::BTreeMap::new();
+    for p in pgns {
+        for f in &p.fields {
+            if let Some(spn) = f.spn {
+                spns.entry(spn).or_insert((f.name.as_str(), p));
+            }
+        }
+    }
+    let mut seen: std::collections::HashMap<&str, u32> = std::collections::HashMap::new();
+    for (spn, (name, p)) in spns {
+        if let Some(earlier) = seen.insert(name, spn) {
+            v.push(Violation {
+                rule: "R24",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "'{name}' names both SPN {earlier} and SPN {spn} in {}; give each its own name",
+                    crate::derive::SPN_LOOKUP
+                ),
+            });
         }
     }
 }
@@ -1295,6 +1332,38 @@ mod tests {
                 "lookups/BIT.yaml: 'A' names both 0 and 1; give each its own name",
                 "lookups/FT.yaml: 'Depth' names both 1 and 2; give each its own name",
                 "lookups/PAIR.yaml: 'Shift' names both 13 and 124; give each its own name",
+            ]
+        );
+    }
+
+    #[test]
+    fn an_spn_name_clash_is_reported_on_the_pgn_that_names_it() {
+        let pgn = |n: u32, id: &str, spn: u32, name: &str| Pgn {
+            pgn: n,
+            id: id.into(),
+            fields: vec![crate::model::Field {
+                id: "f".into(),
+                name: name.into(),
+                spn: Some(spn),
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        let db = Database {
+            pgns_j1939: vec![
+                pgn(65270, "inletExhaust", 102, "Boost Pressure"),
+                pgn(64976, "intakeExhaust2", 3562, "Engine Intake Manifold"),
+                pgn(65000, "other", 3563, "Engine Intake Manifold"),
+                // A second field for SPN 102 doesn't name it: the first does.
+                pgn(65300, "again", 102, "Engine Intake Manifold"),
+            ],
+            ..Default::default()
+        };
+        assert_eq!(
+            r24(&db),
+            [
+                "j1939/pgns/065000-other.yaml: 'Engine Intake Manifold' names both SPN 3562 \
+                 and SPN 3563 in J1939_SPN; give each its own name"
             ]
         );
     }
