@@ -305,7 +305,15 @@ fn field_view_units(f: &RawField, units: Units) -> FieldView {
         Some("rad") => {
             v.resolution = f.resolution.map(|r| r * RAD_TO_DEG);
             v.range_min = f.range_min.map(|x| x * RAD_TO_DEG);
-            v.range_max = f.range_max.map(|x| (x * RAD_TO_DEG).max(360.0));
+            // An unsigned angle reaches a full turn; a signed one stops at
+            // +180, so lifting it to 360 would let a reading of 270 pass.
+            v.range_max = f.range_max.map(|x| {
+                if f.signed.unwrap_or(false) {
+                    x * RAD_TO_DEG
+                } else {
+                    (x * RAD_TO_DEG).max(360.0)
+                }
+            });
             v.unit = Some("deg".to_string());
             v.precision = 1;
         }
