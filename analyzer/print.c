@@ -545,7 +545,9 @@ static bool extractNumberNotEmpty(const Field   *field,
     }
   }
 
-  if (*value > threshold)
+  // An unsigned 64-bit field's maximum is all ones, which is -1 as an int64_t: compare its bits unsigned, or
+  // every value up to 2^63 would be above the threshold.
+  if ((*maxValue < 0) ? ((uint64_t) *value > (uint64_t) threshold) : (*value > threshold))
   {
     printEmpty(fieldName, *value - *maxValue);
     return false;
