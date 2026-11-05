@@ -894,69 +894,6 @@ extern bool fieldPrintDecimal(const Field   *field,
   return true;
 }
 
-/*
- * Whether the lookup of key field `field` gives the name of `value` to
- * another code as well, as B&G's keys 28, 29 and 30 are each "Outside
- * Temperature". Plain JSON then writes the code, so that the records of
- * those keys can be told apart. Each lookup is scanned once.
- */
-static bool lookupNameIsShared(const Field *field, int64_t value)
-{
-  static struct
-  {
-    const char *(*function)(size_t);
-    size_t   codes;
-    uint8_t *shared;
-  } cache[32];
-  static size_t cached;
-
-  const char *(*function)(size_t) = field->lookup.function.pair;
-  size_t i;
-
-  if (field->size > 16)
-  {
-    return false;
-  }
-  for (i = 0; i < cached && cache[i].function != function; i++)
-    ;
-  if (i == cached)
-  {
-    const Field *ftf = g_ftf; /* a FIELDTYPE lookup sets g_ftf; keep it */
-    size_t       codes = (size_t) 1 << field->size;
-    uint8_t     *shared;
-    size_t       a, b;
-
-    if (cached == sizeof cache / sizeof cache[0] || (shared = calloc(codes, 1)) == NULL)
-    {
-      return false;
-    }
-    for (a = 0; a < codes; a++)
-    {
-      const char *name = function(a);
-
-      if (name == NULL || shared[a])
-      {
-        continue;
-      }
-      for (b = a + 1; b < codes; b++)
-      {
-        const char *other = function(b);
-
-        if (other != NULL && strcmp(name, other) == 0)
-        {
-          shared[a] = shared[b] = 1;
-        }
-      }
-    }
-    g_ftf             = ftf;
-    cache[i].function = function;
-    cache[i].codes    = codes;
-    cache[i].shared   = shared;
-    cached++;
-  }
-  return value >= 0 && (size_t) value < cache[i].codes && cache[i].shared[value];
-}
-
 extern bool fieldPrintLookup(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
@@ -1041,12 +978,6 @@ extern bool fieldPrintLookup(const Field   *field,
     if (showJsonValue)
     {
       mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
-    }
-    else if (showJson && field->partOfPrimaryKey && !field->hasMatchValue
-             && (field->lookup.type == LOOKUP_TYPE_PAIR || field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
-             && lookupNameIsShared(field, value))
-    {
-      mprintf("%" PRId64, value);
     }
     else if (showJson)
     {
