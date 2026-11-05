@@ -361,6 +361,20 @@ impl PgnDatabase {
         table.get(value1, value2).map(|v| v.name)
     }
 
+    /// The code an INDIRECT_LOOKUP gives `name` (or id) under `value1`:
+    /// the reverse of [`indirect_lookup`](Self::indirect_lookup).
+    pub(crate) fn indirect_lookup_code(&self, table: &str, value1: u64, name: &str) -> Option<u64> {
+        let i = self
+            .indirect_lookups
+            .binary_search_by(|t| t.name.cmp(table))
+            .ok()?;
+        self.indirect_lookups[i]
+            .values
+            .iter()
+            .find(|v| v.value1 == value1 && (v.name == name || v.id == Some(name)))
+            .map(|v| v.value2)
+    }
+
     /// Resolve a DYNAMIC_FIELD_KEY value through a
     /// LookupFieldTypeEnumeration.
     pub fn field_type_lookup(&self, name: &str, key: u64) -> Option<&'static LookupFieldTypeValue> {
