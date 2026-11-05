@@ -1942,6 +1942,12 @@ extern bool fieldPrintVariable(const Field   *variableField,
         }
 
         logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPrn, refField->name);
+        // Name the target's field, so a reader need not look up the target PGN to know what the value is (#1157).
+        if (showJson && refField->camelName != NULL)
+        {
+          mprintf("%s\"parameterId\":\"%s\"", getSep(), refField->camelName);
+          sep = ",";
+        }
         r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
         *bits = (*bits + 7) & ~0x07; // round to bytes
         return r;

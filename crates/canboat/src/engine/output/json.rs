@@ -279,17 +279,20 @@ fn write_json_inner<W: fmt::Write>(
                 current_set = f.repeat_set;
                 current_iter = Some(iter);
                 top_sep = ",";
+                write_parameter_id(fields_buf, f)?;
                 write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
                 fields_buf.write_char(':')?;
                 write_field_value(fields_buf, f, opts, &pgn.data)?;
             } else if Some(iter) != current_iter {
                 fields_buf.write_str("},{")?;
                 current_iter = Some(iter);
+                write_parameter_id(fields_buf, f)?;
                 write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
                 fields_buf.write_char(':')?;
                 write_field_value(fields_buf, f, opts, &pgn.data)?;
             } else {
                 fields_buf.write_char(',')?;
+                write_parameter_id(fields_buf, f)?;
                 write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
                 fields_buf.write_char(':')?;
                 write_field_value(fields_buf, f, opts, &pgn.data)?;
@@ -655,6 +658,18 @@ fn shared_key_name(f: &DecodedField, name: &str) -> bool {
     f.info.match_value.is_none()
         && crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric)
             .lookup_name_is_shared(f.info, name)
+}
+
+/// A group-function value names the field of the commanded PGN it is for,
+/// so a reader need not look up that PGN's definition: `"parameterId":
+/// "pilotMode",` ahead of the value, as canboatjs writes it (canboat#1157).
+fn write_parameter_id<W: fmt::Write>(w: &mut W, f: &DecodedField) -> fmt::Result {
+    if let Some(target) = f.overrides.as_ref().and_then(|o| o.target) {
+        w.write_str("\"parameterId\":")?;
+        write_json_string(w, target.id)?;
+        w.write_char(',')?;
+    }
+    Ok(())
 }
 
 fn write_field_value<W: fmt::Write>(
@@ -1307,6 +1322,7 @@ mod tests {
             unit: None,
             resolution: Some(1.0),
             precision: 0,
+            target: None,
         }));
         let mut out = String::new();
         write_json(

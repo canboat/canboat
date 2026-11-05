@@ -39,7 +39,7 @@
 use std::io::BufRead;
 
 use crate::engine::source::FrameSource;
-use crate::engine::types::{FieldInfo, FieldRef, FieldType};
+use crate::engine::types::{FieldInfo, FieldRef, FieldType, PgnInfo};
 use crate::engine::{BusProtocol, EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value};
@@ -330,7 +330,26 @@ fn stage_fields(
                     bail!("'{key}' entry is not an object");
                 };
                 let idx = builder.add_set_instance(set).map_err(|e| anyhow!("{e}"))?;
+                // A group-function parameter given by the id of the field it
+                // names, as `parameterId` (canboat#1157), when its number
+                // is not given.
+                if let Some(id) = inst_fields.get("parameterId").and_then(Value::as_str)
+                    && let Some(index_field) = set_fields(builder.pgn_info(), set)
+                        .find(|f| f.field_type == Some(FieldType::FieldIndex))
+                    && !inst_fields.contains_key(index_field.id)
+                    && !inst_fields.contains_key(index_field.name)
+                {
+                    let index = parameter_index(db, fields, id).ok_or_else(|| {
+                        anyhow!("{key}[{idx}]: no field '{id}' in the commanded PGN")
+                    })?;
+                    builder
+                        .push_in_set(set, idx, index_field.id, EncodeValue::Int(index.into()))
+                        .map_err(|e| anyhow!("{key}[{idx}].parameterId: {e}"))?;
+                }
                 for (fkey, fval) in inst_fields {
+                    if fkey == "parameterId" {
+                        continue;
+                    }
                     let Some(info) = find_field(builder, fkey) else {
                         log::warn!("{key}[{idx}]: unknown field '{fkey}' ignored");
                         continue;
@@ -368,6 +387,47 @@ fn stage_fields(
     // decoded, a count left out was not a number, so it stays
     // unavailable.
     Ok(())
+}
+
+/// The fields of repeating set `set` (1 or 2) of `info`.
+fn set_fields(info: &'static PgnInfo, set: usize) -> impl Iterator<Item = &'static FieldInfo> {
+    let (start, size) = match set {
+        1 => (
+            info.repeating_field_set1_start_field,
+            info.repeating_field_set1_size,
+        ),
+        _ => (
+            info.repeating_field_set2_start_field,
+            info.repeating_field_set2_size,
+        ),
+    };
+    let range = match (start, size) {
+        (Some(start), Some(size)) => start..start + size,
+        _ => 0..0,
+    };
+    info.fields
+        .iter()
+        .filter(move |f| range.contains(&u32::from(f.order)))
+}
+
+/// The parameter number of the field with id `id` in the PGN a group
+/// function commands (its `pgn` field), in the first of its definitions,
+/// or its catch-all, that has one.
+fn parameter_index(db: &'static PgnDatabase, fields: &Map<String, Value>, id: &str) -> Option<u8> {
+    let target = ["pgn", "PGN"].iter().find_map(|k| match fields.get(*k)? {
+        Value::Number(n) => n.as_u64(),
+        Value::Object(o) => o.get("value")?.as_u64(),
+        _ => None,
+    })?;
+    let target = u32::try_from(target).ok()?;
+    db.pgn_variants(target)
+        .chain(db.fallback_pgn(target))
+        .find_map(|info| {
+            (1..=255u8).find(|&i| {
+                crate::engine::decode::parameter_field(info, u32::from(i))
+                    .is_some_and(|f| f.id == id)
+            })
+        })
 }
 
 fn find_field(builder: &PgnBuilder, key: &str) -> Option<&'static FieldInfo> {
@@ -1104,6 +1164,34 @@ mod tests {
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[..2], [0xc7, 0x50]);
         assert_eq!(frame.data[6..], [0xcf, 0x2a]);
+    }
+
+    /// A group-function parameter carries the id of the field it names
+    /// (canboat#1157); it reads back, and stands in for the number.
+    #[test]
+    fn a_parameter_id_is_written_and_read() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let line = r#"{"pgn":126208,"prio":3,"dst":42,"fields":{"Function Code":"Command","PGN":127501,"priority":8,"numberOfParameters":1,"list":[{"parameter":4,"value":"On"}]}}"#;
+        let frame = frame_from_json(db, line).unwrap().unwrap();
+        let decoded = db.decode(&frame).unwrap();
+        let mut json = String::new();
+        crate::engine::output::write_json(&mut json, &decoded, &Default::default()).unwrap();
+        assert!(
+            json.contains(r#"{"parameter":4,"parameterId":"indicator3","value":"On"}"#),
+            "{json}"
+        );
+        assert_eq!(
+            decoded_frame_from_json(db, &json).unwrap().unwrap().data,
+            frame.data
+        );
+
+        let by_id = line.replace(r#""parameter":4"#, r#""parameterId":"indicator3""#);
+        assert_eq!(
+            frame_from_json(db, &by_id).unwrap().unwrap().data,
+            frame.data
+        );
+        let unknown = line.replace(r#""parameter":4"#, r#""parameterId":"nope""#);
+        assert!(frame_from_json(db, &unknown).is_err());
     }
 
     #[test]

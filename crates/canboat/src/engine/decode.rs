@@ -191,6 +191,10 @@ pub struct FieldOverrides {
     /// `0` means "no override" (use `info.precision`); non-zero
     /// overrides.
     pub precision: u8,
+    /// A group-function VARIABLE value's target: the field of the
+    /// commanded PGN that the parameter names. JSON writes its id as
+    /// `parameterId` (canboat#1157).
+    pub target: Option<&'static FieldInfo>,
 }
 
 impl DecodedField {
@@ -1003,6 +1007,7 @@ fn decode_one_field_at(
                 unit: v.unit,
                 resolution: v.resolution,
                 precision: v.precision,
+                target: None,
             })
         });
         let (val, consumed_bits) = decode_dynamic_field_value(data, bit_offset, db, ctx);
@@ -1512,6 +1517,7 @@ fn decode_variable(
         unit: target_field.unit,
         resolution: target_field.resolution,
         precision: target_field.precision,
+        target: Some(target_field),
     }));
     Some((
         DecodedField {
