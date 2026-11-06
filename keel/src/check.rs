@@ -55,6 +55,7 @@ fn is_manufacturer_pgn(pgn: u32) -> bool {
     (0xff00..=0xffff).contains(&pgn) || pgn == 0x1ef00 || (0x1ff00..=0x1ffff).contains(&pgn)
 }
 
+/// Run every database rule over `db` and return the violations found.
 pub fn check(db: &Database) -> Vec<Violation> {
     let mut v = Vec::new();
 
@@ -749,8 +750,8 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
     }
 }
 
-// R24: a lookup gives each name to one code (under the same first value,
-// for an indirect lookup), so a value written as its name reads back as one.
+/// R24: a lookup gives each name to one code (under the same first value,
+/// for an indirect lookup), so a value written as its name reads back as one.
 fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
     let mut lookups: Vec<_> = db
         .lookups
@@ -796,10 +797,10 @@ fn check_lookup_names(db: &Database, v: &mut Vec<Violation>) {
     }
 }
 
-// R24 for J1939_SPN, which derive builds from the first field (in PGN
-// order) that carries each SPN: a clash is reported on the PGN of each of
-// the two fields, the files to edit, as the editor checks a candidate by
-// its own file and either one may be the edit that made the clash.
+/// R24 for J1939_SPN, which derive builds from the first field (in PGN
+/// order) that carries each SPN: a clash is reported on the PGN of each of
+/// the two fields, the files to edit, as the editor checks a candidate by
+/// its own file and either one may be the edit that made the clash.
 fn check_spn_names(db: &Database, v: &mut Vec<Violation>) {
     let prefix = Protocol::J1939.check_prefix();
     let mut pgns: Vec<&Pgn> = db.pgns_j1939.iter().collect();
@@ -1288,6 +1289,7 @@ mod tests {
     use super::*;
     use crate::model::{FieldTypeLookupEntry, Lookup};
 
+    /// An empty 8-bit lookup of the given name and kind.
     fn lookup(name: &str, kind: &str) -> Lookup {
         Lookup {
             name: name.into(),
@@ -1297,6 +1299,7 @@ mod tests {
         }
     }
 
+    /// The R24 lookup-name violations for `db`, as "location: message".
     fn r24(db: &Database) -> Vec<String> {
         let mut v = Vec::new();
         check_lookup_names(db, &mut v);

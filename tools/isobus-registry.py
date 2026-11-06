@@ -111,6 +111,7 @@ def yaml_scalar(s):
 
 
 def main():
+    """Scrape the registry and print it as a keel lookup file (--yaml) or TSV (--tsv)."""
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     fmt = ap.add_mutually_exclusive_group(required=True)
