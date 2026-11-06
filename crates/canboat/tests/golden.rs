@@ -369,6 +369,18 @@ fn pgn_unnamed_lookup_json() {
     );
 }
 
+/// An unsigned 64-bit field's top three values are its sentinels and every
+/// other value a reading (test-64-bit-sentinels in analyzer/tests/Makefile):
+/// C compared them as int64_t, where all ones is -1.
+#[test]
+fn pgn_64_bit_sentinels_json() {
+    run_case(
+        "pgn-64-bit-sentinels.in",
+        "pgn-64-bit-sentinels.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
 /// Sentinels in a field with an offset (#984, test-offset-sentinels in
 /// analyzer/tests/Makefile): 127513 Peukert Exponent 0xfd, 0xfe and 0xff
 /// have no value, while 1.25 and the top value 1.5 decode.
