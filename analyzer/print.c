@@ -1067,7 +1067,10 @@ extern bool fieldPrintLookup(const Field   *field,
   {
     // Only the field's own top-of-range sentinels are not available; any
     // other value the lookup doesn't name is a value (a 2-bit "error" of 2).
-    if (*bits > 1 && value > maxValue - field->reservedCount)
+    // At 64 bits maxValue is -1 as an int64_t, so compare unsigned there.
+    if (*bits > 1
+        && ((maxValue < 0) ? ((uint64_t) value > (uint64_t) maxValue - field->reservedCount)
+                           : (value > maxValue - field->reservedCount)))
     {
       printEmpty(fieldName, value - maxValue);
     }

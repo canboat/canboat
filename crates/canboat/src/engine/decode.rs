@@ -46,7 +46,14 @@ fn unnamed_dynamic_lookup_value(ex: Extracted, bits: u32) -> FieldValue {
         2.. => 1,
         _ => 0,
     };
-    if ex.value > ex.max - reserved {
+    // Compared as the unsigned bit pattern: at 64 bits `ex.max` is -1 as an
+    // i64, which would make every value a sentinel.
+    let top = if bits >= 64 {
+        u64::MAX
+    } else {
+        (1u64 << bits) - 1
+    };
+    if ex.raw > top - reserved {
         return FieldValue::NotAvailable;
     }
     FieldValue::Lookup {
@@ -3918,5 +3925,41 @@ mod tests {
                 .map(|f| &f.value),
             Some(FieldValue::Integer(1))
         ));
+    }
+
+    #[test]
+    fn an_unnamed_64_bit_dynamic_lookup_value_is_a_value() {
+        let lookup = |data: &[u8], bits: u32| {
+            let ex = extract_bits(data, 0, bits as usize, false, 0).unwrap();
+            unnamed_dynamic_lookup_value(ex, bits)
+        };
+        // At 64 bits the i64 maximum is -1; 0 and 2^64-4 are values, the
+        // top three are the sentinels.
+        assert!(matches!(
+            lookup(&[0; 8], 64),
+            FieldValue::Lookup {
+                value: 0,
+                name: None
+            }
+        ));
+        let below = (u64::MAX - 3).to_le_bytes();
+        assert!(matches!(
+            lookup(&below, 64),
+            FieldValue::Lookup { value, name: None } if value == u64::MAX - 3
+        ));
+        assert!(matches!(
+            lookup(&(u64::MAX - 2).to_le_bytes(), 64),
+            FieldValue::NotAvailable
+        ));
+        assert!(matches!(lookup(&[0xFF; 8], 64), FieldValue::NotAvailable));
+        // At 8 bits as before: 252 is a value, 253..255 are not.
+        assert!(matches!(
+            lookup(&[252], 8),
+            FieldValue::Lookup {
+                value: 252,
+                name: None
+            }
+        ));
+        assert!(matches!(lookup(&[253], 8), FieldValue::NotAvailable));
     }
 }
