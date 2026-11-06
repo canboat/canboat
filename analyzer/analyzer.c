@@ -1724,6 +1724,29 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   return r;
 }
 
+/*
+ * Write repeating set `key` with no records as an empty JSON list, closing
+ * the list before it if that is still open.
+ */
+static void printEmptyList(const char *key, bool *listOpen)
+{
+  if (*listOpen)
+  {
+    mprintf("}]");
+    closingBraces[strlen(closingBraces) - 2] = '\0'; /* drop its "]}" */
+    sep                                       = ",";
+    *listOpen                                 = false;
+  }
+  mprintf("%s\"%s\":[]", getSep(), key);
+}
+
+/*
+ * Print the fields of `pgn` from `data`, as text or (showJson) JSON, with
+ * each repeating set as a list of records. In JSON, a set the PGN defines
+ * but the message has no records for is written as an empty list.
+ * `variableFields` counts the repeating-set fields left to print. Returns
+ * false, and stops, at the first field that could not be printed.
+ */
 extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields)
 {
   size_t  i;
@@ -1733,6 +1756,8 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   char    fieldName[256];
   uint8_t variableFieldStart;
   uint8_t variableFieldCount;
+  bool    listOpen       = false;
+  bool    listWritten[2] = {false, false};
 
   bool r = true;
 
@@ -1767,15 +1792,27 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (pgn->repeatingCount1 > 0 && field->order == pgn->repeatingStart1 && repetition == 0)
     {
-      if (fieldIsCutShort(field, length, startBit))
+      listWritten[0] = true;
+      if (g_variableFieldRepeat[0] == 0 || fieldIsCutShort(field, length, startBit))
       {
-        break; // no list item to open
+        // A count of 0 means no records: any bytes left are padding.
+        if (showJson)
+        {
+          printEmptyList("list", &listOpen);
+        }
+        if (g_variableFieldRepeat[0] != 0)
+        {
+          break; // no list item to open
+        }
+        i += pgn->repeatingCount1 - 1;
+        continue;
       }
       if (showJson)
       {
         mprintf("%s\"list\":[{", getSep());
         strcat(closingBraces, "]}");
-        sep = "";
+        sep      = "";
+        listOpen = true;
       }
       // Only now is g_variableFieldRepeat set
       *variableFields    = pgn->repeatingCount1 * g_variableFieldRepeat[0];
@@ -1785,14 +1822,33 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
     }
     if (pgn->repeatingCount2 > 0 && field->order == pgn->repeatingStart2 && repetition == 0)
     {
-      if (fieldIsCutShort(field, length, startBit))
+      listWritten[1] = true;
+      if (g_variableFieldRepeat[1] == 0 || fieldIsCutShort(field, length, startBit))
       {
-        break;
+        if (showJson)
+        {
+          printEmptyList("list2", &listOpen);
+        }
+        if (g_variableFieldRepeat[1] != 0)
+        {
+          break;
+        }
+        i += pgn->repeatingCount2 - 1;
+        continue;
       }
       if (showJson)
       {
-        mprintf("}],\"list2\":[{");
-        sep = "";
+        if (listOpen)
+        {
+          mprintf("}],\"list2\":[{");
+        }
+        else
+        {
+          mprintf("%s\"list2\":[{", getSep());
+          strcat(closingBraces, "]}");
+        }
+        sep      = "";
+        listOpen = true;
       }
       // Only now is g_variableFieldRepeat set
       *variableFields    = pgn->repeatingCount2 * g_variableFieldRepeat[1];
@@ -1862,6 +1918,19 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
     }
 
     startBit += bits;
+  }
+
+  // A set the PGN defines is always written, as [] when the message has no bytes left for it.
+  if (showJson && r)
+  {
+    if (pgn->repeatingCount1 > 0 && !listWritten[0])
+    {
+      printEmptyList("list", &listOpen);
+    }
+    if (pgn->repeatingCount2 > 0 && !listWritten[1])
+    {
+      printEmptyList("list2", &listOpen);
+    }
   }
 
   return r;
