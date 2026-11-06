@@ -2917,7 +2917,7 @@ Pgn pgnList[] = {
       {.name = "Unknown 1", .camelName = "unknown1", .fieldType = "BINARY", .size = 24, .resolution = 1.0},
       {.name = "Pilot Mode", .camelName = "pilotMode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSEATALK_PILOT_MODE, .lookup.name = "SEATALK_PILOT_MODE"},
       {.name = "Sub Mode", .camelName = "subMode", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Pilot Mode Data", .camelName = "pilotModeData", .fieldType = "BINARY", .size = 8, .resolution = 1.0},
+      {.name = "Rudder Position", .camelName = "rudderPosition", .fieldType = "ANGLE_FIX8_DEG", .hasSign = true, .description = "Seatalk1 datagram 84 RR byte; positive to starboard, negative to port"},
       {.name = "Unknown 2", .camelName = "unknown2", .fieldType = "BINARY", .size = 80, .resolution = 1.0}
      },
      .camelDescription = "seatalk1PilotMode"},

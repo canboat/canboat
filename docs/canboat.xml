@@ -24504,13 +24504,22 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>pilotModeData</Id>
-          <Name>Pilot Mode Data</Name>
+          <Id>rudderPosition</Id>
+          <Name>Rudder Position</Name>
+          <Description>Seatalk1 datagram 84 RR byte; positive to starboard, negative to port</Description>
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>deg</Unit>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>true</Signed>
+          <RangeMin>-128</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>

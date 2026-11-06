@@ -5898,8 +5898,10 @@ limitations under the License.
                       <a href="#lookup-SEATALK_PILOT_MODE">SEATALK_PILOT_MODE</a></td><td/></tr><tr><td>9</td><td>Sub Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Pilot Mode Data</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>11</td><td>Unknown 2</td><td/><td/><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Rudder Position</td><td>Seatalk1 datagram 84 RR byte; positive to starboard, negative to port</td><td><a href="#pq-ANGLE">deg</a><div class="xs">-128 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Unknown 2</td><td/><td/><td>80 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk1: Pilot Hull Type</h3><p>
