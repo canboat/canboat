@@ -495,6 +495,12 @@ static int repeatCount(int64_t value)
   return (value > UINT8_MAX) ? UINT8_MAX : (int) value;
 }
 
+/*
+ * Extract a number field's raw value and its maximum, noting a repeating
+ * set's count on the way. Returns false, after printing the field as not
+ * available or out of range, when the value is in its top sentinel band or
+ * below its rangeMin; true when it is a reading to print.
+ */
 static bool extractNumberNotEmpty(const Field   *field,
                                   const char    *fieldName,
                                   const uint8_t *data,
@@ -545,7 +551,9 @@ static bool extractNumberNotEmpty(const Field   *field,
     }
   }
 
-  if (*value > threshold)
+  // An unsigned 64-bit field's maximum is all ones, which is -1 as an int64_t: compare its bits unsigned, or
+  // every value up to 2^63 would be above the threshold.
+  if ((*maxValue < 0) ? ((uint64_t) *value > (uint64_t) threshold) : (*value > threshold))
   {
     printEmpty(fieldName, *value - *maxValue);
     return false;
