@@ -1006,7 +1006,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Dipswitch", .camelName = "dipswitch", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Type", .camelName = "type", .fieldType = "UINT8", .resolution = 1.0, .description = "Observed 0x0F for circuit-state reports"},
-      {.name = "Bitmap", .camelName = "bitmap", .fieldType = "BINARY", .size = 32, .resolution = 1.0, .description = "32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON"}
+      {.name = "Bitmap", .camelName = "bitmap", .fieldType = "BITLOOKUP", .size = 32, .resolution = 1.0, .description = "32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON", .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupCZONE_CIRCUIT_BITMAP, .lookup.name = "CZONE_CIRCUIT_BITMAP"}
      },
      .camelDescription = "bepMarineCzoneCircuitStatus",
      .explanation = "Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks every module to report; the bitmap bytes are then unused.",
@@ -1544,7 +1544,7 @@ Pgn pgnList[] = {
       {.name = "Field 1", .camelName = "field1", .fieldType = "UINT8", .resolution = 1.0, .description = "Pass-through byte; purpose unverified"},
       {.name = "Field 2", .camelName = "field2", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "5-bit field; purpose unverified"},
       {.name = "Field 3", .camelName = "field3", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "3-bit field; purpose unverified"},
-      {.name = "Status Bitmap", .camelName = "statusBitmap", .fieldType = "BINARY", .size = 32, .resolution = 1.0, .description = "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified."}
+      {.name = "Status Bitmap", .camelName = "statusBitmap", .fieldType = "BITLOOKUP", .size = 32, .resolution = 1.0, .description = "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified.", .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupCZONE_STATUS_BITMAP, .lookup.name = "CZONE_STATUS_BITMAP"}
      },
      .camelDescription = "bepMarineCzone65301",
      .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md"},
@@ -9937,7 +9937,7 @@ Pgn pgnList[] = {
       {.name = "Field A", .camelName = "fieldA", .fieldType = "BINARY", .size = 4, .resolution = 1.0, .description = "Reserved (unused)"},
       {.name = "Sub Helm", .camelName = "subHelm", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Helm-station sub-address (Mercury multi-helm); byte 3 low nibble"},
       {.name = "Helm", .camelName = "helm", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Helm-station address (Mercury multi-helm); byte 3 high nibble"},
-      {.name = "Capabilities", .camelName = "capabilities", .fieldType = "BINARY", .size = 8, .resolution = 1.0, .description = "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"}
+      {.name = "Capabilities", .camelName = "capabilities", .fieldType = "BITLOOKUP", .size = 8, .resolution = 1.0, .description = "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability", .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupMERCURY_ENGINE_CAPABILITY, .lookup.name = "MERCURY_ENGINE_CAPABILITY"}
      },
      .camelDescription = "mercuryEngineStatus",
      .priority = 7,

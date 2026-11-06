@@ -48,6 +48,7 @@ fields:
   description: Helm-station address (Mercury multi-helm); byte 3 high nibble
 - id: capabilities
   name: Capabilities
-  type: BINARY
+  type: BITLOOKUP
+  lookupBits: MERCURY_ENGINE_CAPABILITY
   bits: 8
   description: 'Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability'

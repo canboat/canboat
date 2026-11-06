@@ -5309,6 +5309,18 @@
     ],
     "LookupBitEnumerations":[
       {
+        "Name":"CZONE_CIRCUIT_BITMAP",
+        "MaxValue":31,
+        "EnumBitValues":[
+        ]
+      },
+      {
+        "Name":"CZONE_STATUS_BITMAP",
+        "MaxValue":31,
+        "EnumBitValues":[
+        ]
+      },
+      {
         "Name":"DISABLED_SATELLITES",
         "MaxValue":39,
         "EnumBitValues":[
@@ -5543,6 +5555,14 @@
           {"Name":"Source Disable", "Bit":47},
           {"Name":"Source Rename", "Bit":48},
           {"Name":"Internal DAB Module", "Bit":50}
+        ]
+      },
+      {
+        "Name":"MERCURY_ENGINE_CAPABILITY",
+        "MaxValue":7,
+        "EnumBitValues":[
+          {"Name":"Beacon", "Bit":0},
+          {"Name":"Cruise Control", "Bit":1}
         ]
       },
       {
@@ -12194,7 +12214,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":4294967295,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"CZONE_CIRCUIT_BITMAP"
           }
         ]
       },
@@ -15806,7 +15829,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":4294967295,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"CZONE_STATUS_BITMAP"
           }
         ]
       },
@@ -81569,7 +81595,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":255,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"MERCURY_ENGINE_CAPABILITY"
           }
         ]
       },

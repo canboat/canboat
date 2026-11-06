@@ -4267,6 +4267,10 @@ limitations under the License.
     </LookupIndirectEnumeration>
   </LookupIndirectEnumerations>
   <LookupBitEnumerations>
+    <LookupBitEnumeration Name="CZONE_CIRCUIT_BITMAP" MaxValue="31">
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name="CZONE_STATUS_BITMAP" MaxValue="31">
+    </LookupBitEnumeration>
     <LookupBitEnumeration Name="DISABLED_SATELLITES" MaxValue="39">
       <BitPair Bit="0" Name="Disable SV #1" />
       <BitPair Bit="1" Name="Disable SV #2" />
@@ -4459,6 +4463,10 @@ limitations under the License.
       <BitPair Bit="47" Name="Source Disable" />
       <BitPair Bit="48" Name="Source Rename" />
       <BitPair Bit="50" Name="Internal DAB Module" />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name="MERCURY_ENGINE_CAPABILITY" MaxValue="7">
+      <BitPair Bit="0" Name="Beacon" />
+      <BitPair Bit="1" Name="Cruise Control" />
     </LookupBitEnumeration>
     <LookupBitEnumeration Name="SIMNET_ALERT_BITFIELD" MaxValue="63">
       <BitPair Bit="0" Name="No GPS fix" />
@@ -11214,7 +11222,10 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967295</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>CZONE_CIRCUIT_BITMAP</LookupBitEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -14952,7 +14963,10 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967295</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>CZONE_STATUS_BITMAP</LookupBitEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -81715,7 +81729,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>MERCURY_ENGINE_CAPABILITY</LookupBitEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
