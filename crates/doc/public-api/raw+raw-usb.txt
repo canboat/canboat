@@ -1162,6 +1162,7 @@ pub canboat::prelude::DecodedPgn::id_is_pinned: bool
 pub canboat::prelude::DecodedPgn::index_by_order: [i8; 32]
 pub canboat::prelude::DecodedPgn::pgn: u32
 pub canboat::prelude::DecodedPgn::prio: u8
+pub canboat::prelude::DecodedPgn::repeat_records: [u32; 2]
 pub canboat::prelude::DecodedPgn::src: u8
 pub canboat::prelude::DecodedPgn::timestamp: core::option::Option<alloc::string::String>
 impl canboat::DecodedPgn
@@ -1752,6 +1753,7 @@ pub canboat::DecodedPgn::id_is_pinned: bool
 pub canboat::DecodedPgn::index_by_order: [i8; 32]
 pub canboat::DecodedPgn::pgn: u32
 pub canboat::DecodedPgn::prio: u8
+pub canboat::DecodedPgn::repeat_records: [u32; 2]
 pub canboat::DecodedPgn::src: u8
 pub canboat::DecodedPgn::timestamp: core::option::Option<alloc::string::String>
 impl canboat::DecodedPgn
