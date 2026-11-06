@@ -145,6 +145,11 @@ extern const char *sentinelsName(Sentinels s)
   }
 }
 
+/*
+ * The largest value a field of this width, sign, resolution and offset can
+ * hold, less its `specialvalues` sentinels, raised to the highest value a
+ * PAIR `lookup` names in the sentinel region.
+ */
 static double
 getMaxRange(const char *name, uint32_t size, double resolution, bool sign, double offset, LookupInfo *lookup, uint8_t specialvalues)
 {

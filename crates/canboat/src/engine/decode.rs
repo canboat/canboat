@@ -1611,6 +1611,9 @@ fn decode_float(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) ->
     })
 }
 
+/// LOOKUP: the value with the name its enumeration gives it; an unnamed
+/// value as its number, unless it is one of the field's own sentinels,
+/// which decode as not available, out of range or reserved.
 fn decode_lookup(
     f: &FieldInfo,
     data: &[u8],

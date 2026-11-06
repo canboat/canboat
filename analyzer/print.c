@@ -957,6 +957,12 @@ static bool lookupNameIsShared(const Field *field, int64_t value)
   return value >= 0 && (size_t) value < cache[i].codes && cache[i].shared[value];
 }
 
+/*
+ * Print a LOOKUP, INDIRECT_LOOKUP or FIELDTYPE_LOOKUP field: the name its
+ * lookup (or, for a matched field, its description) gives the value; an
+ * unnamed value as its number; and only the field's own top-of-range
+ * sentinels as not available. Returns false when a match value differs.
+ */
 extern bool fieldPrintLookup(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
@@ -2333,6 +2339,12 @@ const Field *g_ftf         = NULL;
 int64_t      g_length      = 0;
 bool         g_lengthValid = false;
 
+/*
+ * Print a key/value record's value (DYNAMIC_FIELD_VALUE) as the field type
+ * its key resolved to (`g_ftf`), over the record's length when one was
+ * given, or as binary data when the key is unknown. A value cut off by the
+ * end of the message is skipped. Returns the value printer's result.
+ */
 extern bool fieldPrintKeyValue(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
