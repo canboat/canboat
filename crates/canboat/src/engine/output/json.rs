@@ -188,20 +188,18 @@ pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions
     Ok(())
 }
 
+/// Write the body of one decoded record as JSON: the header keys, then the
+/// visible fields in a `"fields"` object, each repeating set the PGN defines
+/// as a list of one object per record (`[]` when it has none), in schema
+/// order. `fields_buf` is scratch space reused between records.
 fn write_json_inner<W: fmt::Write>(
     w: &mut W,
     pgn: &DecodedPgn,
     opts: &JsonOptions,
     fields_buf: &mut String,
 ) -> fmt::Result {
-    let mut top_sep = "";
-    // Active repeating-list state: which set (1 → "list", 2 → "list2")
-    // and which iteration index we're inside.
-    let mut current_set: u8 = 0;
-    let mut current_iter: Option<u32> = None;
-
     let payload_bits = (pgn.data.len() as u32).saturating_mul(8);
-    for f in &pgn.fields {
+    let visible = |f: &DecodedField| -> bool {
         // Fields whose first byte sits entirely past the payload are
         // dropped — canboat suppresses them regardless of `-empty` /
         // `-debug` (e.g. PGN 126998's third STRING_LAU when only two
@@ -210,7 +208,7 @@ fn write_json_inner<W: fmt::Write>(
         if let Some(bo) = f.bit_offset
             && bo >= payload_bits
         {
-            continue;
+            return false;
         }
         // All three top-of-range sentinels — Unknown, Out Of Range and
         // Reserved — are dropped from JSON. canboat routes every one of
@@ -219,7 +217,7 @@ fn write_json_inner<W: fmt::Write>(
         // "Out Of Range" / "Reserved" spellings are text-mode only.
         // `-debug` still keeps them, so the byte/bit diagnostic survives.
         if !opts.include_empty && !opts.debug && f.value.is_sentinel() {
-            continue;
+            return false;
         }
         // SPARE fields: canboat C's `fieldPrintSpare` (print.c:900)
         // drops them when zero but renders the bytes as BINARY when
@@ -229,7 +227,7 @@ fn write_json_inner<W: fmt::Write>(
         if let FieldValue::Spare { value, .. } = &f.value
             && *value == 0
         {
-            continue;
+            return false;
         }
         // Reserved fields whose value is all-ones (the "unused"
         // default) are skipped entirely — even under -debug, matching
@@ -244,102 +242,80 @@ fn write_json_inner<W: fmt::Write>(
         // of 0xFF, which is not 0x7FFF, and the two computations
         // disagreed.
         if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty()) {
-            continue;
-        }
-        // Determine "where is this field going":
-        // - non-repeating (repeat_set == 0): top-level field.
-        // - repeat_set == 1: under "list".
-        // - repeat_set == 2: under "list2".
-        // Crossing set boundaries closes the previous list and opens the
-        // next; crossing iterations within the same set inserts "},{".
-        if f.repeat_set == 0 {
-            if current_set != 0 {
-                fields_buf.write_str("}]")?;
-                current_set = 0;
-                current_iter = None;
-            }
-            fields_buf.write_str(top_sep)?;
-            write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
-            fields_buf.write_char(':')?;
-            write_field_value(fields_buf, f, opts, &pgn.data)?;
-            top_sep = ",";
-        } else {
-            let iter = f.repeat_index.unwrap_or(0);
-            if current_set != f.repeat_set {
-                if current_set != 0 {
-                    fields_buf.write_str("}]")?;
-                }
-                fields_buf.write_str(top_sep)?;
-                let key = if f.repeat_set == 1 {
-                    "\"list\":[{"
-                } else {
-                    "\"list2\":[{"
-                };
-                fields_buf.write_str(key)?;
-                current_set = f.repeat_set;
-                current_iter = Some(iter);
-                top_sep = ",";
-                write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
-                fields_buf.write_char(':')?;
-                write_field_value(fields_buf, f, opts, &pgn.data)?;
-            } else if Some(iter) != current_iter {
-                fields_buf.write_str("},{")?;
-                current_iter = Some(iter);
-                write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
-                fields_buf.write_char(':')?;
-                write_field_value(fields_buf, f, opts, &pgn.data)?;
-            } else {
-                fields_buf.write_char(',')?;
-                write_json_string(fields_buf, field_display_name(f, opts.camel_case).as_ref())?;
-                fields_buf.write_char(':')?;
-                write_field_value(fields_buf, f, opts, &pgn.data)?;
-            }
-        }
-    }
-    if current_set != 0 {
-        fields_buf.write_str("}]")?;
-    }
-    // Empty-list placeholder: canboat C unconditionally emits
-    // `"list":[{` the moment it sees the repeating set's start field,
-    // regardless of how many iterations the count produces. When the
-    // count is 0 the result is `"list":[{}]`. Mirror that here so
-    // `Reference Stations: 0` style records line up byte-for-byte.
-    // "Did we actually emit any list fields?" — match the same
-    // filtering the JSON walker applies (NotAvailable / Spare are
-    // dropped in default mode). pgn.fields.iter().any(...) by itself
-    // would over-count, because the count=0 + truncated case still
-    // pushes NotAvailable fields onto the decoded set but the JSON
-    // emits none of them.
-    let renderable = |f: &DecodedField| {
-        if let FieldValue::Spare { value, .. } = &f.value
-            && *value == 0
-        {
-            return false;
-        }
-        if matches!(f.value, FieldValue::NotAvailable) && !opts.include_empty && !opts.debug {
             return false;
         }
         true
     };
-    let saw_set1 = pgn
-        .fields
-        .iter()
-        .any(|f| f.repeat_set == 1 && renderable(f));
-    let saw_set2 = pgn
-        .fields
-        .iter()
-        .any(|f| f.repeat_set == 2 && renderable(f));
-    if pgn.has_repeating_set[0] && !saw_set1 {
-        if !fields_buf.is_empty() && current_set == 0 {
-            fields_buf.push_str(top_sep);
+    let write_field = |buf: &mut String, sep: &str, f: &DecodedField| -> fmt::Result {
+        buf.write_str(sep)?;
+        write_json_string(buf, field_display_name(f, opts.camel_case).as_ref())?;
+        buf.write_char(':')?;
+        write_field_value(buf, f, opts, &pgn.data)
+    };
+    // A repeating set is written as a list with one object per record,
+    // `{}` for a record whose values were all left out, and `[]` for a
+    // set the PGN defines but this message has no records of — the C
+    // analyzer's shape. Sets are written in schema order: list before
+    // list2.
+    let write_set = |buf: &mut String, sep: &str, set: u8, run: &[DecodedField]| -> fmt::Result {
+        let k = usize::from(set - 1);
+        let records = run
+            .iter()
+            .filter_map(|f| f.repeat_index.map(|i| i + 1))
+            .fold(pgn.repeat_records[k], u32::max);
+        buf.write_str(sep)?;
+        buf.write_str(if set == 1 {
+            "\"list\":["
+        } else {
+            "\"list2\":["
+        })?;
+        for record in 0..records {
+            buf.write_str(if record == 0 { "{" } else { ",{" })?;
+            let mut sep = "";
+            for f in run.iter().filter(|f| f.repeat_index.unwrap_or(0) == record) {
+                if visible(f) {
+                    write_field(buf, sep, f)?;
+                    sep = ",";
+                }
+            }
+            buf.write_char('}')?;
         }
-        fields_buf.push_str("\"list\":[{}]");
+        buf.write_char(']')
+    };
+
+    let mut top_sep = "";
+    let mut written = [false, false];
+    let mut rest = &pgn.fields[..];
+    while let Some(first) = rest.first() {
+        let set = first.repeat_set;
+        let len = rest.iter().take_while(|f| f.repeat_set == set).count();
+        let (run, tail) = rest.split_at(len);
+        rest = tail;
+        if set == 0 {
+            for f in run.iter().filter(|f| visible(f)) {
+                write_field(fields_buf, top_sep, f)?;
+                top_sep = ",";
+            }
+            continue;
+        }
+        for earlier in 1..set {
+            let k = usize::from(earlier - 1);
+            if pgn.has_repeating_set[k] && !written[k] {
+                write_set(fields_buf, top_sep, earlier, &[])?;
+                written[k] = true;
+                top_sep = ",";
+            }
+        }
+        write_set(fields_buf, top_sep, set, run)?;
+        written[usize::from(set - 1)] = true;
+        top_sep = ",";
     }
-    if pgn.has_repeating_set[1] && !saw_set2 {
-        if !fields_buf.is_empty() {
-            fields_buf.push(',');
+    for set in 1..=2u8 {
+        let k = usize::from(set - 1);
+        if pgn.has_repeating_set[k] && !written[k] {
+            write_set(fields_buf, top_sep, set, &[])?;
+            top_sep = ",";
         }
-        fields_buf.push_str("\"list2\":[{}]");
     }
     if !fields_buf.is_empty() {
         w.write_str(",\"fields\":{")?;
@@ -1130,6 +1106,7 @@ mod tests {
 
     use crate::engine::decode::{DecodedField, FieldValue};
 
+    /// A PGN 128267 record with one field, `Offset`, for the writer tests.
     fn sample_pgn() -> DecodedPgn {
         // PGN 128267 (Water Depth) field 3 is `Offset` — m, res 0.001 —
         // which matches the legacy hand-rolled fixture this test used
@@ -1160,6 +1137,7 @@ mod tests {
                 overrides: None,
             }],
             has_repeating_set: [false, false],
+            repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
         }
     }
