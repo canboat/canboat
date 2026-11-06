@@ -148,13 +148,17 @@ def main():
     print("values:")
     # The registry lists some companies under more than one code. A lookup
     # gives each name to one code (keel rule R24), so a later code carries
-    # its number.
-    seen = set()
+    # its number. The names already written are tracked, so a numbered name
+    # can't clash with one the registry itself gives.
+    emitted = set()
     for code in sorted(reg):
-        name = reg[code][0]
-        if name in seen:
-            name = f"{name} ({code})"
-        seen.add(reg[code][0])
+        base = reg[code][0]
+        name = base
+        n = 1
+        while name in emitted:
+            name = f"{base} ({code})" if n == 1 else f"{base} ({code}-{n})"
+            n += 1
+        emitted.add(name)
         print(f"  {code}: {yaml_scalar(name)}")
     return 0
 
