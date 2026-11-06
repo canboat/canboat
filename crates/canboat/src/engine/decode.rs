@@ -366,12 +366,16 @@ pub enum FieldValue {
 impl FieldValue {
     /// Extract a `f64` for numeric variants. `Integer` widens; `Time`
     /// returns the post-resolution `seconds` value (matching what
-    /// formatters show). Non-numeric variants return `None`.
+    /// formatters show); `Lookup` returns its code, as
+    /// [`as_i64`](Self::as_i64) does, so a field that became a lookup (a
+    /// matched field named by its description, canboat#1153) still reads
+    /// as its number. Non-numeric variants return `None`.
     #[inline]
     pub fn as_f64(&self) -> Option<f64> {
         match self {
             FieldValue::Number(v) | FieldValue::Float(v) => Some(*v),
             FieldValue::Integer(v) => Some(*v as f64),
+            FieldValue::Lookup { value, .. } => Some(*value as f64),
             FieldValue::Time { seconds, .. } => Some(*seconds),
             FieldValue::Date(d) => Some(*d as f64),
             FieldValue::Mmsi(v) => Some(*v as f64),
@@ -3079,6 +3083,39 @@ mod tests {
         let dec = db.decode(&frame).expect("decode");
         assert!(dec.fields.iter().all(|f| f.info.name != "SPN"));
         assert_eq!(dec.has_repeating_set, [false, false], "no list");
+    }
+
+    #[test]
+    fn a_matched_field_is_named_and_still_reads_as_its_number() {
+        // 130822's Command 1 is "Source Report" (canboat#1153); code that
+        // read it as a number still does, through as_i64 and as_f64.
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130822,
+            src: 21,
+            dst: 255,
+            data: smallvec::smallvec![
+                0x13, 0x99, 0xff, 0x01, 0x00, 0x09, 0x02, 0x83, 0x0c, 0x02, 0x4b, 0x00, 0x00, 0xab,
+                0xca
+            ],
+        };
+        let dec = db.decode(&frame).expect("decode");
+        let command = dec
+            .fields
+            .iter()
+            .find(|f| f.info.id == "command")
+            .expect("command");
+        assert!(matches!(
+            command.value,
+            FieldValue::Lookup {
+                value: 1,
+                name: Some("Source Report")
+            }
+        ));
+        assert_eq!(command.value.as_i64(), Some(1));
+        assert_eq!(command.value.as_f64(), Some(1.0));
     }
 
     #[test]
