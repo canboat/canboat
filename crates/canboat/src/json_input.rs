@@ -238,8 +238,9 @@ fn frame_from_json_as(
         bail!("record has no 'pgn'");
     };
     // Synthetic canboat-internal PGNs (gateway status et al.) never
-    // exist on the wire; skip them silently on the way back.
-    if pgn >= 0x40000 {
+    // exist on the bus, so a command is never sent as one; a record
+    // canboat decoded is written back as it was read.
+    if pgn >= 0x40000 && !decoded {
         return Ok(None);
     }
 
@@ -971,6 +972,51 @@ mod tests {
                     .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
                     .unwrap();
                 assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+            }
+        }
+    }
+
+    /// A gateway's own record, canboat's startup record and a single frame
+    /// shorter than 8 bytes come back as they were read (canboat#1152).
+    #[test]
+    fn pseudo_pgns_and_a_short_single_frame_encode_back() {
+        let frames: [(u32, &str); 3] = [
+            // Actisense System Status.
+            (
+                262386,
+                "01,0e,00,d7,e2,01,00,00,00,00,00,02,20,04,00,00,01,00,01,00,00,00,4e,62,02,13,00,01,01,1c,01,0a,0e",
+            ),
+            // CANboat Startup: its strings are padded with NULs.
+            (
+                262656,
+                "28,23,63,61,6e,61,6c,79,73,74,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00",
+            ),
+            // A 65280 catch-all with 5 of its 6 data bytes.
+            (65280, "7d,99,08,01,00,03,00"),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 7, pgn, 8, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
+                    .unwrap_or_else(|| panic!("{pgn} nv={name_value}: skipped\n{line}"));
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+                // Never sent to the bus.
+                if pgn >= 0x40000 {
+                    assert!(frame_from_json(db, &line).unwrap().is_none(), "{pgn}");
+                }
             }
         }
     }
