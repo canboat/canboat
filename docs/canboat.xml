@@ -24518,7 +24518,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>rudderPosition</Id>
+          <Id>pilotModeData</Id>
           <Name>Rudder Position</Name>
           <Description>Seatalk1 datagram 84 RR byte; positive to starboard, negative to port</Description>
           <BitLength>8</BitLength>

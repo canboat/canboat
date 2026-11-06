@@ -62,7 +62,7 @@ fields:
 - id: subMode
   name: Sub Mode
   type: UINT8
-- id: rudderPosition
+- id: pilotModeData
   name: Rudder Position
   type: ANGLE_FIX8_DEG
   description: Seatalk1 datagram 84 RR byte; positive to starboard, negative to port
@@ -81,7 +81,7 @@ samples:
     unknown1: "0x565555"
     pilotMode: "Standby"
     subMode: 0
-    rudderPosition: -5
+    pilotModeData: -5
     unknown2: "0x0205"
 - raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,36,e7,9f,42,00,0e,02,08"  # from raymarine-ev1.raw
   expects:
@@ -93,7 +93,7 @@ samples:
     unknown1: "0x36e79f"
     pilotMode: "Auto"
     subMode: 0
-    rudderPosition: 14
+    pilotModeData: 14
     unknown2: "0x0208"
 - raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,f6,e6,9b,40,00,00,42,08"  # from raymarine-ev1.raw
   expects:
@@ -105,5 +105,5 @@ samples:
     unknown1: "0xf6e69b"
     pilotMode: "Standby"
     subMode: 0
-    rudderPosition: 0
+    pilotModeData: 0
     unknown2: "0x4208"

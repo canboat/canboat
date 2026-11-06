@@ -25097,7 +25097,7 @@
           },
           {
             "Order":10,
-            "Id":"rudderPosition",
+            "Id":"pilotModeData",
             "Name":"Rudder Position",
             "Description":"Seatalk1 datagram 84 RR byte; positive to starboard, negative to port",
             "BitLength":8,
