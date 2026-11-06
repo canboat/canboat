@@ -424,6 +424,8 @@ mod tests {
     use super::*;
     use crate::engine::decode::{DecodedField, DecodedPgn, FieldValue};
 
+    /// A PGN 60928 record with Unique Number and Manufacturer Code, for the
+    /// text writer tests.
     fn sample_pgn() -> DecodedPgn {
         DecodedPgn {
             timestamp: Some("2022-09-10T12:10:16.614Z".into()),
@@ -467,6 +469,7 @@ mod tests {
                 ]
             },
             has_repeating_set: [false, false],
+            repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
         }
     }
