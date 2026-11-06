@@ -328,6 +328,7 @@ mod tests {
                 mk(1, Some(1)),
             ],
             has_repeating_set: [true, true],
+            repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
         };
         assert_eq!(collect_iter_indexes(&pgn, 1), vec![0, 1, 2]);
