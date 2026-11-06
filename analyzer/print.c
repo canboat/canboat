@@ -610,6 +610,11 @@ extern bool fieldPrintMMSI(const Field   *field,
   return true;
 }
 
+/*
+ * Print a number field, scaled by its resolution and offset, in its unit.
+ * In JSON an integer wider than 53 bits prints as its digits in a string,
+ * as a JSON reader can't hold it exactly as a number.
+ */
 extern bool fieldPrintNumber(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
@@ -1100,6 +1105,11 @@ extern bool fieldPrintLookup(const Field   *field,
   return true;
 }
 
+/*
+ * Print a 64-bit ISO NAME: in JSON as its digits in a string (with -nv also
+ * decoded into its 60928 fields), in text as hex followed by those fields.
+ * Its top two values print as not available.
+ */
 extern bool fieldPrintName(const Field   *field,
                            const char    *fieldName,
                            const uint8_t *data,

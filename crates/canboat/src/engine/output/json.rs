@@ -673,6 +673,9 @@ fn write_integer<W: fmt::Write>(w: &mut W, f: &DecodedField, v: i64) -> fmt::Res
     }
 }
 
+/// Write one field's value as canboat's JSON does: numbers at the field's
+/// precision, integers wider than 53 bits and NAMEs as digit strings,
+/// lookups by name, and the `-nv` / `-debug` object forms when asked for.
 fn write_field_value<W: fmt::Write>(
     w: &mut W,
     f: &DecodedField,
