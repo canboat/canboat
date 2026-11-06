@@ -511,6 +511,10 @@ fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
     }
 }
 
+/// Turn a JSON string value for field `f` into the value the encoder
+/// stages: text, hex bytes, a date or time, a lookup label or raw code, a
+/// matched field's description, or a number. Errors when the string can't
+/// be read back for that field.
 fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
     match f.field_type {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {

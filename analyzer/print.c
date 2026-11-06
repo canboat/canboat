@@ -610,6 +610,11 @@ extern bool fieldPrintMMSI(const Field   *field,
   return true;
 }
 
+/*
+ * Print a number field, scaled by its resolution and offset, in its unit.
+ * A field that selects the PGN variant prints its description when its
+ * value is the matched one.
+ */
 extern bool fieldPrintNumber(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
