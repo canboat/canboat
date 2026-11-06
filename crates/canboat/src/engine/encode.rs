@@ -477,16 +477,14 @@ impl PgnBuilder {
         Ok(self)
     }
 
-    /// Resolve repeating set `set` (1 or 2) to `(start index, size,
-    /// count-field index)`, all zero-based, or `None` if this PGN does
-    /// not declare that set.
     /// Whether `f` is a BINARY field that ends a multi-frame message,
     /// outside any repeating set, such as a catch-all's Data: it is written
     /// only as long as the value given, as the decoder reads only the bytes
     /// that are there, so what decodes encodes back (canboat#1133). A
-    /// single frame keeps its 8 bytes.
+    /// single frame keeps its 8 bytes, unless it is a record canboat
+    /// decoded from a shorter frame (canboat#1152).
     fn open_tail(&self, f: &FieldInfo) -> bool {
-        self.pgn.packet_type != PacketType::Single
+        (self.pgn.packet_type != PacketType::Single || self.decoded)
             && f.field_type == Some(FieldType::Binary)
             && f.bit_length.is_some()
             && self
@@ -497,6 +495,9 @@ impl PgnBuilder {
             && self.set_layout(1).is_none()
     }
 
+    /// Resolve repeating set `set` (1 or 2) to `(start index, size,
+    /// count-field index)`, all zero-based, or `None` if this PGN does
+    /// not declare that set.
     fn set_layout(&self, set: usize) -> Option<(usize, usize, Option<usize>)> {
         let (start, size, count) = match set {
             1 => (
@@ -1711,11 +1712,15 @@ const AIS_TEXT_PGNS: [u32; 4] = [129040, 129794, 129809, 129810];
 /// The byte a `STRING_FIX` field in `pgn` is padded with. AIS pads unused
 /// text characters with `@` (6-bit code 0, ITU-R M.1371), and MFDs
 /// (Raymarine Axiom, Furuno TZT) show 0xff padding in AIS names as junk.
-/// Every other fixed string pads with 0xff, the convention real devices
-/// and canboatjs use. The decoder trims NUL, 0xff, `@` and space alike.
+/// canboat's own startup record (262656) pads with NULs, as its readers
+/// write it. Every other fixed string pads with 0xff, the convention real
+/// devices and canboatjs use. The decoder trims NUL, 0xff, `@` and space
+/// alike.
 fn string_fix_pad(pgn: u32) -> u8 {
     if AIS_TEXT_PGNS.contains(&pgn) {
         b'@'
+    } else if pgn == crate::engine::startup::CANBOAT_BEM {
+        0
     } else {
         0xff
     }
