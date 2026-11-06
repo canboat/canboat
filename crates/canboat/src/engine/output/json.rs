@@ -188,6 +188,10 @@ pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions
     Ok(())
 }
 
+/// Write the body of one decoded record as JSON: the header keys, then the
+/// visible fields in a `"fields"` object, each repeating set the PGN defines
+/// as a list of one object per record (`[]` when it has none), in schema
+/// order. `fields_buf` is scratch space reused between records.
 fn write_json_inner<W: fmt::Write>(
     w: &mut W,
     pgn: &DecodedPgn,
@@ -1080,6 +1084,7 @@ mod tests {
 
     use crate::engine::decode::{DecodedField, FieldValue};
 
+    /// A PGN 128267 record with one field, `Offset`, for the writer tests.
     fn sample_pgn() -> DecodedPgn {
         // PGN 128267 (Water Depth) field 3 is `Offset` — m, res 0.001 —
         // which matches the legacy hand-rolled fixture this test used

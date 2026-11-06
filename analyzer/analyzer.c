@@ -1740,6 +1740,13 @@ static void printEmptyList(const char *key, bool *listOpen)
   mprintf("%s\"%s\":[]", getSep(), key);
 }
 
+/*
+ * Print the fields of `pgn` from `data`, as text or (showJson) JSON, with
+ * each repeating set as a list of records. In JSON, a set the PGN defines
+ * but the message has no records for is written as an empty list.
+ * `variableFields` counts the repeating-set fields left to print. Returns
+ * false, and stops, at the first field that could not be printed.
+ */
 extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields)
 {
   size_t  i;

@@ -712,6 +712,9 @@ struct DecodeContext {
     resolved_target: Option<(&'static PgnInfo, bool)>,
 }
 
+/// Decode every field of `info` from `data`, repeating sets included.
+/// Returns the fields in wire order and, per repeating set, the number of
+/// records decoded (`None` when the message ends before the set starts).
 fn decode_fields(
     info: &'static PgnInfo,
     data: &[u8],
@@ -830,6 +833,11 @@ pub(crate) fn build_index_by_order(fields: &[DecodedField]) -> [i8; 32] {
     idx
 }
 
+/// Decode repeating set `set_number`, starting at field index `start_idx`
+/// and bit `base_cursor`, into `out`. The record count comes from the field
+/// numbered `count_field_order`; without one, or when it is not available,
+/// records are decoded until the data ends. A count of 0 decodes no records.
+/// Returns the bit cursor after the set and the number of records decoded.
 #[allow(clippy::too_many_arguments)]
 fn decode_repeating(
     info: &'static PgnInfo,
