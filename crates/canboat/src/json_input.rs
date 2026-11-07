@@ -430,21 +430,29 @@ fn number_parameters_by_id(
     let mut definition = builder.staged_commanded_definition().ok_or_else(no_pgn)?;
     let mut numbers = vec![0u8; by_id.len()];
     for _ in 0..4 {
-        // An id the definition lacks may be found once the others select
-        // a more specific one, so it only counts when nothing changes.
+        // An id the definition lacks, or names more than once, may be
+        // settled once the others select a more specific definition, so it
+        // only counts when nothing changes.
         let catch_all = builder.staged_commanded_fallback();
-        let mut missing = None;
+        let mut unsettled = None;
         for (number, &(set, idx, id, index_field)) in numbers.iter_mut().zip(by_id) {
-            let index = match parameter_number(definition, id)? {
-                Some(index) => Some(index),
-                None => match catch_all {
-                    Some(catch_all) => parameter_number(catch_all, id)?,
-                    None => None,
-                },
+            let named = match parameter_number(definition, id) {
+                Named::None => catch_all.map_or(Named::None, |c| parameter_number(c, id)),
+                named => named,
             };
-            let Some(index) = index else {
-                missing = Some(id);
-                continue;
+            let index = match named {
+                Named::One(index) => index,
+                Named::None => {
+                    unsettled = Some((id, "no such field in"));
+                    continue;
+                }
+                Named::Many => {
+                    unsettled = Some((
+                        id,
+                        "a repeating field, so it names more than one parameter; give the parameter number, in",
+                    ));
+                    continue;
+                }
             };
             *number = index;
             builder
@@ -453,8 +461,8 @@ fn number_parameters_by_id(
         }
         let selected = builder.staged_commanded_definition().ok_or_else(no_pgn)?;
         if std::ptr::eq(selected, definition) {
-            if let Some(id) = missing {
-                bail!("parameterId '{id}': no such field in '{}'", definition.id);
+            if let Some((id, why)) = unsettled {
+                bail!("parameterId '{id}': {why} '{}'", definition.id);
             }
             for (&number, &(_, _, id, _)) in numbers.iter().zip(by_id) {
                 let named = crate::engine::decode::parameter_field(selected, u32::from(number));
@@ -474,24 +482,25 @@ fn number_parameters_by_id(
     )
 }
 
-/// The one parameter number `id` names in `definition`, or `None` when it
-/// names none. A field in a repeating set is named by every repetition, so
-/// its id alone can't say which one is meant: that is refused, and the
-/// parameter number has to be given.
-fn parameter_number(definition: &'static PgnInfo, id: &str) -> Result<Option<u8>> {
+/// How many parameters of a definition an id names.
+enum Named {
+    None,
+    One(u8),
+    /// A field in a repeating set is named by every repetition, so its id
+    /// alone can't say which one is meant.
+    Many,
+}
+
+/// The parameter number `id` names in `definition`.
+fn parameter_number(definition: &'static PgnInfo, id: &str) -> Named {
     let mut found = (1..=255u8).filter(|&i| {
         crate::engine::decode::parameter_field(definition, u32::from(i)).is_some_and(|f| f.id == id)
     });
-    let Some(first) = found.next() else {
-        return Ok(None);
-    };
-    if found.next().is_some() {
-        bail!(
-            "parameterId '{id}' is a repeating field of '{}', so it names more than one parameter; give the parameter number",
-            definition.id
-        );
+    match (found.next(), found.next()) {
+        (None, _) => Named::None,
+        (Some(index), None) => Named::One(index),
+        (Some(_), Some(_)) => Named::Many,
     }
-    Ok(Some(first))
 }
 
 fn find_field(builder: &PgnBuilder, key: &str) -> Option<&'static FieldInfo> {
@@ -1386,6 +1395,30 @@ mod tests {
         .unwrap()
         .unwrap();
         assert_eq!(data_by_id.data, data_by_number.data);
+
+        // An id that is ambiguous at first can be settled by the others: in
+        // a command for 126208 itself, `parameter` repeats in the Request
+        // form but is field 11 of Read Fields, which functionCode 3 selects.
+        let meta = |params: &str| {
+            format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":126208,"priority":8,"numberOfParameters":2,"list":[{params}]}}}}"#
+            )
+        };
+        let by_number = frame_from_json(
+            db,
+            &meta(r#"{"parameter":1,"value":3},{"parameter":11,"value":5}"#),
+        )
+        .unwrap()
+        .unwrap();
+        let by_id = frame_from_json(
+            db,
+            &meta(
+                r#"{"parameterId":"functionCode","value":3},{"parameterId":"parameter","value":5}"#,
+            ),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(by_id.data, by_number.data);
     }
 
     #[test]
