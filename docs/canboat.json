@@ -5309,6 +5309,18 @@
     ],
     "LookupBitEnumerations":[
       {
+        "Name":"CZONE_CIRCUIT_BITMAP",
+        "MaxValue":31,
+        "EnumBitValues":[
+        ]
+      },
+      {
+        "Name":"CZONE_STATUS_BITMAP",
+        "MaxValue":31,
+        "EnumBitValues":[
+        ]
+      },
+      {
         "Name":"DISABLED_SATELLITES",
         "MaxValue":39,
         "EnumBitValues":[
@@ -5543,6 +5555,14 @@
           {"Name":"Source Disable", "Bit":47},
           {"Name":"Source Rename", "Bit":48},
           {"Name":"Internal DAB Module", "Bit":50}
+        ]
+      },
+      {
+        "Name":"MERCURY_ENGINE_CAPABILITY",
+        "MaxValue":7,
+        "EnumBitValues":[
+          {"Name":"Beacon", "Bit":0},
+          {"Name":"Cruise Control", "Bit":1}
         ]
       },
       {
@@ -12194,7 +12214,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":4294967295,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"CZONE_CIRCUIT_BITMAP"
           }
         ]
       },
@@ -13506,7 +13529,13 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -15800,7 +15829,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":4294967295,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"CZONE_STATUS_BITMAP"
           }
         ]
       },
@@ -20141,7 +20173,13 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
+            "FieldType":"NUMBER"
           },
           {
             "Order":6,
@@ -25060,12 +25098,21 @@
           {
             "Order":10,
             "Id":"pilotModeData",
-            "Name":"Pilot Mode Data",
+            "Name":"Rudder Position",
+            "Description":"Seatalk1 datagram 84 RR byte; positive to starboard, negative to port",
             "BitLength":8,
             "BitOffset":80,
             "BitStart":0,
+            "Unit":"deg",
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":true,
+            "RangeMin":-128,
+            "RangeMax":124,
+            "UnknownValue":127,
+            "OutOfRangeValue":126,
+            "ReservedValue":125,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":11,
@@ -41436,7 +41483,13 @@
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           },
           {
             "Order":8,
@@ -81510,7 +81563,12 @@
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"NUMBER"
           },
           {
             "Order":7,
@@ -81521,7 +81579,12 @@
             "BitOffset":28,
             "BitStart":4,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"NUMBER"
           },
           {
             "Order":8,
@@ -81532,7 +81595,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "RangeMin":0,
+            "RangeMax":255,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"MERCURY_ENGINE_CAPABILITY"
           }
         ]
       },
