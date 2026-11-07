@@ -5,3 +5,6 @@
 {"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}
 {"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}
 {"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":6,"src":1,"dst":255,"pgn":59904,"description":"ISO Request"}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":6,"src":1,"dst":255,"pgn":59904,"description":"ISO Request"}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":6,"src":1,"dst":255,"pgn":59904,"description":"ISO Request"}

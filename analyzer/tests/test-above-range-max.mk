@@ -4,7 +4,8 @@
 # Above RangeMax (#1167): latitude 111 deg, with longitude at exactly 180; both
 # at their edge, 90 and 180; both one step above it; heading at its edge (2 pi),
 # one step above it, at the top of its own bits below the sentinels, and all
-# ones, not available. In Metric and SI.
+# ones, not available; and a PGN field above its range, then its Reserved and
+# Unknown values, which stay sentinels. In Metric and SI.
 #
 .PHONY: test-above-range-max
 tests: test-above-range-max

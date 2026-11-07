@@ -216,6 +216,7 @@ static const struct
     {"semi-circle/s", "rad/s", Pi, 1.0},
 };
 
+/* Scale a field's resolution, offset and range by mul / div, and set its unit. */
 static void scaleUnit(Field *f, double mul, double div, const char *unit)
 {
   f->resolution = f->resolution * mul / div;
@@ -226,6 +227,11 @@ static void scaleUnit(Field *f, double mul, double div, const char *unit)
   logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
 }
 
+/*
+ * Convert a field to the units asked for: SI with -si, otherwise the practical
+ * ones. Its range goes along, and an angle's stops at 2 pi, or pi when signed, in
+ * both, so that a value being out of range does not depend on the units.
+ */
 void fixupUnit(Field *f)
 {
   if (showSI)

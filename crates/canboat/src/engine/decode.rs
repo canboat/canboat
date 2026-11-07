@@ -1587,6 +1587,8 @@ fn decode_variable(
     ))
 }
 
+/// A number field: its value scaled by resolution and offset, or what it is
+/// instead when it is a sentinel or outside the field's range.
 fn decode_number(
     f: &FieldInfo,
     data: &[u8],
@@ -2110,6 +2112,8 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     FieldValue::Binary(out)
 }
 
+/// An MMSI field: its number, or not available or out of range, by the C
+/// analyzer's rules below.
 fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length != 32 {
         return FieldValue::Unsupported {
@@ -2143,6 +2147,8 @@ fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> 
     FieldValue::Mmsi(ex.value as u32)
 }
 
+/// A PGN field: its number, its top sentinels or out of range, with the
+/// PGN's name when the number alone says which definition it is.
 fn decode_pgn_field(
     f: &FieldInfo,
     data: &[u8],
@@ -2158,6 +2164,10 @@ fn decode_pgn_field(
     let Some(ex) = extract_bits(data, bit_offset as usize, 24, false, 0) else {
         return FieldValue::NotAvailable;
     };
+    // The top three values first, as the C analyzer tells them apart.
+    if let Some(sent) = range_max_sentinel(f, ex, 24) {
+        return sent;
+    }
     if let Some(sent) = range_max_out_of_range(f, ex, false) {
         return sent;
     }
@@ -2200,6 +2210,8 @@ fn decode_date(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> 
     FieldValue::Date(ex.value as u16)
 }
 
+/// A time field: its raw value and seconds, or what it is instead when it is
+/// a sentinel or above the field's range.
 fn decode_time(
     f: &FieldInfo,
     data: &[u8],

@@ -263,6 +263,8 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
 }
 
 /// [`field_view`] before the default precision is filled in.
+/// A field as it is in `units`: its resolution, range, unit and precision
+/// converted the way the C analyzer's `fixupUnit` does.
 fn field_view_units(f: &RawField, units: Units) -> FieldView {
     let mut v = FieldView {
         resolution: f.resolution,
