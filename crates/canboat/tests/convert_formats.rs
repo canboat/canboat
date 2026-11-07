@@ -511,3 +511,56 @@ fn bst_95_follows_the_protocol() {
         "on NMEA 2000 it is the first frame of a fast-packet"
     );
 }
+
+/// `--manufacturer-allow` and `-deny` keep a device by what it claims, and see
+/// the claim even when `--pgn` leaves it out (canboat#1177).
+#[test]
+fn manufacturers_are_filtered_by_device() {
+    // Source 1 claims Victron (358), source 2 B&G (381); source 3 never says.
+    let input = b"\
+2024-01-01T00:00:00.000Z,2,127250,1,255,8,00,00,00,ff,7f,ff,7f,fd
+2024-01-01T00:00:00.100Z,6,60928,1,255,8,00,00,c0,2c,00,00,00,80
+2024-01-01T00:00:00.200Z,6,60928,2,255,8,00,00,a0,2f,00,00,00,80
+2024-01-01T00:00:00.300Z,2,127250,1,255,8,01,00,00,ff,7f,ff,7f,fd
+2024-01-01T00:00:00.400Z,2,127250,2,255,8,02,00,00,ff,7f,ff,7f,fd
+2024-01-01T00:00:00.500Z,2,127250,3,255,8,03,00,00,ff,7f,ff,7f,fd
+";
+    let sources = |args: &[&str]| -> Vec<(u32, u8)> {
+        let mut all = vec!["convert", "--no-banner", "-"];
+        all.extend_from_slice(args);
+        String::from_utf8(run(&all, input))
+            .unwrap()
+            .lines()
+            .map(|line| {
+                let record: serde_json::Value = serde_json::from_str(line).unwrap();
+                (
+                    record["pgn"].as_u64().unwrap() as u32,
+                    record["src"].as_u64().unwrap() as u8,
+                )
+            })
+            .collect()
+    };
+    let allowed = sources(&["--manufacturer-allow", "victron"]);
+    assert_eq!(allowed, [(60928, 1), (127250, 1)]);
+    let denied = sources(&["--manufacturer-deny", "b&g"]);
+    assert_eq!(denied, [(60928, 1), (127250, 1)]);
+    let both = sources(&["--manufacturer-allow", "358,381", "--pgn", "127250"]);
+    assert_eq!(both, [(127250, 1), (127250, 2)]);
+
+    // The same on frames, passed on as frames.
+    let mut all = vec![
+        "convert",
+        "--to",
+        "plain",
+        "-",
+        "--manufacturer-deny",
+        "381",
+    ];
+    let plain = String::from_utf8(run(&all, input)).unwrap();
+    assert_eq!(plain.lines().count(), 2, "{plain}");
+    all.truncate(4);
+    assert_eq!(
+        String::from_utf8(run(&all, input)).unwrap().lines().count(),
+        6
+    );
+}

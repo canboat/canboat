@@ -30,6 +30,7 @@ mod format_message;
 pub mod help;
 mod interface;
 mod legacy;
+pub mod manufacturer;
 mod replay;
 mod stop_signal;
 mod tui;

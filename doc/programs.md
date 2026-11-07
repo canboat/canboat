@@ -114,6 +114,41 @@ It reads the snapshot (2597) and JSON stream (2598) ports. There is no default
 host: with neither option it starts idle, with a dialog to load a capture or
 connect.
 
+## Filtering by manufacturer
+
+`convert`, `interface`, `server`, `n2kd` and `tui` can keep or drop devices by
+who made them: only some manufacturers, or everyone but some.
+
+```sh
+canboat convert --manufacturer-allow victron,raymarine capture.log
+canboat server --kind actisense --device /dev/ttyUSB0 --manufacturer-deny garmin
+canboat convert --list-manufacturers
+```
+
+- **Allow or deny:** `--manufacturer-allow` only keeps these, and
+  `--manufacturer-deny` drops these. They can't be combined. Each is repeatable
+  or comma-separated.
+- **By device, not by PGN:** a message goes by the device that sent it, so every
+  PGN from that source address goes the same way. Only what canboat reads is
+  filtered, not what it sends.
+- **Where the manufacturer comes from:** the ISO Address Claim (PGN 60928), which
+  always overrides anything learned before. On NMEA 2000, the first proprietary
+  PGN from an address counts provisionally. Its code names whose message format
+  it is, so as soon as the address sends a different code it waits for its Address
+  Claim: a B&G display often sends Simrad-coded PGNs.
+- **Unknown until known:** nothing from an address passes until its manufacturer
+  is known, with either list. Those messages are dropped, not held back, so a
+  short capture may lose its start. `n2kd` and `server` ask an unknown device for
+  its Address Claim, unless told not to. A message canboat or a gateway makes
+  itself (a pseudo PGN) always passes.
+- **Names:** a value is a code (`358`) or a name from `--list-manufacturers`. Case,
+  spaces and punctuation don't matter, so `victron`, `Victron Energy` and `b&g`
+  all work, and a unique prefix is enough. A name that can't be resolved stops the
+  command before it reads anything. With `--protocol j1939` the names are J1939's,
+  whose allocation differs. `n2kd` and `tui` use NMEA 2000's names, so give a code
+  for a J1939 stream. A Quick bus has no manufacturers to filter by.
+- **In `tui`,** it filters what is shown; a Raw save of a capture holds all of it.
+
 ## `canboat format-message`
 
 Builds one message from field values, for any PGN, in canboat PLAIN or another

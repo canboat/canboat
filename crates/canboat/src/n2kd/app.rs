@@ -27,6 +27,7 @@
 //! PGNs flow unchanged through the AIS port; the NMEA stream simply
 //! doesn't emit AIVDM sentences yet.
 
+use crate::engine::manufacturer_filter::{ManufacturerFilter, ManufacturerList, claim_in_line};
 use crate::n2kd::nmea_filter::NmeaFilter;
 use crate::n2kd::request_engine::{self, RequestEngine};
 use crate::n2kd::serving::{Hub as WireHub, tcp as serving_tcp};
@@ -60,6 +61,10 @@ pub struct Args {
     /// `srcFilter`.
     #[arg(long)]
     src_filter: Option<String>,
+
+    /// Names are NMEA 2000's: give a code for a J1939 stream.
+    #[command(flatten)]
+    manufacturers: crate::cli::manufacturer::ManufacturerArgs,
 
     /// Rate-limit each (src, kind) of NMEA 0183 sentence to at most
     /// one per second. Mirrors canboat's `--rate-limit`.
@@ -137,6 +142,11 @@ pub struct Args {
 
 pub fn run(args: Args) -> Result<()> {
     let cli = args;
+    let protocol = crate::engine::BusProtocol::Nmea2000;
+    if cli.manufacturers.print_list(protocol)? {
+        return Ok(());
+    }
+    let manufacturers = cli.manufacturers.resolve(protocol)?;
     let level = if cli.quiet {
         "error"
     } else if cli.debug || cli.verbose {
@@ -173,6 +183,7 @@ pub fn run(args: Args) -> Result<()> {
     let engine = Arc::new(RequestEngine::new());
     let mut hub = Hub::new(src_filter, cli.rate_limit, udp, Arc::clone(&engine), filter);
     hub.nmea_to_stdout = cli.nmea0183 && !cli.restrict;
+    hub.manufacturers = manufacturers;
     let hub = Arc::new(hub);
 
     if !cli.nmea0183 {
@@ -412,6 +423,12 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
     let mut protocol = crate::engine::BusProtocol::Nmea2000;
     let mut saw_banner = false;
     let mut warned_no_banner = false;
+    let filter_for = |protocol| {
+        hub.manufacturers
+            .clone()
+            .map(|list| ManufacturerFilter::new(list, protocol))
+    };
+    let mut manufacturers = filter_for(protocol);
     loop {
         line.clear();
         let n = lock.read_line(&mut line).context("reading stdin")?;
@@ -428,6 +445,7 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
             // request the units they need from the right schema.
             saw_banner = true;
             (unit_si, protocol) = parse_banner(trimmed)?;
+            manufacturers = filter_for(protocol);
             log::info!("analyzer stream protocol: {protocol}");
             log::info!(
                 "analyzer stream units: {}",
@@ -477,7 +495,15 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
         if !hub.src_allowed(meta.src) {
             continue;
         }
+        // Before the filter: it is the request this prompts that gets an
+        // unknown device's Address Claim.
         hub.note_device_seen(meta.pgn, meta.src);
+        if let Some(filter) = manufacturers.as_mut() {
+            let claim = claim_in_line(meta.pgn, trimmed, protocol);
+            if !filter.keep(meta.pgn, meta.src, claim) {
+                continue;
+            }
+        }
         // `line` carries the trailing `\n` from `read_line`; the
         // snapshot's nested wrapper would print that as a blank line
         // after every entry. Strip it before stashing.
@@ -578,6 +604,9 @@ struct Hub {
     json_hub: Arc<WireHub>,
     nmea_hub: Arc<WireHub>,
     src_filter: Option<SrcFilter>,
+    /// `--manufacturer-allow`, `--manufacturer-deny`: the pump keeps its
+    /// state, as it knows the stream's protocol.
+    manufacturers: Option<ManufacturerList>,
     rate_limiter: Mutex<RateLimiter>,
     udp: Option<UdpBroadcast>,
     /// `--nmea0183` mode: NMEA / AIVDM sentences are also written to
@@ -606,6 +635,7 @@ impl Hub {
             json_hub: Arc::new(WireHub::new()),
             nmea_hub: Arc::new(WireHub::new()),
             src_filter,
+            manufacturers: None,
             rate_limiter: Mutex::new(RateLimiter::new(rate_limit)),
             udp,
             nmea_to_stdout: false,

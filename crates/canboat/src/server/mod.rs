@@ -65,6 +65,7 @@ mod tcp;
 pub use bridge::{Bridge, Transmitter};
 pub use quirks::QuirkKind;
 
+use crate::engine::manufacturer_filter::ManufacturerList;
 use std::io::{self, BufRead, BufReader, Read, Write};
 use std::net::Ipv4Addr;
 use std::path::PathBuf;
@@ -309,6 +310,9 @@ pub struct Args {
 
     /// The JSON on the analyzer, snapshot and AIS ports: field names, units
     /// and wrapping. NMEA 0183 sentences always use their own units.
+    #[command(flatten)]
+    pub(crate) manufacturers: crate::cli::manufacturer::ManufacturerArgs,
+
     #[command(flatten, next_help_heading = JSON)]
     shape: crate::cli::ShapeArgs,
 
@@ -382,6 +386,9 @@ pub struct BridgeConfig {
     /// itself, whatever the source. (An iKonvert can also filter in the
     /// gateway: [`Device::rx_filter`].) Empty: nothing is filtered.
     pub rx_filter: Vec<u32>,
+    /// Only keep, or drop, the devices of these manufacturers
+    /// (`--manufacturer-allow`, `--manufacturer-deny`). `None`: all of them.
+    pub manufacturers: Option<ManufacturerList>,
     pub no_request_claims: bool,
     pub quirk: Vec<quirks::QuirkKind>,
     pub bind: Ipv4Addr,
@@ -453,6 +460,7 @@ impl Default for BridgeConfig {
             replay: None,
             replay_sent: None,
             rx_filter: Vec::new(),
+            manufacturers: None,
             no_request_claims: false,
             quirk: Vec::new(),
             bind: Ipv4Addr::new(0, 0, 0, 0),
@@ -484,6 +492,11 @@ impl Default for BridgeConfig {
 
 #[cfg(feature = "cli")]
 impl Args {
+    /// What the bus carries (`--protocol`).
+    pub(crate) fn protocol(&self) -> crate::engine::BusProtocol {
+        self.gateway.protocol()
+    }
+
     /// Nudge users off canboat C's `--camel` / `--upper-camel` / `--si`
     /// spellings. The host binary calls this before converting to a
     /// [`BridgeConfig`], which only carries the resolved shape.
@@ -520,6 +533,7 @@ impl Args {
                 "--kind needs --device, where the gateway is (not an old --<gateway> flag)"
             );
         }
+        self.manufacturers.resolve(self.gateway.protocol())?;
         self.gateway.check(self.source()?.map(|(kind, _)| kind))
     }
 }
@@ -539,6 +553,10 @@ impl From<Args> for BridgeConfig {
             replay: a.replay,
             replay_sent: a.replay_sent,
             rx_filter: g.rx_filter.clone(),
+            manufacturers: a
+                .manufacturers
+                .resolve(g.protocol())
+                .expect("Args::check refuses a name it cannot resolve"),
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,

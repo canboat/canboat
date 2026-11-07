@@ -29,6 +29,7 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use crate::engine::format::write_plain;
+use crate::engine::manufacturer_filter::FrameManufacturerFilter;
 use crate::engine::output::{JsonOptions, write_json};
 use crate::engine::pgn_list::RxFilter;
 use crate::engine::{FramePacketType, PgnDatabase, RawFrame, Reassembled, Reassembler};
@@ -218,6 +219,7 @@ pub struct Nmea0183Options {
 ///   (`Off` / `Lower` matches canboat C `-camel`, `Upper` matches
 ///   `-upper-camel`), and the same options drive per-iteration
 ///   snapshot lines for PGNs with PK fields in a repeating set.
+#[allow(clippy::too_many_arguments)]
 pub fn run(
     db: &'static PgnDatabase,
     frames_rx: Receiver<RawFrame>,
@@ -226,6 +228,7 @@ pub fn run(
     json_opts: JsonOptions,
     nmea: Nmea0183Options,
     rx_filter: Option<RxFilter>,
+    mut manufacturers: Option<FrameManufacturerFilter>,
 ) {
     let Nmea0183Options {
         emit_stdout: emit_nmea_stdout,
@@ -286,6 +289,17 @@ pub fn run(
                 Err(_) => break,
             }
         };
+        // `--manufacturer-allow` and `-deny`. First, so that it sees the
+        // claims `rx_filter` would drop. A dropped device still counts as
+        // seen: the request this prompts is what gets an unknown device's
+        // Address Claim.
+        if !synthetic && let Some(filter) = manufacturers.as_mut() {
+            filter.set_coalesced(pre_coalesced.load(Ordering::Relaxed));
+            if !filter.keep_frame(&frame) {
+                hubs.engine.note_device_seen(frame.pgn, frame.src);
+                continue;
+            }
+        }
         // `--rx-filter`: what the gateway did not filter itself. Frames
         // canboat made itself from one that passed are not filtered again.
         if !synthetic && rx_filter.as_ref().is_some_and(|f| !f.passes(frame.pgn)) {
@@ -598,6 +612,7 @@ mod tests {
                     filter: None,
                 },
                 None,
+                None,
             )
         });
 
@@ -608,6 +623,57 @@ mod tests {
         assert_eq!(decoded.src, 0x21);
         // Exactly one record, then end-of-stream when the pipeline drains.
         assert!(tap_rx.recv().is_err(), "tap should see only the one record");
+        handle.join().unwrap();
+    }
+
+    /// `--manufacturer-allow`: a device's frames stop before its claim and
+    /// when it claims to be another maker's, and go on after its own (#1177).
+    #[test]
+    fn the_manufacturer_filter_keeps_the_claimed_device() {
+        use crate::engine::BusProtocol;
+        use crate::engine::manufacturer_filter::ManufacturerList;
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric);
+        let (frames_tx, frames_rx) = mpsc::channel();
+        let (tap_tx, tap_rx) = mpsc::channel();
+        let frame = |pgn: u32, src: u8, data: [u8; 8]| {
+            crate::engine::RawFrame::new(None, 6, pgn, src, 0xFF, data)
+        };
+        let claim = |code: u64| (code << 21).to_le_bytes();
+        const HEADING: u32 = 127250;
+        frames_tx.send(frame(HEADING, 1, [0; 8])).unwrap(); // unknown yet
+        frames_tx.send(frame(60928, 1, claim(358))).unwrap();
+        frames_tx.send(frame(HEADING, 1, [1; 8])).unwrap();
+        frames_tx.send(frame(60928, 2, claim(381))).unwrap(); // another maker
+        frames_tx.send(frame(HEADING, 2, [2; 8])).unwrap();
+        drop(frames_tx);
+
+        let list = ManufacturerList::Allow([358].into_iter().collect());
+        let manufacturers = FrameManufacturerFilter::new(list, BusProtocol::Nmea2000, db);
+        let handle = std::thread::spawn(move || {
+            run(
+                db,
+                frames_rx,
+                tapped_hubs(tap_tx),
+                Arc::new(AtomicBool::new(true)),
+                JsonOptions {
+                    include_empty: false,
+                    name_value: true,
+                    debug: false,
+                    camel_case: crate::engine::output::CamelCase::Off,
+                    wrap: false,
+                    protocol: BusProtocol::Nmea2000,
+                },
+                Nmea0183Options {
+                    emit_stdout: false,
+                    rate_limit: true,
+                    filter: None,
+                },
+                None,
+                Some(manufacturers),
+            )
+        });
+        let seen: Vec<_> = tap_rx.iter().map(|d| (d.pgn, d.src)).collect();
+        assert_eq!(seen, [(60928, 1), (HEADING, 1)]);
         handle.join().unwrap();
     }
 
@@ -658,6 +724,7 @@ mod tests {
                     rate_limit: true,
                     filter: None,
                 },
+                None,
                 None,
             )
         });

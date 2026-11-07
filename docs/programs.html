@@ -89,6 +89,19 @@ canboat interface --kind socketcan can0</code></pre>
 <pre><code class="language-sh">canboat tui --host pi.local       # a canboat server or n2kd
 canboat tui --log capture.log     # a capture</code></pre>
 <p>It reads the snapshot (2597) and JSON stream (2598) ports. There is no default host: with neither option it starts idle, with a dialog to load a capture or connect.</p>
+<h2 id="filtering-by-manufacturer">Filtering by manufacturer</h2>
+<p><code>convert</code>, <code>interface</code>, <code>server</code>, <code>n2kd</code> and <code>tui</code> can keep or drop devices by who made them: only some manufacturers, or everyone but some.</p>
+<pre><code class="language-sh">canboat convert --manufacturer-allow victron,raymarine capture.log
+canboat server --kind actisense --device /dev/ttyUSB0 --manufacturer-deny garmin
+canboat convert --list-manufacturers</code></pre>
+<ul>
+<li><strong>Allow or deny:</strong> <code>--manufacturer-allow</code> only keeps these, and <code>--manufacturer-deny</code> drops these. They can't be combined. Each is repeatable or comma-separated.</li>
+<li><strong>By device, not by PGN:</strong> a message goes by the device that sent it, so every PGN from that source address goes the same way. Only what canboat reads is filtered, not what it sends.</li>
+<li><strong>Where the manufacturer comes from:</strong> the ISO Address Claim (PGN 60928), which always overrides anything learned before. On NMEA 2000, the first proprietary PGN from an address counts provisionally. Its code names whose message format it is, so as soon as the address sends a different code it waits for its Address Claim: a B&amp;G display often sends Simrad-coded PGNs.</li>
+<li><strong>Unknown until known:</strong> nothing from an address passes until its manufacturer is known, with either list. Those messages are dropped, not held back, so a short capture may lose its start. <code>n2kd</code> and <code>server</code> ask an unknown device for its Address Claim, unless told not to. A message canboat or a gateway makes itself (a pseudo PGN) always passes.</li>
+<li><strong>Names:</strong> a value is a code (<code>358</code>) or a name from <code>--list-manufacturers</code>. Case, spaces and punctuation don't matter, so <code>victron</code>, <code>Victron Energy</code> and <code>b&amp;g</code> all work, and a unique prefix is enough. A name that can't be resolved stops the command before it reads anything. With <code>--protocol j1939</code> the names are J1939's, whose allocation differs. <code>n2kd</code> and <code>tui</code> use NMEA 2000's names, so give a code for a J1939 stream. A Quick bus has no manufacturers to filter by.</li>
+<li><strong>In <code>tui</code>,</strong> it filters what is shown; a Raw save of a capture holds all of it.</li>
+</ul>
 <h2 id="canboat-format-message"><code>canboat format-message</code></h2>
 <p>Builds one message from field values, for any PGN, in canboat PLAIN or another format (<code>--to</code>). A number is in the field's unit; <code>raw:N</code> writes the wire bits.</p>
 <pre><code class="language-sh">canboat format-message --list               # every PGN
