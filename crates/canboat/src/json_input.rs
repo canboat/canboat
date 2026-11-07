@@ -1096,12 +1096,12 @@ mod tests {
     }
 
     /// A BINARY field that starts mid-byte is its value, from bit 0, both
-    /// ways: 130829's Helm "0A" goes back to the high nibble of byte 3
-    /// (canboat#1143).
+    /// ways: 130829's Field A "05" goes back to the high nibble of byte 2
+    /// (canboat#1143). Its Helm and Sub Helm are numbers (canboat#1158).
     #[test]
     fn a_mid_byte_binary_field_encodes_as_its_value() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
-        let line = r#"{"prio":7,"src":2,"dst":255,"pgn":130829,"fields":{"manufacturerCode":144,"industryCode":4,"fieldA":"05","subHelm":"03","helm":"0A","capabilities":"01"}}"#;
+        let line = r#"{"prio":7,"src":2,"dst":255,"pgn":130829,"fields":{"manufacturerCode":144,"industryCode":4,"fieldA":"05","subHelm":3,"helm":10,"capabilities":"01"}}"#;
         let frame = frame_from_json(db, line).unwrap().unwrap();
         assert_eq!(frame.data[..], [0x90, 0x98, 0x5f, 0xa3, 0x01]);
     }

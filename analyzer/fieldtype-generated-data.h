@@ -341,6 +341,13 @@ FieldType fieldTypeList[] = {
      .resolution = 0.1,
      .physical = &ANGLE},
 
+    {.name = "ANGLE_FIX8_DEG",
+     .description = "Angle",
+     .baseFieldType = "FIX8",
+     .unit = "deg",
+     .resolution = 1.0,
+     .physical = &ANGLE},
+
     {.name = "ANGLE_UFIX16",
      .description = "Angle",
      .baseFieldType = "UFIX16",
