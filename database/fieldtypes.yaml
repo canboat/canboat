@@ -265,6 +265,12 @@
   unit: deg
   resolution: 0.1
   physical: ANGLE
+- name: ANGLE_FIX8_DEG
+  base: FIX8
+  description: Angle
+  unit: deg
+  resolution: 1.0
+  physical: ANGLE
 - name: ANGLE_UFIX16
   base: UFIX16
   description: Angle
