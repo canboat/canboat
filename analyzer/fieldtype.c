@@ -281,22 +281,27 @@ void fixupUnit(Field *f)
     {
       f->unitOffset += -273.15;
       f->rangeMin += -273.15;
-      f->rangeMax += -275.15;
+      f->rangeMax += -273.15;
       f->unit = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
     else if (strcmp(f->unit, "rad") == 0)
     {
-      // A signed angle stops at -pi, as in SI (and in keel, which converts the
-      // clamped SI range): -187.7 deg is not an angle.
+      // An angle stops as in SI (and in keel, which converts the clamped SI
+      // range), or a value's being out of range would depend on the units:
+      // -187.7 deg and 375 deg are not angles.
       if (f->hasSign)
       {
         f->rangeMin = max(f->rangeMin, -Pi);
+        f->rangeMax = min(f->rangeMax, Pi);
+      }
+      else
+      {
+        f->rangeMax = min(f->rangeMax, 2 * Pi);
       }
       f->resolution *= RadianToDegree;
       f->rangeMin *= RadianToDegree;
       f->rangeMax *= RadianToDegree;
-      f->rangeMax  = max(f->rangeMax, 360);
       f->unit      = "deg";
       f->precision = 1;
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);

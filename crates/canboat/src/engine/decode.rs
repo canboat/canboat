@@ -86,7 +86,7 @@ fn range_max_sentinel(f: &FieldInfo, ex: Extracted, bits: u32) -> Option<FieldVa
     // maximum: the schema's `offset` (J1939 Excess-K: raw 0 reads
     // 233 K) and the unit conversion the Metric schema variant applies
     // on top of it (the same field's range is 485 K in SI and
-    // 209.85 C in Metric — both raw 252). Dropping either term makes
+    // 211.85 C in Metric — both raw 252). Dropping either term makes
     // the range look wider than the field can hold, the check bails
     // out, and the all-ones "not available" pattern decodes as a real
     // reading where the C prints Unknown.
@@ -134,6 +134,29 @@ fn range_min_out_of_range(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
     let raw_min = ((range_min - display_offset - f.unit_offset) / resolution).round();
     (raw_min > i64::MIN as f64 && ex.value < raw_min as i64)
         .then_some(FieldValue::OutOfRange { value: ex.raw })
+}
+
+/// A value above the field's `RangeMax` is out of range too (#1167): a
+/// latitude of 111 degrees is no more a position than one of -111. A derived
+/// `RangeMax` ends just below the field's sentinels, so this only catches a
+/// range narrower than the bits (latitude, longitude, angles of 2 pi, ...).
+/// The raw threshold is rounded the way the encoder rounds its range check,
+/// with the offset and unit taken off first. Mirrors the C
+/// `extractNumberNotEmpty`.
+fn range_max_out_of_range(f: &FieldInfo, ex: Extracted, signed: bool) -> Option<FieldValue> {
+    let range_max = f.range_max?;
+    let resolution = f.resolution.unwrap_or(1.0);
+    if resolution <= 0.0 || !range_max.is_finite() {
+        return None;
+    }
+    let display_offset = f.offset.map(|o| o as f64).unwrap_or(0.0);
+    let raw_max = ((range_max - display_offset - f.unit_offset) / resolution).round();
+    let above = if signed {
+        raw_max < i64::MAX as f64 && ex.value > raw_max as i64
+    } else {
+        raw_max < u64::MAX as f64 && raw_max >= 0.0 && ex.raw > raw_max as u64
+    };
+    above.then_some(FieldValue::OutOfRange { value: ex.raw })
 }
 
 /// One decoded field.
@@ -1221,7 +1244,7 @@ fn decode_scalar(
         }
         Some(FieldType::Binary) => decode_binary(data, bit_offset, bit_length),
         Some(FieldType::Mmsi) => decode_mmsi(f, data, bit_offset, bit_length),
-        Some(FieldType::Pgn) => decode_pgn_field(data, bit_offset, bit_length, db),
+        Some(FieldType::Pgn) => decode_pgn_field(f, data, bit_offset, bit_length, db),
         Some(FieldType::Date) => decode_date(f, data, bit_offset, bit_length),
         Some(FieldType::Time) | Some(FieldType::Duration) => {
             decode_time(f, data, bit_offset, bit_length, signed)
@@ -1608,6 +1631,9 @@ fn decode_number(
     }
     // Signed only: an unsigned field starts at its offset, its RangeMin.
     if effective_signed && let Some(sent) = range_min_out_of_range(f, ex) {
+        return sent;
+    }
+    if let Some(sent) = range_max_out_of_range(f, ex, effective_signed) {
         return sent;
     }
     let resolution = f.resolution.unwrap_or(1.0);
@@ -2104,6 +2130,9 @@ fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> 
     if let Some(sent) = range_max_sentinel(f, ex, 32) {
         return sent;
     }
+    if let Some(sent) = range_max_out_of_range(f, ex, false) {
+        return sent;
+    }
     // No station holds MMSI 0 -- its MID, 000, is not assigned -- and
     // devices send 0 for "none": every 129810 Mothership User ID from a
     // Class B unit without one, in all the captures. Not available, like
@@ -2114,7 +2143,13 @@ fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> 
     FieldValue::Mmsi(ex.value as u32)
 }
 
-fn decode_pgn_field(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDatabase) -> FieldValue {
+fn decode_pgn_field(
+    f: &FieldInfo,
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+    db: &PgnDatabase,
+) -> FieldValue {
     if bit_length != 24 {
         return FieldValue::Unsupported {
             field_type: "PGN (non-24-bit)",
@@ -2123,6 +2158,9 @@ fn decode_pgn_field(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDatab
     let Some(ex) = extract_bits(data, bit_offset as usize, 24, false, 0) else {
         return FieldValue::NotAvailable;
     };
+    if let Some(sent) = range_max_out_of_range(f, ex, false) {
+        return sent;
+    }
     // The PGN as the sender wrote it, as canboat C prints it. A PDU1 PGN
     // has its destination in the low byte of the CAN ID, not here, so a
     // nonzero low byte is what was sent and is kept rather than hidden.
@@ -2179,6 +2217,9 @@ fn decode_time(
         return FieldValue::NotAvailable;
     };
     if let Some(sent) = sentinel_field_value(f, ex) {
+        return sent;
+    }
+    if let Some(sent) = range_max_out_of_range(f, ex, signed) {
         return sent;
     }
     let resolution = f.resolution.unwrap_or(1.0);

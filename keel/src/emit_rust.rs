@@ -326,8 +326,7 @@ fn field_view_units(f: &RawField, units: Units) -> FieldView {
         Some("K") if !f.signed.unwrap_or(false) => {
             v.unit_offset = -273.15;
             v.range_min = f.range_min.map(|x| x - 273.15);
-            // Match canboat's faithfully-quirky 275.15 subtraction.
-            v.range_max = f.range_max.map(|x| x - 275.15);
+            v.range_max = f.range_max.map(|x| x - 273.15);
             v.unit = Some("C".to_string());
         }
         Some("Pa") => {

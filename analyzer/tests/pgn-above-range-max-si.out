@@ -1,0 +1,7 @@
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Longitude":180.0000000}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude":90.0000000,"Longitude":180.0000000}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":129025,"description":"Position, Rapid Update"}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Heading":6.2832,"Reference":"Magnetic"}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}
+{"timestamp":"2026-11-05T00:00:00.000Z","prio":2,"src":1,"dst":255,"pgn":127250,"description":"Vessel Heading","fields":{"SID":1,"Reference":"Magnetic"}}

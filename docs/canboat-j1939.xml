@@ -3892,7 +3892,7 @@ limitations under the License.
           <Signed>false</Signed>
           <Offset>-125</Offset>
           <RangeMin>-125</RangeMin>
-          <RangeMax>125</RangeMax>
+          <RangeMax>126</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -3928,7 +3928,7 @@ limitations under the License.
           <Signed>false</Signed>
           <Offset>-125</Offset>
           <RangeMin>-125</RangeMin>
-          <RangeMax>125</RangeMax>
+          <RangeMax>126</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
