@@ -442,6 +442,12 @@ fn to_encode_value(
                 Some(EncodeValue::Bytes(
                     raw.to_le_bytes()[..width.min(8)].to_vec(),
                 ))
+            } else if let Some(i) = n.as_i64() {
+                // A whole number, kept exact: a 64-bit one is more than an
+                // f64 holds.
+                Some(EncodeValue::Int(i))
+            } else if let Some(u) = n.as_u64() {
+                Some(EncodeValue::Raw(u))
             } else {
                 // A physical value in the field's display unit.
                 Some(EncodeValue::Number(
@@ -514,16 +520,24 @@ fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
 
 /// Turn a JSON string value for field `f` into the value the encoder
 /// stages: text, hex bytes, a date or time, a lookup label or raw code, a
-/// matched field's description, or a number. Errors when the string can't
-/// be read back for that field.
+/// matched field's description, or a number (64-bit digit strings exactly).
+/// A key/value value of digits stays text, for the encoder to type by its
+/// key. Errors when the string can't be read back for that field.
 fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
     match f.field_type {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
             Ok(EncodeValue::Text(s.to_string()))
         }
         Some(FieldType::Binary) => Ok(EncodeValue::Bytes(parse_hex(s)?)),
-        // A key/value value is its bytes as hex, or a lookup name or time
-        // ("Off", "10:00:00") that the record's key gives meaning to.
+        // A key/value value is its bytes as hex, or a lookup name, time or
+        // a NAME's digits ("Off", "10:00:00", "13869005477589862183") that
+        // the record's key gives meaning to. Digits alone ("10") can be
+        // either a number or hex bytes, so the encoder decides by the key.
+        Some(FieldType::DynamicFieldValue)
+            if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) =>
+        {
+            Ok(EncodeValue::Text(s.to_string()))
+        }
         Some(FieldType::DynamicFieldValue) => Ok(parse_hex(s)
             .map(EncodeValue::Bytes)
             .unwrap_or_else(|_| EncodeValue::Text(s.to_string()))),
@@ -557,8 +571,11 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         _ if f.match_value.is_some() && f.description == Some(s) => {
             Ok(EncodeValue::Int(f.match_value.unwrap_or_default()))
         }
-        // Digit strings on numeric fields (e.g. an MMSI rendered as a
-        // string) parse back.
+        // Digit strings on numeric fields (an MMSI, or a NAME or other
+        // 64-bit number, which canboat writes as its digits, canboat#1157)
+        // parse back exactly.
+        _ if s.parse::<i64>().is_ok() => Ok(EncodeValue::Int(s.parse().unwrap_or_default())),
+        _ if s.parse::<u64>().is_ok() => Ok(EncodeValue::Raw(s.parse().unwrap_or_default())),
         _ => s.parse::<f64>().map(EncodeValue::Number).map_err(|_| {
             anyhow!(
                 "field '{}': cannot re-encode display string '{s}'; use -nv JSON input",
@@ -894,12 +911,6 @@ mod tests {
         assert_eq!(prns, vec![7, 11]);
     }
 
-    /// Key/value records whose values are typed by their key decode and
-    /// encode back to the same bytes, from the -nv JSON and from the
-    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
-    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
-    /// and a Navico 130822 Object Dump whose last record the frame cuts off
-    /// (canboat#1114).
     /// A field that selects the variant is written by its description
     /// (canboat#1153) and reads back from it, in plain and `-nv` JSON, and
     /// the description alone picks the variant.
@@ -935,6 +946,146 @@ mod tests {
         assert_eq!(back.data[3], 1, "{:02x?}", back.data);
     }
 
+    /// A key/value value wider than 53 bits is signed as its key's type
+    /// says, not as the value field: B&G's key 0 (Altitude, INT16) given 8
+    /// bytes of all ones is -1, as the C analyzer writes it.
+    #[test]
+    fn a_wide_key_value_value_is_signed_as_its_key_says() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let mut data = vec![0x7d, 0x99, 0x00, 0x80];
+        data.extend([0xff; 8]);
+        let decoded = db
+            .decode(&RawFrame::new(None, 7, 130824, 1, 255, data))
+            .unwrap();
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
+        assert!(line.contains(r#""value":"-1""#), "{line}");
+    }
+
+    /// A NAME and a 64-bit number are written as their digits, as most
+    /// JSON readers read a number as a double (canboat#1157), and read back
+    /// exactly from that and from a bare number.
+    #[test]
+    fn a_64_bit_value_is_written_as_its_digits_and_reads_back_exactly() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // 130840 Navico Data Source with its source's NAME, and Maretron's
+        // 130833 with a memory capacity of 0xF000000000000001, above
+        // i64::MAX.
+        let frames: [(u32, Vec<u8>, [&str; 2]); 2] = [
+            (
+                130840,
+                vec![
+                    0x41, 0x9f, 0xff, 0x00, 0x01, 0x34, 0xff, 0x73, 0x64, 0x43, 0xe0, 0xe7, 0x00,
+                    0x8c, 0x78, 0xc0, 0xff,
+                ],
+                [r#""source":"13"#, r#""source":{"value":"13"#],
+            ),
+            (
+                130833,
+                vec![
+                    0x89, 0x98, 0x01, 0x01, 0, 0, 0, 0, 0, 0, 0xf0, 0xe8, 0x03, 0, 0, 0, 0, 0, 0,
+                ],
+                [r#""memoryCapacity":"17293822569102704641""#; 2],
+            ),
+        ];
+        for (pgn, data, forms) in frames {
+            let frame = RawFrame::new(None, 3, pgn, 13, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let form = forms[usize::from(name_value)];
+                assert!(line.contains(form), "{pgn} nv={name_value}: {line}");
+                let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+                // Also as a bare number, as canboat wrote it before.
+                let bare = line.replace(r#""17293822569102704641""#, "17293822569102704641");
+                let back = decoded_frame_from_json(db, &bare).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "{pgn} bare: {bare}");
+            }
+        }
+    }
+
+    /// A key/value value given as digits is a number when the record's key
+    /// makes it one, however short ("10" as a NAME), scaled by the key as a
+    /// bare number is, and hex bytes otherwise.
+    #[test]
+    fn key_value_digits_are_typed_by_the_key() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        // A Navico 130822 Configuration Set whose value is a NAME of 10, and
+        // one of 2^64 - 3, the largest a NAME holds short of its two
+        // sentinels.
+        for name in [
+            [0x0a, 0, 0, 0, 0, 0, 0, 0],
+            [0xfd, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff],
+        ] {
+            let mut data = vec![
+                0x13, 0x99, 0xff, 0x03, 0x00, 0x0a, 0x01, 0x00, 0x15, 0x00, 0x00, 0x00, 0x84, 0xca,
+                0x08, 0x00,
+            ];
+            data.extend(name);
+            let frame = RawFrame::new(None, 3, 130822, 49, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+                assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+            }
+        }
+
+        // B&G 130824 Course (key 105, 0.0001 rad): "5" is 5 rad, as 5 is.
+        let record = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{{"manufacturerCode":381,"industryCode":4,"list":[{{"key":105,"length":2,"value":{value}}}]}}}}"#
+            )
+        };
+        let bare = frame_from_json(db, &record("5")).unwrap().unwrap();
+        let digits = frame_from_json(db, &record(r#""5""#)).unwrap().unwrap();
+        assert_eq!(digits.data, bare.data);
+
+        // Digits too big for an unscaled key are refused, as the number is:
+        // B&G key 0 (Altitude) is a signed 16-bit number, whose top three
+        // values, 32765 to 32767, are its sentinels.
+        let altitude = |value: &str| {
+            format!(
+                r#"{{"prio":3,"src":16,"dst":255,"pgn":130824,"fields":{{"manufacturerCode":381,"industryCode":4,"list":[{{"key":0,"length":2,"value":{value}}}]}}}}"#
+            )
+        };
+        for sentinel in ["32765", "32767", "32768"] {
+            assert!(
+                frame_from_json(db, &altitude(sentinel)).is_err(),
+                "{sentinel}"
+            );
+            let digits = format!(r#""{sentinel}""#);
+            assert!(frame_from_json(db, &altitude(&digits)).is_err(), "{digits}");
+        }
+        assert_eq!(
+            frame_from_json(db, &altitude(r#""32764""#))
+                .unwrap()
+                .unwrap()
+                .data,
+            frame_from_json(db, &altitude("32764"))
+                .unwrap()
+                .unwrap()
+                .data
+        );
+    }
+
+    /// Key/value records whose values are typed by their key decode and
+    /// encode back to the same bytes, from the -nv JSON and from the
+    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
+    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
+    /// and a Navico 130822 Object Dump whose last record the frame cuts off
+    /// (canboat#1114).
     #[test]
     fn key_value_records_encode_back() {
         let frames: [(u32, &str); 4] = [

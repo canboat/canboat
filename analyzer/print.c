@@ -622,6 +622,8 @@ extern bool fieldPrintMMSI(const Field   *field,
  * Print a number field, scaled by its resolution and offset, in its unit.
  * A field that selects the PGN variant prints its description when its
  * value is the matched one.
+ * In JSON an integer wider than 53 bits prints as its digits in a string,
+ * as a JSON reader can't hold it exactly as a number.
  */
 extern bool fieldPrintNumber(const Field   *field,
                              const char    *fieldName,
@@ -676,7 +678,22 @@ extern bool fieldPrintNumber(const Field   *field,
   if (resolution == 1.0 && field->unitOffset == 0.0)
   {
     logDebug("fieldPrintNumber <%s> print as integer %" PRId64 "\n", fieldName, value);
-    mprintf("%" PRId64, value);
+    if (showJson && *bits > 53)
+    {
+      // Wider than a double holds exactly, which is how most JSON readers read a number: give its digits.
+      if (field->hasSign)
+      {
+        mprintf("\"%" PRId64 "\"", value);
+      }
+      else
+      {
+        mprintf("\"%" PRIu64 "\"", (uint64_t) value);
+      }
+    }
+    else
+    {
+      mprintf("%" PRId64, value);
+    }
     if (!showJson && unit != NULL)
     {
       mprintf(" %s", unit);
@@ -1048,6 +1065,11 @@ extern bool fieldPrintLookup(const Field   *field,
   return true;
 }
 
+/*
+ * Print a 64-bit ISO NAME: in JSON as its digits in a string (with -nv also
+ * decoded into its 60928 fields), in text as hex followed by those fields.
+ * Its top two values print as not available.
+ */
 extern bool fieldPrintName(const Field   *field,
                            const char    *fieldName,
                            const uint8_t *data,
@@ -1080,7 +1102,8 @@ extern bool fieldPrintName(const Field   *field,
   {
     if (showJson)
     {
-      mprintf("%" PRIu64, value);
+      // A NAME is 64 bits, more than a JSON number holds exactly in most readers: give its digits.
+      mprintf("\"%" PRIu64 "\"", value);
 
       if (pgn != NULL && showJsonValue)
       {
