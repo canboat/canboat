@@ -357,6 +357,18 @@ fn pgn_below_range_min_json() {
     );
 }
 
+/// A lookup value the lookup does not name is a value unless it is one of
+/// the field's own sentinels (#1156, test-unnamed-lookup in
+/// analyzer/tests/Makefile): a 2-bit "error" of 2 is printed, not left out.
+#[test]
+fn pgn_unnamed_lookup_json() {
+    run_case(
+        "pgn-unnamed-lookup.in",
+        "pgn-unnamed-lookup.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
 /// An unsigned 64-bit field's top three values are its sentinels and every
 /// other value a reading (test-64-bit-sentinels in analyzer/tests/Makefile):
 /// C compared them as int64_t, where all ones is -1.
