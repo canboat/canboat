@@ -54,3 +54,15 @@ samples:
     industryCode: "Marine Industry"
     registerId: "DC Current"
     value: -2.800
+- raw: "2023-01-01-00:00:00.000,7,61184,225,255,8,66,99,34,02,47,00,00,00"
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "AC Active Input L1 Current"
+    value: 0.71
+- raw: "2023-01-01-00:00:00.000,7,61184,225,255,8,66,99,34,02,b9,ff,00,00"
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "AC Active Input L1 Current"
+    value: -0.71

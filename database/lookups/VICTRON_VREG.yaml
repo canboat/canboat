@@ -2,6 +2,12 @@ name: VICTRON_VREG
 kind: fieldtype
 bits: 16
 values:
+- value: 256
+  name: Product Id
+  type: UINT24
+- value: 258
+  name: Firmware Version
+  type: UINT32
 - value: 260
   name: Group ID
   type: UINT8
@@ -71,6 +77,15 @@ values:
 - value: 548
   name: AC Input 2 Current Limit Remote
   type: CURRENT_UFIX16_DA
+- value: 564
+  name: AC Active Input L1 Current
+  type: CURRENT_FIX16_CA
+- value: 569
+  name: AC Active Input L2 Current
+  type: CURRENT_FIX16_CA
+- value: 574
+  name: AC Active Input L3 Current
+  type: CURRENT_FIX16_CA
 - value: 768
   name: Deepest Discharge
   type: ELECTRIC_CHARGE_FIX32_DAH
@@ -314,6 +329,15 @@ values:
 - value: 8220
   name: DC Current
   type: CURRENT_FIX32_MA
+- value: 8724
+  name: AC Output L1 Current
+  type: CURRENT_FIX16_CA
+- value: 8729
+  name: AC Output L2 Current
+  type: CURRENT_FIX16_CA
+- value: 8734
+  name: AC Output L3 Current
+  type: CURRENT_FIX16_CA
 - value: 60781
   name: Channel 3 Voltage
   type: VOLTAGE_FIX16_10MV
