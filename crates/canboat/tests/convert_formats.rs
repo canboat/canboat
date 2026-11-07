@@ -513,7 +513,8 @@ fn bst_95_follows_the_protocol() {
 }
 
 /// `--manufacturer-allow` and `-deny` keep a device by what it claims, and see
-/// the claim even when `--pgn` leaves it out (canboat#1177).
+/// the claim even when `--pgn` leaves it out. Every claim itself passes, as
+/// network management (canboat#1177).
 #[test]
 fn manufacturers_are_filtered_by_device() {
     // Source 1 claims Victron (358), source 2 B&G (381); source 3 never says.
@@ -541,9 +542,9 @@ fn manufacturers_are_filtered_by_device() {
             .collect()
     };
     let allowed = sources(&["--manufacturer-allow", "victron"]);
-    assert_eq!(allowed, [(60928, 1), (127250, 1)]);
+    assert_eq!(allowed, [(60928, 1), (60928, 2), (127250, 1)]);
     let denied = sources(&["--manufacturer-deny", "b&g"]);
-    assert_eq!(denied, [(60928, 1), (127250, 1)]);
+    assert_eq!(denied, [(60928, 1), (60928, 2), (127250, 1)]);
     let both = sources(&["--manufacturer-allow", "358,381", "--pgn", "127250"]);
     assert_eq!(both, [(127250, 1), (127250, 2)]);
 
@@ -565,7 +566,7 @@ fn manufacturers_are_filtered_by_device() {
         "381",
     ];
     let plain = String::from_utf8(run(&all, input)).unwrap();
-    assert_eq!(plain.lines().count(), 2, "{plain}");
+    assert_eq!(plain.lines().count(), 3, "{plain}");
     all.truncate(4);
     assert_eq!(
         String::from_utf8(run(&all, input)).unwrap().lines().count(),

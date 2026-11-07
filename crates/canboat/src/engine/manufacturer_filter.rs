@@ -14,6 +14,10 @@
 //!
 //! Nothing from an address passes until its manufacturer is known, with
 //! either list. Those messages are dropped, not held back.
+//!
+//! Network management PGNs always pass, whoever sends them: a node reading
+//! this stream has to hear every Address Claim and ISO Request to defend its
+//! address. So a filtered device can still show up in a device list.
 
 use std::collections::{BTreeSet, HashMap};
 
@@ -75,6 +79,17 @@ pub fn manufacturer_table(protocol: BusProtocol) -> Option<&'static LookupTable>
         BusProtocol::Quick => return None,
     };
     protocol.database(Units::Si).lookup(name)
+}
+
+/// Whether `pgn` is network management, which passes whoever sends it: ISO
+/// Acknowledge, Request, Transport Protocol, Address Claim and Commanded
+/// Address, Group Function, PGN List, Heartbeat, Product Information and
+/// Configuration Information.
+pub fn is_network_management(pgn: u32) -> bool {
+    matches!(
+        pgn,
+        59392 | 59904 | 60160 | 60416 | 60928 | 65240 | 126208 | 126464 | 126993 | 126996 | 126998
+    )
 }
 
 /// Whether `pgn` starts with a manufacturer code on NMEA 2000.
@@ -140,7 +155,7 @@ impl ManufacturerFilter {
             return true;
         }
         self.learn(src, claim);
-        self.keeps(src)
+        is_network_management(pgn) || self.keeps(src)
     }
 
     /// Whether what is known about `src` keeps its messages.
@@ -339,8 +354,9 @@ mod tests {
         assert!(allowing.keep_message(60928, 7, &claim(VICTRON)));
         assert!(allowing.keep_message(127250, 7, &[0; 8]));
         assert!(denying.keep_message(60928, 7, &claim(VICTRON)));
-        assert!(!denying.keep_message(60928, 8, &claim(BG)));
-        assert!(!denying.keep_message(127250, 8, &[0; 8]));
+        assert!(!denying.keep_message(127250, 9, &[0; 8]));
+        assert!(denying.keep_message(60928, 9, &claim(BG)));
+        assert!(!denying.keep_message(127250, 9, &[0; 8]));
     }
 
     #[test]
@@ -377,14 +393,30 @@ mod tests {
         assert!(f.keep_message(65280, 7, &proprietary(SIMRAD)));
         assert!(f.keep_message(127250, 7, &[0; 8]));
         // Another device takes the address over.
-        assert!(!f.keep_message(60928, 7, &claim(VICTRON)));
+        assert!(f.keep_message(60928, 7, &claim(VICTRON)));
+        assert!(!f.keep_message(127250, 7, &[0; 8]));
+    }
+
+    /// A node reading the stream has to hear these from every device, or it
+    /// can't defend its address (canboatjs#450).
+    #[test]
+    fn network_management_passes_whoever_sends_it() {
+        let mut f = allow(&[BG]);
+        for pgn in [
+            59392, 59904, 60160, 60416, 60928, 65240, 126208, 126464, 126993, 126996, 126998,
+        ] {
+            assert!(f.keep_message(pgn, 7, &[0; 8]), "unknown, {pgn}");
+        }
+        assert!(f.keep_message(60928, 8, &claim(VICTRON)));
+        assert!(f.keep_message(126996, 8, &[0; 8]), "denied");
+        assert!(!f.keep_message(127250, 8, &[0; 8]));
         assert!(!f.keep_message(127250, 7, &[0; 8]));
     }
 
     #[test]
     fn address_254_is_never_known() {
         let mut f = allow(&[BG]);
-        assert!(!f.keep_message(60928, 254, &claim(BG)));
+        assert!(f.keep_message(60928, 254, &claim(BG)));
         assert!(!f.keep_message(65280, 254, &proprietary(BG)));
         assert!(!f.keep_message(127250, 254, &[0; 8]));
     }

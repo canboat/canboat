@@ -953,7 +953,7 @@ mod tests {
         seed_state_from_snapshot(&mut s, doc).expect("seed snapshot");
         let mut seen: Vec<_> = s.entries.values().map(|e| (e.pgn, e.src)).collect();
         seen.sort_unstable();
-        assert_eq!(seen, [(60928, 1), (127250, 1)]);
+        assert_eq!(seen, [(60928, 1), (60928, 2), (127250, 1)]);
     }
 
     /// End-to-end regression for the `--camel` device-info cache: a

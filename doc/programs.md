@@ -139,11 +139,15 @@ canboat convert --list-manufacturers
 - **Unknown until known:** nothing from an address passes until its manufacturer
   is known, with either list. Those messages are dropped, not held back, so a
   short capture may lose its start. `n2kd` and `server` ask an unknown device for
-  its Address Claim, unless told not to. A message canboat or a gateway makes
-  itself (a pseudo PGN) always passes.
+  its Address Claim, unless told not to.
+- **What always passes:** a message canboat or a gateway makes itself (a pseudo
+  PGN), and network management, whoever sends it: PGNs 59392, 59904, 60160, 60416,
+  60928, 65240, 126208, 126464, 126993, 126996 and 126998. A node reading the
+  stream has to hear every Address Claim and ISO Request to defend its address. So
+  a filtered device can still show up in a device list.
 - **Names:** a value is a code (`358`) or a name from `--list-manufacturers`. Case,
-  spaces and punctuation don't matter, so `victron`, `Victron Energy` and `b&g`
-  all work, and a unique prefix is enough. A name that can't be resolved stops the
+  spaces and punctuation don't matter, and `&` reads as "and", so `victron`,
+  `Victron Energy` and `b&g` all work, and a unique prefix is enough. A name that can't be resolved stops the
   command before it reads anything. With `--protocol j1939` the names are J1939's,
   whose allocation differs. `n2kd` and `tui` use NMEA 2000's names, so give a code
   for a J1939 stream. A Quick bus has no manufacturers to filter by.

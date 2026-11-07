@@ -627,7 +627,8 @@ mod tests {
     }
 
     /// `--manufacturer-allow`: a device's frames stop before its claim and
-    /// when it claims to be another maker's, and go on after its own (#1177).
+    /// when it claims to be another maker's, and go on after its own, while
+    /// every claim passes (#1177).
     #[test]
     fn the_manufacturer_filter_keeps_the_claimed_device() {
         use crate::engine::BusProtocol;
@@ -673,7 +674,7 @@ mod tests {
             )
         });
         let seen: Vec<_> = tap_rx.iter().map(|d| (d.pgn, d.src)).collect();
-        assert_eq!(seen, [(60928, 1), (HEADING, 1)]);
+        assert_eq!(seen, [(60928, 1), (HEADING, 1), (60928, 2)]);
         handle.join().unwrap();
     }
 

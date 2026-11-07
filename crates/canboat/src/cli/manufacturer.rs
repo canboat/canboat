@@ -56,17 +56,23 @@ impl ManufacturerArgs {
         }
         let codes = |values: &[String]| -> Result<BTreeSet<u16>> {
             let names = table(protocol)?;
+            let is_name = |value: &str| {
+                let value = normalize(value);
+                names.iter().any(|(_, name)| normalize(name) == value)
+            };
             let mut codes = BTreeSet::new();
             for value in values {
-                // Many names hold a comma ("Tohatsu Co, JP"): a value that is
-                // one whole name is not a list.
-                let whole = normalize(value);
-                if names.iter().any(|(_, name)| normalize(name) == whole) {
-                    codes.insert(resolve_one(value, protocol)?);
-                    continue;
-                }
-                for part in value.split(',') {
-                    codes.insert(resolve_one(part, protocol)?);
+                // Many names hold a comma ("Tohatsu Co, JP"): the parts that
+                // together are exactly one name stay together.
+                let parts: Vec<&str> = value.split(',').collect();
+                let mut start = 0;
+                while start < parts.len() {
+                    let end = (start + 1..=parts.len())
+                        .rev()
+                        .find(|&end| is_name(&parts[start..end].join(",")))
+                        .unwrap_or(start + 1);
+                    codes.insert(resolve_one(&parts[start..end].join(","), protocol)?);
+                    start = end;
                 }
             }
             Ok(codes)
@@ -103,9 +109,11 @@ fn table(protocol: BusProtocol) -> Result<Vec<(u16, &'static str)>> {
         .collect())
 }
 
-/// Lower case letters and digits only, so that `b&g` is `B & G`.
+/// Lower case letters and digits only, with `&` read as "and", so that `b&g`,
+/// `b and g` and `B & G` are the same.
 fn normalize(name: &str) -> String {
-    name.chars()
+    name.replace('&', "and")
+        .chars()
         .filter(char::is_ascii_alphanumeric)
         .map(|c| c.to_ascii_lowercase())
         .collect()
@@ -205,6 +213,7 @@ mod tests {
         assert_eq!(one("VICTRON-ENERGY").unwrap(), 358);
         assert_eq!(one("b&g").unwrap(), 381);
         assert_eq!(one("B & G").unwrap(), 381);
+        assert_eq!(one("b and g").unwrap(), 381);
     }
 
     #[test]
@@ -254,6 +263,10 @@ mod tests {
         assert_eq!(resolved(&["victron,b&g"]).unwrap(), want(&[358, 381]));
         assert_eq!(resolved(&["victron", "381"]).unwrap(), want(&[358, 381]));
         assert_eq!(resolved(&["Tohatsu Co, JP"]).unwrap(), want(&[431]));
+        assert_eq!(
+            resolved(&["victron,Tohatsu Co, JP,381"]).unwrap(),
+            want(&[358, 381, 431])
+        );
         assert!(resolved(&["victron,vicron"]).is_err());
     }
 }
