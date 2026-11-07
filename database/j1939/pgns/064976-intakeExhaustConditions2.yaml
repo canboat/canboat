@@ -21,11 +21,11 @@ fields:
   description: 0.05 kPa per bit
   type: PRESSURE_UINT8_005KPA
 - id: engineIntakeManifold2Pressure
-  name: Engine Intake Manifold #2 Pressure
+  name: "Engine Intake Manifold #2 Pressure"
   spn: 3562
   type: PRESSURE_UINT8_2KPA
 - id: engineIntakeManifold1AbsolutePressure
-  name: Engine Intake Manifold #1 Absolute Pressure
+  name: "Engine Intake Manifold #1 Absolute Pressure"
   spn: 3563
   description: 0.1 kPa per bit
   type: NUMBER
