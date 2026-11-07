@@ -191,6 +191,10 @@ pub struct FieldOverrides {
     /// `0` means "no override" (use `info.precision`); non-zero
     /// overrides.
     pub precision: u8,
+    /// Whether the value is signed, when the type it was read as says so
+    /// rather than the field (a key/value value's key, a group-function
+    /// parameter's target field). `None` uses `info.signed`.
+    pub signed: Option<bool>,
 }
 
 impl DecodedField {
@@ -997,6 +1001,7 @@ fn decode_one_field_at(
                 unit: v.unit,
                 resolution: v.resolution,
                 precision: v.precision,
+                signed: Some(v.signed || matches!(v.field_type, Some(ft) if ft.starts_with("FIX"))),
             })
         });
         let (val, consumed_bits) = decode_dynamic_field_value(data, bit_offset, db, ctx);
@@ -1506,6 +1511,7 @@ fn decode_variable(
         unit: target_field.unit,
         resolution: target_field.resolution,
         precision: target_field.precision,
+        signed: target_field.signed,
     }));
     Some((
         DecodedField {

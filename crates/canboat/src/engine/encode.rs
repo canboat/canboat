@@ -1067,6 +1067,29 @@ impl PgnBuilder {
         if v.is_none() && ends_message && !sentinel {
             return Ok(());
         }
+        // Digits are a number when the key types the value as one (a NAME
+        // or other 64-bit number, which canboat writes as its digits), and
+        // otherwise hex bytes, as canboat writes binary data ("10").
+        if let Some(EncodeValue::Text(s)) = v
+            && s.bytes().all(|b| b.is_ascii_digit())
+            && !entry.is_some_and(|e| {
+                e.field_type.is_some_and(|ft| {
+                    ft.starts_with("NUMBER")
+                        || ft.starts_with("FIX")
+                        || ft.starts_with("UFIX")
+                        || matches!(ft, "ISO_NAME" | "LOOKUP" | "TIME" | "DURATION")
+                })
+            })
+        {
+            let bytes = hex_bytes(s).ok_or(EncodeError::TypeMismatch {
+                field: f.name,
+                expected: "hex bytes for a key/value value the key does not make a number",
+            })?;
+            for b in bytes {
+                write_bits(buf, next_bit, 8, u64::from(b));
+            }
+            return Ok(());
+        }
         let bits = length
             .or_else(|| entry.and_then(|e| e.bit_length()))
             .ok_or(EncodeError::NotFixedLength(f.name))?;
@@ -1122,6 +1145,20 @@ impl PgnBuilder {
             return Err(mismatch);
         };
         let signed = dynamic_signed(e);
+        // The top values of the width are not values but "unknown", "out of
+        // range" and "reserved", as for a number of that width anywhere
+        // (C's reservedCountForSize): a value is refused there, as a
+        // field's own range refuses it. Raw wire bits above still reach
+        // them.
+        // A NAME reserves its top two only, as the decoder reads it (C's
+        // fieldPrintName).
+        let reserved: u64 = match bits {
+            _ if e.field_type == Some("ISO_NAME") => 2,
+            8.. => 3,
+            4.. => 2,
+            2.. => 1,
+            _ => 0,
+        };
         // An unscaled whole number stays exact: f64 would round a 64-bit one.
         if let EncodeValue::Int(i) = v
             && e.resolution.unwrap_or(1.0) == 1.0
@@ -1133,6 +1170,7 @@ impl PgnBuilder {
             } else {
                 (0, 1i128 << bits)
             };
+            let max_excl = max_excl - i128::from(reserved);
             if !(min..max_excl).contains(&i) {
                 return Err(EncodeError::ValueOutOfRange {
                     field: f.name,
@@ -1146,6 +1184,25 @@ impl PgnBuilder {
             EncodeValue::Raw(r) => *r as i64 as f64,
             EncodeValue::Int(i) => *i as f64,
             EncodeValue::Number(x) => *x,
+            // A NAME or other 64-bit number given as its digits, as canboat
+            // writes it: kept exact when unscaled (canboat#1157), else the
+            // value in the key's unit, as a bare number is.
+            EncodeValue::Text(s) if !is_time && let Ok(n) = s.parse::<u64>() => {
+                if e.resolution.unwrap_or(1.0) == 1.0 && e.unit_offset == 0.0 {
+                    // The largest value the key's width holds, short of its
+                    // sentinels, as for an Int.
+                    let max = (if signed { mask >> 1 } else { mask }) - reserved;
+                    if n > max {
+                        return Err(EncodeError::ValueOutOfRange {
+                            field: f.name,
+                            value: n as f64,
+                            range: None,
+                        });
+                    }
+                    return Ok(n);
+                }
+                n as f64
+            }
             EncodeValue::Text(s) | EncodeValue::Lookup(s) => {
                 if let Some(lv) = e
                     .lookup_enumeration
@@ -1169,6 +1226,7 @@ impl PgnBuilder {
         } else {
             (0.0, 2f64.powi(bits as i32))
         };
+        let max_excl = max_excl - reserved as f64;
         if !(min..max_excl).contains(&raw) {
             return Err(EncodeError::ValueOutOfRange {
                 field: f.name,
