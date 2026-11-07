@@ -439,9 +439,12 @@ samples:
 ```
 
 * `expects` is partial — assert the fields that matter, ignore the rest.
-  Values are **strict SI** (Pa, K, seconds, radians — what `analyzer -si`
-  shows), lookups by name, bit enumerations as lists, `~` (null) asserts
-  Unavailable. `id.N` addresses the Nth instance in a repeating set.
+  Values are in **the unit the PGN defines for the field**, with no
+  conversion: mostly SI in standard NMEA 2000 PGNs (Pa, K, seconds, radians),
+  but a manufacturer's PGN often has degrees (`ANGLE_FIX16_DDEG`), and
+  J1939 has its own (kg/h). Lookups are by name, bit enumerations are lists,
+  `~` (null) asserts Unavailable. `id.N` addresses the Nth instance in a
+  repeating set.
 * A later edit to the field layout, a lookup, or a fieldtype that changes
   any expected decode fails `keel check` (rule R40) with a
   value-level diff.

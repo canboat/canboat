@@ -193,6 +193,10 @@ pub struct FieldOverrides {
     /// `0` means "no override" (use `info.precision`); non-zero
     /// overrides.
     pub precision: u8,
+    /// A group-function VARIABLE value's target: the field of the
+    /// commanded PGN that the parameter names. JSON writes its id as
+    /// `parameterId` (canboat#1157).
+    pub target: Option<&'static FieldInfo>,
     /// Whether the value is signed, when the type it was read as says so
     /// rather than the field (a key/value value's key, a group-function
     /// parameter's target field). `None` uses `info.signed`.
@@ -1007,6 +1011,7 @@ fn decode_one_field_at(
                 unit: v.unit,
                 resolution: v.resolution,
                 precision: v.precision,
+                target: None,
                 signed: Some(v.signed || matches!(v.field_type, Some(ft) if ft.starts_with("FIX"))),
             })
         });
@@ -1536,6 +1541,7 @@ fn decode_variable(
         unit: target_field.unit,
         resolution: target_field.resolution,
         precision: target_field.precision,
+        target: Some(target_field),
         signed: target_field.signed,
     }));
     Some((
