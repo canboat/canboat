@@ -1148,7 +1148,7 @@ limitations under the License.
       <EnumPair Value="635" Name="Argo Tractors S.p.A." />
       <EnumPair Value="636" Name="Divelbiss Corporation" />
       <EnumPair Value="637" Name="Bavaria Yachtbau GmbH" />
-      <EnumPair Value="638" Name="KVH Industries, Inc." />
+      <EnumPair Value="638" Name="KVH Industries, Inc. (638)" />
       <EnumPair Value="639" Name="Startec s.r.l." />
       <EnumPair Value="640" Name="Power Solutions International" />
       <EnumPair Value="641" Name="Diverse Yacht Services" />
@@ -1165,7 +1165,7 @@ limitations under the License.
       <EnumPair Value="652" Name="MicroControl GmbH &amp; Co. KG" />
       <EnumPair Value="653" Name="AEV, spol. s r. o." />
       <EnumPair Value="654" Name="Kohler Power Systems, Detroit Engine Development Center (DEDC)" />
-      <EnumPair Value="655" Name="Genge &amp; Thoma AG" />
+      <EnumPair Value="655" Name="Genge &amp; Thoma AG (655)" />
       <EnumPair Value="656" Name="PRO SOLUS do Brasil" />
       <EnumPair Value="657" Name="Terzo Power Systems" />
       <EnumPair Value="658" Name="Shenzhen Jiuzhou Himunication Technology Co., Ltd" />
@@ -1311,7 +1311,7 @@ limitations under the License.
       <EnumPair Value="798" Name="Lumishore Ltd" />
       <EnumPair Value="799" Name="Stillwater Designs and Audio, Inc. - KICKER" />
       <EnumPair Value="800" Name="Delta-Q Technologies" />
-      <EnumPair Value="801" Name="LOR Manufacturing Company Inc." />
+      <EnumPair Value="801" Name="LOR Manufacturing Company Inc. (801)" />
       <EnumPair Value="802" Name="SPBI (Bj Technologie)" />
       <EnumPair Value="803" Name="Gill Sensors &amp; Controls Limited" />
       <EnumPair Value="804" Name="ASA Electronics" />
@@ -1415,7 +1415,7 @@ limitations under the License.
       <EnumPair Value="902" Name="Bucher Hydraulics" />
       <EnumPair Value="903" Name="InMotion" />
       <EnumPair Value="904" Name="Equipment Safety Systems Pty. Ltd. (EQSS)" />
-      <EnumPair Value="905" Name="ASA Electronics" />
+      <EnumPair Value="905" Name="ASA Electronics (905)" />
       <EnumPair Value="906" Name="MOBA AG" />
       <EnumPair Value="907" Name="strautmann" />
       <EnumPair Value="908" Name="Chonbuk National University Department of Electronics" />
@@ -2129,7 +2129,7 @@ limitations under the License.
       <EnumPair Value="1617" Name="DRUDLES s.r.o." />
       <EnumPair Value="1618" Name="The Carlisle and Finch Co." />
       <EnumPair Value="1619" Name="Clemens GmbH &amp; Co. KG" />
-      <EnumPair Value="1620" Name="BlueNav" />
+      <EnumPair Value="1620" Name="BlueNav (1620)" />
       <EnumPair Value="1621" Name="Mach Inc." />
       <EnumPair Value="1622" Name="Brettmeister Elektronik" />
       <EnumPair Value="1623" Name="PRO Charging Systems, LLC" />
@@ -2297,8 +2297,8 @@ limitations under the License.
       <EnumPair Value="3552" Name="Engine Oil Pre-Heated State" />
       <EnumPair Value="3553" Name="Engine Coolant Pre-heated State" />
       <EnumPair Value="3554" Name="Engine Ventilation Status" />
-      <EnumPair Value="3562" Name="Engine Intake Manifold" />
-      <EnumPair Value="3563" Name="Engine Intake Manifold" />
+      <EnumPair Value="3562" Name="Engine Intake Manifold #2 Pressure" />
+      <EnumPair Value="3563" Name="Engine Intake Manifold #1 Absolute Pressure" />
       <EnumPair Value="3589" Name="Engine Oil Priming Pump Control" />
       <EnumPair Value="3601" Name="Engine Fuel Shutoff Valve Leak Test Control" />
       <EnumPair Value="3602" Name="Engine Oil Preheater Control" />
@@ -5283,7 +5283,7 @@ limitations under the License.
         <Field>
           <Order>4</Order>
           <Id>engineIntakeManifold2Pressure</Id>
-          <Name>Engine Intake Manifold</Name>
+          <Name>Engine Intake Manifold #2 Pressure</Name>
           <SPN>3562</SPN>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
@@ -5302,7 +5302,7 @@ limitations under the License.
         <Field>
           <Order>5</Order>
           <Id>engineIntakeManifold1AbsolutePressure</Id>
-          <Name>Engine Intake Manifold</Name>
+          <Name>Engine Intake Manifold #1 Absolute Pressure</Name>
           <Description>0.1 kPa per bit</Description>
           <SPN>3563</SPN>
           <BitLength>8</BitLength>

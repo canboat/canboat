@@ -1,7 +1,7 @@
 name: J1939_MANUFACTURER_CODE
 kind: pair
 bits: 11
-note: Scraped from https://www.isobus.net/isobus/manufacturerCode by tools/isobus-registry.py. This is the ISO 11783 / SAE J1939 allocation; the NMEA 2000 marine allocation of the same 11-bit space is MANUFACTURER_CODE. See github issue #837.
+note: "Scraped from https://www.isobus.net/isobus/manufacturerCode by tools/isobus-registry.py. This is the ISO 11783 / SAE J1939 allocation; the NMEA 2000 marine allocation of the same 11-bit space is MANUFACTURER_CODE. See github issue #837."
 values:
   0: For experimental or developmental use only.
   1: Bendix Commercial Vehicle Systems LLC (formerly Allied Signal Inc.)
@@ -638,7 +638,7 @@ values:
   635: Argo Tractors S.p.A.
   636: Divelbiss Corporation
   637: Bavaria Yachtbau GmbH
-  638: KVH Industries, Inc.
+  638: KVH Industries, Inc. (638)
   639: Startec s.r.l.
   640: Power Solutions International
   641: Diverse Yacht Services
@@ -655,7 +655,7 @@ values:
   652: MicroControl GmbH & Co. KG
   653: AEV, spol. s r. o.
   654: Kohler Power Systems, Detroit Engine Development Center (DEDC)
-  655: Genge & Thoma AG
+  655: Genge & Thoma AG (655)
   656: PRO SOLUS do Brasil
   657: Terzo Power Systems
   658: Shenzhen Jiuzhou Himunication Technology Co., Ltd
@@ -801,7 +801,7 @@ values:
   798: Lumishore Ltd
   799: Stillwater Designs and Audio, Inc. - KICKER
   800: Delta-Q Technologies
-  801: LOR Manufacturing Company Inc.
+  801: LOR Manufacturing Company Inc. (801)
   802: SPBI (Bj Technologie)
   803: Gill Sensors & Controls Limited
   804: ASA Electronics
@@ -905,7 +905,7 @@ values:
   902: Bucher Hydraulics
   903: InMotion
   904: Equipment Safety Systems Pty. Ltd. (EQSS)
-  905: ASA Electronics
+  905: ASA Electronics (905)
   906: MOBA AG
   907: strautmann
   908: Chonbuk National University Department of Electronics
@@ -1619,7 +1619,7 @@ values:
   1617: DRUDLES s.r.o.
   1618: The Carlisle and Finch Co.
   1619: Clemens GmbH & Co. KG
-  1620: BlueNav
+  1620: BlueNav (1620)
   1621: Mach Inc.
   1622: Brettmeister Elektronik
   1623: PRO Charging Systems, LLC

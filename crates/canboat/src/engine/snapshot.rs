@@ -869,44 +869,6 @@ mod tests {
         }
     }
 
-    /// With `--no-nv` a key whose name its lookup gives to more than one
-    /// code is written as its code, so the records stay apart, keyed as
-    /// with `-nv`. No key in the database shares a name today, so this
-    /// takes 126720 Seatalk Pilot Auto Turn's command, "Auto Turn" (38, a
-    /// name SEATALK_COMMAND also gives 17), without the match value that
-    /// otherwise names it.
-    #[test]
-    fn a_shared_key_name_keeps_its_code_without_name_value() {
-        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
-        let data = [0x3b, 0x9f, 0x6c, 0x26, 0x00, 0x01, 0x00, 0x00, 0x00];
-        let frame = crate::engine::RawFrame::new(None, 3, 126720, 15, 255, data.to_vec());
-        let mut decoded = db.decode(&frame).unwrap();
-        let command = decoded
-            .fields
-            .iter_mut()
-            .find(|f| f.info.name == "command")
-            .unwrap();
-        command.info = Box::leak(Box::new(crate::engine::FieldInfo {
-            match_value: None,
-            ..*command.info
-        }));
-        for debug in [false, true] {
-            let opts = crate::engine::output::JsonOptions {
-                name_value: false,
-                debug,
-                ..Default::default()
-            };
-            let mut line = String::new();
-            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
-            let code = if debug {
-                r#""command":{"value":38"#
-            } else {
-                r#""command":38"#
-            };
-            assert!(line.contains(code), "{line}");
-        }
-    }
-
     /// A key whose name is its own is written as the name: B&G key 28.
     #[test]
     fn a_key_name_of_its_own_is_written_as_the_name() {
@@ -924,32 +886,6 @@ mod tests {
             line.contains(r#""key":"Outside Temperature (F channel)""#),
             "{line}"
         );
-    }
-
-    #[test]
-    fn a_matched_key_keeps_its_shared_name() {
-        // 126720 Seatalk Pilot Auto Turn: its command key matches 38, "Auto
-        // Turn", a name SEATALK_COMMAND also gives 17. The match already
-        // tells the records apart, so the name stays, as in the C analyzer.
-        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
-        let data = [0x3b, 0x9f, 0x6c, 0x26, 0x00, 0x01, 0x00, 0x00, 0x00];
-        let frame = crate::engine::RawFrame::new(None, 3, 126720, 15, 255, data.to_vec());
-        let decoded = db.decode(&frame).unwrap();
-        for debug in [false, true] {
-            let opts = crate::engine::output::JsonOptions {
-                name_value: false,
-                debug,
-                ..Default::default()
-            };
-            let mut line = String::new();
-            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
-            let named = if debug {
-                r#""command":{"value":"Auto Turn""#
-            } else {
-                r#""command":"Auto Turn""#
-            };
-            assert!(line.contains(named), "{line}");
-        }
     }
 
     #[test]

@@ -936,7 +936,7 @@ limitations under the License.
       <EnumPair Value="48" Name="Shunt mismatch" />
       <EnumPair Value="49" Name="Cooling Fan Error" />
       <EnumPair Value="50" Name="Mastershunt Fuse Blown" />
-      <EnumPair Value="51" Name="High Temperature" />
+      <EnumPair Value="51" Name="High Temperature (51)" />
       <EnumPair Value="52" Name="Over Pressure" />
       <EnumPair Value="53" Name="Low Pressure" />
       <EnumPair Value="54" Name="Rapid Deflation" />
@@ -3132,7 +3132,7 @@ limitations under the License.
       <EnumPair Value="165" Name="GPS and DGPS Info" />
       <EnumPair Value="167" Name="Unknown meaning" />
       <EnumPair Value="168" Name="Alarm ON/OFF for Guard" />
-      <EnumPair Value="171" Name="Alarm ON/OFF for Guard" />
+      <EnumPair Value="171" Name="Alarm ON/OFF for Guard (171)" />
     </LookupEnumeration>
     <LookupEnumeration Name="SEATALK_ALARM_GROUP" MaxValue="255">
       <EnumPair Value="0" Name="Instrument" />
@@ -3273,7 +3273,7 @@ limitations under the License.
       <EnumPair Value="8" Name="Cruise Speed" />
       <EnumPair Value="11" Name="Power Steer Mode" />
       <EnumPair Value="15" Name="Wind Type" />
-      <EnumPair Value="17" Name="Auto Turn" />
+      <EnumPair Value="17" Name="Auto Turn (17)" />
       <EnumPair Value="18" Name="Calibration Lock" />
       <EnumPair Value="20" Name="Gybe Inhibit" />
       <EnumPair Value="21" Name="Compass Offset" />
@@ -3546,7 +3546,7 @@ limitations under the License.
       <EnumPair Value="121" Name="CZone important" />
       <EnumPair Value="122" Name="CZone standard" />
       <EnumPair Value="123" Name="CZone warning" />
-      <EnumPair Value="124" Name="True wind shift" />
+      <EnumPair Value="124" Name="True wind shift (124)" />
       <EnumPair Value="125" Name="EVC Com Error" />
       <EnumPair Value="126" Name="EVC override" />
       <EnumPair Value="127" Name="High drive temperature" />
@@ -3606,7 +3606,7 @@ limitations under the License.
       <EnumPair Value="183" Name="Forward range" />
       <EnumPair Value="245" Name="Alarm source missing" />
       <EnumPair Value="246" Name="External" />
-      <EnumPair Value="247" Name="EVC Com Error" />
+      <EnumPair Value="247" Name="EVC Com Error (247)" />
       <EnumPair Value="248" Name="Wind sensor battery low" />
       <EnumPair Value="266" Name="Gasoline low" />
       <EnumPair Value="267" Name="Gasoline high" />
