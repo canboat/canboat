@@ -519,10 +519,10 @@ fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
 }
 
 /// Turn a JSON string value for field `f` into the value the encoder
-/// stages: text, hex bytes, a date or time, a lookup label or raw code, or
-/// a number (64-bit digit strings exactly). A key/value value of digits
-/// stays text, for the encoder to type by its key. Errors when the string
-/// can't be read back for that field.
+/// stages: text, hex bytes, a date or time, a lookup label or raw code, a
+/// matched field's description, or a number (64-bit digit strings exactly).
+/// A key/value value of digits stays text, for the encoder to type by its
+/// key. Errors when the string can't be read back for that field.
 fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
     match f.field_type {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
@@ -566,6 +566,11 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             Ok(raw) => EncodeValue::Int(raw),
             Err(_) => EncodeValue::Lookup(s.to_string()),
         }),
+        // A field that selects the PGN variant, named by its description
+        // as the decoder writes it (canboat#1153).
+        _ if f.match_value.is_some() && f.description == Some(s) => {
+            Ok(EncodeValue::Int(f.match_value.unwrap_or_default()))
+        }
         // Digit strings on numeric fields (an MMSI, or a NAME or other
         // 64-bit number, which canboat writes as its digits, canboat#1157)
         // parse back exactly.
@@ -650,6 +655,10 @@ fn match_field_agrees(
 ) -> Option<bool> {
     match v {
         Value::Number(n) => Some(n.as_i64()? == mv),
+        // A field without a lookup is named by its description.
+        Value::String(s) if f.lookup_enumeration.is_none() => {
+            f.description.map(|d| d == s.as_str())
+        }
         Value::String(s) => {
             let table = f.lookup_enumeration.and_then(|t| db.lookup(t))?;
             let val = table
@@ -659,7 +668,12 @@ fn match_field_agrees(
                 .value;
             Some(val as i64 == mv)
         }
-        Value::Object(o) => o.get("value").and_then(Value::as_i64).map(|x| x == mv),
+        // -nv's {"value":N,…}, or -debug's {"value":"Source Report",…}: its
+        // value agrees as a bare one does.
+        Value::Object(o) => match o.get("value")? {
+            Value::Object(_) => None,
+            inner => match_field_agrees(db, f, inner, mv),
+        },
         _ => None,
     }
 }
@@ -897,15 +911,41 @@ mod tests {
         assert_eq!(prns, vec![7, 11]);
     }
 
-    /// Key/value records whose values are typed by their key decode and
-    /// encode back to the same bytes, from the -nv JSON and from the
-    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
-    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
-    /// and a Navico 130822 Object Dump whose last record the frame cuts off
-    /// (canboat#1114).
-    /// A NAME and a 64-bit number are written as their digits, as most
-    /// JSON readers read a number as a double (canboat#1157), and read back
-    /// exactly from that and from a bare number.
+    /// A field that selects the variant is written by its description
+    /// (canboat#1153) and reads back from it, in plain and `-nv` JSON, and
+    /// the description alone picks the variant.
+    #[test]
+    fn a_matched_field_named_by_its_description_encodes_back() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let data = vec![
+            0x13, 0x99, 0xff, 0x01, 0x00, 0x09, 0x02, 0x83, 0x0c, 0x02, 0x4b, 0x00, 0x00, 0xab,
+            0xca,
+        ];
+        let frame = RawFrame::new(None, 3, 130822, 21, 255, data.clone());
+        let decoded = db.decode(&frame).unwrap();
+        for name_value in [true, false] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            assert!(line.contains("Source Report"), "{line}");
+            let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+        }
+
+        // Without the record's description, the field's still picks it, as
+        // -debug writes it too.
+        let debug = r#"{"pgn":130822,"src":21,"dst":255,"fields":{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":{"value":"Source Report","bytes":"01"},"address":0,"sourceSettingId":9}}"#;
+        let back = frame_from_json(db, debug).unwrap().unwrap();
+        assert_eq!(back.data[3], 1, "{:02x?}", back.data);
+        // Without the record's description, the field's still picks it.
+        let line = r#"{"pgn":130822,"src":21,"dst":255,"fields":{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":"Source Report","address":0,"sourceSettingId":9}}"#;
+        let back = frame_from_json(db, line).unwrap().unwrap();
+        assert_eq!(back.data[3], 1, "{:02x?}", back.data);
+    }
+
     /// A key/value value wider than 53 bits is signed as its key's type
     /// says, not as the value field: B&G's key 0 (Altitude, INT16) given 8
     /// bytes of all ones is -1, as the C analyzer writes it.
@@ -922,6 +962,9 @@ mod tests {
         assert!(line.contains(r#""value":"-1""#), "{line}");
     }
 
+    /// A NAME and a 64-bit number are written as their digits, as most
+    /// JSON readers read a number as a double (canboat#1157), and read back
+    /// exactly from that and from a bare number.
     #[test]
     fn a_64_bit_value_is_written_as_its_digits_and_reads_back_exactly() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
@@ -1037,6 +1080,12 @@ mod tests {
         );
     }
 
+    /// Key/value records whose values are typed by their key decode and
+    /// encode back to the same bytes, from the -nv JSON and from the
+    /// plain one: B&G's 130824 (numbers, a negative angle, a time and a
+    /// value left out as unknown), Simnet's 130845 (a time, in 60 s steps)
+    /// and a Navico 130822 Object Dump whose last record the frame cuts off
+    /// (canboat#1114).
     #[test]
     fn key_value_records_encode_back() {
         let frames: [(u32, &str); 4] = [
@@ -1305,6 +1354,32 @@ mod tests {
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         assert_eq!(frame.data[..2], [0xc7, 0x50]);
         assert_eq!(frame.data[6..], [0xcf, 0x2a]);
+    }
+
+    /// A 126208 Command whose parameter is a matched field without a lookup
+    /// gives it by its description, as the decoder writes it, and the
+    /// description selects the target variant (canboat#1153).
+    #[test]
+    fn a_group_function_parameter_by_its_description_encodes() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let by = |command: &str| {
+            format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":130822,"priority":8,"numberOfParameters":3,"list":[{{"parameter":1,"value":275}},{{"parameter":3,"value":4}},{{"parameter":5,"value":{command}}}]}}}}"#
+            )
+        };
+        let frame = frame_from_json(db, &by("1")).unwrap().unwrap();
+        let by_name = frame_from_json(db, &by(r#""Source Report""#))
+            .unwrap()
+            .unwrap();
+        assert_eq!(by_name.data, frame.data);
+
+        // And what the decoder writes reads back.
+        let decoded = db.decode(&frame).unwrap();
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
+        assert!(line.contains(r#""value":"Source Report""#), "{line}");
+        let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(back.data, frame.data, "{line}");
     }
 
     #[test]

@@ -620,6 +620,8 @@ extern bool fieldPrintMMSI(const Field   *field,
 
 /*
  * Print a number field, scaled by its resolution and offset, in its unit.
+ * A field that selects the PGN variant prints its description when its
+ * value is the matched one.
  * In JSON an integer wider than 53 bits prints as its digits in a string,
  * as a JSON reader can't hold it exactly as a number.
  */
@@ -644,6 +646,25 @@ extern bool fieldPrintNumber(const Field   *field,
 
   if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
   {
+    return true;
+  }
+
+  // A field that selects its PGN variant is named by its description, which names the variant, as a
+  // lookup names its value: 130822's Command 1 is "Source Report" (#1153).
+  if (field->hasMatchValue && field->description != NULL && value == field->matchValue)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, field->description);
+    }
+    else if (showJson)
+    {
+      mprintf("\"%s\"", field->description);
+    }
+    else
+    {
+      mprintf("%s", field->description);
+    }
     return true;
   }
 

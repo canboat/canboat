@@ -163,6 +163,28 @@ fn field_value_from_json(
         // Plain numerics: an unscaled integer (resolution 1, no unit) is
         // an `Integer` — matching the decoder — so `as_i64` stays exact;
         // everything else is a scaled `Number`.
+        // A field that selects the variant, named by its description
+        // (canboat#1153): bare, or `-nv`'s {"value":N,"name":"…"}.
+        Some(Number) if fi.match_value.is_some() && fi.description.is_some() => {
+            let value = match nested_or_bare_int(line, name) {
+                Some(v) => v,
+                // Bare, or -debug's {"value":"…","bytes":…}.
+                None if json::value(line, name).map(|v| json::value(v, "value").unwrap_or(v))
+                    == fi.description =>
+                {
+                    fi.match_value?
+                }
+                None => return None,
+            };
+            Some(if Some(value) == fi.match_value {
+                FieldValue::Lookup {
+                    value: value as u64,
+                    name: fi.description,
+                }
+            } else {
+                FieldValue::Integer(value)
+            })
+        }
         Some(Number | Decimal | Address) | None => {
             if is_integer_field(fi) {
                 // A 64-bit unsigned value above i64::MAX is held wrapped,
@@ -264,6 +286,35 @@ mod tests {
         };
         assert_eq!(code("deviceFunction"), Some(175));
         assert_eq!(code("deviceClass"), Some(60));
+    }
+
+    #[test]
+    fn a_matched_field_reads_from_its_description_in_every_form() {
+        // 130822's Command is "Source Report" (canboat#1153): plain, -nv and
+        // -debug all give the code, named.
+        let db = crate::engine::PgnDatabase::embedded(Units::Si);
+        for command in [
+            r#""Source Report""#,
+            r#"{"value":1,"name":"Source Report"}"#,
+            r#"{"value":"Source Report","bytes":"01","bits":"0001"}"#,
+        ] {
+            let line = format!(
+                r#"{{"navicoUdbDatabaseSourceReport":{{"pgn":130822,"src":21,"dst":255,"fields":{{"manufacturerCode":"Navico","industryCode":"Marine Industry","command":{command}}}}}}}"#
+            );
+            let d = json_to_decoded(&line, db).expect("decodes");
+            let f = d.fields.iter().find(|f| f.info.id == "command");
+            assert!(
+                matches!(
+                    f.map(|f| &f.value),
+                    Some(FieldValue::Lookup {
+                        value: 1,
+                        name: Some("Source Report")
+                    })
+                ),
+                "{command}: {:?}",
+                f.map(|f| &f.value)
+            );
+        }
     }
 
     #[test]

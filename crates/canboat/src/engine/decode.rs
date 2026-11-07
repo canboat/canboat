@@ -372,12 +372,16 @@ pub enum FieldValue {
 impl FieldValue {
     /// Extract a `f64` for numeric variants. `Integer` widens; `Time`
     /// returns the post-resolution `seconds` value (matching what
-    /// formatters show). Non-numeric variants return `None`.
+    /// formatters show); `Lookup` returns its code, as
+    /// [`as_i64`](Self::as_i64) does, so a field that became a lookup (a
+    /// matched field named by its description, canboat#1153) still reads
+    /// as its number. Non-numeric variants return `None`.
     #[inline]
     pub fn as_f64(&self) -> Option<f64> {
         match self {
             FieldValue::Number(v) | FieldValue::Float(v) => Some(*v),
             FieldValue::Integer(v) => Some(*v as f64),
+            FieldValue::Lookup { value, .. } => Some(*value as f64),
             FieldValue::Time { seconds, .. } => Some(*seconds),
             FieldValue::Date(d) => Some(*d as f64),
             FieldValue::Mmsi(v) => Some(*v as f64),
@@ -1105,7 +1109,26 @@ fn decode_one_field_at(
         None => (data, bit_offset, bit_length),
     };
     let value = decode_scalar(f, info, data, db, at, width, signed, offset_k, ctx);
-    finish_scalar(f, value, bit_offset, bit_length, ctx)
+    finish_scalar(f, matched_name(f, value), bit_offset, bit_length, ctx)
+}
+
+/// A field that selects its PGN variant and has no lookup is named by its
+/// description, which names the variant, as a lookup names its value: 130822's
+/// `command` 1 is "Source Report" (canboat#1153). A field without a
+/// description, or whose value is not its match (a catch-all's), stays a
+/// number.
+fn matched_name(f: &'static FieldInfo, value: FieldValue) -> FieldValue {
+    match (f.match_value, f.description, &value) {
+        (Some(mv), Some(name), FieldValue::Integer(v))
+            if *v == mv && f.lookup_enumeration.is_none() =>
+        {
+            FieldValue::Lookup {
+                value: *v as u64,
+                name: Some(name),
+            }
+        }
+        _ => value,
+    }
 }
 
 /// True when the payload (`total` bits) ends inside, or before, the
@@ -3114,6 +3137,39 @@ mod tests {
             fields.contains(r#""list":[{"colorTemperature":65278},{"colorTemperature":65021}]"#),
             "{fields}"
         );
+    }
+
+    #[test]
+    fn a_matched_field_is_named_and_still_reads_as_its_number() {
+        // 130822's Command 1 is "Source Report" (canboat#1153); code that
+        // read it as a number still does, through as_i64 and as_f64.
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130822,
+            src: 21,
+            dst: 255,
+            data: smallvec::smallvec![
+                0x13, 0x99, 0xff, 0x01, 0x00, 0x09, 0x02, 0x83, 0x0c, 0x02, 0x4b, 0x00, 0x00, 0xab,
+                0xca
+            ],
+        };
+        let dec = db.decode(&frame).expect("decode");
+        let command = dec
+            .fields
+            .iter()
+            .find(|f| f.info.id == "command")
+            .expect("command");
+        assert!(matches!(
+            command.value,
+            FieldValue::Lookup {
+                value: 1,
+                name: Some("Source Report")
+            }
+        ));
+        assert_eq!(command.value.as_i64(), Some(1));
+        assert_eq!(command.value.as_f64(), Some(1.0));
     }
 
     #[test]
