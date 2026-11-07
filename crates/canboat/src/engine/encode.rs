@@ -976,6 +976,12 @@ impl PgnBuilder {
         self.commanded_definition(self.staged_target_pgn()?)
     }
 
+    /// The catch-all definition of the PGN the message's PGN field names,
+    /// if it has one.
+    pub(crate) fn staged_commanded_fallback(&self) -> Option<&'static PgnInfo> {
+        self.db.fallback_pgn(self.staged_target_pgn()?)
+    }
+
     /// Pick the definition of `target_pgn` that the staged parameter
     /// pairs describe — the encode-side mirror of decode's
     /// `match_pgn_by_parameters` (itself a port of the C analyzer's

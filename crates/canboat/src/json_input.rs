@@ -414,9 +414,11 @@ fn set_fields(info: &'static PgnInfo, set: usize) -> impl Iterator<Item = &'stat
 /// of the commanded PGN that the builder will address. Their numbers can
 /// themselves select another definition (a proprietary PGN's Manufacturer
 /// and Industry Code given by id), so this repeats until the definition
-/// stays the same; an id that definition doesn't have is refused, rather
-/// than numbered from another variant where the number means another
-/// field.
+/// stays the same. An id the selected definition lacks is looked up in the
+/// PGN's catch-all, whose own number can select it (126720's `data`). In
+/// the end every id must name its number in the definition that encodes
+/// the message; an id it doesn't have is refused, rather than numbered
+/// from another variant where the number means another field.
 fn number_parameters_by_id(
     builder: &mut PgnBuilder,
     by_id: &[(usize, usize, &str, &'static str)],
@@ -424,31 +426,44 @@ fn number_parameters_by_id(
     if by_id.is_empty() {
         return Ok(());
     }
-    let mut definition = builder
-        .staged_commanded_definition()
-        .ok_or_else(|| anyhow!("parameterId: no commanded PGN to look it up in"))?;
+    let no_pgn = || anyhow!("parameterId: no commanded PGN to look it up in");
+    let mut definition = builder.staged_commanded_definition().ok_or_else(no_pgn)?;
+    let mut numbers = vec![0u8; by_id.len()];
     for _ in 0..4 {
         // An id the definition lacks may be found once the others select
         // a more specific one, so it only counts when nothing changes.
+        let catch_all = builder.staged_commanded_fallback();
         let mut missing = None;
-        for &(set, idx, id, index_field) in by_id {
-            let Some(index) = (1..=255u8).find(|&i| {
-                crate::engine::decode::parameter_field(definition, u32::from(i))
-                    .is_some_and(|f| f.id == id)
-            }) else {
+        for (number, &(set, idx, id, index_field)) in numbers.iter_mut().zip(by_id) {
+            let index = match parameter_number(definition, id)? {
+                Some(index) => Some(index),
+                None => match catch_all {
+                    Some(catch_all) => parameter_number(catch_all, id)?,
+                    None => None,
+                },
+            };
+            let Some(index) = index else {
                 missing = Some(id);
                 continue;
             };
+            *number = index;
             builder
                 .push_in_set(set, idx, index_field, EncodeValue::Int(index.into()))
                 .map_err(|e| anyhow!("parameterId '{id}': {e}"))?;
         }
-        let selected = builder
-            .staged_commanded_definition()
-            .ok_or_else(|| anyhow!("parameterId: no commanded PGN to look it up in"))?;
+        let selected = builder.staged_commanded_definition().ok_or_else(no_pgn)?;
         if std::ptr::eq(selected, definition) {
             if let Some(id) = missing {
                 bail!("parameterId '{id}': no such field in '{}'", definition.id);
+            }
+            for (&number, &(_, _, id, _)) in numbers.iter().zip(by_id) {
+                let named = crate::engine::decode::parameter_field(selected, u32::from(number));
+                if named.is_none_or(|f| f.id != id) {
+                    bail!(
+                        "parameterId '{id}': parameter {number} of '{}' is another field",
+                        selected.id
+                    );
+                }
             }
             return Ok(());
         }
@@ -457,6 +472,26 @@ fn number_parameters_by_id(
     bail!(
         "parameterId: the parameters select no single definition of the commanded PGN; give parameter numbers"
     )
+}
+
+/// The one parameter number `id` names in `definition`, or `None` when it
+/// names none. A field in a repeating set is named by every repetition, so
+/// its id alone can't say which one is meant: that is refused, and the
+/// parameter number has to be given.
+fn parameter_number(definition: &'static PgnInfo, id: &str) -> Result<Option<u8>> {
+    let mut found = (1..=255u8).filter(|&i| {
+        crate::engine::decode::parameter_field(definition, u32::from(i)).is_some_and(|f| f.id == id)
+    });
+    let Some(first) = found.next() else {
+        return Ok(None);
+    };
+    if found.next().is_some() {
+        bail!(
+            "parameterId '{id}' is a repeating field of '{}', so it names more than one parameter; give the parameter number",
+            definition.id
+        );
+    }
+    Ok(Some(first))
 }
 
 fn find_field(builder: &PgnBuilder, key: &str) -> Option<&'static FieldInfo> {
@@ -1304,6 +1339,53 @@ mod tests {
             frame_from_json(db, &all_by_id).unwrap().unwrap().data,
             by_number.data
         );
+    }
+
+    /// A `parameterId` alone must name one parameter: a field of a repeating
+    /// set is named by every repetition, so it is refused (the number says
+    /// which pair is meant). An id only the catch-all has is numbered from
+    /// it, and that number then selects the catch-all.
+    #[test]
+    fn a_parameter_id_must_name_one_parameter() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let command = |count: u8, params: &str| {
+            format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":126720,"priority":8,"numberOfParameters":{count},"list":[{params}]}}}}"#
+            )
+        };
+        // Airmar Calibrate Speed: inputFrequency is parameter 6, 8, 10, ...
+        let airmar =
+            r#"{"parameter":1,"value":135},{"parameter":3,"value":4},{"parameter":4,"value":41}"#;
+        let by_number = command(4, &format!(r#"{airmar},{{"parameter":8,"value":12}}"#));
+        assert!(frame_from_json(db, &by_number).unwrap().is_some());
+        let by_id = command(
+            4,
+            &format!(r#"{airmar},{{"parameterId":"inputFrequency","value":12}}"#),
+        );
+        let err = frame_from_json(db, &by_id).unwrap_err().to_string();
+        assert!(err.contains("more than one parameter"), "{err}");
+
+        // Raymarine's 126720 by number, then the catch-all's `data`.
+        let raymarine = r#"{"parameter":1,"value":1851},{"parameter":3,"value":4}"#;
+        let data_by_number = frame_from_json(
+            db,
+            &command(
+                3,
+                &format!(r#"{raymarine},{{"parameter":4,"value":"01 02 03"}}"#),
+            ),
+        )
+        .unwrap()
+        .unwrap();
+        let data_by_id = frame_from_json(
+            db,
+            &command(
+                3,
+                &format!(r#"{raymarine},{{"parameterId":"data","value":"01 02 03"}}"#),
+            ),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(data_by_id.data, data_by_number.data);
     }
 
     #[test]
