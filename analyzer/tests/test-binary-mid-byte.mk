@@ -2,8 +2,9 @@
 
 #
 # A BINARY field that starts mid-byte reads as its value, from bit 0, as a
-# number field does (#1143): PGN 130829's Field A (bits 20-23) and Helm
-# (bits 28-31) print 05 and 0A, not 50 and A0. The first frame is
+# number field does (#1143): PGN 130829's Field A (bits 20-23) prints 05,
+# not 50. Its Sub Helm and Helm are numbers and Capabilities a bit lookup
+# (#1158). The first frame is
 # samples/mercury-proprietary.raw, the second sets Field A = 5, Sub Helm = 3
 # and Helm = 0xA.
 #

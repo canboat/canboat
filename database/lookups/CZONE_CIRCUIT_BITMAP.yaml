@@ -1,0 +1,4 @@
+name: CZONE_CIRCUIT_BITMAP
+kind: bit
+bits: 32
+values: {}

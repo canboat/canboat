@@ -1,0 +1,4 @@
+name: CZONE_STATUS_BITMAP
+kind: bit
+bits: 32
+values: {}
