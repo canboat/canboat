@@ -107,7 +107,7 @@ values:
   121: CZone important
   122: CZone standard
   123: CZone warning
-  124: True wind shift
+  124: True wind shift (124)
   125: EVC Com Error
   126: EVC override
   127: High drive temperature
@@ -167,7 +167,7 @@ values:
   183: Forward range
   245: Alarm source missing
   246: External
-  247: EVC Com Error
+  247: EVC Com Error (247)
   248: Wind sensor battery low
   266: Gasoline low
   267: Gasoline high
