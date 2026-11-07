@@ -2,12 +2,6 @@ name: VICTRON_VREG
 kind: fieldtype
 bits: 16
 values:
-- value: 256
-  name: Product Id
-  type: UINT24
-- value: 258
-  name: Firmware Version
-  type: UINT32
 - value: 260
   name: Group ID
   type: UINT8

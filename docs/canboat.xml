@@ -4876,8 +4876,6 @@ limitations under the License.
       <EnumFieldType Value="55087" Name="Day mode invert" FieldType="NUMBER" Signed="false" Bits="8"/>
     </LookupFieldTypeEnumeration>
     <LookupFieldTypeEnumeration Name="VICTRON_VREG" MaxValue="65535">
-      <EnumFieldType Value="256" Name="Product Id" FieldType="NUMBER" Signed="false" Bits="24"/>
-      <EnumFieldType Value="258" Name="Firmware Version" FieldType="NUMBER" Signed="false" Bits="32"/>
       <EnumFieldType Value="260" Name="Group ID" FieldType="NUMBER" Signed="false" Bits="8"/>
       <EnumFieldType Value="261" Name="Hardware Revision" FieldType="NUMBER" Signed="false" Bits="8"/>
       <EnumFieldType Value="270" Name="Identify" FieldType="NUMBER" Signed="false" Bits="8"/>

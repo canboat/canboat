@@ -6002,8 +6002,6 @@
         "Name":"VICTRON_VREG",
         "MaxValue":65535,
         "EnumFieldTypeValues":[
-        {"name": "Product Id", "value": 256, "FieldType": "NUMBER", "Signed": false, "Bits": "24"},
-        {"name": "Firmware Version", "value": 258, "FieldType": "NUMBER", "Signed": false, "Bits": "32"},
         {"name": "Group ID", "value": 260, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
         {"name": "Hardware Revision", "value": 261, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
         {"name": "Identify", "value": 270, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
