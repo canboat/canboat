@@ -906,6 +906,22 @@ mod tests {
     /// A NAME and a 64-bit number are written as their digits, as most
     /// JSON readers read a number as a double (canboat#1157), and read back
     /// exactly from that and from a bare number.
+    /// A key/value value wider than 53 bits is signed as its key's type
+    /// says, not as the value field: B&G's key 0 (Altitude, INT16) given 8
+    /// bytes of all ones is -1, as the C analyzer writes it.
+    #[test]
+    fn a_wide_key_value_value_is_signed_as_its_key_says() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let mut data = vec![0x7d, 0x99, 0x00, 0x80];
+        data.extend([0xff; 8]);
+        let decoded = db
+            .decode(&RawFrame::new(None, 7, 130824, 1, 255, data))
+            .unwrap();
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
+        assert!(line.contains(r#""value":"-1""#), "{line}");
+    }
+
     #[test]
     fn a_64_bit_value_is_written_as_its_digits_and_reads_back_exactly() {
         let db = PgnDatabase::embedded(crate::engine::Units::Si);

@@ -628,7 +628,14 @@ fn write_integer<W: fmt::Write>(w: &mut W, f: &DecodedField, v: i64) -> fmt::Res
     if !wide {
         return write!(w, "{v}");
     }
-    if f.info.signed.unwrap_or(false) {
+    // A key/value value or a group-function parameter is signed as the type
+    // it was read as, not as the field that carries it.
+    let signed = f
+        .overrides
+        .as_ref()
+        .and_then(|o| o.signed)
+        .or(f.info.signed);
+    if signed.unwrap_or(false) {
         write!(w, "\"{v}\"")
     } else {
         write!(w, "\"{}\"", v as u64)
@@ -1287,6 +1294,7 @@ mod tests {
             unit: None,
             resolution: Some(1.0),
             precision: 0,
+            signed: None,
         }));
         let mut out = String::new();
         write_json(
