@@ -289,6 +289,19 @@ pub fn run(
                 Err(_) => break,
             }
         };
+        // Sticky lock-in: once we see ANY frame with more than 8
+        // payload bytes, the upstream is definitely emitting
+        // coalesced PGNs, so flip the shared flag for all
+        // subsequent frames (and any other subscriber that reads
+        // it). Matches canboat's `RAWFORMAT_PLAIN_OR_FAST` → `FAST`
+        // promotion in analyzer.c.
+        if !pre_coalesced.load(Ordering::Relaxed) && frame.data.len() > 8 {
+            log::debug!(
+                "frame with {} payload bytes seen; locking pipeline into coalesced mode",
+                frame.data.len()
+            );
+            pre_coalesced.store(true, Ordering::Relaxed);
+        }
         // `--manufacturer-allow` and `-deny`. First, so that it sees the
         // claims `rx_filter` would drop. A dropped device still counts as
         // seen: the request this prompts is what gets an unknown device's
@@ -320,20 +333,6 @@ pub fn run(
         // must be skipped entirely. A coalesced fast-packet whose
         // payload is ≤8 bytes would otherwise have its first byte
         // misread as a sequence / frame-index header.
-        //
-        // Sticky lock-in: once we see ANY frame with more than 8
-        // payload bytes, the upstream is definitely emitting
-        // coalesced PGNs, so flip the shared flag for all
-        // subsequent frames (and any other subscriber that reads
-        // it). Matches canboat's `RAWFORMAT_PLAIN_OR_FAST` → `FAST`
-        // promotion in analyzer.c.
-        if !pre_coalesced.load(Ordering::Relaxed) && frame.data.len() > 8 {
-            log::debug!(
-                "frame with {} payload bytes seen; locking pipeline into coalesced mode",
-                frame.data.len()
-            );
-            pre_coalesced.store(true, Ordering::Relaxed);
-        }
         let assembled = if pre_coalesced.load(Ordering::Relaxed) {
             frame
         } else {
@@ -624,6 +623,51 @@ mod tests {
         // Exactly one record, then end-of-stream when the pipeline drains.
         assert!(tap_rx.recv().is_err(), "tap should see only the one record");
         handle.join().unwrap();
+    }
+
+    /// A long frame the manufacturer filter drops still shows the source joins
+    /// fast-packets, so a later short one is not read as a frame of its own.
+    #[test]
+    fn a_dropped_long_frame_still_locks_in_coalesced_mode() {
+        use crate::engine::BusProtocol;
+        use crate::engine::manufacturer_filter::ManufacturerList;
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric);
+        let (frames_tx, frames_rx) = mpsc::channel();
+        let (tap_tx, tap_rx) = mpsc::channel();
+        let tag = (358u16 | 0x1800 | 4 << 13).to_le_bytes();
+        // From an unknown address, so dropped.
+        let long: Vec<u8> = [tag[0], tag[1]].into_iter().chain([0; 10]).collect();
+        frames_tx
+            .send(crate::engine::RawFrame::new(None, 6, 127489, 9, 0xFF, long))
+            .unwrap();
+        drop(frames_tx);
+        let list = ManufacturerList::Allow([358].into_iter().collect());
+        let manufacturers = FrameManufacturerFilter::new(list, BusProtocol::Nmea2000, db);
+        let pre_coalesced = Arc::new(AtomicBool::new(false));
+        let flag = pre_coalesced.clone();
+        run(
+            db,
+            frames_rx,
+            tapped_hubs(tap_tx),
+            pre_coalesced,
+            JsonOptions {
+                include_empty: false,
+                name_value: true,
+                debug: false,
+                camel_case: crate::engine::output::CamelCase::Off,
+                wrap: false,
+                protocol: BusProtocol::Nmea2000,
+            },
+            Nmea0183Options {
+                emit_stdout: false,
+                rate_limit: true,
+                filter: None,
+            },
+            None,
+            Some(manufacturers),
+        );
+        assert!(flag.load(Ordering::Relaxed));
+        assert!(tap_rx.recv().is_err(), "the frame was dropped");
     }
 
     /// `--manufacturer-allow`: a device's frames stop before its claim and
