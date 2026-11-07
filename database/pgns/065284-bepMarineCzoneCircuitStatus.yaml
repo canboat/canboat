@@ -41,7 +41,8 @@ fields:
   description: Observed 0x0F for circuit-state reports
 - id: bitmap
   name: Bitmap
-  type: BINARY
+  type: BITLOOKUP
+  lookupBits: CZONE_CIRCUIT_BITMAP
   bits: 32
   description: 32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON
 samples:
@@ -51,4 +52,4 @@ samples:
     industryCode: "Marine Industry"
     dipswitch: ~
     type: 8
-    bitmap: "0x00000000"
+    bitmap: []

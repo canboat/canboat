@@ -1,0 +1,6 @@
+name: MERCURY_ENGINE_CAPABILITY
+kind: bit
+bits: 8
+values:
+  0: Beacon
+  1: Cruise Control
