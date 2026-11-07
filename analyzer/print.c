@@ -943,6 +943,12 @@ extern bool fieldPrintDecimal(const Field   *field,
   return true;
 }
 
+/*
+ * Print a LOOKUP, INDIRECT_LOOKUP or FIELDTYPE_LOOKUP field: the name its
+ * lookup (or, for a matched field, its description) gives the value; an
+ * unnamed value as its number; and only the field's own top-of-range
+ * sentinels as not available. Returns false when a match value differs.
+ */
 extern bool fieldPrintLookup(const Field   *field,
                              const char    *fieldName,
                              const uint8_t *data,
@@ -1039,7 +1045,12 @@ extern bool fieldPrintLookup(const Field   *field,
   }
   else
   {
-    if (*bits > 1 && (value >= maxValue - (*bits > 2 ? 2 : 1)))
+    // Only the field's own top-of-range sentinels are not available; any
+    // other value the lookup doesn't name is a value (a 2-bit "error" of 2).
+    // At 64 bits maxValue is -1 as an int64_t, so compare unsigned there.
+    if (*bits > 1
+        && ((maxValue < 0) ? ((uint64_t) value > (uint64_t) maxValue - field->reservedCount)
+                           : (value > maxValue - field->reservedCount)))
     {
       printEmpty(fieldName, value - maxValue);
     }
@@ -2317,6 +2328,12 @@ const Field *g_ftf         = NULL;
 int64_t      g_length      = 0;
 bool         g_lengthValid = false;
 
+/*
+ * Print a key/value record's value (DYNAMIC_FIELD_VALUE) as the field type
+ * its key resolved to (`g_ftf`), over the record's length when one was
+ * given, or as binary data when the key is unknown. A value cut off by the
+ * end of the message is skipped. Returns the value printer's result.
+ */
 extern bool fieldPrintKeyValue(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
@@ -2366,10 +2383,10 @@ extern bool fieldPrintKeyValue(const Field   *field,
       }
 
       // The field a key resolves to is not one of pgnList's fields, so the pass in fieldtype.c that
-      // gives every field its reservedCount never reaches it: give a number or a time the
+      // gives every field its reservedCount never reaches it: give a number, a time or a lookup the
       // top-of-range sentinels of the width it is read at, as any field of that width has. An unset
       // B&G Trip 2 Time (0xffffffff) is then Unknown rather than 1193:02:47.295.
-      if (f.ft->pf == fieldPrintNumber || f.ft->pf == fieldPrintTime)
+      if (f.ft->pf == fieldPrintNumber || f.ft->pf == fieldPrintTime || f.ft->pf == fieldPrintLookup)
       {
         f.reservedCount = reservedCountForSize((uint32_t) *bits);
       }
