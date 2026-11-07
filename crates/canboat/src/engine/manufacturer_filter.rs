@@ -193,14 +193,18 @@ impl ManufacturerFilter {
 /// `convert --to plain`, `interface` and the server.
 ///
 /// A fast-packet's first frame holds its manufacturer code, so that frame
-/// decides, and the rest of the message goes the same way: nothing needs
-/// joining, and a message is not cut in two by what it teaches.
+/// decides, and the rest of the message goes the same way, whatever is learned
+/// in between. Nothing needs joining, and a message is never cut in two.
 pub struct FrameManufacturerFilter {
     filter: ManufacturerFilter,
     db: &'static PgnDatabase,
     /// A frame of more than 8 bytes has shown that the source joins
     /// fast-packets itself.
     coalesced: bool,
+    /// What each fast-packet's first frame decided, by source, PGN and
+    /// sequence number. A next message with that key replaces it, so this
+    /// stays as small as the bus's traffic.
+    decided: HashMap<(u8, u32, u8), bool>,
 }
 
 impl FrameManufacturerFilter {
@@ -210,6 +214,7 @@ impl FrameManufacturerFilter {
             filter: ManufacturerFilter::new(list, protocol),
             db,
             coalesced: false,
+            decided: HashMap::new(),
         }
     }
 
@@ -219,12 +224,18 @@ impl FrameManufacturerFilter {
         self.coalesced |= coalesced;
     }
 
-    /// Learn from `frame`, and say whether to keep it.
+    /// Learn from `frame`, and say whether to keep it. A frame of more than
+    /// 8 bytes means that all that follow are whole messages too.
     pub fn keep_frame(&mut self, frame: &RawFrame) -> bool {
-        if frame.data.len() > 8 {
-            self.coalesced = true;
-        }
-        let fast = !self.coalesced
+        self.coalesced |= frame.data.len() > 8;
+        self.keep_framed(frame, self.coalesced)
+    }
+
+    /// [`keep_frame`](Self::keep_frame) for a source that says of each frame
+    /// whether it is a `whole` message, as a capture's format can.
+    pub fn keep_framed(&mut self, frame: &RawFrame, whole: bool) -> bool {
+        let fast = !whole
+            && frame.data.len() <= 8
             && self
                 .db
                 .first_pgn(frame.pgn)
@@ -233,16 +244,23 @@ impl FrameManufacturerFilter {
         if !fast {
             return self.filter.keep_message(frame.pgn, frame.src, &frame.data);
         }
+        let Some(&head) = frame.data.first() else {
+            return self.filter.keep(frame.pgn, frame.src, Claim::None);
+        };
+        let key = (frame.src, frame.pgn, head >> 5);
         // Only a whole first frame: its payload starts after the sequence
         // and length bytes. Bus frames of a fast-packet are always 8 bytes,
         // so a shorter line isn't one, and teaches nothing.
-        let claim = match &frame.data[..] {
-            [seq, _, payload @ ..] if frame.data.len() == 8 && seq & 0x1f == 0 => {
-                self.filter.claim_in(frame.pgn, payload)
-            }
-            _ => Claim::None,
-        };
-        self.filter.keep(frame.pgn, frame.src, claim)
+        if head & 0x1f == 0 && frame.data.len() == 8 {
+            let claim = self.filter.claim_in(frame.pgn, &frame.data[2..]);
+            let keep = self.filter.keep(frame.pgn, frame.src, claim);
+            self.decided.insert(key, keep);
+            return keep;
+        }
+        match self.decided.get(&key) {
+            Some(&keep) => keep,
+            None => self.filter.keep(frame.pgn, frame.src, Claim::None),
+        }
     }
 }
 
@@ -467,6 +485,68 @@ mod tests {
         );
         assert!(!unknown.keep_frame(&frame(130820, &[0, 9, tag[0], tag[1]])));
         assert!(!unknown.keep_frame(&frame(127250, &[0; 8])));
+    }
+
+    /// What is learned between a fast-packet's frames doesn't cut it in two.
+    #[test]
+    fn a_first_frame_decides_for_its_whole_message() {
+        let db = BusProtocol::Nmea2000.database(crate::engine::Units::Si);
+        let mut f = FrameManufacturerFilter::new(
+            ManufacturerList::Allow([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        let frame = |data: [u8; 8]| RawFrame::new(None, 7, 130820, 7, 255, data);
+        let tag = |code: u16| (code | 0x1800 | 4 << 13).to_le_bytes();
+        let first = |seq: u8, code: u16| {
+            let tag = tag(code);
+            frame([seq << 5, 9, tag[0], tag[1], 1, 2, 3, 4])
+        };
+        let last = |seq: u8| frame([seq << 5 | 1, 5, 6, 7, 0xff, 0xff, 0xff, 0xff]);
+        let claim_of = |code: u16| RawFrame::new(None, 6, 60928, 7, 255, claim(code));
+
+        // Started as B&G's, then a claim says Victron: it still ends whole.
+        assert!(f.keep_frame(&first(1, BG)));
+        assert!(f.keep_frame(&claim_of(VICTRON)));
+        assert!(f.keep_frame(&last(1)));
+        // Started as Victron's, then a claim says B&G: still dropped whole.
+        assert!(!f.keep_frame(&first(2, VICTRON)));
+        assert!(f.keep_frame(&claim_of(BG)));
+        assert!(!f.keep_frame(&last(2)));
+        // The next message goes by what is known now.
+        assert!(f.keep_frame(&first(3, VICTRON)));
+        assert!(f.keep_frame(&last(3)));
+
+        // A conflicting code from a provisional address, the same way.
+        let mut g = FrameManufacturerFilter::new(
+            ManufacturerList::Allow([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        assert!(g.keep_frame(&first(1, BG)));
+        assert!(!g.keep_frame(&first(2, SIMRAD)));
+        assert!(g.keep_frame(&last(1)));
+        assert!(!g.keep_frame(&last(2)));
+    }
+
+    /// A source can say a line holds a whole message, however short.
+    #[test]
+    fn a_whole_message_is_not_read_as_a_frame() {
+        let db = BusProtocol::Nmea2000.database(crate::engine::Units::Si);
+        let mut f = FrameManufacturerFilter::new(
+            ManufacturerList::Allow([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        let whole = RawFrame::new(None, 7, 130820, 7, 255, proprietary(BG));
+        assert!(f.keep_framed(&whole, true));
+        // Read as a frame, its first bytes would have said nothing of the kind.
+        let mut g = FrameManufacturerFilter::new(
+            ManufacturerList::Allow([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        assert!(!g.keep_framed(&whole, false));
     }
 
     /// A first frame of a denied maker drops the message, whatever the list.

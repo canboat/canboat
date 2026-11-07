@@ -476,6 +476,15 @@ fn convert_raw<W: Write>(
         args.to,
         OutFormat::Mxpgn | OutFormat::ActisenseMxpgn | OutFormat::SeaSmart
     );
+    let mut manufacturers = manufacturers.map(|list| {
+        let mut filter =
+            FrameManufacturerFilter::new(list, protocol, protocol.database(args.shape.units()));
+        // Whole messages come from a binary or JSON reader and from `Joined`:
+        // a short one must not be read as a fast-packet frame. The line
+        // reader says of itself, in `ManufacturerLines`.
+        filter.set_coalesced(binary_or_json || joined);
+        filter
+    });
     let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
         binary.reader(source, protocol)
     } else if args.from == Some(FromFormat::Json) {
@@ -498,6 +507,9 @@ fn convert_raw<W: Write>(
         // readers above join them already.
         if joined {
             Box::new(Joined::new(lines, protocol))
+        } else if let Some(filter) = manufacturers.take() {
+            // The capture's format decides how to read a frame.
+            Box::new(ManufacturerLines { lines, filter })
         } else {
             Box::new(lines)
         }
@@ -513,21 +525,13 @@ fn convert_raw<W: Write>(
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
-    // Whole messages come from a binary or JSON reader and from `Joined`:
-    // a short one must not be read as a fast-packet frame.
-    let whole_messages = binary_or_json || joined;
-    let mut manufacturers = manufacturers.map(|list| {
-        let mut filter =
-            FrameManufacturerFilter::new(list, protocol, protocol.database(args.shape.units()));
-        filter.set_coalesced(whole_messages);
-        filter
-    });
     if manufacturers.is_none() && !args.has_filter() && !live {
         copy(&mut *reader, &mut *writer).context("converting frames")?;
         return Ok(());
     }
     while let Some(frame) = reader.read_frame().context("reading input")? {
         // First, so that it sees the claims the other filters would drop.
+        // A line capture's reader holds the filter, and has done this already.
         let device_kept = manufacturers.as_mut().is_none_or(|f| f.keep_frame(&frame));
         if device_kept && args.keep(&frame) {
             writer.write_frame(&frame).context("writing frame")?;
@@ -579,6 +583,35 @@ impl<R: BufRead> FrameReader for Joined<R> {
                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => return Ok(Some(f)),
                 Reassembled::Partial => {}
                 Reassembled::Error(e) => log::warn!("reassembly error: {e}"),
+            }
+        }
+        Ok(None)
+    }
+}
+
+/// The frames of a line capture that `filter` keeps. A capture's format and
+/// `# format=` header say whether a line is a whole message, as for [`Joined`].
+struct ManufacturerLines<R: BufRead> {
+    lines: LineFrameReader<R>,
+    filter: FrameManufacturerFilter,
+}
+
+impl<R: BufRead> FrameReader for ManufacturerLines<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        while let Some(frame) = self.lines.read_frame()? {
+            let format = self.lines.active_format();
+            let kept = if format == Some(InputFormat::PlainMixFast) {
+                // Its long lines say nothing about its short ones.
+                self.filter.keep_framed(&frame, false)
+            } else {
+                self.filter.set_coalesced(
+                    self.lines.header_coalesced()
+                        || format.is_some_and(|f| f.framing() == Framing::Coalesced),
+                );
+                self.filter.keep_frame(&frame)
+            };
+            if kept {
+                return Ok(Some(frame));
             }
         }
         Ok(None)

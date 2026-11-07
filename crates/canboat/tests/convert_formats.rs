@@ -548,6 +548,23 @@ fn manufacturers_are_filtered_by_device() {
     let both = sources(&["--manufacturer-allow", "358,381", "--pgn", "127250"]);
     assert_eq!(both, [(127250, 1), (127250, 2)]);
 
+    // A capture whose format says its lines are whole messages: this one is
+    // B&G's own, not a fast-packet frame, though it is 8 bytes on a fast PGN.
+    let whole =
+        b"# format=FAST\n2024-01-01T00:00:00.000Z,7,130820,7,255,8,7d,99,01,02,03,04,05,06\n";
+    let plain = run(
+        &[
+            "convert",
+            "--to",
+            "plain",
+            "-",
+            "--manufacturer-allow",
+            "b&g",
+        ],
+        whole,
+    );
+    assert_eq!(String::from_utf8(plain).unwrap().lines().count(), 1);
+
     // The list follows --protocol.
     let list = |args: &[&str]| String::from_utf8(run(args, b"")).unwrap();
     let marine = list(&["convert", "--list-manufacturers"]);
