@@ -248,6 +248,7 @@ fn write_json_inner<W: fmt::Write>(
     };
     let write_field = |buf: &mut String, sep: &str, f: &DecodedField| -> fmt::Result {
         buf.write_str(sep)?;
+        write_parameter_id(buf, f)?;
         write_json_string(buf, field_display_name(f, opts.camel_case).as_ref())?;
         buf.write_char(':')?;
         write_field_value(buf, f, opts, &pgn.data)
@@ -617,6 +618,18 @@ fn write_field_value_debug<W: fmt::Write>(
         w.write_str(",\"key\":true")?;
     }
     w.write_char('}')
+}
+
+/// A group-function value names the field of the commanded PGN it is for,
+/// so a reader need not look up that PGN's definition: `"parameterId":
+/// "pilotMode",` ahead of the value, as canboatjs writes it (canboat#1157).
+fn write_parameter_id<W: fmt::Write>(w: &mut W, f: &DecodedField) -> fmt::Result {
+    if let Some(target) = f.overrides.as_ref().and_then(|o| o.target) {
+        w.write_str("\"parameterId\":")?;
+        write_json_string(w, target.id)?;
+        w.write_char(',')?;
+    }
+    Ok(())
 }
 
 /// An integer, as its digits in a string when the field is wider than a
@@ -1294,6 +1307,7 @@ mod tests {
             unit: None,
             resolution: Some(1.0),
             precision: 0,
+            target: None,
             signed: None,
         }));
         let mut out = String::new();
