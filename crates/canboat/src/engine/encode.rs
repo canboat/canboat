@@ -1019,10 +1019,14 @@ impl PgnBuilder {
                 let Some(want) = field.match_value else {
                     continue;
                 };
-                // A label for a lookup-typed match field arrives as
-                // Text; retype it the same way emit_variable does.
+                // A label for a lookup-typed match field, or a match
+                // field's description, arrives as Text; retype it the same
+                // way emit_variable does.
                 let staged_value = match value {
-                    EncodeValue::Text(s) if field.lookup_enumeration.is_some() => {
+                    EncodeValue::Text(s)
+                        if field.lookup_enumeration.is_some()
+                            || field.description == Some(s.as_str()) =>
+                    {
                         EncodeValue::Lookup(s.clone())
                     }
                     other => other.clone(),
@@ -1312,14 +1316,19 @@ impl PgnBuilder {
         let target_field = crate::engine::decode::parameter_field(target_info, param_idx).ok_or(
             unresolved("FIELD_INDEX is beyond the referenced PGN's fields"),
         )?;
-        // A label for a lookup-typed target arrives as Text (the caller
-        // cannot know the target's type up front); retype it.
+        // A label for a lookup-typed target, or a matched target's
+        // description, arrives as Text (the caller cannot know the target's
+        // type up front); retype it.
         let is_time = matches!(
             target_field.field_type,
             Some(FieldType::Time) | Some(FieldType::Duration)
         );
         let value = match v {
-            EncodeValue::Text(s) if target_field.lookup_enumeration.is_some() => {
+            EncodeValue::Text(s)
+                if target_field.lookup_enumeration.is_some()
+                    || (target_field.match_value.is_some()
+                        && target_field.description == Some(s.as_str())) =>
+            {
                 EncodeValue::Lookup(s.clone())
             }
             // A TIME / DURATION target is seconds, as canboat writes it
@@ -1466,6 +1475,16 @@ impl PgnBuilder {
 
             // DECIMAL: digit pairs, one byte each, not a binary number.
             (Some(FieldType::Decimal), v) => return decimal_to_raw(f, width, v),
+
+            // A field that selects the PGN variant, named by its
+            // description as the decoder writes it (canboat#1153).
+            (_, EncodeValue::Lookup(label))
+                if f.match_value.is_some()
+                    && f.lookup_enumeration.is_none()
+                    && f.description == Some(label.as_str()) =>
+            {
+                f.match_value.unwrap_or_default()
+            }
 
             // Lookup by label → its raw value; or a raw integer.
             (
