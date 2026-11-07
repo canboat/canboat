@@ -385,6 +385,19 @@ impl AppState {
         self.manufacturers.as_ref().map(|f| f.list().clone())
     }
 
+    /// Learn who sent a record without showing it, for a snapshot: its
+    /// records come in no useful order, and a device's Address Claim may
+    /// follow its other records.
+    pub fn learn_manufacturer(&mut self, pgn: u32, src: u8, record: &Value) {
+        if let Some(filter) = self.manufacturers.as_mut() {
+            filter.keep(
+                pgn,
+                src,
+                claim_in_record(pgn, record, BusProtocol::Nmea2000),
+            );
+        }
+    }
+
     /// Insert or refresh one record. `line` has already been parsed
     /// to a `Value` by the caller.
     pub fn upsert(

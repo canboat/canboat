@@ -42,7 +42,7 @@ pub struct ManufacturerArgs {
     deny: Vec<String>,
 
     /// List the manufacturers and their codes, and exit.
-    #[arg(long = "list-manufacturers", id = "list", exclusive = true, help_heading = HEADING)]
+    #[arg(long = "list-manufacturers", id = "list", help_heading = HEADING)]
     pub list: bool,
 }
 

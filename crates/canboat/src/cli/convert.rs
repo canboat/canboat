@@ -373,6 +373,7 @@ impl Args {
     }
 }
 
+/// Convert the input as `args` says, to frames or to decoded records.
 pub fn run(args: Args) -> Result<()> {
     // Surface decode-path diagnostics (e.g. a stream mislabeled
     // `# format=FAST` but carrying single frames) on stderr without

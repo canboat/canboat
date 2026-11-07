@@ -115,6 +115,7 @@ impl Args {
 /// The help heading of the stdin/stdout options.
 const STREAM: &str = "stdin and stdout";
 
+/// Open the gateway and bridge it to stdin and stdout until a stream ends.
 pub fn run(mut args: Args) -> Result<()> {
     if args.manufacturers.print_list(args.gateway.protocol())? {
         return Ok(());
@@ -284,6 +285,7 @@ impl<'a> Idle<'a> {
         }
     }
 
+    /// Whether to pass `frame` on.
     fn passes(&mut self, frame: &RawFrame) -> bool {
         // First, so that it sees the claims `filter` would drop.
         let device_kept = self

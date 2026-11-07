@@ -18,10 +18,7 @@
 use std::collections::{BTreeSet, HashMap};
 
 use super::codec::SYNTHETIC_PGN_START;
-use super::{
-    BusProtocol, FramePacketType, LookupTable, PacketType, PgnDatabase, RawFrame, Reassembled,
-    Reassembler, Units,
-};
+use super::{BusProtocol, LookupTable, PacketType, PgnDatabase, RawFrame, Units};
 
 /// PGN of the ISO Address Claim.
 const ADDRESS_CLAIM: u32 = 60928;
@@ -154,6 +151,7 @@ impl ManufacturerFilter {
         }
     }
 
+    /// Update what is known about `src` from `claim`, by the module's rules.
     fn learn(&mut self, src: u8, claim: Claim) {
         if src == NO_ADDRESS {
             return;
@@ -177,16 +175,14 @@ impl ManufacturerFilter {
 }
 
 /// A [`ManufacturerFilter`] for a stream of bus frames, passed on as frames:
-/// `convert --to plain`, `interface` and the server's raw port.
+/// `convert --to plain`, `interface` and the server.
 ///
-/// The frames are joined only to learn from. A frame goes by what was known
-/// before its message ended, and a single frame by what it says itself, so a
-/// message
-/// is not cut in two by what it itself teaches.
+/// A fast-packet's first frame holds its manufacturer code, so that frame
+/// decides, and the rest of the message goes the same way: nothing needs
+/// joining, and a message is not cut in two by what it teaches.
 pub struct FrameManufacturerFilter {
     filter: ManufacturerFilter,
     db: &'static PgnDatabase,
-    reassembler: Reassembler,
     /// A frame of more than 8 bytes has shown that the source joins
     /// fast-packets itself.
     coalesced: bool,
@@ -198,7 +194,6 @@ impl FrameManufacturerFilter {
         Self {
             filter: ManufacturerFilter::new(list, protocol),
             db,
-            reassembler: Reassembler::new(),
             coalesced: false,
         }
     }
@@ -211,36 +206,28 @@ impl FrameManufacturerFilter {
 
     /// Learn from `frame`, and say whether to keep it.
     pub fn keep_frame(&mut self, frame: &RawFrame) -> bool {
-        if frame.pgn >= SYNTHETIC_PGN_START {
-            return true;
-        }
         if frame.data.len() > 8 {
             self.coalesced = true;
         }
-        let packet_type = if self.coalesced {
-            FramePacketType::Other
-        } else {
-            self.db
+        let fast = !self.coalesced
+            && self
+                .db
                 .first_pgn(frame.pgn)
                 .or_else(|| self.db.fallback_pgn(frame.pgn))
-                .map_or(FramePacketType::Other, |p| match p.packet_type {
-                    PacketType::Fast => FramePacketType::Fast,
-                    PacketType::Single => FramePacketType::Single,
-                    _ => FramePacketType::Other,
-                })
-        };
-        match self.reassembler.push(frame.clone(), packet_type) {
-            Reassembled::PassThrough(whole) => {
-                self.filter.keep_message(whole.pgn, whole.src, &whole.data)
-            }
-            Reassembled::Complete(whole) => {
-                let keep = self.filter.keeps(whole.src);
-                let claim = self.filter.claim_in(whole.pgn, &whole.data);
-                self.filter.learn(whole.src, claim);
-                keep
-            }
-            Reassembled::Partial | Reassembled::Error(_) => self.filter.keeps(frame.src),
+                .is_some_and(|p| matches!(p.packet_type, PacketType::Fast));
+        if !fast {
+            return self.filter.keep_message(frame.pgn, frame.src, &frame.data);
         }
+        // Only a whole first frame: its payload starts after the sequence
+        // and length bytes. Bus frames of a fast-packet are always 8 bytes,
+        // so a shorter line isn't one, and teaches nothing.
+        let claim = match &frame.data[..] {
+            [seq, _, payload @ ..] if frame.data.len() == 8 && seq & 0x1f == 0 => {
+                self.filter.claim_in(frame.pgn, payload)
+            }
+            _ => Claim::None,
+        };
+        self.filter.keep(frame.pgn, frame.src, claim)
     }
 }
 
@@ -430,13 +417,39 @@ mod tests {
         let tag = (BG | 0x1800 | 4 << 13).to_le_bytes();
         let first = |seq: u8| frame(130820, &[seq << 5, 9, tag[0], tag[1], 1, 2, 3, 4]);
         let last = |seq: u8| frame(130820, &[seq << 5 | 1, 5, 6, 7, 0xff, 0xff, 0xff, 0xff]);
-        // The first message teaches the code: not cut in two, so all dropped.
-        assert!(!f.keep_frame(&first(1)));
-        assert!(!f.keep_frame(&last(1)));
-        // From then on the address is known, and all of it passes.
-        assert!(f.keep_frame(&first(2)));
-        assert!(f.keep_frame(&last(2)));
+        // The first message teaches the code, and passes whole.
+        assert!(f.keep_frame(&first(1)));
+        assert!(f.keep_frame(&last(1)));
         assert!(f.keep_frame(&frame(127250, &[0; 8])));
+        // A second code stops the address from its first frame on, and the
+        // rest of that message goes the same way.
+        let other = (SIMRAD | 0x1800 | 4 << 13).to_le_bytes();
+        assert!(!f.keep_frame(&frame(130820, &[3 << 5, 9, other[0], other[1], 1, 2, 3, 4])));
+        assert!(!f.keep_frame(&last(3)));
+        assert!(!f.keep_frame(&frame(127250, &[0; 8])));
+        // A short line on a fast-packet PGN teaches nothing.
+        let mut unknown = FrameManufacturerFilter::new(
+            ManufacturerList::Allow([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        assert!(!unknown.keep_frame(&frame(130820, &[0, 9, tag[0], tag[1]])));
+        assert!(!unknown.keep_frame(&frame(127250, &[0; 8])));
+    }
+
+    /// A first frame of a denied maker drops the message, whatever the list.
+    #[test]
+    fn a_first_frame_decides_for_a_denied_maker_too() {
+        let db = BusProtocol::Nmea2000.database(crate::engine::Units::Si);
+        let mut f = FrameManufacturerFilter::new(
+            ManufacturerList::Deny([BG].into_iter().collect()),
+            BusProtocol::Nmea2000,
+            db,
+        );
+        let tag = (BG | 0x1800 | 4 << 13).to_le_bytes();
+        let frame = |data: [u8; 8]| RawFrame::new(None, 7, 130820, 7, 255, data);
+        assert!(!f.keep_frame(&frame([0, 9, tag[0], tag[1], 1, 2, 3, 4])));
+        assert!(!f.keep_frame(&frame([1, 5, 6, 7, 0xff, 0xff, 0xff, 0xff])));
     }
 
     #[test]

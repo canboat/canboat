@@ -547,6 +547,14 @@ fn manufacturers_are_filtered_by_device() {
     let both = sources(&["--manufacturer-allow", "358,381", "--pgn", "127250"]);
     assert_eq!(both, [(127250, 1), (127250, 2)]);
 
+    // The list follows --protocol.
+    let list = |args: &[&str]| String::from_utf8(run(args, b"")).unwrap();
+    let marine = list(&["convert", "--list-manufacturers"]);
+    let j1939 = list(&["convert", "--protocol", "j1939", "--list-manufacturers"]);
+    assert!(marine.contains("Victron Energy"), "{marine}");
+    assert!(j1939.contains("Motorenfabrik Hatz"), "{j1939}");
+    assert!(!marine.contains("Motorenfabrik Hatz"));
+
     // The same on frames, passed on as frames.
     let mut all = vec![
         "convert",

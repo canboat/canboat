@@ -75,6 +75,7 @@ pub struct Args {
     manufacturers: crate::cli::manufacturer::ManufacturerArgs,
 }
 
+/// Run the terminal UI on a live endpoint, a capture, or idle until it quits.
 pub async fn run(args: Args) -> Result<()> {
     // Before the terminal is taken over, so an error can be read.
     let protocol = crate::engine::BusProtocol::Nmea2000;

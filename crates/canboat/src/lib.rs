@@ -686,14 +686,15 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
-    /// The gateway a [`BridgeConfig`] names: [`crate::bus::Device`] and its
-    /// [`Kind`], here too.
+    /// Which manufacturers' devices a [`BridgeConfig`] keeps.
     pub use crate::engine::manufacturer_filter::ManufacturerList;
     /// [`Device::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
     pub use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
     /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
+    /// The gateway a [`BridgeConfig`] names: [`crate::bus::Device`] and its
+    /// [`Kind`], here too.
     pub use crate::server::{
         ActisenseFormat, Bridge, BridgeConfig, Device, Kind, QuirkKind as Quirk, Transmitter,
     };

@@ -140,6 +140,7 @@ pub struct Args {
     nmea0183_filter: Option<std::path::PathBuf>,
 }
 
+/// Run the daemon: serve the stream on stdin on TCP until stdin ends.
 pub fn run(args: Args) -> Result<()> {
     let cli = args;
     let protocol = crate::engine::BusProtocol::Nmea2000;
@@ -408,6 +409,7 @@ fn parse_banner(banner: &str) -> Result<(bool, crate::engine::BusProtocol)> {
     Ok((si, protocol))
 }
 
+/// Read the analyzer JSON on stdin into the hub's cache and TCP streams.
 fn run_stdin_pump(hub: &Hub) -> Result<()> {
     let stdin = io::stdin();
     let mut lock = stdin.lock();
