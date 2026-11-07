@@ -478,8 +478,8 @@ Pgn pgnList[] = {
       {.name = "Engine Air Filter 2 Differential Pressure", .camelName = "engineAirFilter2DifferentialPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "0.05 kPa per bit"},
       {.name = "Engine Air Filter 3 Differential Pressure", .camelName = "engineAirFilter3DifferentialPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "0.05 kPa per bit"},
       {.name = "Engine Air Filter 4 Differential Pressure", .camelName = "engineAirFilter4DifferentialPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "0.05 kPa per bit"},
-      {.name = "Engine Intake Manifold", .camelName = "engineIntakeManifold2Pressure", .fieldType = "PRESSURE_UINT8_2KPA"},
-      {.name = "Engine Intake Manifold", .camelName = "engineIntakeManifold1AbsolutePressure", .fieldType = "NUMBER", .size = 8, .resolution = 100.0, .unit = "Pa", .description = "0.1 kPa per bit"},
+      {.name = "Engine Intake Manifold #2 Pressure", .camelName = "engineIntakeManifold2Pressure", .fieldType = "PRESSURE_UINT8_2KPA"},
+      {.name = "Engine Intake Manifold #1 Absolute Pressure", .camelName = "engineIntakeManifold1AbsolutePressure", .fieldType = "NUMBER", .size = 8, .resolution = 100.0, .unit = "Pa", .description = "0.1 kPa per bit"},
       {.name = "Engine Intake Manifold 1 Absolute Pressure (High Resolution)", .camelName = "engineIntakeManifold1AbsolutePressureHighResolution", .fieldType = "PRESSURE_UFIX16_HPA", .description = "0.1 kPa per bit"},
       {.name = "Engine Intake Manifold 2 Absolute Pressure", .camelName = "engineIntakeManifold2AbsolutePressure", .fieldType = "PRESSURE_UINT8_2KPA"}
      },
