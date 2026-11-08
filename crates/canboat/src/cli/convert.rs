@@ -599,7 +599,9 @@ impl<R: BufRead> FrameReader for Joined<R> {
             self.coalesced |= self.lines.header_coalesced()
                 || (frame.data.len() > 8 && format != Some(InputFormat::PlainMixFast));
             let whole = self.coalesced || format.is_some_and(|f| f.framing() == Framing::Coalesced);
-            let packet_type = if whole {
+            // canboat's own records are whole messages, however short: they
+            // never went over the bus in frames.
+            let packet_type = if whole || frame.pgn >= CANBOAT_PGN_START {
                 FramePacketType::Other
             } else {
                 self.protocol.packet_type(frame.pgn)
