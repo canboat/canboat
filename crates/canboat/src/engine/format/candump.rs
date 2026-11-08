@@ -96,14 +96,43 @@ fn split_time(line: &str) -> Option<(&str, &str)> {
     let rest = line.strip_prefix('(')?;
     let close = rest.find(')')?;
     let ts = &rest[..close];
-    let seconds = ts.bytes().all(|b| b.is_ascii_digit() || b == b'.');
-    let dated = ts.len() >= 19
-        && ts.as_bytes()[4] == b'-'
-        && ts.as_bytes()[10] == b' '
-        && ts
-            .bytes()
-            .all(|b| b.is_ascii_digit() || matches!(b, b'-' | b' ' | b':' | b'.'));
-    (!ts.is_empty() && (seconds || dated)).then(|| (ts, &rest[close + 1..]))
+    (is_seconds(ts) || is_date_time(ts)).then(|| (ts, &rest[close + 1..]))
+}
+
+/// Seconds as `candump -ta`, `-td` and `-tz` print them: digits, then
+/// optionally a dot and more digits.
+fn is_seconds(ts: &str) -> bool {
+    let (whole, frac) = ts.split_once('.').unwrap_or((ts, "0"));
+    let digits = |s: &str| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit());
+    digits(whole) && digits(frac)
+}
+
+/// A date and time as `candump -tA` prints it: `2015-07-10 08:17:33`,
+/// optionally followed by a dot and digits.
+fn is_date_time(ts: &str) -> bool {
+    let b = ts.as_bytes();
+    let shape = b"dddd-dd-dd dd:dd:dd";
+    b.len() >= shape.len()
+        && shape.iter().zip(b).all(|(&want, &got)| {
+            if want == b'd' {
+                got.is_ascii_digit()
+            } else {
+                got == want
+            }
+        })
+        && (b.len() == shape.len()
+            || (b[shape.len()] == b'.'
+                && b.len() > shape.len() + 1
+                && b[shape.len() + 1..].iter().all(u8::is_ascii_digit)))
+}
+
+/// Whether the frame after a timestamp and the interface is in the `-l`
+/// log form, `<canid>#<hexbytes>`. Only that token decides: `candump -a`
+/// may print a `#` in its ASCII column after a pretty frame's bytes.
+fn is_log_frame(rest: &str) -> bool {
+    rest.split_whitespace()
+        .nth(1)
+        .is_some_and(|t| t.contains('#'))
 }
 
 /// True when `line` looks like a candump *pretty* line with a `-t`
@@ -124,7 +153,7 @@ pub(crate) fn looks_like_log(line: &str) -> bool {
     let ts = &rest[..close];
     ts.bytes().all(|b| b.is_ascii_digit() || b == b'.')
         && !ts.is_empty()
-        && rest[close + 1..].trim_start().contains('#')
+        && is_log_frame(&rest[close + 1..])
 }
 
 /// Parse any candump shape into a [`RawFrame`], for a 29-bit ISO 11783
@@ -152,7 +181,7 @@ pub fn parse_line_for(line: &str, standard: bool) -> Result<Option<RawFrame>, Pa
         return Err(ParseError::Empty);
     }
     if let Some((ts, rest)) = split_time(t)
-        && !rest.contains('#')
+        && !is_log_frame(rest)
     {
         parse_timed_pretty(ts, rest, standard)
     } else if t.starts_with('(') {
@@ -578,6 +607,19 @@ mod tests {
             crate::engine::format::detect(" (1436509053.762905)  can0  18EEFF00   [8]  8E F2"),
             Some(crate::engine::format::InputFormat::Candump)
         );
+        // `candump -a`'s ASCII column may hold a `#` (byte 23): still the
+        // pretty form, not the log form.
+        let f = parse_line(" (1436509053.762905)  can0  18EEFF00   [2]  23 41   '#A'").unwrap();
+        assert_eq!(f.data.as_slice(), &[0x23, 0x41]);
+        // Only the documented timestamp shapes.
+        for bad in [
+            "(1.2.3)  can0  18EEFF00   [1]  00",
+            "(.5)  can0  18EEFF00   [1]  00",
+            "(2015-07-10x08:17:33.1)  can0  18EEFF00   [1]  00",
+            "(2015-07-10 08:17:33.)  can0  18EEFF00   [1]  00",
+        ] {
+            assert!(!looks_like_timed_pretty(bad), "{bad}");
+        }
     }
 
     #[test]

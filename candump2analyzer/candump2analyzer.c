@@ -50,44 +50,94 @@ limitations under the License.
 #define FMT_6 6 // PCAN-View v1.1: "     1)         2.7  Rx     09F11324  8  53 84 9E 01 00 FF FF FF"
 #define FMT_7 7 // candump -t: " (1502979132.106111)  can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
 
+// Milliseconds from the digits after the dot in `frac` ("123456" -> 123,
+// "1" -> 100): from the text, not a double, so .100000 never becomes .099.
+static int fractionMillis(const char *frac)
+{
+  int ms = 0;
+  int i;
+
+  for (i = 0; i < 3; i++)
+  {
+    ms = ms * 10 + ((frac != NULL && isdigit((unsigned char) frac[0])) ? *frac++ - '0' : 0);
+  }
+  return ms;
+}
+
+// Seconds as candump -ta, -td and -tz print them: digits, optionally a dot and more digits.
+static bool isSeconds(const char *ts)
+{
+  size_t whole = strspn(ts, "0123456789");
+
+  if (whole == 0)
+  {
+    return false;
+  }
+  if (ts[whole] == 0)
+  {
+    return true;
+  }
+  return ts[whole] == '.' && strspn(ts + whole + 1, "0123456789") > 0 && ts[whole + 1 + strspn(ts + whole + 1, "0123456789")] == 0;
+}
+
+// A date and time as candump -tA prints it: "2015-07-10 08:17:33", optionally a dot and digits.
+static bool isDateTime(const char *ts)
+{
+  static const char shape[] = "dddd-dd-dd dd:dd:dd";
+  size_t            i;
+
+  for (i = 0; i < sizeof(shape) - 1; i++)
+  {
+    if (shape[i] == 'd' ? !isdigit((unsigned char) ts[i]) : ts[i] != shape[i])
+    {
+      return false;
+    }
+  }
+  if (ts[i] == 0)
+  {
+    return true;
+  }
+  return ts[i] == '.' && strspn(ts + i + 1, "0123456789") > 0 && ts[i + 1 + strspn(ts + i + 1, "0123456789")] == 0;
+}
+
 // The pretty (Debian) line after the timestamp `candump -t` puts in front of
 // it: epoch seconds (-ta), a local date and time (-tA, "2017-08-17 15:12:12.106111")
 // or seconds since the previous or first frame (-td, -tz). Writes the time as
 // the analyzer's PLAIN timestamp: epoch seconds in UTC, the date and time as
 // they are, and the relative seconds as a time of day, which has no date.
-// Returns false when the line is not of this form.
+// Returns false when the line is not of this form. Only the frame token says
+// whether it is the -l log form (`<canid>#<bytes>`): candump -a's ASCII column
+// may hold a '#'.
 static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSize, unsigned int *canid, int *size)
 {
-  char   ts[40];
-  int    y, mo, d, h, mi;
-  double sec;
-  int    end = 0;
+  char        ts[40];
+  char        frame[32];
+  const char *frac;
+  int         end = 0;
 
-  if (strchr(p, '#') != NULL || sscanf(p, " (%39[^)]) %*s %x [%d] %n", ts, canid, size, &end) != 3 || end == 0)
+  if (sscanf(p, " (%39[^)]) %*s %31s", ts, frame) != 2 || strchr(frame, '#') != NULL
+      || sscanf(p, " (%*[^)]) %*s %x [%d] %n", canid, size, &end) != 2 || end == 0)
   {
     return false;
   }
-  if (sscanf(ts, "%d-%d-%d %d:%d:%lf", &y, &mo, &d, &h, &mi, &sec) == 6)
+  frac = strchr(ts, '.');
+  if (isDateTime(ts))
   {
-    int whole = (int) sec;
-    int msec  = (int) ((sec - whole) * 1000.0);
-
-    snprintf(timestamp, timestampSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", y, mo, d, h, mi, whole, msec);
+    snprintf(timestamp, timestampSize, "%.10s-%.8s.%03d", ts, ts + 11, fractionMillis(frac ? frac + 1 : NULL));
     return true;
   }
-  if (sscanf(ts, "%lf", &sec) != 1 || strspn(ts, "0123456789.") != strlen(ts))
+  if (!isSeconds(ts))
   {
     return false;
   }
   {
-    time_t     whole  = (time_t) sec;
-    int        msec   = (int) ((sec - (double) whole) * 1000.0);
-    struct tm *utc    = gmtime(&whole);
-    bool       epoch  = strcspn(ts, ".") >= 9; // epoch seconds have nine or ten digits
+    time_t     whole = (time_t) strtoll(ts, NULL, 10);
+    struct tm *utc   = gmtime(&whole);
+    bool       epoch = strcspn(ts, ".") >= 9; // epoch seconds have nine or ten digits
     char       hms[24];
 
     strftime(hms, sizeof(hms), epoch ? "%F-%T" : "%T", utc);
-    snprintf(timestamp, timestampSize, "%s.%03d", hms, msec);
+    snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
   }
   return true;
 }
