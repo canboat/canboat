@@ -67159,8 +67159,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>15</FieldCount>
-      <Length>28</Length>
+      <FieldCount>16</FieldCount>
+      <Length>30</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -67410,6 +67410,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>32766</OutOfRangeValue>
           <ReservedValue>32765</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>spare16</Id>
+          <Name>Spare</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -68970,8 +68980,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>9</FieldCount>
-      <Length>11</Length>
+      <FieldCount>10</FieldCount>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -69110,6 +69120,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>spare10</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -70962,8 +70982,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Missing>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>8</Length>
+      <FieldCount>7</FieldCount>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -71058,6 +71078,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <ReservedValue>16777213</ReservedValue>
           <FieldType>DURATION</FieldType>
           <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spare7</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

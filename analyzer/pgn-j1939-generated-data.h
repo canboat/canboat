@@ -1415,7 +1415,8 @@ Pgn pgnList[] = {
       {.name = "Ch2 Bandwidth", .camelName = "ch2Bandwidth", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch2 Deleted", .camelName = "ch2Deleted", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch2 BufferLoading", .camelName = "ch2Bufferloading", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Ch2 PointerLoading", .camelName = "ch2Pointerloading", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Ch2 PointerLoading", .camelName = "ch2Pointerloading", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Spare", .camelName = "spare27", .fieldType = "SPARE", .size = 24, .resolution = 1.0}
      },
      .camelDescription = "actisenseSystemStatus"},
 

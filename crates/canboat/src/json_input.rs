@@ -1259,6 +1259,54 @@ mod tests {
         }
     }
 
+    /// A trailing Spare comes back whether the decoder wrote it (not zero)
+    /// or left it out (zero); a 262386 without its Spare stops at its
+    /// minLength, as it was read (canboat#1169).
+    #[test]
+    fn a_trailing_spare_encodes_back() {
+        let frames: [(u32, &str); 5] = [
+            // Fusion Track Position, its last byte 0.
+            (130820, "a3,99,09,80,0b,f5,e6,13,00"),
+            // Fusion Versions, its last byte 1.
+            (130820, "a3,99,01,80,01,00,17,00,02,00,09,01"),
+            // Furuno Sensor Setup, its last 2 bytes 06 00.
+            (
+                130818,
+                "3f,9f,1e,12,ee,70,86,fb,ff,ff,ff,ff,e8,03,00,00,d0,07,00,00,ff,ff,ff,ff,64,00,05,00,06,00",
+            ),
+            // Actisense System Status, with and without its 3 last bytes.
+            (
+                262386,
+                "01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08",
+            ),
+            (
+                262386,
+                "01,0e,00,d7,e2,01,00,00,00,00,00,02,20,04,00,00,01,00,01,00,00,00,4e,62,02,13,00,01,01,1c,01,0a,0e",
+            ),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 7, pgn, 10, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
+                    .unwrap_or_else(|| panic!("{pgn} nv={name_value}: skipped\n{line}"));
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+            }
+        }
+    }
+
     /// A gateway's own record, canboat's startup record and a single frame
     /// shorter than 8 bytes come back as they were read (canboat#1152).
     #[test]
