@@ -593,6 +593,8 @@ impl<R: BufRead> Joined<R> {
 }
 
 impl<R: BufRead> FrameReader for Joined<R> {
+    /// The next whole message: a fast-packet once its last frame is read,
+    /// any other frame as it is, and canboat's own records always whole.
     fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
         while let Some(frame) = self.lines.read_frame()? {
             let format = self.lines.active_format();
