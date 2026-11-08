@@ -212,6 +212,10 @@ pub(crate) fn decoded_frame_from_json(
     frame_from_json_as(db, line, true)
 }
 
+/// Encode one analyzer-JSON record, bare or `-camel` wrapped, into its
+/// frame: the variant picked by id, description or match fields, its
+/// fields staged, and any `"trailing"` bytes appended. `decoded` reads it
+/// as canboat decoded it ([`decoded_frame_from_json`]).
 fn frame_from_json_as(
     db: &'static PgnDatabase,
     line: &str,

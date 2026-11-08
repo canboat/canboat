@@ -1281,6 +1281,10 @@ static bool fieldIsTrailingPadding(const Field *field)
   return true;
 }
 
+/*
+ * Only print reserved fields if they are NOT all ones, in that case the device
+ * sends something there; under -empty, also a trailing one that is all ones.
+ */
 extern bool fieldPrintReserved(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
@@ -1319,7 +1323,7 @@ extern bool fieldPrintReserved(const Field   *field,
 
 /*
  * Only print spare fields if they are NOT all zeroes, in that case we have an incorrect
- * PGN definition.
+ * PGN definition; under -empty, also a trailing one that is all zeroes.
  */
 extern bool fieldPrintSpare(const Field   *field,
                             const char    *fieldName,

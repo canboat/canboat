@@ -1594,6 +1594,12 @@ static bool printField(const Field   *field,
   return false;
 }
 
+/*
+ * Print one message, as text or (showJson) a JSON record, with its fields
+ * as the matching PGN definition gives them. Under -empty the JSON record
+ * ends with "trailing", the bytes no field covers. Returns false when a
+ * field could not be printed.
+ */
 bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showData, bool showJson)
 {
   const Pgn *pgn;
