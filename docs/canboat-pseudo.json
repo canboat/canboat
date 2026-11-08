@@ -1500,8 +1500,9 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":26,
-        "Length":33,
+        "FieldCount":27,
+        "MinLength":33,
+        "Length":36,
         "Fields":[
           {
             "Order":1,
@@ -1919,6 +1920,16 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"NUMBER"
+          },
+          {
+            "Order":27,
+            "Id":"spare27",
+            "Name":"Spare",
+            "BitLength":24,
+            "BitOffset":264,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"SPARE"
           }
         ]
       },

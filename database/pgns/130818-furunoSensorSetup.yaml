@@ -72,6 +72,10 @@ fields:
   unit: K
   rangeMin: -99.9
   rangeMax: 99.9
+- id: spare16
+  name: Spare
+  type: SPARE
+  bits: 16
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130818,52,255,30,3f,9f,64,10,0e,6e,b6,fb,ff,ff,ff,ff,00,00,00,00,00,00,00,00,ff,ff,ff,ff,00,00,00,00,00,00"  # from scx20-setting-tool-offset_smooth_rot_10s.raw
   expects:
@@ -105,6 +109,7 @@ samples:
     3AxisOffset: -0.0003
     airPressureOffset: 1000
     airTemperatureOffset: 0.5
+    spare16: "0x0600"
 - raw: "2023-01-01-00:00:00.000,7,130818,52,255,30,3f,9f,00,10,8e,70,84,fb,ff,ff,ff,ff,e8,03,00,00,00,00,00,00,ff,ff,ff,ff,00,00,00,00,00,00"  # from scx20-setting-tool-sensor-set.raw
   expects:
     manufacturerCode: "Furuno"

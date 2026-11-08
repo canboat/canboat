@@ -2,6 +2,7 @@ pgn: 262386
 id: actisenseSystemStatus
 description: 'Actisense: System status'
 type: Fast
+minLength: 33
 missing:
 - Fields
 - FieldLengths
@@ -86,6 +87,14 @@ fields:
 - id: ch2Pointerloading
   name: Ch2 PointerLoading
   type: UINT8
+- id: spare27
+  name: Spare
+  type: SPARE
+  bits: 24
+notes: |-
+  minLength 33: the payload ends after Ch2 PointerLoading. The sample corpus
+  has 28,030 such messages from four captures; one NGT-1
+  (susteranna2020.raw) sends 36 bytes, the last three of them 00 00 08.
 samples:
 - raw: "2023-01-01-00:00:00.000,0,262386,0,0,33,01,0e,00,ac,9f,01,00,00,00,00,00,02,01,00,00,00,00,00,00,00,00,00,00,00,02,01,00,03,0c,01,00,01,01"  # from merrimac-actisense-serial-2011.raw
   expects:
@@ -171,3 +180,19 @@ samples:
     ch2Deleted: 0
     ch2Bufferloading: 0
     ch2Pointerloading: 0
+- raw: "2023-01-01-00:00:00.000,0,262386,0,0,36,01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08"  # from susteranna2020.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 177127
+    indiChannelCount: 2
+    ch1RxBandwidth: 43
+    ch1RxLoad: 4
+    ch2TxBandwidth: 97
+    ch2TxLoad: 97
+    uniChannelCount: 2
+    ch1Bandwidth: 24
+    ch2Bandwidth: 38
+    ch2Bufferloading: 42
+    ch2Pointerloading: 58
+    spare27: "0x000008"

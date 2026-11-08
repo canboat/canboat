@@ -38,6 +38,10 @@ fields:
 - id: progress
   name: Progress
   type: DURATION_UFIX24_MS
+- id: spare7
+  name: Spare
+  type: SPARE
+  bits: 8
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,10,255,9,a3,99,09,80,0b,f5,e6,13,00"  # from fusion-130820.log
   expects:
