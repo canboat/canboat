@@ -626,6 +626,7 @@ fn seed_state_from_snapshot(state: &mut AppState, doc: &str) -> Result<()> {
     let Some(by_pgn) = root.as_object() else {
         anyhow::bail!("snapshot top-level is not a JSON object");
     };
+    let mut records = Vec::new();
     for (group_key, group) in by_pgn {
         let Some(group_obj) = group.as_object() else {
             continue;
@@ -665,8 +666,16 @@ fn seed_state_from_snapshot(state: &mut AppState, doc: &str) -> Result<()> {
                 Some(id) => serde_json::json!({ id: line_val.clone() }),
                 None => line_val.clone(),
             };
-            state.upsert(pgn, src, secondary, description, record);
+            records.push((pgn, src, secondary, description, record));
         }
+    }
+    // What the snapshot says about who is who comes first, so that the
+    // manufacturer filter doesn't drop a record ahead of its device's claim.
+    for (pgn, src, _, _, record) in &records {
+        state.learn_manufacturer(*pgn, *src, record);
+    }
+    for (pgn, src, secondary, description, record) in records {
+        state.upsert(pgn, src, secondary, description, record);
     }
     Ok(())
 }
@@ -923,6 +932,28 @@ mod tests {
         assert_eq!(strip_snapshot_banner(pretty), pretty);
         // Banner-only (empty cache): `banner\n\n` → empty doc.
         assert_eq!(strip_snapshot_banner("{\"version\":\"x\"}\n\n"), "");
+    }
+
+    /// A snapshot's records come in no useful order: a device's Address Claim
+    /// can follow its other records, which the manufacturer filter must not
+    /// drop for that (canboat#1177).
+    #[test]
+    fn a_snapshot_claim_counts_for_the_records_before_it() {
+        use crate::engine::manufacturer_filter::ManufacturerList;
+        let mut s = AppState::new(Status::new_log("x".into()), HashMap::new());
+        s.set_manufacturers(Some(ManufacturerList::Allow([358].into_iter().collect())));
+        let doc = r#"{
+            "127250":{"description":"Vessel Heading",
+                "1":{"pgn":127250,"src":1,"fields":{"Heading":1.0}},
+                "2":{"pgn":127250,"src":2,"fields":{"Heading":2.0}}},
+            "60928":{"description":"ISO Address Claim",
+                "1":{"pgn":60928,"src":1,"fields":{"Manufacturer Code":"Victron Energy"}},
+                "2":{"pgn":60928,"src":2,"fields":{"Manufacturer Code":"B & G"}}}
+        }"#;
+        seed_state_from_snapshot(&mut s, doc).expect("seed snapshot");
+        let mut seen: Vec<_> = s.entries.values().map(|e| (e.pgn, e.src)).collect();
+        seen.sort_unstable();
+        assert_eq!(seen, [(60928, 1), (60928, 2), (127250, 1)]);
     }
 
     /// End-to-end regression for the `--camel` device-info cache: a

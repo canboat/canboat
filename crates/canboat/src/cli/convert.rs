@@ -19,6 +19,9 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 
 use crate::engine::format::{Framing, InputFormat};
+use crate::engine::manufacturer_filter::{
+    FrameManufacturerFilter, ManufacturerFilter, ManufacturerList,
+};
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
 use crate::engine::{BusProtocol, FramePacketType, RawFrame, Reassembled, Reassembler};
 use crate::io::{
@@ -293,6 +296,9 @@ pub struct Args {
     /// Identifier spelling (`--id`) and unit system (`--units`), plus
     /// their deprecated canboat C spellings. Defaults: camelCase + SI.
     #[command(flatten)]
+    pub(crate) manufacturers: super::manufacturer::ManufacturerArgs,
+
+    #[command(flatten)]
     shape: crate::cli::ShapeArgs,
 
     /// Decode-time device quirks, off by default (`--quirk
@@ -367,6 +373,7 @@ impl Args {
     }
 }
 
+/// Convert the input as `args` says, to frames or to decoded records.
 pub fn run(args: Args) -> Result<()> {
     // Surface decode-path diagnostics (e.g. a stream mislabeled
     // `# format=FAST` but carrying single frames) on stderr without
@@ -379,15 +386,27 @@ pub fn run(args: Args) -> Result<()> {
     // Resolved before any I/O, so a refused `--protocol` never leaves a
     // half-written output behind, whichever path runs.
     let protocol = args.protocol.resolve()?;
+    if args.manufacturers.print_list(protocol)? {
+        return Ok(());
+    }
+    let manufacturers = args.manufacturers.resolve(protocol)?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let binary = binary_input(&args);
     let live = args.reads_stdin() && crate::cli::stdin_is_live();
     let mut out = crate::cli::stdout(live);
 
     if args.to.is_frame_level() {
-        convert_raw(&args, protocol, forced, binary, live, &mut out)
+        convert_raw(
+            &args,
+            protocol,
+            manufacturers,
+            forced,
+            binary,
+            live,
+            &mut out,
+        )
     } else {
-        convert_decoded(&args, protocol, forced, binary, &mut out)
+        convert_decoded(&args, protocol, manufacturers, forced, binary, &mut out)
     }
 }
 
@@ -445,12 +464,27 @@ fn binary_input(args: &Args) -> Option<Binary> {
 fn convert_raw<W: Write>(
     args: &Args,
     protocol: BusProtocol,
+    manufacturers: Option<ManufacturerList>,
     forced: Option<InputFormat>,
     binary: Option<Binary>,
     live: bool,
     out: &mut W,
 ) -> Result<()> {
     let source = open_source(args.input(), args.container_opts())?;
+    let binary_or_json = binary.is_some() || args.from == Some(FromFormat::Json);
+    let joined = matches!(
+        args.to,
+        OutFormat::Mxpgn | OutFormat::ActisenseMxpgn | OutFormat::SeaSmart
+    );
+    let mut manufacturers = manufacturers.map(|list| {
+        let mut filter =
+            FrameManufacturerFilter::new(list, protocol, protocol.database(args.shape.units()));
+        // Whole messages come from a binary or JSON reader and from `Joined`:
+        // a short one must not be read as a fast-packet frame. The line
+        // reader says of itself, in `ManufacturerLines`.
+        filter.set_coalesced(binary_or_json || joined);
+        filter
+    });
     let mut reader: Box<dyn FrameReader> = if let Some(binary) = binary {
         binary.reader(source, protocol)
     } else if args.from == Some(FromFormat::Json) {
@@ -471,11 +505,11 @@ fn convert_raw<W: Write>(
         // MXPGN splits a fast-packet into its frames itself, and SeaSmart
         // carries it whole, so both need whole messages; the binary
         // readers above join them already.
-        if matches!(
-            args.to,
-            OutFormat::Mxpgn | OutFormat::ActisenseMxpgn | OutFormat::SeaSmart
-        ) {
+        if joined {
             Box::new(Joined::new(lines, protocol))
+        } else if let Some(filter) = manufacturers.take() {
+            // The capture's format decides how to read a frame.
+            Box::new(ManufacturerLines { lines, filter })
         } else {
             Box::new(lines)
         }
@@ -491,12 +525,15 @@ fn convert_raw<W: Write>(
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
-    if !args.has_filter() && !live {
+    if manufacturers.is_none() && !args.has_filter() && !live {
         copy(&mut *reader, &mut *writer).context("converting frames")?;
         return Ok(());
     }
     while let Some(frame) = reader.read_frame().context("reading input")? {
-        if args.keep(&frame) {
+        // First, so that it sees the claims the other filters would drop.
+        // A line capture's reader holds the filter, and has done this already.
+        let device_kept = manufacturers.as_mut().is_none_or(|f| f.keep_frame(&frame));
+        if device_kept && args.keep(&frame) {
             writer.write_frame(&frame).context("writing frame")?;
             if live {
                 writer.flush().context("flushing output")?;
@@ -552,11 +589,41 @@ impl<R: BufRead> FrameReader for Joined<R> {
     }
 }
 
+/// The frames of a line capture that `filter` keeps. A capture's format and
+/// `# format=` header say whether a line is a whole message, as for [`Joined`].
+struct ManufacturerLines<R: BufRead> {
+    lines: LineFrameReader<R>,
+    filter: FrameManufacturerFilter,
+}
+
+impl<R: BufRead> FrameReader for ManufacturerLines<R> {
+    fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
+        while let Some(frame) = self.lines.read_frame()? {
+            let format = self.lines.active_format();
+            let kept = if format == Some(InputFormat::PlainMixFast) {
+                // Its long lines say nothing about its short ones.
+                self.filter.keep_framed(&frame, false)
+            } else {
+                self.filter.set_coalesced(
+                    self.lines.header_coalesced()
+                        || format.is_some_and(|f| f.framing() == Framing::Coalesced),
+                );
+                self.filter.keep_frame(&frame)
+            };
+            if kept {
+                return Ok(Some(frame));
+            }
+        }
+        Ok(None)
+    }
+}
+
 /// Decoded path: drive the analyzer pipeline and render each record as
 /// JSON or text. Filters are pushed into the pipeline's `Config`.
 fn convert_decoded<W: Write>(
     args: &Args,
     protocol: BusProtocol,
+    manufacturers: Option<ManufacturerList>,
     forced: Option<InputFormat>,
     binary: Option<Binary>,
     out: &mut W,
@@ -592,11 +659,15 @@ fn convert_decoded<W: Write>(
         .context("writing JSON banner")?;
     }
 
+    // The manufacturer filter has to see every device's claims, so with one
+    // the other filters come after it, in the sink.
+    let mut manufacturers = manufacturers.map(|list| ManufacturerFilter::new(list, protocol));
+    let filter_early = manufacturers.is_none();
     let cfg = analyze::Config {
         forced_format: forced,
-        pgn_filter: args.pgn,
-        src_filter: args.src,
-        dst_filter: args.dst,
+        pgn_filter: args.pgn.filter(|_| filter_early),
+        src_filter: args.src.filter(|_| filter_early),
+        dst_filter: args.dst.filter(|_| filter_early),
         suppress_startup_record: false,
         units: args.shape.units(),
         protocol,
@@ -608,6 +679,14 @@ fn convert_decoded<W: Write>(
     let mut sink_err: Option<io::Error> = None;
     let sink = |decoded: &crate::engine::DecodedPgn| {
         if sink_err.is_some() {
+            return;
+        }
+        if let Some(filter) = manufacturers.as_mut()
+            && !(filter.keep_message(decoded.pgn, decoded.src, &decoded.data)
+                && args.pgn.is_none_or(|p| decoded.pgn == p)
+                && args.src.is_none_or(|s| decoded.src == s)
+                && args.dst.is_none_or(|d| decoded.dst == d))
+        {
             return;
         }
         line.clear();

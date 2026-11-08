@@ -263,6 +263,8 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
 }
 
 /// [`field_view`] before the default precision is filled in.
+/// A field as it is in `units`: its resolution, range, unit and precision
+/// converted the way the C analyzer's `fixupUnit` does.
 fn field_view_units(f: &RawField, units: Units) -> FieldView {
     let mut v = FieldView {
         resolution: f.resolution,
@@ -326,8 +328,7 @@ fn field_view_units(f: &RawField, units: Units) -> FieldView {
         Some("K") if !f.signed.unwrap_or(false) => {
             v.unit_offset = -273.15;
             v.range_min = f.range_min.map(|x| x - 273.15);
-            // Match canboat's faithfully-quirky 275.15 subtraction.
-            v.range_max = f.range_max.map(|x| x - 275.15);
+            v.range_max = f.range_max.map(|x| x - 273.15);
             v.unit = Some("C".to_string());
         }
         Some("Pa") => {

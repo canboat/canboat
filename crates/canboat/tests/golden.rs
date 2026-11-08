@@ -381,6 +381,23 @@ fn pgn_64_bit_sentinels_json() {
     );
 }
 
+/// A value above RangeMax is out of range, as one below RangeMin is, while
+/// one at the edge is a reading (#1167, test-above-range-max in
+/// analyzer/tests/Makefile). In Metric and SI.
+#[test]
+fn pgn_above_range_max_json() {
+    run_case(
+        "pgn-above-range-max.in",
+        "pgn-above-range-max.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "pgn-above-range-max.in",
+        "pgn-above-range-max-si.out",
+        &["--json", "--fixtime", "pgn-test", "--units", "si"],
+    );
+}
+
 /// Sentinels in a field with an offset (#984, test-offset-sentinels in
 /// analyzer/tests/Makefile): 127513 Peukert Exponent 0xfd, 0xfe and 0xff
 /// have no value, while 1.25 and the top value 1.5 decode.

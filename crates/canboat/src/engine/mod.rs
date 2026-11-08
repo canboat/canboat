@@ -26,6 +26,7 @@ pub mod format;
 pub mod frame;
 pub mod from_json;
 pub mod iso_tp;
+pub mod manufacturer_filter;
 pub mod os;
 pub mod output;
 pub mod pgn_list;

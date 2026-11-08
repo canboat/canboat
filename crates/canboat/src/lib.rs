@@ -686,6 +686,8 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
+    /// Which manufacturers' devices a [`BridgeConfig`] keeps.
+    pub use crate::engine::manufacturer_filter::ManufacturerList;
     /// [`Device::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
     pub use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
     /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on

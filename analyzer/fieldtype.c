@@ -216,6 +216,7 @@ static const struct
     {"semi-circle/s", "rad/s", Pi, 1.0},
 };
 
+/* Scale a field's resolution, offset and range by mul / div, and set its unit. */
 static void scaleUnit(Field *f, double mul, double div, const char *unit)
 {
   f->resolution = f->resolution * mul / div;
@@ -226,6 +227,11 @@ static void scaleUnit(Field *f, double mul, double div, const char *unit)
   logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
 }
 
+/*
+ * Convert a field to the units asked for: SI with -si, otherwise the practical
+ * ones. Its range goes along, and an angle's stops at 2 pi, or pi when signed, in
+ * both, so that a value being out of range does not depend on the units.
+ */
 void fixupUnit(Field *f)
 {
   if (showSI)
@@ -281,22 +287,27 @@ void fixupUnit(Field *f)
     {
       f->unitOffset += -273.15;
       f->rangeMin += -273.15;
-      f->rangeMax += -275.15;
+      f->rangeMax += -273.15;
       f->unit = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
     else if (strcmp(f->unit, "rad") == 0)
     {
-      // A signed angle stops at -pi, as in SI (and in keel, which converts the
-      // clamped SI range): -187.7 deg is not an angle.
+      // An angle stops as in SI (and in keel, which converts the clamped SI
+      // range), or a value's being out of range would depend on the units:
+      // -187.7 deg and 375 deg are not angles.
       if (f->hasSign)
       {
         f->rangeMin = max(f->rangeMin, -Pi);
+        f->rangeMax = min(f->rangeMax, Pi);
+      }
+      else
+      {
+        f->rangeMax = min(f->rangeMax, 2 * Pi);
       }
       f->resolution *= RadianToDegree;
       f->rangeMin *= RadianToDegree;
       f->rangeMax *= RadianToDegree;
-      f->rangeMax  = max(f->rangeMax, 360);
       f->unit      = "deg";
       f->precision = 1;
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
