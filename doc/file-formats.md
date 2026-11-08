@@ -33,7 +33,7 @@ The full list of understood formats:
 | Waveshare USB-CAN-A | The 20-byte frames the adapter sends on its serial port | _(binary)_ | `canboat convert --from usb-can-a <file>` |
 | candump (Angstrom) | Linux can-utils | `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0` | `candump2analyzer <file> \| analyzer` |
 | candump (Debian) | Linux can-utils | `can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
-| candump with time (Debian) | Linux can-utils (`candump -ta`, `-tA`, `-td`, `-tz`) | `(1502979132.106111)  can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
+| candump with time (Debian) | Linux can-utils (`candump -ta`, `-tA`, `-td`, `-tz`); `-tA`'s local time is read in the zone `TZ` names | `(1502979132.106111)  can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
 | candump log | Linux can-utils (`candump -l`) | `(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF` | `candump2analyzer <file> \| analyzer` |
 | tshark / pcap | Wireshark text export of a CAN pcap | `… CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff` | `candump2analyzer <file> \| analyzer` |
 | Navico (TCP port 8086) | Navico raw dump | `0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d` | `candump2analyzer <file> \| analyzer` |

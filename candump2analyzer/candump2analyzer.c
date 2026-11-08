@@ -103,8 +103,9 @@ static bool isDateTime(const char *ts)
 // The pretty (Debian) line after the timestamp `candump -t` puts in front of
 // it: epoch seconds (-ta), a local date and time (-tA, "2017-08-17 15:12:12.106111")
 // or seconds since the previous or first frame (-td, -tz). Writes the time as
-// the analyzer's PLAIN timestamp: epoch seconds in UTC, the date and time as
-// they are, and the relative seconds as a time of day, which has no date.
+// the analyzer's PLAIN timestamp: epoch seconds in UTC, the local date and time
+// in UTC by this host's zone (TZ), and the relative seconds as a time of day,
+// which has no date.
 // Returns false when the line is not of this form. Only the frame token says
 // whether it is the -l log form (`<canid>#<bytes>`): candump -a's ASCII column
 // may hold a '#'.
@@ -123,7 +124,23 @@ static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSiz
   frac = strchr(ts, '.');
   if (isDateTime(ts))
   {
-    snprintf(timestamp, timestampSize, "%.10s-%.8s.%03d", ts, ts + 11, fractionMillis(frac ? frac + 1 : NULL));
+    // candump -tA prints the capturing host's localtime(); read it as local
+    // time in this host's zone (TZ) and write UTC, as every other timestamp is.
+    struct tm local = {0};
+    time_t    unix;
+    char      hms[24];
+
+    sscanf(ts, "%d-%d-%d %d:%d:%d", &local.tm_year, &local.tm_mon, &local.tm_mday, &local.tm_hour, &local.tm_min, &local.tm_sec);
+    local.tm_year -= 1900;
+    local.tm_mon -= 1;
+    local.tm_isdst = -1;
+    unix           = mktime(&local);
+    if (unix == (time_t) -1)
+    {
+      return false;
+    }
+    strftime(hms, sizeof(hms), "%F-%T", gmtime(&unix));
+    snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
     return true;
   }
   if (!isSeconds(ts))

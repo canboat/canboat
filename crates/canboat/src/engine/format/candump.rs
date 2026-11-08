@@ -24,7 +24,8 @@
 //! (the log form's, and `-ta`'s) are converted to the ISO shape
 //! downstream emitters expect, by pure arithmetic so wasm32 (no host
 //! clock) takes the same path. `-tA`'s local date and time is kept as
-//! the classic canboat `YYYY-MM-DD-HH:MM:SS.mmm`; `-td` and `-tz` count
+//! the classic canboat `YYYY-MM-DD-HH:MM:SS.mmm` unless the binary installed
+//! the host's time zone, which converts it to UTC; `-td` and `-tz` count
 //! seconds from the previous or the first frame, which have no date, so
 //! they become a time of day.
 //!
@@ -247,14 +248,46 @@ fn parse_timed_pretty(
     }))
 }
 
+/// Converts a local date and time, as `candump -tA` prints it (its
+/// `localtime()`), to Unix seconds: year, month, day, hour, minute, second.
+pub(crate) type LocalToUnix = fn(i32, u32, u32, u32, u32, u32) -> Option<i64>;
+
+/// The host's time zone, for `candump -tA`. The library knows no clock or
+/// zone (wasm32 has none), so the binaries install it at startup.
+static LOCAL_TO_UNIX: std::sync::OnceLock<LocalToUnix> = std::sync::OnceLock::new();
+
+/// Read `candump -tA` times as local time in the zone `to_unix` knows,
+/// usually the reading host's (`TZ`), as `candump2analyzer`'s `mktime()`
+/// does. A capture says nothing of the zone it was made in. Without this,
+/// such a time is kept as written.
+pub(crate) fn set_local_time_zone(to_unix: LocalToUnix) {
+    let _ = LOCAL_TO_UNIX.set(to_unix);
+}
+
+/// `candump -tA`'s local `2015-07-10 08:17:33.762905` in UTC, when a time
+/// zone is installed ([`set_local_time_zone`]).
+fn local_to_iso(date: &str, hms: &str, frac: &str) -> Option<String> {
+    let to_unix = LOCAL_TO_UNIX.get()?;
+    let mut d = date.split('-').map(str::parse::<u32>);
+    let mut t = hms.split(':').map(str::parse::<u32>);
+    let (y, mo, day) = (d.next()?.ok()?, d.next()?.ok()?, d.next()?.ok()?);
+    let (h, mi, sec) = (t.next()?.ok()?, t.next()?.ok()?, t.next()?.ok()?);
+    let unix = to_unix(y as i32, mo, day, h, mi, sec)?;
+    Some(epoch_to_iso(&format!("{unix}.{frac}")))
+}
+
 /// A `candump -t` timestamp in a form the emitters take: `-ta`'s epoch
-/// seconds as ISO UTC, `-tA`'s local `2015-07-10 08:17:33.762905` as
-/// `2015-07-10-08:17:33.762`, and `-td` / `-tz`'s seconds since the
+/// seconds as ISO UTC; `-tA`'s local `2015-07-10 08:17:33.762905` in UTC
+/// when the host's time zone is installed ([`set_local_time_zone`]), else as
+/// written, `2015-07-10-08:17:33.762`; and `-td` / `-tz`'s seconds since the
 /// previous or first frame as a time of day, `00:00:00.000123` → `00:00:00.000`.
 fn timed_to_canonical(ts: &str) -> String {
     if ts.contains(' ') {
         let (date, time) = ts.split_once(' ').unwrap_or((ts, ""));
         let (hms, frac) = time.split_once('.').unwrap_or((time, ""));
+        if let Some(utc) = local_to_iso(date, hms, frac) {
+            return utc;
+        }
         let millis: String = frac.chars().chain("000".chars()).take(3).collect();
         return format!("{date}-{hms}.{millis}");
     }

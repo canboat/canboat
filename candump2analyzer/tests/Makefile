@@ -61,13 +61,14 @@ test-bad-length:
 #
 # The pretty (Debian) style after the timestamp `candump -t` puts in front of
 # it: epoch seconds (-ta), a local date and time (-tA), seconds since the
-# previous or first frame (-td, -tz), FMT_7 (#1187). The frames are checked
+# previous or first frame (-td, -tz), FMT_7 (#1187). -tA is local time, read
+# in the zone TZ names (Amsterdam: UTC+1 in November). The frames are checked
 # against <name>.out, as the Rust candump reader is
 # (crates/canboat/tests/convert_formats.rs), the timestamps against <name>.ts.
 #
 test-timed:
 	for f in candump-t-epoch candump-t-date candump-t-relative; do \
-	  $(CANDUMP2ANALYZER) $$f.in > $(TEMPDIR)/$$f.full 2> $(TEMPDIR)/$$f.err || exit 1; \
+	  TZ=Europe/Amsterdam $(CANDUMP2ANALYZER) $$f.in > $(TEMPDIR)/$$f.full 2> $(TEMPDIR)/$$f.err || exit 1; \
 	  cut -d, -f2- $(TEMPDIR)/$$f.full | diff - $$f.out || exit 1; \
 	  cut -d, -f1 $(TEMPDIR)/$$f.full | diff - $$f.ts || exit 1; \
 	done
