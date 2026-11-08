@@ -1276,23 +1276,77 @@ mod tests {
         }
     }
 
+    /// A trailing Spare comes back whether the decoder wrote it (not zero)
+    /// or left it out (zero); a 262386 without its Spare stops at its
+    /// minLength, as it was read (canboat#1169).
+    #[test]
+    fn a_trailing_spare_encodes_back() {
+        let frames: [(u32, &str); 5] = [
+            // Fusion Track Position, its last byte 0.
+            (130820, "a3,99,09,80,0b,f5,e6,13,00"),
+            // Fusion Versions, its last byte 1.
+            (130820, "a3,99,01,80,01,00,17,00,02,00,09,01"),
+            // Furuno Sensor Setup, its last 2 bytes 06 00.
+            (
+                130818,
+                "3f,9f,1e,12,ee,70,86,fb,ff,ff,ff,ff,e8,03,00,00,d0,07,00,00,ff,ff,ff,ff,64,00,05,00,06,00",
+            ),
+            // Actisense System Status, with and without its 3 last bytes.
+            (
+                262386,
+                "01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08",
+            ),
+            (
+                262386,
+                "01,0e,00,d7,e2,01,00,00,00,00,00,02,20,04,00,00,01,00,01,00,00,00,4e,62,02,13,00,01,01,1c,01,0a,0e",
+            ),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 7, pgn, 10, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [true, false] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("{pgn} nv={name_value}: {e}\n{line}"))
+                    .unwrap_or_else(|| panic!("{pgn} nv={name_value}: skipped\n{line}"));
+                assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
+            }
+        }
+    }
+
     /// A record written with `-empty` holds the whole message: its
     /// trailing Reserved and Spare fields and the bytes no field covers
     /// (`"trailing"`) encode back to the bytes that were read (canboat#1169).
     #[test]
     fn an_empty_record_encodes_back_whole() {
-        let frames: [(u32, &str); 4] = [
+        let frames: [(u32, &str); 5] = [
             // Magnetic Variation, its 2-byte Reserved all ones.
             (127258, "ff,f5,11,39,ce,f5,ff,ff"),
-            // ISO Request in a full single frame: 5 bytes of fill.
+            // ISO Request in a full single frame: 5 bytes of fill, which
+            // no field covers.
             (59904, "14,f0,01,ff,ff,ff,ff,ff"),
-            // Actisense System Status, 3 bytes past its 33.
+            // Actisense System Status, its 3-byte Spare not zero.
             (
                 262386,
                 "01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08",
             ),
-            // Fusion Track Position: 1 byte past its Progress.
+            // Fusion Track Position, its 1-byte Spare zero.
             (130820, "a3,99,09,80,0b,f5,e6,13,00"),
+            // Actisense System Status that stops at its minLength.
+            (
+                262386,
+                "01,0e,00,d7,e2,01,00,00,00,00,00,02,20,04,00,00,01,00,01,00,00,00,4e,62,02,13,00,01,01,1c,01,0a,0e",
+            ),
         ];
         let db = PgnDatabase::embedded(crate::engine::Units::Si);
         for (pgn, hex) in frames {

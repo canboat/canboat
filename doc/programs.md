@@ -39,6 +39,10 @@ detected from the first line, or set with `--from`; `.pcap`, `.pcap.gz` and
 `.nif` containers are unwrapped. [file-formats.md](./file-formats.md) lists the
 formats.
 
+CANboat's own pseudo PGNs (0x40000 and up, such as an Actisense gateway's
+System Status) never go on the bus, and only `--to plain` can carry them. The
+other raw-frame formats leave them out and say how many on stderr.
+
 ```sh
 canboat convert capture.log                 # JSON
 canboat convert --to text capture.log       # human-readable

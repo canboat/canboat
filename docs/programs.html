@@ -63,6 +63,7 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 </blockquote>
 <h2 id="canboat-convert"><code>canboat convert</code></h2>
 <p>Decodes a capture, or converts it to another capture format. The input format is detected from the first line, or set with <code>--from</code>; <code>.pcap</code>, <code>.pcap.gz</code> and <code>.nif</code> containers are unwrapped. <a href="file-formats.html">file-formats.md</a> lists the formats.</p>
+<p>CANboat's own pseudo PGNs (0x40000 and up, such as an Actisense gateway's System Status) never go on the bus, and only <code>--to plain</code> can carry them. The other raw-frame formats leave them out and say how many on stderr.</p>
 <pre><code class="language-sh">canboat convert capture.log                 # JSON
 canboat convert --to text capture.log       # human-readable
 canboat convert --to plain capture.candump  # canboat PLAIN, for analyzer
