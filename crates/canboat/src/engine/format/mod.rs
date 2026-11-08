@@ -212,6 +212,7 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     // never shadow PLAIN; checked after YDWG-02/Airmar, whose lines a
     // candump capture cannot resemble (no `[len]`, no `#`).
     if candump::looks_like_pretty(t)
+        || candump::looks_like_timed_pretty(t)
         || candump::looks_like_log(t)
         || candump::looks_like_angstrom(t)
         || candump::is_banner(t)

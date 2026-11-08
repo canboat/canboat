@@ -48,6 +48,49 @@ limitations under the License.
 #define FMT_4 4 // tshark of pcap:10131  29.555750              ?              CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff
 #define FMT_5 5 // Navico port 8086: 0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d
 #define FMT_6 6 // PCAN-View v1.1: "     1)         2.7  Rx     09F11324  8  53 84 9E 01 00 FF FF FF"
+#define FMT_7 7 // candump -t: " (1502979132.106111)  can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
+
+// The pretty (Debian) line after the timestamp `candump -t` puts in front of
+// it: epoch seconds (-ta), a local date and time (-tA, "2017-08-17 15:12:12.106111")
+// or seconds since the previous or first frame (-td, -tz). Writes the time as
+// the analyzer's PLAIN timestamp: epoch seconds in UTC, the date and time as
+// they are, and the relative seconds as a time of day, which has no date.
+// Returns false when the line is not of this form.
+static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSize, unsigned int *canid, int *size)
+{
+  char   ts[40];
+  int    y, mo, d, h, mi;
+  double sec;
+  int    end = 0;
+
+  if (strchr(p, '#') != NULL || sscanf(p, " (%39[^)]) %*s %x [%d] %n", ts, canid, size, &end) != 3 || end == 0)
+  {
+    return false;
+  }
+  if (sscanf(ts, "%d-%d-%d %d:%d:%lf", &y, &mo, &d, &h, &mi, &sec) == 6)
+  {
+    int whole = (int) sec;
+    int msec  = (int) ((sec - whole) * 1000.0);
+
+    snprintf(timestamp, timestampSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", y, mo, d, h, mi, whole, msec);
+    return true;
+  }
+  if (sscanf(ts, "%lf", &sec) != 1 || strspn(ts, "0123456789.") != strlen(ts))
+  {
+    return false;
+  }
+  {
+    time_t     whole  = (time_t) sec;
+    int        msec   = (int) ((sec - (double) whole) * 1000.0);
+    struct tm *utc    = gmtime(&whole);
+    bool       epoch  = strcspn(ts, ".") >= 9; // epoch seconds have nine or ten digits
+    char       hms[24];
+
+    strftime(hms, sizeof(hms), epoch ? "%F-%T" : "%T", utc);
+    snprintf(timestamp, timestampSize, "%s.%03d", hms, msec);
+  }
+  return true;
+}
 
 // PCAN-View per-message timestamps are relative offsets in ms; the
 // ;$STARTTIME= header gives the absolute start as an OLE Automation date
@@ -174,6 +217,7 @@ int main(int argc, char **argv)
     char     pcanType[8]    = {0};  // FMT_6: "Rx" / "Tx"
     int      pcanDataOff    = 0;    // FMT_6: offset within the line of the data bytes
     char    *pcanData       = NULL; // FMT_6: pointer to the data bytes
+    char     timedStamp[48];        // FMT_7: the timestamp as written
 
     // Determine which candump format is being used.
     //
@@ -185,6 +229,10 @@ int main(int argc, char **argv)
       if (sscanf(p, "<%x> [%d] ", &canid, &size) == 2)
       {
         format = FMT_1;
+      }
+      else if (parseTimedPretty(p, timedStamp, sizeof(timedStamp), &canid, &size))
+      {
+        format = FMT_7;
       }
       else if (sscanf(p, " %*s %x [%d] ", &canid, &size) == 2)
       {
@@ -230,6 +278,13 @@ int main(int argc, char **argv)
         continue;
       }
     }
+    else if (format == FMT_7)
+    {
+      if (!parseTimedPretty(p, timedStamp, sizeof(timedStamp), &canid, &size))
+      {
+        continue;
+      }
+    }
     else if (format == FMT_3)
     {
       if (sscanf(p, "(%lf) %*s %8x#", &currentTime, &canid) != 2)
@@ -264,7 +319,7 @@ int main(int argc, char **argv)
       pcanData    = p + pcanDataOff;
     }
 
-    if ((format == FMT_1 || format == FMT_2) && !bracketPayloadComplete(p, size))
+    if ((format == FMT_1 || format == FMT_2 || format == FMT_7) && !bracketPayloadComplete(p, size))
     {
       fprintf(stderr,
               "Skipping candump line: its bytes do not match its [%d], or that is more than 8: %.*s\n",
@@ -325,7 +380,14 @@ int main(int argc, char **argv)
 
     // Output all but the data bytes.
     //
-    fprintf(outfile, "%s.%03d,%d,%d,%d,%d,%d", timestamp, msec, pri, pgn, src, dst, size);
+    if (format == FMT_7)
+    {
+      fprintf(outfile, "%s,%d,%d,%d,%d,%d", timedStamp, pri, pgn, src, dst, size);
+    }
+    else
+    {
+      fprintf(outfile, "%s.%03d,%d,%d,%d,%d,%d", timestamp, msec, pri, pgn, src, dst, size);
+    }
 
     // Now process the data bytes.
     //
@@ -369,7 +431,7 @@ int main(int argc, char **argv)
         while (*(++p) == ' ')
           ;
       }
-      if (format == FMT_1 || format == FMT_2)
+      if (format == FMT_1 || format == FMT_2 || format == FMT_7)
       {
         // Walk the bytes as bracketPayloadComplete() counted them: any
         // whitespace between them, not a fixed stride.

@@ -64,6 +64,7 @@ nav { font-size: .9em; margin-bottom: 1rem; }
 <tr><td>Waveshare USB-CAN-A</td><td>The 20-byte frames the adapter sends on its serial port</td><td><em>(binary)</em></td><td><code>canboat convert --from usb-can-a &lt;file&gt;</code></td></tr>
 <tr><td>candump (Angstrom)</td><td>Linux can-utils</td><td><code>&lt;0x18eeff01&gt; [8] 05 a0 be 1c 00 a0 a0 c0</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
 <tr><td>candump (Debian)</td><td>Linux can-utils</td><td><code>can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
+<tr><td>candump with time (Debian)</td><td>Linux can-utils (<code>candump -ta</code>, <code>-tA</code>, <code>-td</code>, <code>-tz</code>)</td><td><code>(1502979132.106111)  can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
 <tr><td>candump log</td><td>Linux can-utils (<code>candump -l</code>)</td><td><code>(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
 <tr><td>tshark / pcap</td><td>Wireshark text export of a CAN pcap</td><td><code>… CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>
 <tr><td>Navico (TCP port 8086)</td><td>Navico raw dump</td><td><code>0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d</code></td><td><code>candump2analyzer &lt;file&gt; | analyzer</code></td></tr>

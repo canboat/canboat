@@ -7,6 +7,9 @@
 //!
 //! ```text
 //!   can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40      (pretty, default)
+//! (1436509053.762905)  can0  18EEFF00   [8]  8E F2 …    (pretty, -ta)
+//! (2015-07-10 08:17:33.762905)  can0  18EEFF00   [8] …  (pretty, -tA)
+//! (000.000123)  can0  18EEFF00   [8]  8E F2 DD E8 …     (pretty, -td / -tz)
 //! (1436509053.762905) can0 18EEFF00#8EF2DDE800966440   (log, -l / -L)
 //! <0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0             (Angstrom, old can-utils)
 //! ```
@@ -17,9 +20,13 @@
 //! the identifier's width says which kind a line holds. The pretty and
 //! Angstrom forms have no timestamp at all
 //! (`RawFrame.timestamp` stays `None` — the caller stamps receive
-//! time); the log form's epoch seconds are converted to the ISO shape
+//! time) unless `-t` put one in front of the pretty form. Epoch seconds
+//! (the log form's, and `-ta`'s) are converted to the ISO shape
 //! downstream emitters expect, by pure arithmetic so wasm32 (no host
-//! clock) takes the same path.
+//! clock) takes the same path. `-tA`'s local date and time is kept as
+//! the classic canboat `YYYY-MM-DD-HH:MM:SS.mmm`; `-td` and `-tz` count
+//! seconds from the previous or the first frame, which have no date, so
+//! they become a time of day.
 //!
 //! canboat C handles these through the separate `candump2analyzer`
 //! converter (whose parser this mirrors); here they are first-class
@@ -82,6 +89,29 @@ fn angstrom_id(tok: &str) -> Option<&str> {
         .strip_suffix('>')
 }
 
+/// The timestamp and the rest of a line that `candump -t` started with
+/// one: `(<time>) <rest>`, the time being seconds (`-ta`, `-td`, `-tz`)
+/// or a date and time (`-tA`).
+fn split_time(line: &str) -> Option<(&str, &str)> {
+    let rest = line.strip_prefix('(')?;
+    let close = rest.find(')')?;
+    let ts = &rest[..close];
+    let seconds = ts.bytes().all(|b| b.is_ascii_digit() || b == b'.');
+    let dated = ts.len() >= 19
+        && ts.as_bytes()[4] == b'-'
+        && ts.as_bytes()[10] == b' '
+        && ts
+            .bytes()
+            .all(|b| b.is_ascii_digit() || matches!(b, b'-' | b' ' | b':' | b'.'));
+    (!ts.is_empty() && (seconds || dated)).then(|| (ts, &rest[close + 1..]))
+}
+
+/// True when `line` looks like a candump *pretty* line with a `-t`
+/// timestamp in front: `(<time>) <iface> <hex-canid> [<len>] <bytes…>`.
+pub(crate) fn looks_like_timed_pretty(line: &str) -> bool {
+    split_time(line).is_some_and(|(_, rest)| looks_like_pretty(rest))
+}
+
 /// True when `line` looks like a candump *log* line:
 /// `(<epoch.frac>) <iface> <hex-canid>#<hexbytes>`.
 pub(crate) fn looks_like_log(line: &str) -> bool {
@@ -121,7 +151,11 @@ pub fn parse_line_for(line: &str, standard: bool) -> Result<Option<RawFrame>, Pa
     if t.is_empty() {
         return Err(ParseError::Empty);
     }
-    if t.starts_with('(') {
+    if let Some((ts, rest)) = split_time(t)
+        && !rest.contains('#')
+    {
+        parse_timed_pretty(ts, rest, standard)
+    } else if t.starts_with('(') {
         parse_log(t, standard)
     } else if is_banner(t) {
         Ok(None)
@@ -168,6 +202,42 @@ fn parse_pretty(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseErr
         found: 1,
     })?;
     parse_len_and_bytes(id_tok, toks, 2, standard)
+}
+
+/// `(1436509053.762905)  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40`:
+/// the pretty shape after the timestamp `candump -t` puts in front.
+fn parse_timed_pretty(
+    ts: &str,
+    rest: &str,
+    standard: bool,
+) -> Result<Option<RawFrame>, ParseError> {
+    let frame = parse_pretty(rest.trim_start(), standard)?;
+    Ok(frame.map(|f| RawFrame {
+        timestamp: Some(timed_to_canonical(ts)),
+        ..f
+    }))
+}
+
+/// A `candump -t` timestamp in a form the emitters take: `-ta`'s epoch
+/// seconds as ISO UTC, `-tA`'s local `2015-07-10 08:17:33.762905` as
+/// `2015-07-10-08:17:33.762`, and `-td` / `-tz`'s seconds since the
+/// previous or first frame as a time of day, `00:00:00.000123` → `00:00:00.000`.
+fn timed_to_canonical(ts: &str) -> String {
+    if ts.contains(' ') {
+        let (date, time) = ts.split_once(' ').unwrap_or((ts, ""));
+        let (hms, frac) = time.split_once('.').unwrap_or((time, ""));
+        let millis: String = frac.chars().chain("000".chars()).take(3).collect();
+        return format!("{date}-{hms}.{millis}");
+    }
+    let secs_str = ts.split_once('.').map_or(ts, |(s, _)| s);
+    // Epoch seconds have ten digits now and nine since 1973; a relative
+    // time is a few, zero padded to three.
+    if secs_str.len() >= 9 {
+        return epoch_to_iso(ts);
+    }
+    let iso = epoch_to_iso(ts);
+    // `1970-01-01T` + `HH:MM:SS.mmm` + `Z`: the time of day only.
+    iso[11..iso.len() - 1].to_string()
 }
 
 /// `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0`: the pretty shape with the
@@ -479,6 +549,35 @@ mod tests {
         assert_eq!(f.timestamp.as_deref(), Some("2015-07-10T06:17:33.762Z"));
         assert_eq!(f.data.len(), 8);
         assert_eq!(f.data[0], 0x8E);
+    }
+
+    /// `candump -t` puts a timestamp in front of the pretty line: epoch
+    /// seconds (`-ta`), a local date and time (`-tA`), or seconds since
+    /// the previous or first frame (`-td`, `-tz`) (canboat#1187).
+    #[test]
+    fn parses_pretty_line_with_a_t_timestamp() {
+        let bytes = "  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40";
+        for (ts, want) in [
+            ("1436509053.762905", "2015-07-10T06:17:33.762Z"),
+            ("2015-07-10 08:17:33.762905", "2015-07-10-08:17:33.762"),
+            ("000.012345", "00:00:00.012"),
+            ("3725.5", "01:02:05.500"),
+        ] {
+            let line = format!(" ({ts}){bytes}");
+            assert!(looks_like_timed_pretty(line.trim_start()), "{line}");
+            assert!(!looks_like_log(line.trim_start()), "{line}");
+            let f = parse_line(&line).unwrap();
+            assert_eq!(f.pgn, 60928, "{line}");
+            assert_eq!(f.timestamp.as_deref(), Some(want), "{line}");
+            assert_eq!(
+                f.data.as_slice(),
+                &[0x8E, 0xF2, 0xDD, 0xE8, 0x00, 0x96, 0x64, 0x40]
+            );
+        }
+        assert_eq!(
+            crate::engine::format::detect(" (1436509053.762905)  can0  18EEFF00   [8]  8E F2"),
+            Some(crate::engine::format::InputFormat::Candump)
+        );
     }
 
     #[test]

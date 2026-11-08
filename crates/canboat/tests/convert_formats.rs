@@ -531,6 +531,16 @@ fn candump_bad_lengths_match_candump2analyzer() {
     assert_eq!(candump_matches_candump2analyzer("debian-bad-length"), 2);
 }
 
+/// candump's pretty style after a `candump -t` timestamp: epoch seconds,
+/// a local date and time, and seconds since the previous or first frame
+/// (#1187). The timestamps are checked in the candump reader's own tests.
+#[test]
+fn candump_timed_matches_candump2analyzer() {
+    for name in ["candump-t-epoch", "candump-t-date", "candump-t-relative"] {
+        assert_eq!(candump_matches_candump2analyzer(name), 2, "{name}");
+    }
+}
+
 /// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)
 /// with the identifier of `prio`, `pgn` (PDU2), `src`.
 fn bst95(prio: u8, pgn: u32, src: u8, data: &[u8]) -> Vec<u8> {
