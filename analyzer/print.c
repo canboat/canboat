@@ -499,7 +499,7 @@ static int repeatCount(int64_t value)
  * Extract a number field's raw value and its maximum, noting a repeating
  * set's count on the way. Returns false, after printing the field as not
  * available or out of range, when the value is in its top sentinel band or
- * below its rangeMin; true when it is a reading to print.
+ * outside its rangeMin and rangeMax; true when it is a reading to print.
  */
 static bool extractNumberNotEmpty(const Field   *field,
                                   const char    *fieldName,
@@ -570,6 +570,24 @@ static bool extractNumberNotEmpty(const Field   *field,
     double range_min_raw = (field->rangeMin - field->unitOffset) / field->resolution;
 
     if (range_min_raw > -0x1p63 && *value < llround(range_min_raw))
+    {
+      printEmpty(fieldName, DATAFIELD_OUT_OF_RANGE);
+      return false;
+    }
+  }
+
+  /* Above the field's rangeMax, a value is out of range too (#1167): a latitude
+   * of 111 deg is no more a position than one of -111. A derived rangeMax ends
+   * just below the field's sentinels, so this only catches a range narrower than
+   * the bits. A key/value value has no range of its own: its rangeMax is 0. The
+   * threshold is rounded like the one above, with the unit's offset taken off
+   * first; *value already holds the whole offset. An unsigned 64-bit value doesn't
+   * fit the comparison. */
+  if (field != NULL && field->rangeMax > 0.0 && field->resolution > 0.0 && isfinite(field->rangeMax) && *maxValue > 0)
+  {
+    double range_max_raw = (field->rangeMax - field->unitOffset) / field->resolution;
+
+    if (range_max_raw < 0x1p63 && *value > llround(range_max_raw))
     {
       printEmpty(fieldName, DATAFIELD_OUT_OF_RANGE);
       return false;
