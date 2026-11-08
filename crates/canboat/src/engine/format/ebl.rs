@@ -83,9 +83,13 @@ pub fn frame_unix_ms(frame: &RawFrame) -> u64 {
         .max(0) as u64
 }
 
+/// The most data bytes an `N2K_MSG_RECEIVED` message carries: its length
+/// byte counts the 11-byte header and the data, so 255 - 11.
+pub const MAX_DATA_LEN: usize = 255 - 11;
+
 /// Encode `frame` as one `.ebl` record pair — a `TimeUTC` metatag plus an
 /// `N2K_MSG_RECEIVED` message — appended to `out`. Round-trips through
-/// [`EblDecoder`].
+/// [`EblDecoder`]. `frame.data` must hold at most [`MAX_DATA_LEN`] bytes.
 pub fn encode_frame(frame: &RawFrame, out: &mut Vec<u8>) {
     push_tag(
         out,
