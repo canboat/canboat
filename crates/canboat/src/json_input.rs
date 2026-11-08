@@ -47,7 +47,7 @@ use serde_json::{Map, Value};
 /// Top-level keys of a bare (non-camel) analyzer record. A single-key
 /// object whose key is none of these is a `-camel` envelope and the key
 /// is the PGN variant id.
-const BARE_TOP_LEVEL: [&str; 7] = [
+const BARE_TOP_LEVEL: [&str; 8] = [
     "timestamp",
     "prio",
     "src",
@@ -55,6 +55,7 @@ const BARE_TOP_LEVEL: [&str; 7] = [
     "pgn",
     "description",
     "fields",
+    "trailing",
 ];
 
 /// A [`FrameSource`] that reads analyzer-JSON lines from `src` and
@@ -304,6 +305,22 @@ fn frame_from_json_as(
             .is_some_and(|c| c.pgn == frame.pgn)
     {
         frame.pgn = pgn as u32;
+    }
+    // The bytes no field covers, as `-empty` writes them, end the message.
+    if let Some(trailing) = record.get("trailing") {
+        let bytes = trailing
+            .as_str()
+            .ok_or_else(|| anyhow!("'trailing' is not a string"))
+            .and_then(parse_hex)
+            .context("trailing")?;
+        if frame.data.len() + bytes.len() > crate::engine::RAWFRAME_MAX_SIZE {
+            bail!(
+                "trailing: {} bytes do not fit after the {} of the message",
+                bytes.len(),
+                frame.data.len()
+            );
+        }
+        frame.data.extend(bytes);
     }
     Ok(Some(frame))
 }
@@ -1256,6 +1273,45 @@ mod tests {
                     .unwrap();
                 assert_eq!(back.data.to_vec(), data, "{pgn} nv={name_value}: {line}");
             }
+        }
+    }
+
+    /// A record written with `-empty` holds the whole message: its
+    /// trailing Reserved and Spare fields and the bytes no field covers
+    /// (`"trailing"`) encode back to the bytes that were read (canboat#1169).
+    #[test]
+    fn an_empty_record_encodes_back_whole() {
+        let frames: [(u32, &str); 4] = [
+            // Magnetic Variation, its 2-byte Reserved all ones.
+            (127258, "ff,f5,11,39,ce,f5,ff,ff"),
+            // ISO Request in a full single frame: 5 bytes of fill.
+            (59904, "14,f0,01,ff,ff,ff,ff,ff"),
+            // Actisense System Status, 3 bytes past its 33.
+            (
+                262386,
+                "01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08",
+            ),
+            // Fusion Track Position: 1 byte past its Progress.
+            (130820, "a3,99,09,80,0b,f5,e6,13,00"),
+        ];
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for (pgn, hex) in frames {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 7, pgn, 8, 255, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            let opts = crate::engine::output::JsonOptions {
+                include_empty: true,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            let back = decoded_frame_from_json(db, &line)
+                .unwrap_or_else(|e| panic!("{pgn}: {e}\n{line}"))
+                .unwrap_or_else(|| panic!("{pgn}: skipped\n{line}"));
+            assert_eq!(back.data.to_vec(), data, "{pgn}: {line}");
         }
     }
 

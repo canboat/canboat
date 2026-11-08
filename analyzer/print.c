@@ -1254,6 +1254,33 @@ static bool fieldBitsAllAre(const uint8_t *data, size_t dataLen, size_t startBit
   return true;
 }
 
+/*
+ * Whether `field` is a RESERVED or SPARE field that only RESERVED or SPARE
+ * fields follow in its PGN, in a PGN without repeating sets. Under -empty,
+ * such a field is printed even when it holds its default value, so that a
+ * record shows how far the message went.
+ */
+static bool fieldIsTrailingPadding(const Field *field)
+{
+  const Pgn *pgn = field->pgn;
+  size_t     i;
+
+  if (pgn == NULL || pgn->repeatingCount1 > 0 || field < pgn->fieldList || field >= pgn->fieldList + pgn->fieldCount)
+  {
+    return false;
+  }
+  for (i = (size_t) (field - pgn->fieldList) + 1; i < pgn->fieldCount; i++)
+  {
+    const Field *f = &pgn->fieldList[i];
+
+    if (f->ft == NULL || (f->ft->pf != fieldPrintReserved && f->ft->pf != fieldPrintSpare))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 extern bool fieldPrintReserved(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
@@ -1267,7 +1294,7 @@ extern bool fieldPrintReserved(const Field   *field,
 
   if (*bits > 64)
   {
-    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, true, &same) || same)
+    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, true, &same) || (same && !(showJson && showJsonEmpty && fieldIsTrailingPadding(field))))
     {
       g_skip = true;
       return true;
@@ -1281,7 +1308,7 @@ extern bool fieldPrintReserved(const Field   *field,
     g_skip = true;
     return true;
   }
-  if (value == maxValue)
+  if (value == maxValue && !(showJson && showJsonEmpty && fieldIsTrailingPadding(field)))
   {
     g_skip = true;
     return true;
@@ -1307,7 +1334,7 @@ extern bool fieldPrintSpare(const Field   *field,
 
   if (*bits > 64)
   {
-    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, false, &same) || same)
+    if (!fieldBitsAllAre(data, dataLen, startBit, *bits, false, &same) || (same && !(showJson && showJsonEmpty && fieldIsTrailingPadding(field))))
     {
       g_skip = true;
       return true;
@@ -1321,7 +1348,7 @@ extern bool fieldPrintSpare(const Field   *field,
     g_skip = true;
     return true;
   }
-  if (value == 0)
+  if (value == 0 && !(showJson && showJsonEmpty && fieldIsTrailingPadding(field)))
   {
     g_skip = true;
     return true;

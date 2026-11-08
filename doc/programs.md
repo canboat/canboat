@@ -59,7 +59,10 @@ leaves it out). Its JSON is not quite the C `analyzer`'s: field keys are lowerCa
 are in SI units (radians, kelvin, pascal). `--id spaces --units metric` gives
 `analyzer`'s keys and units. `--nv`, `--empty` and `--debug` match `analyzer`'s
 `-nv`, `-empty` and `-debug` (`--no-nv` says the default, as `server` takes
-both too); `--protocol j1939` or `quick` decodes those
+both too). With `--empty` a record holds the whole message: the Reserved and
+Spare fields that end it are written even at their default value, and the
+bytes no field covers follow `"fields"` as `"trailing":"00 00 08"`, which
+`--from json` writes back; `--protocol j1939` or `quick` decodes those
 buses. `--quirk gps-rollover` corrects dates, as in
 [server.md](./server.md#device-quirks).
 

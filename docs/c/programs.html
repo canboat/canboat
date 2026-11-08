@@ -54,7 +54,7 @@ $ analyzer -q -json &lt; small.log
 </tr></thead>
 <tbody>
 <tr><td><code>-json</code></td><td>JSON output; empty values are left out</td></tr>
-<tr><td><code>-empty</code></td><td>JSON, with empty values as <code>null</code></td></tr>
+<tr><td><code>-empty</code></td><td>JSON, with empty values as <code>null</code>, the Reserved and Spare fields that end a message, and the bytes no field covers as <code>&quot;trailing&quot;</code></td></tr>
 <tr><td><code>-nv</code></td><td>JSON, with a lookup as <code>{&quot;value&quot;:N,&quot;name&quot;:&quot;…&quot;}</code></td></tr>
 <tr><td><code>-camel</code></td><td>field names in lowerCamelCase</td></tr>
 <tr><td><code>-si</code></td><td>strict SI units: kelvin, radians per second, Hz for rpm, m³ for litres, ratios for percentages</td></tr>

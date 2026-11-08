@@ -284,7 +284,10 @@ pub struct Args {
     no_nv: bool,
 
     /// Include unavailable fields — `null` in JSON, `Unknown` in text —
-    /// instead of omitting them. Matches canboat's `-empty`.
+    /// instead of omitting them. In JSON, also write the Reserved and Spare
+    /// fields that end a message at their default value, and any bytes no
+    /// field covers as `"trailing"`, so the record holds the whole message.
+    /// Matches canboat's `-empty`.
     #[arg(long)]
     empty: bool,
 
