@@ -330,6 +330,7 @@ mod tests {
             has_repeating_set: [true, true],
             repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
+            decoded_bits: 0,
         };
         assert_eq!(collect_iter_indexes(&pgn, 1), vec![0, 1, 2]);
         assert_eq!(collect_iter_indexes(&pgn, 2), vec![7]);

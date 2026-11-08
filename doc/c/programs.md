@@ -35,7 +35,7 @@ a value is left out.
 | Option | |
 | --- | --- |
 | `-json` | JSON output; empty values are left out |
-| `-empty` | JSON, with empty values as `null` |
+| `-empty` | JSON, with empty values as `null`, the Reserved and Spare fields that end a message, and the bytes no field covers as `"trailing"` |
 | `-nv` | JSON, with a lookup as `{"value":N,"name":"…"}` |
 | `-camel` | field names in lowerCamelCase |
 | `-si` | strict SI units: kelvin, radians per second, Hz for rpm, m³ for litres, ratios for percentages |
