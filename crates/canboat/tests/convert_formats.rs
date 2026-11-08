@@ -81,6 +81,87 @@ fn ydwg02_round_trips_to_plain() {
     assert!(s.contains(BODY), "round-trip lost the body: {s}");
 }
 
+/// A canboat pseudo PGN (an Actisense gateway's System Status, 262386 =
+/// 0x400F2) never went on the bus, and no frame format but PLAIN can carry
+/// it: it is skipped, and counted once on stderr. The bus message beside it
+/// still comes through.
+#[test]
+fn pseudo_pgns_stay_out_of_frame_formats() {
+    let input = "2016-02-28T19:57:02.480Z,0,262386,0,0,33,01,0e,00,d7,e2,01,00,00,00,00,00,\
+                 02,20,04,00,00,01,00,01,00,00,00,4e,62,02,13,00,01,01,1c,01,0a,0e\n\
+                 2016-02-28T19:57:02.500Z,2,130306,1,255,8,00,64,00,10,27,fa,ff,ff\n";
+    for to in [
+        "raw-ascii",
+        "n2k-ascii",
+        "seasmart",
+        "mxpgn",
+        "actisense-mxpgn",
+        "actisense-ebl",
+    ] {
+        let mut child = Command::new(canboat())
+            .args(["convert", "--to", to])
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .expect("spawn canboat");
+        child
+            .stdin
+            .as_mut()
+            .unwrap()
+            .write_all(input.as_bytes())
+            .expect("write stdin");
+        let out = child.wait_with_output().expect("wait canboat");
+        assert!(out.status.success(), "--to {to} exited {:?}", out.status);
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(
+            stderr.contains("skipped 1 message(s) with a canboat pseudo PGN"),
+            "--to {to} stderr: {stderr}"
+        );
+        let back = run(&["convert", "--from", to, "--to", "plain"], &out.stdout);
+        let back = String::from_utf8(back).unwrap();
+        assert!(!back.contains("262386"), "--to {to} kept it: {back}");
+        assert!(
+            back.contains(",130306,1,255,8,00,64,00,10,27,fa,ff,ff"),
+            "--to {to} lost the bus message: {back}"
+        );
+    }
+    let plain = run(&["convert", "--to", "plain"], input.as_bytes());
+    assert_eq!(String::from_utf8(plain).unwrap(), input);
+}
+
+/// A pseudo PGN of 8 bytes or fewer is a whole record, not the first
+/// frame of a fast-packet: the formats that join fast-packets first skip
+/// and count it too.
+#[test]
+fn a_short_pseudo_pgn_is_counted_when_frames_are_joined() {
+    let input = "2016-02-28T19:57:02.480Z,0,262657,0,0,8,01,02,03,04,05,06,07,08\n\
+                 2016-02-28T19:57:02.500Z,2,130306,1,255,8,00,64,00,10,27,fa,ff,ff\n";
+    for to in ["mxpgn", "actisense-mxpgn", "seasmart"] {
+        let out = Command::new(canboat())
+            .args(["convert", "--to", to])
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .and_then(|mut child| {
+                child.stdin.as_mut().unwrap().write_all(input.as_bytes())?;
+                child.wait_with_output()
+            })
+            .expect("run canboat");
+        assert!(out.status.success(), "--to {to} exited {:?}", out.status);
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(
+            stderr.contains("skipped 1 message(s) with a canboat pseudo PGN"),
+            "--to {to} stderr: {stderr}"
+        );
+        assert!(
+            String::from_utf8_lossy(&out.stdout).contains("01FD02"),
+            "--to {to} lost the bus message"
+        );
+    }
+}
+
 /// A fast-packet in its `$MXPGN` frames comes out in the same frames: they
 /// are joined first, not split a second time.
 #[test]
