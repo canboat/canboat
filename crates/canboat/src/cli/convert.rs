@@ -18,6 +18,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
+use crate::engine::fastpacket::CANBOAT_PGN_START;
 use crate::engine::format::{Framing, InputFormat};
 use crate::engine::manufacturer_filter::{
     FrameManufacturerFilter, ManufacturerFilter, ManufacturerList,
@@ -73,6 +74,14 @@ impl OutFormat {
                 | OutFormat::ActisenseMxpgn
                 | OutFormat::SeaSmart
         )
+    }
+
+    /// Whether the format can carry a canboat pseudo PGN (`>= 0x40000`),
+    /// such as an Actisense gateway's own status. Only PLAIN can: every
+    /// other frame format has room for an 18-bit PGN at most, and a
+    /// reader would decode such a line as something never on the bus.
+    fn carries_pseudo_pgns(self) -> bool {
+        self == OutFormat::Plain
     }
 }
 
@@ -211,6 +220,10 @@ Output formats (--to, default json):
   mxpgn          $MXPGN sentences, as a ShipModul MiniPlex sends them (raw frames)
   actisense-mxpgn  $MXPGN sentences, as an Actisense gateway sends them (raw frames)
   seasmart       $PCDIN sentences, as a SeaSmart gateway takes them (whole messages)
+
+  canboat's own pseudo PGNs (0x40000 and up, such as an Actisense gateway's
+  System Status) never go on the bus, and only plain can carry them: the
+  other raw-frame formats skip them, with a count on stderr.
 
 Decoded-output shape (json/text only):
   --id STYLE     spaces | camel (default) | uppercamel
@@ -525,14 +538,20 @@ fn convert_raw<W: Write>(
         OutFormat::Json | OutFormat::Text => unreachable!("decoded formats routed elsewhere"),
     };
 
-    if manufacturers.is_none() && !args.has_filter() && !live {
+    let skip_pseudo = !args.to.carries_pseudo_pgns();
+    if manufacturers.is_none() && !args.has_filter() && !live && !skip_pseudo {
         copy(&mut *reader, &mut *writer).context("converting frames")?;
         return Ok(());
     }
+    let mut pseudo_skipped = 0u64;
     while let Some(frame) = reader.read_frame().context("reading input")? {
         // First, so that it sees the claims the other filters would drop.
         // A line capture's reader holds the filter, and has done this already.
         let device_kept = manufacturers.as_mut().is_none_or(|f| f.keep_frame(&frame));
+        if skip_pseudo && frame.pgn >= CANBOAT_PGN_START {
+            pseudo_skipped += 1;
+            continue;
+        }
         if device_kept && args.keep(&frame) {
             writer.write_frame(&frame).context("writing frame")?;
             if live {
@@ -541,6 +560,12 @@ fn convert_raw<W: Write>(
         }
     }
     writer.flush().context("flushing output")?;
+    if pseudo_skipped > 0 {
+        log::warn!(
+            "skipped {pseudo_skipped} message(s) with a canboat pseudo PGN (0x40000 and up), \
+             which only --to plain can carry"
+        );
+    }
     Ok(())
 }
 
@@ -568,13 +593,17 @@ impl<R: BufRead> Joined<R> {
 }
 
 impl<R: BufRead> FrameReader for Joined<R> {
+    /// The next whole message: a fast-packet once its last frame is read,
+    /// any other frame as it is, and canboat's own records always whole.
     fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
         while let Some(frame) = self.lines.read_frame()? {
             let format = self.lines.active_format();
             self.coalesced |= self.lines.header_coalesced()
                 || (frame.data.len() > 8 && format != Some(InputFormat::PlainMixFast));
             let whole = self.coalesced || format.is_some_and(|f| f.framing() == Framing::Coalesced);
-            let packet_type = if whole {
+            // canboat's own records are whole messages, however short: they
+            // never went over the bus in frames.
+            let packet_type = if whole || frame.pgn >= CANBOAT_PGN_START {
                 FramePacketType::Other
             } else {
                 self.protocol.packet_type(frame.pgn)
