@@ -90,6 +90,11 @@ pub fn main() -> ExitCode {
             // (this binary) owns it. Convert the clap Args to the plain config,
             // then set up env_logger from its verbosity before running.
             args.warn_deprecated();
+            match args.manufacturers.print_list(args.protocol()) {
+                Ok(true) => return finish(Ok(())),
+                Ok(false) => {}
+                Err(e) => return finish(Err(e)),
+            }
             if let Err(e) = args.check() {
                 return finish(Err(e));
             }

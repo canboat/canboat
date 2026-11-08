@@ -99,6 +99,19 @@ impl core::marker::StructuralPartialEq for canboat::bus::Kind
 impl core::str::traits::FromStr for canboat::bus::Kind
 pub type canboat::bus::Kind::Err = canboat::bus::UnknownKind
 pub fn canboat::bus::Kind::from_str(&str) -> core::result::Result<canboat::bus::Kind, canboat::bus::UnknownKind>
+pub enum canboat::bridge::ManufacturerList
+pub canboat::bridge::ManufacturerList::Allow(alloc::collections::btree::set::BTreeSet<u16>)
+pub canboat::bridge::ManufacturerList::Deny(alloc::collections::btree::set::BTreeSet<u16>)
+impl canboat::bridge::ManufacturerList
+pub fn canboat::bridge::ManufacturerList::keeps(&self, u16) -> bool
+impl core::clone::Clone for canboat::bridge::ManufacturerList
+pub fn canboat::bridge::ManufacturerList::clone(&self) -> Self
+impl core::cmp::Eq for canboat::bridge::ManufacturerList
+impl core::cmp::PartialEq for canboat::bridge::ManufacturerList
+pub fn canboat::bridge::ManufacturerList::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::bridge::ManufacturerList
+pub fn canboat::bridge::ManufacturerList::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bridge::ManufacturerList
 #[non_exhaustive] pub enum canboat::bridge::PgnListSupport
 pub canboat::bridge::PgnListSupport::Answered
 pub canboat::bridge::PgnListSupport::Pushed
@@ -165,6 +178,7 @@ pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc
 pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::device: core::option::Option<canboat::bus::Device>
 pub canboat::bridge::BridgeConfig::input_port: u16
+pub canboat::bridge::BridgeConfig::manufacturers: core::option::Option<canboat::bridge::ManufacturerList>
 pub canboat::bridge::BridgeConfig::mcu006_port: u16
 pub canboat::bridge::BridgeConfig::mdns: bool
 pub canboat::bridge::BridgeConfig::name_value: bool

@@ -27,6 +27,7 @@
 //! embedding library share one code path, and a signal closes the device
 //! cleanly.
 
+use crate::engine::manufacturer_filter::FrameManufacturerFilter;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU8};
 use std::sync::{Arc, Mutex, mpsc};
@@ -621,6 +622,7 @@ impl Bridge {
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
         let rx_filter = RxFilter::new(&self.config.rx_filter);
+        let manufacturers = self.manufacturer_filter();
         pipeline::run(
             db,
             frames_rx,
@@ -629,6 +631,7 @@ impl Bridge {
             json_opts,
             nmea,
             rx_filter,
+            manufacturers,
         );
         self.shutdown();
         match self.failure() {
@@ -654,6 +657,7 @@ impl Bridge {
         let hubs = self.build_hubs();
         let (db, pre_coalesced, json_opts, nmea) = self.pipeline_inputs();
         let rx_filter = RxFilter::new(&self.config.rx_filter);
+        let manufacturers = self.manufacturer_filter();
         let join = thread::Builder::new()
             .name("bridge-pipeline".into())
             .spawn(move || {
@@ -665,6 +669,7 @@ impl Bridge {
                     json_opts,
                     nmea,
                     rx_filter,
+                    manufacturers,
                 )
             })
             .map_err(|e| anyhow!("spawning the bridge pipeline thread: {e}"))?;
@@ -726,6 +731,16 @@ impl Bridge {
             name_value: true,
             ..self.json_opts.clone()
         }
+    }
+
+    /// `config.manufacturers` as `pipeline::run` wants it.
+    fn manufacturer_filter(&self) -> Option<FrameManufacturerFilter> {
+        let list = self.config.manufacturers.clone()?;
+        Some(FrameManufacturerFilter::new(
+            list,
+            self.config.protocol,
+            self.db,
+        ))
     }
 
     /// The by-value inputs `pipeline::run` needs, cloned off the bridge so
