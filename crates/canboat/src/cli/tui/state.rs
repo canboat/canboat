@@ -25,6 +25,8 @@
 //! apply each incoming line. No background derivation runs; views are
 //! computed on demand from the cached JSON values.
 
+use crate::engine::BusProtocol;
+use crate::engine::manufacturer_filter::{ManufacturerFilter, ManufacturerList, claim_in_record};
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::time::Instant;
@@ -307,6 +309,8 @@ pub struct HistoryRecord {
 
 /// Shared state guarded by a [`tokio::sync::Mutex`] in the binary.
 pub struct AppState {
+    /// `--manufacturer-allow`, `--manufacturer-deny`: the devices to show.
+    manufacturers: Option<ManufacturerFilter>,
     /// Insertion-ordered to keep the UI stable across renders. Insertions
     /// happen on first sight of a `(pgn, src, secondary)`; updates keep
     /// the slot in place.
@@ -367,6 +371,30 @@ impl AppState {
             nmea0183: BTreeMap::new(),
             raw_lines: Vec::new(),
             overrides: BTreeMap::new(),
+            manufacturers: None,
+        }
+    }
+
+    /// Show only the devices `list` keeps, from now on and after a reload.
+    pub fn set_manufacturers(&mut self, list: Option<ManufacturerList>) {
+        self.manufacturers = list.map(|list| ManufacturerFilter::new(list, BusProtocol::Nmea2000));
+    }
+
+    /// The list that [`set_manufacturers`](Self::set_manufacturers) set.
+    pub fn manufacturers(&self) -> Option<ManufacturerList> {
+        self.manufacturers.as_ref().map(|f| f.list().clone())
+    }
+
+    /// Learn who sent a record without showing it, for a snapshot: its
+    /// records come in no useful order, and a device's Address Claim may
+    /// follow its other records.
+    pub fn learn_manufacturer(&mut self, pgn: u32, src: u8, record: &Value) {
+        if let Some(filter) = self.manufacturers.as_mut() {
+            filter.keep(
+                pgn,
+                src,
+                claim_in_record(pgn, record, BusProtocol::Nmea2000),
+            );
         }
     }
 
@@ -380,6 +408,12 @@ impl AppState {
         description: String,
         line: Value,
     ) {
+        if let Some(filter) = self.manufacturers.as_mut() {
+            let claim = claim_in_record(pgn, &line, BusProtocol::Nmea2000);
+            if !filter.keep(pgn, src, claim) {
+                return;
+            }
+        }
         // Canonicalize `server --camel` records to bare `-json` shape so
         // every reader below (all keyed by human field name) works
         // unchanged. No-op on the default non-camel stream.

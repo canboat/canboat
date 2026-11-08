@@ -68,9 +68,21 @@ pub struct Args {
     /// mode since they need a live bus.
     #[arg(long, value_name = "PATH")]
     log: Option<std::path::PathBuf>,
+
+    /// Only what is shown is filtered: a Raw save of a capture holds it all.
+    /// Names are NMEA 2000's: give a code for a J1939 stream.
+    #[command(flatten)]
+    manufacturers: crate::cli::manufacturer::ManufacturerArgs,
 }
 
+/// Run the terminal UI on a live endpoint, a capture, or idle until it quits.
 pub async fn run(args: Args) -> Result<()> {
+    // Before the terminal is taken over, so an error can be read.
+    let protocol = crate::engine::BusProtocol::Nmea2000;
+    if args.manufacturers.print_list(protocol)? {
+        return Ok(());
+    }
+    let manufacturers = args.manufacturers.resolve(protocol)?;
     // The TUI takes over the terminal via crossterm's alt-screen, so
     // any log line emitted on stderr paints garbage over the UI. Route
     // logs to a file instead, and quiet the default filter (WARN) so a
@@ -104,7 +116,9 @@ pub async fn run(args: Args) -> Result<()> {
     // device list with anything we've learned across past sessions.
     let device_cache_path = device_cache::default_path();
     let device_cache = device_cache::load_or_default(&device_cache_path);
-    let state = Arc::new(Mutex::new(AppState::new(status, device_cache)));
+    let mut state = AppState::new(status, device_cache);
+    state.set_manufacturers(manufacturers);
+    let state = Arc::new(Mutex::new(state));
 
     // Writer channel is created up front in both modes — in log mode
     // nothing ever sends through it (the `o` / `i` handlers are gated
@@ -319,10 +333,12 @@ async fn execute_command(
             {
                 let mut s = state.lock().await;
                 let cache = std::mem::take(&mut s.device_cache);
+                let manufacturers = s.manufacturers();
                 *s = AppState::new(
                     Status::new_live(host.clone(), snapshot_port, stream_port),
                     cache,
                 );
+                s.set_manufacturers(manufacturers);
             }
             let (new_writer, rx) = client::make_writer();
             tasks.push(client::spawn_snapshot_load(
@@ -342,7 +358,9 @@ async fn execute_command(
             {
                 let mut s = state.lock().await;
                 let cache = std::mem::take(&mut s.device_cache);
+                let manufacturers = s.manufacturers();
                 *s = AppState::new(Status::new_log(path.display().to_string()), cache);
+                s.set_manufacturers(manufacturers);
             }
             tasks.extend(client::spawn_log_load(path, state.clone()));
             app.reset_views();

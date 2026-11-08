@@ -17,6 +17,7 @@
 //! per-kind producer name is preserved so the n2kd parity harness keeps
 //! comparing like with like).
 
+use crate::engine::manufacturer_filter::FrameManufacturerFilter;
 use std::io::{self, BufRead, Write};
 use std::thread;
 use std::time::Duration;
@@ -58,8 +59,8 @@ fn producer(kind: Kind) -> &'static str {
 #[command(after_long_help = super::help::gateway_help())]
 pub struct Args {
     /// The kind of gateway.
-    #[arg(long = "kind", value_enum, value_name = "KIND", help_heading = gateway_args::GATEWAY)]
-    kind_arg: KindArg,
+    #[arg(long = "kind", required_unless_present = "list", value_enum, value_name = "KIND", help_heading = gateway_args::GATEWAY)]
+    kind_arg: Option<KindArg>,
 
     /// The gateway `--kind` and `--data-format` name, resolved by `run`.
     #[arg(skip = Kind::NGT1)]
@@ -72,8 +73,8 @@ pub struct Args {
     /// FTDI-based gateway such as the NGT-1 can also be opened directly
     /// over USB as `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]`: on
     /// macOS, whose serial driver does not recognise the NGT-1. `udp://[bind:]port` only receives.
-    #[arg(value_name = "DEVICE")]
-    device: String,
+    #[arg(value_name = "DEVICE", required_unless_present = "list")]
+    device: Option<String>,
 
     /// Only read: write the bus to stdout, ignore stdin.
     #[arg(short = 'r', long = "read-only", conflicts_with = "write_only", help_heading = STREAM)]
@@ -93,17 +94,38 @@ pub struct Args {
     #[command(flatten)]
     gateway: DeviceArgs,
 
+    #[command(flatten)]
+    manufacturers: super::manufacturer::ManufacturerArgs,
+
     /// `--system-instance`, as the C socketcan-serial spells it (not on
     /// `canboat server`, where `--si` picks SI units).
     #[arg(long = "si", hide = true, value_name = "N", value_parser = clap::value_parser!(u8).range(0..=15))]
     si: Option<u8>,
 }
 
+impl Args {
+    /// Where the gateway is.
+    fn device(&self) -> &str {
+        self.device
+            .as_deref()
+            .expect("clap requires DEVICE without --list-manufacturers")
+    }
+}
+
 /// The help heading of the stdin/stdout options.
 const STREAM: &str = "stdin and stdout";
 
+/// Open the gateway and bridge it to stdin and stdout until a stream ends.
 pub fn run(mut args: Args) -> Result<()> {
-    args.kind = args.kind_arg.resolve(args.gateway.data_format)?;
+    if args.manufacturers.print_list(args.gateway.protocol())? {
+        return Ok(());
+    }
+    args.kind = args
+        .kind_arg
+        .as_ref()
+        .expect("clap requires --kind without --list-manufacturers")
+        .resolve(args.gateway.data_format)?;
+    args.manufacturers.resolve(args.gateway.protocol())?;
     // On stderr, at the C gateway programs' default level; the device
     // drivers' warnings went nowhere without it. `RUST_LOG` overrides.
     let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
@@ -149,6 +171,14 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     // `--rx-filter`, for what the gateway does not filter itself; an
     // iKonvert has done it already, which this does not undo.
     let filter = RxFilter::new(&args.gateway.rx_filter);
+    // Every gateway hands over whole messages, so a short one must not be
+    // read as a fast-packet frame.
+    let manufacturers = args.manufacturers.resolve(protocol)?.map(|list| {
+        let db = protocol.database(crate::engine::Units::Si);
+        let mut filter = FrameManufacturerFilter::new(list, protocol, db);
+        filter.set_coalesced(true);
+        filter
+    });
     let mut out = super::stdout(true);
     write_prologue(&mut out, args).context("writing prologue")?;
 
@@ -156,7 +186,9 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
         // Read-only: device → PLAIN stdout, ignore stdin.
         (true, _) => {
             let mut writer = PlainWriter::new(&mut out);
-            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout).filtered(filter.clone());
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout)
+                .filtered(filter.clone())
+                .by_manufacturer(manufacturers);
             copy(&mut rx, &mut writer).context("reading from device")?;
         }
         // Write-only: stdin PLAIN → device on the main thread (so we
@@ -203,7 +235,9 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
                 })
                 .expect("spawn stdin pump");
             let mut writer = PlainWriter::new(&mut out);
-            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout).filtered(filter.clone());
+            let mut rx = Idle::new(&mut handle.frames_rx, args.timeout)
+                .filtered(filter.clone())
+                .by_manufacturer(manufacturers);
             copy(&mut rx, &mut writer).context("reading from device")?;
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
@@ -224,6 +258,7 @@ struct Idle<'a> {
     timeout: Option<std::time::Duration>,
     last: std::time::Instant,
     filter: Option<RxFilter>,
+    manufacturers: Option<FrameManufacturerFilter>,
 }
 
 impl<'a> Idle<'a> {
@@ -233,6 +268,7 @@ impl<'a> Idle<'a> {
             timeout: (timeout_secs > 0).then(|| std::time::Duration::from_secs(timeout_secs)),
             last: std::time::Instant::now(),
             filter: None,
+            manufacturers: None,
         }
     }
 
@@ -241,8 +277,22 @@ impl<'a> Idle<'a> {
         Self { filter, ..self }
     }
 
-    fn passes(&self, frame: &RawFrame) -> bool {
-        self.filter.as_ref().is_none_or(|f| f.passes(frame.pgn))
+    /// Pass on only the devices `manufacturers` keeps.
+    fn by_manufacturer(self, manufacturers: Option<FrameManufacturerFilter>) -> Self {
+        Self {
+            manufacturers,
+            ..self
+        }
+    }
+
+    /// Whether to pass `frame` on.
+    fn passes(&mut self, frame: &RawFrame) -> bool {
+        // First, so that it sees the claims `filter` would drop.
+        let device_kept = self
+            .manufacturers
+            .as_mut()
+            .is_none_or(|f| f.keep_frame(frame));
+        device_kept && self.filter.as_ref().is_none_or(|f| f.passes(frame.pgn))
     }
 }
 
@@ -250,7 +300,12 @@ impl crate::io::FrameReader for Idle<'_> {
     fn read_frame(&mut self) -> io::Result<Option<RawFrame>> {
         use std::sync::mpsc::RecvTimeoutError;
         let Some(timeout) = self.timeout else {
-            return Ok(self.rx.iter().find(|frame| self.passes(frame)));
+            while let Ok(frame) = self.rx.recv() {
+                if self.passes(&frame) {
+                    return Ok(Some(frame));
+                }
+            }
+            return Ok(None);
         };
         loop {
             let left = timeout.saturating_sub(self.last.elapsed());
@@ -324,8 +379,11 @@ impl FrameWriter for DiscardWriter {
 /// Emit the `# format=FAST` header + the synthetic startup record.
 fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
     out.write_all(FORMAT_FAST_HEADER)?;
-    let rec =
-        crate::engine::startup_record(env!("CARGO_PKG_VERSION"), producer(args.kind), &args.device);
+    let rec = crate::engine::startup_record(
+        env!("CARGO_PKG_VERSION"),
+        producer(args.kind),
+        args.device(),
+    );
     let mut line = String::with_capacity(160);
     crate::engine::format::plain::write_line(&mut line, &rec).ok();
     out.write_all(line.as_bytes())?;
@@ -343,7 +401,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     if args.si.is_some() && kind.takes(Setting::RunNode) && !gateway.node {
         anyhow::bail!("--si: --kind {kind} runs canboat's node only with --node");
     }
-    let mut dev = gateway.device(kind, &args.device);
+    let mut dev = gateway.device(kind, args.device());
     // Where canboat's node runs: on candump only with --node.
     if dev.capabilities().node {
         if let Some(instance) = args.si {
@@ -358,7 +416,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
     if args.write_only && !dev.capabilities().sends {
         anyhow::bail!(
             "--write-only: --kind {kind} at {} only receives; use tcp:// to send",
-            args.device
+            args.device()
         );
     }
     dev.open(gateway.protocol()).map_err(|e| {
@@ -366,7 +424,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
         if e.kind() == io::ErrorKind::InvalidInput {
             anyhow::Error::new(e)
         } else {
-            anyhow::Error::new(e).context(format!("opening --kind {kind} {}", args.device))
+            anyhow::Error::new(e).context(format!("opening --kind {kind} {}", args.device()))
         }
     })
 }
