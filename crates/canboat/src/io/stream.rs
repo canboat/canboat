@@ -464,6 +464,10 @@ impl<W: Write> EblWriter<W> {
 }
 
 impl<W: Write> FrameWriter for EblWriter<W> {
+    /// Write `frame` as a `TimeUTC` metatag and an `N2K_MSG_RECEIVED`
+    /// record, after the file's preamble on the first call. A message
+    /// longer than [`MAX_DATA_LEN`](crate::engine::format::ebl::MAX_DATA_LEN)
+    /// is left out with a warning.
     fn write_frame(&mut self, frame: &RawFrame) -> io::Result<()> {
         // A message longer than an N2K record holds (an ISO TP one, say)
         // would get a length byte that wraps: skipped with a warning, as the
