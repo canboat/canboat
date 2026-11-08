@@ -785,9 +785,11 @@ mod tests {
     use super::*;
     use std::io::Cursor;
 
-    /// An `.ebl` N2K record holds at most 244 data bytes: one that long
-    /// reads back whole, a longer one (an ISO TP message) is left out
-    /// rather than written with a length byte that wraps.
+    /// An `.ebl` N2K record is written with at most a fast-packet's 223
+    /// data bytes, as an NGT-1 delivers and canboat C reads them: one that
+    /// long reads back whole, a longer one (an ISO TP message) is left out
+    /// rather than written in a record other readers refuse, or with a
+    /// length byte that wraps.
     #[test]
     fn ebl_writer_leaves_out_what_a_record_cannot_hold() {
         let frame = |len: usize| {
@@ -804,6 +806,8 @@ mod tests {
         {
             let mut w = EblWriter::new(&mut out);
             w.write_frame(&frame(300)).unwrap();
+            w.write_frame(&frame(crate::engine::format::ebl::MAX_DATA_LEN + 1))
+                .unwrap();
             w.write_frame(&frame(crate::engine::format::ebl::MAX_DATA_LEN))
                 .unwrap();
             w.flush().unwrap();
