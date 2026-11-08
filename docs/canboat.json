@@ -39164,11 +39164,10 @@
         "Id":"converterStatus",
         "Description":"Converter Status",
         "Type":"Single",
-        "Complete":false,
-        "Missing":["Interval"
-        ],
+        "Complete":true,
         "FieldCount":8,
         "Length":8,
+        "TransmissionInterval":1500,
         "Fields":[
           {
             "Order":1,

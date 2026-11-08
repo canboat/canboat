@@ -2,6 +2,7 @@ pgn: 127750
 id: converterStatus
 description: Converter Status
 type: Single
+interval: 1500
 fields:
 - id: sid
   name: SID

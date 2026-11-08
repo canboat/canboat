@@ -4692,7 +4692,8 @@ Pgn pgnList[] = {
       {.name = "Ripple State", .camelName = "rippleState", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGOOD_WARNING_ERROR, .lookup.name = "GOOD_WARNING_ERROR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
-     .camelDescription = "converterStatus"},
+     .camelDescription = "converterStatus",
+     .interval = 1500},
 
     {"DC Voltage/Current",
      127751,

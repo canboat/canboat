@@ -38727,12 +38727,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Id>converterStatus</Id>
       <Description>Converter Status</Description>
       <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>8</FieldCount>
       <Length>8</Length>
+      <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
