@@ -672,6 +672,11 @@
   description: Electrical current
   resolution: 0.1
   physical: ELECTRICAL_CURRENT
+- name: CURRENT_FIX16_CA
+  base: FIX16
+  description: Electrical current
+  resolution: 0.01
+  physical: ELECTRICAL_CURRENT
 - name: CURRENT_FIX24_CA
   base: FIX24
   description: Electrical current

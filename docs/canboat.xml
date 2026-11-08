@@ -4899,6 +4899,9 @@ limitations under the License.
       <EnumFieldType Value="546" Name="AC Input 2 Current Limit Max" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="A" Bits="16"/>
       <EnumFieldType Value="547" Name="AC Input 2 Current Limit Internal" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="A" Bits="16"/>
       <EnumFieldType Value="548" Name="AC Input 2 Current Limit Remote" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="A" Bits="16"/>
+      <EnumFieldType Value="564" Name="AC Active Input L1 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
+      <EnumFieldType Value="569" Name="AC Active Input L2 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
+      <EnumFieldType Value="574" Name="AC Active Input L3 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
       <EnumFieldType Value="768" Name="Deepest Discharge" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="Ah" Bits="32"/>
       <EnumFieldType Value="769" Name="Last Discharge" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="Ah" Bits="32"/>
       <EnumFieldType Value="770" Name="Average Discharge" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="Ah" Bits="32"/>
@@ -4980,6 +4983,9 @@ limitations under the License.
       <EnumFieldType Value="4148" Name="Current Offset" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="8194" Name="DC Voltage" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="V" Bits="16"/>
       <EnumFieldType Value="8220" Name="DC Current" FieldType="NUMBER" Signed="true" Resolution="0.001" Unit="A" Bits="32"/>
+      <EnumFieldType Value="8724" Name="AC Output L1 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
+      <EnumFieldType Value="8729" Name="AC Output L2 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
+      <EnumFieldType Value="8734" Name="AC Output L3 Current" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="A" Bits="16"/>
       <EnumFieldType Value="60781" Name="Channel 3 Voltage" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="V" Bits="16"/>
       <EnumFieldType Value="60782" Name="Channel 3 Power" FieldType="NUMBER" Signed="true" Resolution="1" Unit="W" Bits="16"/>
       <EnumFieldType Value="60783" Name="Channel 3 Current" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="A" Bits="16"/>
