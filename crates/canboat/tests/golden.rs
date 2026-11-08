@@ -660,6 +660,17 @@ fn short_frame_text_debug() {
     run_case("short-frame.in", "short-frame.out", &["--debug"]);
 }
 
+/// Under `-empty`, a trailing Reserved or Spare field is written at its
+/// default value, and the bytes no field covers as `"trailing"` (#1169).
+#[test]
+fn empty_writes_trailing_padding_and_bytes() {
+    run_case(
+        "empty-trailing.in",
+        "empty-trailing.out",
+        &["--json", "--empty", "--fixtime", "empty-trailing"],
+    );
+}
+
 /// A real Yamaha outboard J1939 capture in candump's pretty format,
 /// against the C fixture (regenerated with today's database via
 /// `candump2analyzer | analyzer-j1939`). Exercises the J1939 schema

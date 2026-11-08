@@ -1499,8 +1499,9 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>26</FieldCount>
-      <Length>33</Length>
+      <FieldCount>27</FieldCount>
+      <MinLength>33</MinLength>
+      <Length>36</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -1918,6 +1919,16 @@ limitations under the License.
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>27</Order>
+          <Id>spare27</Id>
+          <Name>Spare</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>264</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

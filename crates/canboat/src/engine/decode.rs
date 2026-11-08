@@ -522,6 +522,11 @@ pub struct DecodedPgn {
     /// array sits inline so the lookup is a single bounds-checked
     /// load with no allocation.
     pub index_by_order: [i8; 32],
+    /// How far into `data`, in bits, the walk over the PGN's fields went:
+    /// canboat C's `startBit` once `printFields` is done. The bytes past
+    /// it are covered by no field; `-empty` JSON writes them as
+    /// `"trailing"`.
+    pub decoded_bits: u32,
 }
 
 impl DecodedPgn {
@@ -632,7 +637,7 @@ impl PgnDatabase {
             .pick_variant(frame)
             .ok_or(DecodeError::UnknownPgn { pgn: frame.pgn })?;
 
-        let (mut fields, records) = decode_fields(info, &frame.data, self)?;
+        let (mut fields, records, decoded_bits) = decode_fields(info, &frame.data, self)?;
         // Opt-in device-quirk corrections (GPS week rollover); each a
         // no-op — one relaxed atomic load — unless a quirk was switched
         // on. The quirk keys devices by ISO NAME, which is the whole
@@ -657,6 +662,7 @@ impl PgnDatabase {
             has_repeating_set: records.map(|r| r.is_some()),
             repeat_records: records.map(|r| r.unwrap_or(0)),
             index_by_order,
+            decoded_bits,
         })
     }
 
@@ -749,14 +755,17 @@ struct DecodeContext {
     resolved_target: Option<(&'static PgnInfo, bool)>,
 }
 
+/// The fields of a message in wire order, per repeating set the number of
+/// records decoded (`None` when the message ends before the set starts),
+/// and the bit the walk ended at.
+type WalkedFields = (Vec<DecodedField>, [Option<u32>; 2], u32);
+
 /// Decode every field of `info` from `data`, repeating sets included.
-/// Returns the fields in wire order and, per repeating set, the number of
-/// records decoded (`None` when the message ends before the set starts).
 fn decode_fields(
     info: &'static PgnInfo,
     data: &[u8],
     db: &PgnDatabase,
-) -> Result<(Vec<DecodedField>, [Option<u32>; 2]), DecodeError> {
+) -> Result<WalkedFields, DecodeError> {
     let mut out = Vec::with_capacity(info.fields.len());
     let mut ctx = DecodeContext::default();
     let start1 = info.repeating_field_set1_start_field;
@@ -845,7 +854,7 @@ fn decode_fields(
         }
         i += 1;
     }
-    Ok((out, records))
+    Ok((out, records, cursor_bits))
 }
 
 /// Compute `DecodedPgn::index_by_order` from a freshly-decoded
@@ -1066,30 +1075,34 @@ fn decode_one_field_at(
         let payload_bits = (data.len() as u32).saturating_mul(8);
         let avail = payload_bits.saturating_sub(bit_offset);
         let avail = avail - (avail & 7); // round down to whole bytes
-        let value = match f.field_type {
-            Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, avail, f.encoding),
+        let (value, width) = match f.field_type {
+            Some(FieldType::StringLz) => {
+                (decode_string_lz(data, bit_offset, avail, f.encoding), avail)
+            }
             // A BINARY field with no width of its own takes one, in
             // *bits*, from the value of the field before it — canboat's
             // `*bits = g_previousFieldValue` (fieldPrintBinary, print.c),
             // which its own comment calls heuristic. Fusion's 130820
             // SiriusXM Presets sizes `Values` by the preceding `Count`,
-            // as do AIS 129792 / 129795 / 129797.
+            // as do AIS 129792 / 129795 / 129797. The walk goes on from
+            // the end of those bits, as the C's does.
             _ if ctx.previous_field_value > 0 && (ctx.previous_field_value as u32) <= avail => {
-                decode_binary(data, bit_offset, ctx.previous_field_value as u32)
+                let width = ctx.previous_field_value as u32;
+                (decode_binary(data, bit_offset, width), width)
             }
-            _ => decode_binary(data, bit_offset, avail),
+            _ => (decode_binary(data, bit_offset, avail), avail),
         };
         return Some((
             DecodedField {
                 info: f,
                 value,
                 bit_offset: Some(bit_offset),
-                bit_length: Some(avail),
+                bit_length: Some(width),
                 repeat_index: None,
                 repeat_set: 0,
                 overrides: None,
             },
-            avail,
+            width,
         ));
     }
 
@@ -2070,7 +2083,7 @@ fn trailing_zero_is_digit(f: &FieldInfo, info: &PgnInfo, data: &[u8]) -> bool {
     .unwrap_or(false)
 }
 
-fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+pub(crate) fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     let bit_offset = bit_offset as usize;
     let bit_length = bit_length as usize;
     // Whole-byte aligned: take a clean slice. Fallback PGNs like the

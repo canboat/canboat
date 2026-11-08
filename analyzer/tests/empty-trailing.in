@@ -1,0 +1,13 @@
+# Under -empty, a Reserved or Spare field that only Reserved or Spare fields
+# follow is written even at its default value, and the bytes no field covers
+# are written as "trailing" after the fields.
+# 127258 Magnetic Variation, 8 bytes: its 2-byte Reserved is all ones.
+2023-01-01-00:00:00.000,7,127258,7,255,8,ff,f5,11,39,ce,f5,ff,ff
+# 127250 Vessel Heading: a 6-bit Reserved after Reference.
+2023-01-01-00:00:00.000,2,127250,19,255,8,00,56,79,ff,7f,ff,7f,fd
+# 59904 ISO Request in a full single frame: 5 bytes of fill.
+2023-01-01-00:00:00.000,6,59904,8,255,8,14,f0,01,ff,ff,ff,ff,ff
+# 262386 Actisense System Status, 36 bytes: its trailing Spare is not zero.
+2020-08-22T13:52:37.339Z,0,262386,0,0,36,01,0e,00,e7,b3,02,00,00,00,00,00,02,2b,04,00,00,00,00,00,00,00,00,61,61,02,18,00,00,00,26,00,2a,3a,00,00,08
+# 129029 GNSS Position Data with an empty reference-station slot.
+2026-07-10T06:27:57.879Z,3,129029,41,255,47,48,a4,50,d0,c9,df,0d,c0,02,05,f6,6c,eb,74,04,00,a4,65,ae,99,a9,27,13,20,aa,44,00,00,00,00,00,13,fc,0e,34,00,5e,00,1e,0f,00,00,00,ff,ff,ff,ff

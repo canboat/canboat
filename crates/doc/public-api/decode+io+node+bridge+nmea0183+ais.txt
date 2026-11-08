@@ -1542,6 +1542,7 @@ impl core::fmt::Debug for canboat::DecodedField
 pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::prelude::DecodedPgn
 pub canboat::prelude::DecodedPgn::data: alloc::vec::Vec<u8>
+pub canboat::prelude::DecodedPgn::decoded_bits: u32
 pub canboat::prelude::DecodedPgn::description: &'static str
 pub canboat::prelude::DecodedPgn::dst: u8
 pub canboat::prelude::DecodedPgn::fields: alloc::vec::Vec<canboat::DecodedField>
@@ -2179,6 +2180,7 @@ impl core::fmt::Debug for canboat::DecodedField
 pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::DecodedPgn
 pub canboat::DecodedPgn::data: alloc::vec::Vec<u8>
+pub canboat::DecodedPgn::decoded_bits: u32
 pub canboat::DecodedPgn::description: &'static str
 pub canboat::DecodedPgn::dst: u8
 pub canboat::DecodedPgn::fields: alloc::vec::Vec<canboat::DecodedField>

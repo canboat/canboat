@@ -121,6 +121,7 @@ bool       showBytes     = false;
 bool       showAllBytes  = false;
 bool       showJson      = false;
 bool       showJsonEmpty = false;
+size_t     g_fieldsEndBit = 0; // Bit after the last field printFields read
 bool       showJsonValue = false;
 bool       showVersion   = true;
 bool       fixedTime     = false; // -fixtime in effect (test mode)
@@ -183,7 +184,8 @@ static void usage(char **argv, char **av)
          "-version\n",
          argv[0]);
   printf("     -json             Output in json format, for program consumption. Empty values are skipped\n");
-  printf("     -empty            Modified json format where empty values are shown as NULL\n");
+  printf("     -empty            Modified json format where empty values are shown as NULL, trailing reserved\n"
+         "                       and spare fields are shown, and bytes no field covers are shown as \"trailing\"\n");
   printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
   printf("     -ignore-checksum  Accept $PCDIN and $MXPGN sentences whose checksum is wrong\n");
@@ -1592,6 +1594,12 @@ static bool printField(const Field   *field,
   return false;
 }
 
+/*
+ * Print one message, as text or (showJson) a JSON record, with its fields
+ * as the matching PGN definition gives them. Under -empty the JSON record
+ * ends with "trailing", the bytes no field covers. Returns false when a
+ * field could not be printed.
+ */
 bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showData, bool showJson)
 {
   const Pgn *pgn;
@@ -1599,6 +1607,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   size_t i;
   bool   r;
   size_t variableFields = 0; // How many variable fields remain (product of repetition count * # of fields)
+  size_t baseBraces;
   char   ts[DATE_LENGTH];
 
   if (msg == NULL)
@@ -1688,10 +1697,29 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
     mprintf("%s %u %3u %3u %6u %s:", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     sep = " ";
   }
-  r = printFields(pgn, data, length, showData, showJson, &variableFields);
+  baseBraces = strlen(closingBraces);
+  r          = printFields(pgn, data, length, showData, showJson, &variableFields);
 
   if (showJson)
   {
+    size_t used = (g_fieldsEndBit + 7) >> 3;
+
+    if (r && showJsonEmpty && used < (size_t) length)
+    {
+      // Under -empty, the bytes no field covers follow the fields, so that
+      // the record holds the whole message.
+      for (i = strlen(closingBraces); i > baseBraces;)
+      {
+        mprintf("%c", closingBraces[--i]);
+      }
+      closingBraces[baseBraces] = '\0';
+      mprintf(",\"trailing\":\"");
+      for (i = used; i < (size_t) length; i++)
+      {
+        mprintf("%s%02X", i > used ? " " : "", data[i]);
+      }
+      mprintf("\"");
+    }
     for (i = strlen(closingBraces); i;)
     {
       mprintf("%c", closingBraces[--i]);
@@ -1919,6 +1947,8 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     startBit += bits;
   }
+
+  g_fieldsEndBit = startBit;
 
   // A set the PGN defines is always written, as [] when the message has no bytes left for it.
   if (showJson && r)

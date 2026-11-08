@@ -45,6 +45,10 @@ fields:
 - id: buildNumber
   name: Build Number
   type: UINT8
+- id: spare10
+  name: Spare
+  type: SPARE
+  bits: 8
 notes: Fusion
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,10,255,12,a3,99,01,80,01,00,17,00,02,00,09,01"  # from fusion-130820.log
@@ -57,3 +61,4 @@ samples:
     swVersionMajor: 2
     swVersionMinor: 0
     buildNumber: 9
+    spare10: "0x01"

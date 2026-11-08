@@ -495,6 +495,30 @@ impl PgnBuilder {
             && self.set_layout(1).is_none()
     }
 
+    /// Whether a multi-frame message as canboat decoded it ends before
+    /// field `idx`: `next_bit` is on the PGN's `minLength`, and every
+    /// field from `idx` on is Reserved or Spare and not given. A single
+    /// frame keeps its whole length: most devices fill it to 8 bytes.
+    fn ends_at_min_length(&self, idx: usize, next_bit: usize) -> bool {
+        self.decoded
+            && self.pgn.packet_type != PacketType::Single
+            && self
+                .pgn
+                .min_length
+                .is_some_and(|m| next_bit == m as usize * 8)
+            && self.set_layout(1).is_none()
+            && self.pgn.fields[idx..]
+                .iter()
+                .zip(&self.staged[idx..])
+                .all(|(f, staged)| {
+                    staged.is_none()
+                        && matches!(
+                            f.field_type,
+                            Some(FieldType::Reserved) | Some(FieldType::Spare)
+                        )
+                })
+    }
+
     /// Resolve repeating set `set` (1 or 2) to `(start index, size,
     /// count-field index)`, all zero-based, or `None` if this PGN does
     /// not declare that set.
@@ -734,6 +758,15 @@ impl PgnBuilder {
                 idx += 1;
                 continue;
             }
+            // A message as canboat decoded it, already at the PGN's
+            // `minLength`, ends there when nothing after it is given but
+            // Reserved or Spare bits: the decoder leaves those out both
+            // when the message stops short of them and when they hold
+            // their default, and the shorter form is the one minLength
+            // says devices send.
+            if self.ends_at_min_length(idx, next_bit) {
+                break;
+            }
             // The Manufacturer / Industry header of a 126208 Read or Write
             // Fields is in the message exactly when the commanded PGN is
             // proprietary, as decode reads it: required then (bar its
@@ -799,8 +832,12 @@ impl PgnBuilder {
             let pad = 8 - (next_bit % 8);
             write_bits(&mut buf, &mut next_bit, pad, u64::MAX);
         }
-        // An open tail may end the message early, never late.
-        let open = self.pgn.fields.last().is_some_and(|f| self.open_tail(f));
+        // An open tail may end the message early, never late, as may one
+        // that stopped at its minLength.
+        let open = self.pgn.fields.last().is_some_and(|f| self.open_tail(f))
+            || (self.decoded
+                && self.pgn.packet_type != PacketType::Single
+                && self.pgn.min_length.is_some_and(|m| buf.len() == m as usize));
         if let Some(expected) = self.pgn.length
             && (buf.len() > expected as usize || (!open && buf.len() != expected as usize))
         {

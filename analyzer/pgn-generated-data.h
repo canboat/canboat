@@ -8139,7 +8139,8 @@ Pgn pgnList[] = {
       {.name = "FC", .camelName = "fc", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "3 axis offset", .camelName = "3AxisOffset", .fieldType = "INT16", .resolution = 0.00032, .hasSign = true, .unit = "%", .rangeMin = -12.5, .rangeMax = 12.5},
       {.name = "Air pressure offset", .camelName = "airPressureOffset", .fieldType = "INT16", .resolution = 10.0, .hasSign = true, .unit = "Pa"},
-      {.name = "Air temperature offset", .camelName = "airTemperatureOffset", .fieldType = "FIX16_1", .hasSign = true, .unit = "K", .rangeMin = -99.9, .rangeMax = 99.9}
+      {.name = "Air temperature offset", .camelName = "airTemperatureOffset", .fieldType = "FIX16_1", .hasSign = true, .unit = "K", .rangeMin = -99.9, .rangeMax = 99.9},
+      {.name = "Spare", .camelName = "spare16", .fieldType = "SPARE", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "furunoSensorSetup",
      .priority = 7},
@@ -8348,7 +8349,8 @@ Pgn pgnList[] = {
       {.name = "HW Version Minor", .camelName = "hwVersionMinor", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "SW Version Major", .camelName = "swVersionMajor", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "SW Version Minor", .camelName = "swVersionMinor", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Build Number", .camelName = "buildNumber", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Build Number", .camelName = "buildNumber", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Spare", .camelName = "spare10", .fieldType = "SPARE", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "fusionVersions",
      .priority = 7},
@@ -8614,7 +8616,8 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32777, .description = "Track Progress", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "Progress", .camelName = "progress", .fieldType = "DURATION_UFIX24_MS"}
+      {.name = "Progress", .camelName = "progress", .fieldType = "DURATION_UFIX24_MS"},
+      {.name = "Spare", .camelName = "spare7", .fieldType = "SPARE", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "fusionTrackPosition",
      .priority = 7},
@@ -11488,7 +11491,8 @@ Pgn pgnList[] = {
       {.name = "Ch2 Bandwidth", .camelName = "ch2Bandwidth", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch2 Deleted", .camelName = "ch2Deleted", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Ch2 BufferLoading", .camelName = "ch2Bufferloading", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Ch2 PointerLoading", .camelName = "ch2Pointerloading", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Ch2 PointerLoading", .camelName = "ch2Pointerloading", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Spare", .camelName = "spare27", .fieldType = "SPARE", .size = 24, .resolution = 1.0}
      },
      .camelDescription = "actisenseSystemStatus"},
 

@@ -25,6 +25,7 @@
 use std::fmt::{self, Write as _};
 
 use crate::engine::decode::{DecodedField, DecodedPgn, FieldValue};
+use crate::engine::types::FieldType;
 
 use super::{effective_precision, time_precision_for, write_fixed_float};
 
@@ -199,6 +200,35 @@ fn write_json_inner<W: fmt::Write>(
     fields_buf: &mut String,
 ) -> fmt::Result {
     let payload_bits = (pgn.data.len() as u32).saturating_mul(8);
+    // Under `-empty` (and `-debug`, which implies it in canboat C) a
+    // Reserved or Spare field that only Reserved or Spare fields follow,
+    // in a PGN without repeating sets, is written even at its default
+    // value, so a record shows how far the message went.
+    let empty = opts.include_empty || opts.debug;
+    let info = if empty {
+        opts.protocol
+            .database(crate::engine::Units::Si)
+            .pgn_by_id(pgn.id)
+            .filter(|i| i.repeating_field_set1_start_field.is_none())
+    } else {
+        None
+    };
+    let is_padding = |f: &DecodedField| -> bool {
+        let padding =
+            |t: Option<FieldType>| matches!(t, Some(FieldType::Reserved | FieldType::Spare));
+        info.is_some_and(|info| {
+            f.repeat_set == 0
+                && padding(f.info.field_type)
+                && f.bit_offset
+                    .zip(f.bit_length)
+                    .is_some_and(|(o, l)| o + l <= payload_bits)
+                && info
+                    .fields
+                    .iter()
+                    .filter(|g| g.order > f.info.order)
+                    .all(|g| padding(g.field_type))
+        })
+    };
     let visible = |f: &DecodedField| -> bool {
         // Fields whose first byte sits entirely past the payload are
         // dropped — canboat suppresses them regardless of `-empty` /
@@ -226,6 +256,7 @@ fn write_json_inner<W: fmt::Write>(
         // by the value writer's `Spare { bytes, .. }` arm.
         if let FieldValue::Spare { value, .. } = &f.value
             && *value == 0
+            && !is_padding(f)
         {
             return false;
         }
@@ -241,7 +272,9 @@ fn write_json_inner<W: fmt::Write>(
         // 15-bit Reserved on a 26-byte AIS Class B report reads 7 bits
         // of 0xFF, which is not 0x7FFF, and the two computations
         // disagreed.
-        if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty()) {
+        if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty())
+            && !is_padding(f)
+        {
             return false;
         }
         true
@@ -251,6 +284,25 @@ fn write_json_inner<W: fmt::Write>(
         write_parameter_id(buf, f)?;
         write_json_string(buf, field_display_name(f, opts.camel_case).as_ref())?;
         buf.write_char(':')?;
+        // A default Reserved carries no bytes; written as padding, it
+        // takes them from the payload, as canboat's `fieldPrintBinary`.
+        if let FieldValue::Reserved {
+            value,
+            bytes,
+            bit_length,
+        } = &f.value
+            && bytes.is_empty()
+            && let (Some(o), Some(l)) = (f.bit_offset, f.bit_length)
+            && let FieldValue::Binary(bytes) = crate::engine::decode::decode_binary(&pgn.data, o, l)
+        {
+            let mut f = f.clone();
+            f.value = FieldValue::Reserved {
+                value: *value,
+                bytes,
+                bit_length: *bit_length,
+            };
+            return write_field_value(buf, &f, opts, &pgn.data);
+        }
         write_field_value(buf, f, opts, &pgn.data)
     };
     // A repeating set is written as a list with one object per record,
@@ -322,6 +374,23 @@ fn write_json_inner<W: fmt::Write>(
         w.write_str(",\"fields\":{")?;
         w.write_str(fields_buf)?;
         w.write_char('}')?;
+    }
+    // Under `-empty`, the bytes no field covers follow the fields, so the
+    // record holds the whole message.
+    if empty {
+        let used = (pgn.decoded_bits as usize).div_ceil(8);
+        if let Some(rest) = pgn.data.get(used..)
+            && !rest.is_empty()
+        {
+            w.write_str(",\"trailing\":\"")?;
+            for (i, b) in rest.iter().enumerate() {
+                if i > 0 {
+                    w.write_char(' ')?;
+                }
+                write!(w, "{:02X}", b)?;
+            }
+            w.write_char('"')?;
+        }
     }
     w.write_char('}')?; // close top
     Ok(())
@@ -583,9 +652,10 @@ fn write_field_value_debug<W: fmt::Write>(
                 w.write_char('}')?;
             }
         }
-        FieldValue::Reserved { bytes, .. } => {
+        FieldValue::Reserved { bytes, .. } | FieldValue::Spare { bytes, .. } => {
             // Same shape as canboat's Binary: uppercase hex, space-
-            // separated.
+            // separated. A Spare is only written when it is not zero or
+            // ends the message, and canboat prints it as Binary then too.
             w.write_char('"')?;
             for (i, b) in bytes.iter().enumerate() {
                 if i > 0 {
@@ -595,7 +665,7 @@ fn write_field_value_debug<W: fmt::Write>(
             }
             w.write_char('"')?;
         }
-        FieldValue::Spare { .. } | FieldValue::NotAvailable => {
+        FieldValue::NotAvailable => {
             w.write_str("null")?;
         }
         FieldValue::OutOfRange { .. } | FieldValue::ReservedValue { .. } => {
@@ -1139,6 +1209,7 @@ mod tests {
             has_repeating_set: [false, false],
             repeat_records: [0, 0],
             index_by_order: [i8::MIN; 32],
+            decoded_bits: 0,
         }
     }
 

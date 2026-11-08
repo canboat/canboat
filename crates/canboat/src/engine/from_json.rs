@@ -85,6 +85,7 @@ pub fn json_to_decoded(line: &str, db: &PgnDatabase) -> Option<DecodedPgn> {
         has_repeating_set: [false, false],
         repeat_records: [0, 0],
         index_by_order,
+        decoded_bits: 0,
     })
 }
 
