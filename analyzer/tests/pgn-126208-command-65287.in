@@ -5,3 +5,6 @@
 2023-01-01-00:00:00.000,0,126208,35,51,18,01,07,ff,00,f8,04,01,87,98,04,01,05,01,07,78,56,34,12
 # The same command with Manufacturer and Industry Code as parameters 1 and 3.
 2023-01-01-00:00:00.000,0,126208,35,51,20,01,07,ff,00,f8,05,01,87,00,03,04,04,01,05,01,07,78,56,34,12
+# The same with the Industry Code as parameter 3 after parameter 4: parameter
+# 1's top bits (here 0) are padding then, not the Industry Code.
+2023-01-01-00:00:00.000,0,126208,35,51,20,01,07,ff,00,f8,05,01,87,00,04,01,03,04,05,01,07,78,56,34,12

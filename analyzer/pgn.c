@@ -213,6 +213,15 @@ const Field *getParameterField(const Pgn *pgn, int index)
   return &pgn->fieldList[(index - start) % count + start - 1];
 }
 
+/*
+ * The definition of PGN `pgnId` that a 126208 group function's parameter list
+ * describes. `data` starts at the parameter count, followed by that many
+ * {field index, value} pairs. The first definition whose match fields all
+ * agree with the parameters given wins. For a proprietary PGN the Manufacturer
+ * (parameter 1) is required; its Industry Code comes from parameter 3 or, when
+ * no parameter 3 is given, from parameter 1's top bits. Returns NULL when
+ * nothing matches.
+ */
 const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length)
 {
   const Pgn *pgn = searchForPgn(pgnId);
@@ -264,6 +273,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
   for (prn = pgn->pgn; pgn->pgn == prn; pgn++)
   {
     bool matchedFixedField = true;
+    bool explicitIndustry  = false; // a parameter 3 anywhere in the list
 
     logDebug("getMatchingPgnByParameters: PGN %u parameters %d try match with manufacturer specific '%s'\n",
              prn,
@@ -284,6 +294,10 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
     {
       int index = data[d++];
 
+      if (index == 3)
+      {
+        explicitIndustry = true;
+      }
       logDebug("getMatchingPgnByParameters: offset %d parameter #%d\n", d, index);
       const Field *field = getParameterField(pgn, index);
       if (field == NULL)
@@ -320,7 +334,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
       }
       d += bytes;
     }
-    if (matchedFixedField && industry >= 0)
+    if (matchedFixedField && industry >= 0 && !explicitIndustry)
     {
       const Field *field = getParameterField(pgn, 3);
 
