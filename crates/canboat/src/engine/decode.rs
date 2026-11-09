@@ -1414,6 +1414,13 @@ pub(crate) fn parameter_field(info: &'static PgnInfo, index: u32) -> Option<&'st
     by_order((index - start) % count + start)
 }
 
+/// The definition of `pgn_id` that a 126208 group function's parameter
+/// list describes: `params` is the count followed by that many {field
+/// index, value} pairs. The first definition whose match fields all agree
+/// with the parameters given wins. A proprietary PGN needs its Manufacturer
+/// (parameter 1); its Industry Code comes from parameter 3 or, when none
+/// is given, from parameter 1's top bits. `None` when nothing matches.
+/// A port of the C analyzer's `getMatchingPgnByParameters`.
 fn match_pgn_by_parameters(
     db: &PgnDatabase,
     pgn_id: u32,
@@ -1422,12 +1429,20 @@ fn match_pgn_by_parameters(
     let first = db.specific_variants(pgn_id).next()?;
 
     // A proprietary PGN can only be narrowed by Manufacturer (field 1)
-    // and Industry Code (field 3); without both there is nothing to go
-    // on and the C bails out rather than guessing.
-    if is_pgn_proprietary(pgn_id)
-        && (params.len() < 6 || params[0] < 2 || params[1] != 0x01 || params[4] != 3)
-    {
-        return None;
+    // and Industry Code (field 3); without the manufacturer there is
+    // nothing to go on and the C bails out rather than guessing. Some
+    // devices (an Airmar setup tool, say) give only parameter 1, its two
+    // bytes holding the whole header word: the 11-bit manufacturer, 2
+    // reserved bits and the 3-bit Industry Code on top. The Industry Code
+    // is then taken from there.
+    let mut industry = None;
+    if is_pgn_proprietary(pgn_id) {
+        if params.len() < 4 || params[0] < 1 || params[1] != 0x01 {
+            return None;
+        }
+        if params.len() < 6 || params[0] < 2 || params[4] != 3 {
+            industry = Some(i64::from(params[3] >> 5));
+        }
     }
 
     // `hasMatchFields` is set per *definition* (fieldtype.c), and the C
@@ -1441,6 +1456,8 @@ fn match_pgn_by_parameters(
     let nparams = *params.first()? as usize;
     'variant: for cand in db.specific_variants(pgn_id) {
         let mut d = 1usize;
+        // A parameter 3 anywhere in the list gives the Industry Code itself.
+        let mut explicit_industry = false;
         // Exactly `nparams` pairs — walking to the end of the data
         // instead would read trailing bytes as a bogus extra parameter.
         for _ in 0..nparams {
@@ -1449,6 +1466,7 @@ fn match_pgn_by_parameters(
             }
             let index = params[d];
             d += 1;
+            explicit_industry |= index == 3;
             let Some(field) = parameter_field(cand, u32::from(index)) else {
                 continue 'variant;
             };
@@ -1463,6 +1481,14 @@ fn match_pgn_by_parameters(
                 }
             }
             d += bits.div_ceil(8);
+        }
+        if let Some(industry) = industry
+            && !explicit_industry
+            && parameter_field(cand, 3)
+                .and_then(|f| f.match_value)
+                .is_some_and(|want| want != industry)
+        {
+            continue 'variant;
         }
         return Some(cand);
     }
