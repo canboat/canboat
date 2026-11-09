@@ -572,6 +572,58 @@ fn candump_bad_lengths_match_candump2analyzer() {
     assert_eq!(candump_matches_candump2analyzer("debian-bad-length"), 2);
 }
 
+/// candump's pretty style after a `candump -t` timestamp: epoch seconds,
+/// a local date and time, and seconds since the previous or first frame
+/// (#1187). The timestamps are checked in the candump reader's own tests.
+#[test]
+fn candump_timed_matches_candump2analyzer() {
+    for name in ["candump-t-epoch", "candump-t-date", "candump-t-relative"] {
+        assert_eq!(candump_matches_candump2analyzer(name), 2, "{name}");
+    }
+}
+
+/// `candump -tA` prints the capturing host's local time: read in the zone
+/// `TZ` names and written in UTC, daylight saving time included. Unix only:
+/// on Windows the local zone is the system's, whatever `TZ` says.
+#[cfg(unix)]
+#[test]
+fn candump_local_time_is_read_in_the_hosts_zone() {
+    let input = " (2023-11-14 22:13:19.123456)  can0  09F80103   [8]  C1 30 8A C4 0C 5D E3 43\n\
+                  (2023-07-14 22:13:19.123456)  can0  09F80103   [8]  C1 30 8A C4 0C 5D E3 43\n";
+    for (tz, want) in [
+        (
+            "UTC",
+            ["2023-11-14T22:13:19.123Z", "2023-07-14T22:13:19.123Z"],
+        ),
+        (
+            "Europe/Amsterdam",
+            ["2023-11-14T21:13:19.123Z", "2023-07-14T20:13:19.123Z"],
+        ),
+    ] {
+        let mut child = Command::new(canboat())
+            .args(["convert", "--to", "plain"])
+            .env("TZ", tz)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .expect("spawn canboat");
+        child
+            .stdin
+            .as_mut()
+            .unwrap()
+            .write_all(input.as_bytes())
+            .expect("write stdin");
+        let out = child.wait_with_output().expect("wait canboat");
+        let got: Vec<String> = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|l| l.split(',').next().unwrap_or("").to_string())
+            .collect();
+        assert_eq!(got, want, "TZ={tz}");
+    }
+}
+
 /// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)
 /// with the identifier of `prio`, `pgn` (PDU2), `src`.
 fn bst95(prio: u8, pgn: u32, src: u8, data: &[u8]) -> Vec<u8> {

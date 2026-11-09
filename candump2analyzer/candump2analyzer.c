@@ -48,6 +48,122 @@ limitations under the License.
 #define FMT_4 4 // tshark of pcap:10131  29.555750              ?              CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff
 #define FMT_5 5 // Navico port 8086: 0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d
 #define FMT_6 6 // PCAN-View v1.1: "     1)         2.7  Rx     09F11324  8  53 84 9E 01 00 FF FF FF"
+#define FMT_7 7 // candump -t: " (1502979132.106111)  can0  09F8027F   [8]  00 FC FF FF 00 00 FF FF"
+
+// Milliseconds from the digits after the dot in `frac` ("123456" -> 123,
+// "1" -> 100): from the text, not a double, so .100000 never becomes .099.
+static int fractionMillis(const char *frac)
+{
+  int ms = 0;
+  int i;
+
+  for (i = 0; i < 3; i++)
+  {
+    ms = ms * 10 + ((frac != NULL && isdigit((unsigned char) frac[0])) ? *frac++ - '0' : 0);
+  }
+  return ms;
+}
+
+// Seconds as candump -ta, -td and -tz print them: digits, optionally a dot and more digits.
+static bool isSeconds(const char *ts)
+{
+  size_t whole = strspn(ts, "0123456789");
+
+  if (whole == 0)
+  {
+    return false;
+  }
+  if (ts[whole] == 0)
+  {
+    return true;
+  }
+  return ts[whole] == '.' && strspn(ts + whole + 1, "0123456789") > 0 && ts[whole + 1 + strspn(ts + whole + 1, "0123456789")] == 0;
+}
+
+// A date and time as candump -tA prints it: "2015-07-10 08:17:33", optionally a dot and digits.
+static bool isDateTime(const char *ts)
+{
+  static const char shape[] = "dddd-dd-dd dd:dd:dd";
+  size_t            i;
+
+  for (i = 0; i < sizeof(shape) - 1; i++)
+  {
+    if (shape[i] == 'd' ? !isdigit((unsigned char) ts[i]) : ts[i] != shape[i])
+    {
+      return false;
+    }
+  }
+  if (ts[i] == 0)
+  {
+    return true;
+  }
+  return ts[i] == '.' && strspn(ts + i + 1, "0123456789") > 0 && ts[i + 1 + strspn(ts + i + 1, "0123456789")] == 0;
+}
+
+// The pretty (Debian) line after the timestamp `candump -t` puts in front of
+// it: epoch seconds (-ta), a local date and time (-tA, "2017-08-17 15:12:12.106111")
+// or seconds since the previous or first frame (-td, -tz). Writes the time as
+// the analyzer's PLAIN timestamp: epoch seconds in UTC, the local date and time
+// in UTC by this host's zone (TZ), and the relative seconds as a time of day,
+// which has no date.
+// Returns false when the line is not of this form. Only the frame token says
+// whether it is the -l log form (`<canid>#<bytes>`): candump -a's ASCII column
+// may hold a '#'.
+static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSize, unsigned int *canid, int *size)
+{
+  char        ts[40];
+  char        frame[32];
+  const char *frac;
+  int         end = 0;
+
+  if (sscanf(p, " (%39[^)]) %*s %31s", ts, frame) != 2 || strchr(frame, '#') != NULL
+      || sscanf(p, " (%*[^)]) %*s %x [%d] %n", canid, size, &end) != 2 || end == 0)
+  {
+    return false;
+  }
+  frac = strchr(ts, '.');
+  if (isDateTime(ts))
+  {
+    // candump -tA prints the capturing host's localtime(); read it as local
+    // time in this host's zone (TZ) and write UTC, as every other timestamp is.
+    struct tm  local = {0};
+    struct tm *utc;
+    time_t     localEpoch; // not `unix`: GCC predefines that as 1
+    char       hms[24];
+
+    sscanf(ts, "%d-%d-%d %d:%d:%d", &local.tm_year, &local.tm_mon, &local.tm_mday, &local.tm_hour, &local.tm_min, &local.tm_sec);
+    local.tm_year -= 1900;
+    local.tm_mon -= 1;
+    local.tm_isdst = -1;
+    localEpoch     = mktime(&local);
+    utc            = (localEpoch == (time_t) -1) ? NULL : gmtime(&localEpoch);
+    if (utc == NULL)
+    {
+      return false;
+    }
+    strftime(hms, sizeof(hms), "%F-%T", utc);
+    snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
+    return true;
+  }
+  if (!isSeconds(ts))
+  {
+    return false;
+  }
+  {
+    time_t     whole = (time_t) strtoll(ts, NULL, 10);
+    struct tm *utc   = gmtime(&whole);
+    bool       epoch = strcspn(ts, ".") >= 9; // epoch seconds have nine or ten digits
+    char       hms[24];
+
+    if (utc == NULL)
+    {
+      return false;
+    }
+    strftime(hms, sizeof(hms), epoch ? "%F-%T" : "%T", utc);
+    snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
+  }
+  return true;
+}
 
 // PCAN-View per-message timestamps are relative offsets in ms; the
 // ;$STARTTIME= header gives the absolute start as an OLE Automation date
@@ -174,6 +290,7 @@ int main(int argc, char **argv)
     char     pcanType[8]    = {0};  // FMT_6: "Rx" / "Tx"
     int      pcanDataOff    = 0;    // FMT_6: offset within the line of the data bytes
     char    *pcanData       = NULL; // FMT_6: pointer to the data bytes
+    char     timedStamp[48];        // FMT_7: the timestamp as written
 
     // Determine which candump format is being used.
     //
@@ -185,6 +302,10 @@ int main(int argc, char **argv)
       if (sscanf(p, "<%x> [%d] ", &canid, &size) == 2)
       {
         format = FMT_1;
+      }
+      else if (parseTimedPretty(p, timedStamp, sizeof(timedStamp), &canid, &size))
+      {
+        format = FMT_7;
       }
       else if (sscanf(p, " %*s %x [%d] ", &canid, &size) == 2)
       {
@@ -230,6 +351,13 @@ int main(int argc, char **argv)
         continue;
       }
     }
+    else if (format == FMT_7)
+    {
+      if (!parseTimedPretty(p, timedStamp, sizeof(timedStamp), &canid, &size))
+      {
+        continue;
+      }
+    }
     else if (format == FMT_3)
     {
       if (sscanf(p, "(%lf) %*s %8x#", &currentTime, &canid) != 2)
@@ -264,7 +392,7 @@ int main(int argc, char **argv)
       pcanData    = p + pcanDataOff;
     }
 
-    if ((format == FMT_1 || format == FMT_2) && !bracketPayloadComplete(p, size))
+    if ((format == FMT_1 || format == FMT_2 || format == FMT_7) && !bracketPayloadComplete(p, size))
     {
       fprintf(stderr,
               "Skipping candump line: its bytes do not match its [%d], or that is more than 8: %.*s\n",
@@ -325,7 +453,14 @@ int main(int argc, char **argv)
 
     // Output all but the data bytes.
     //
-    fprintf(outfile, "%s.%03d,%d,%d,%d,%d,%d", timestamp, msec, pri, pgn, src, dst, size);
+    if (format == FMT_7)
+    {
+      fprintf(outfile, "%s,%d,%d,%d,%d,%d", timedStamp, pri, pgn, src, dst, size);
+    }
+    else
+    {
+      fprintf(outfile, "%s.%03d,%d,%d,%d,%d,%d", timestamp, msec, pri, pgn, src, dst, size);
+    }
 
     // Now process the data bytes.
     //
@@ -369,7 +504,7 @@ int main(int argc, char **argv)
         while (*(++p) == ' ')
           ;
       }
-      if (format == FMT_1 || format == FMT_2)
+      if (format == FMT_1 || format == FMT_2 || format == FMT_7)
       {
         // Walk the bytes as bracketPayloadComplete() counted them: any
         // whitespace between them, not a fixed stride.

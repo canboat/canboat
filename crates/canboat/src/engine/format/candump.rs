@@ -7,6 +7,9 @@
 //!
 //! ```text
 //!   can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40      (pretty, default)
+//! (1436509053.762905)  can0  18EEFF00   [8]  8E F2 …    (pretty, -ta)
+//! (2015-07-10 08:17:33.762905)  can0  18EEFF00   [8] …  (pretty, -tA)
+//! (000.000123)  can0  18EEFF00   [8]  8E F2 DD E8 …     (pretty, -td / -tz)
 //! (1436509053.762905) can0 18EEFF00#8EF2DDE800966440   (log, -l / -L)
 //! <0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0             (Angstrom, old can-utils)
 //! ```
@@ -17,9 +20,14 @@
 //! the identifier's width says which kind a line holds. The pretty and
 //! Angstrom forms have no timestamp at all
 //! (`RawFrame.timestamp` stays `None` — the caller stamps receive
-//! time); the log form's epoch seconds are converted to the ISO shape
+//! time) unless `-t` put one in front of the pretty form. Epoch seconds
+//! (the log form's, and `-ta`'s) are converted to the ISO shape
 //! downstream emitters expect, by pure arithmetic so wasm32 (no host
-//! clock) takes the same path.
+//! clock) takes the same path. `-tA`'s local date and time is kept as
+//! the classic canboat `YYYY-MM-DD-HH:MM:SS.mmm` unless the binary installed
+//! the host's time zone, which converts it to UTC; `-td` and `-tz` count
+//! seconds from the previous or the first frame, which have no date, so
+//! they become a time of day.
 //!
 //! canboat C handles these through the separate `candump2analyzer`
 //! converter (whose parser this mirrors); here they are first-class
@@ -82,6 +90,58 @@ fn angstrom_id(tok: &str) -> Option<&str> {
         .strip_suffix('>')
 }
 
+/// The timestamp and the rest of a line that `candump -t` started with
+/// one: `(<time>) <rest>`, the time being seconds (`-ta`, `-td`, `-tz`)
+/// or a date and time (`-tA`).
+fn split_time(line: &str) -> Option<(&str, &str)> {
+    let rest = line.strip_prefix('(')?;
+    let close = rest.find(')')?;
+    let ts = &rest[..close];
+    (is_seconds(ts) || is_date_time(ts)).then(|| (ts, &rest[close + 1..]))
+}
+
+/// Seconds as `candump -ta`, `-td` and `-tz` print them: digits, then
+/// optionally a dot and more digits.
+fn is_seconds(ts: &str) -> bool {
+    let (whole, frac) = ts.split_once('.').unwrap_or((ts, "0"));
+    let digits = |s: &str| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit());
+    digits(whole) && digits(frac)
+}
+
+/// A date and time as `candump -tA` prints it: `2015-07-10 08:17:33`,
+/// optionally followed by a dot and digits.
+fn is_date_time(ts: &str) -> bool {
+    let b = ts.as_bytes();
+    let shape = b"dddd-dd-dd dd:dd:dd";
+    b.len() >= shape.len()
+        && shape.iter().zip(b).all(|(&want, &got)| {
+            if want == b'd' {
+                got.is_ascii_digit()
+            } else {
+                got == want
+            }
+        })
+        && (b.len() == shape.len()
+            || (b[shape.len()] == b'.'
+                && b.len() > shape.len() + 1
+                && b[shape.len() + 1..].iter().all(u8::is_ascii_digit)))
+}
+
+/// Whether the frame after a timestamp and the interface is in the `-l`
+/// log form, `<canid>#<hexbytes>`. Only that token decides: `candump -a`
+/// may print a `#` in its ASCII column after a pretty frame's bytes.
+fn is_log_frame(rest: &str) -> bool {
+    rest.split_whitespace()
+        .nth(1)
+        .is_some_and(|t| t.contains('#'))
+}
+
+/// True when `line` looks like a candump *pretty* line with a `-t`
+/// timestamp in front: `(<time>) <iface> <hex-canid> [<len>] <bytes…>`.
+pub(crate) fn looks_like_timed_pretty(line: &str) -> bool {
+    split_time(line).is_some_and(|(_, rest)| looks_like_pretty(rest))
+}
+
 /// True when `line` looks like a candump *log* line:
 /// `(<epoch.frac>) <iface> <hex-canid>#<hexbytes>`.
 pub(crate) fn looks_like_log(line: &str) -> bool {
@@ -94,7 +154,7 @@ pub(crate) fn looks_like_log(line: &str) -> bool {
     let ts = &rest[..close];
     ts.bytes().all(|b| b.is_ascii_digit() || b == b'.')
         && !ts.is_empty()
-        && rest[close + 1..].trim_start().contains('#')
+        && is_log_frame(&rest[close + 1..])
 }
 
 /// Parse any candump shape into a [`RawFrame`], for a 29-bit ISO 11783
@@ -121,7 +181,11 @@ pub fn parse_line_for(line: &str, standard: bool) -> Result<Option<RawFrame>, Pa
     if t.is_empty() {
         return Err(ParseError::Empty);
     }
-    if t.starts_with('(') {
+    if let Some((ts, rest)) = split_time(t)
+        && !is_log_frame(rest)
+    {
+        parse_timed_pretty(ts, rest, standard)
+    } else if t.starts_with('(') {
         parse_log(t, standard)
     } else if is_banner(t) {
         Ok(None)
@@ -168,6 +232,74 @@ fn parse_pretty(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseErr
         found: 1,
     })?;
     parse_len_and_bytes(id_tok, toks, 2, standard)
+}
+
+/// `(1436509053.762905)  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40`:
+/// the pretty shape after the timestamp `candump -t` puts in front.
+fn parse_timed_pretty(
+    ts: &str,
+    rest: &str,
+    standard: bool,
+) -> Result<Option<RawFrame>, ParseError> {
+    let frame = parse_pretty(rest.trim_start(), standard)?;
+    Ok(frame.map(|f| RawFrame {
+        timestamp: Some(timed_to_canonical(ts)),
+        ..f
+    }))
+}
+
+/// Converts a local date and time, as `candump -tA` prints it (its
+/// `localtime()`), to Unix seconds: year, month, day, hour, minute, second.
+pub(crate) type LocalToUnix = fn(i32, u32, u32, u32, u32, u32) -> Option<i64>;
+
+/// The host's time zone, for `candump -tA`. The library knows no clock or
+/// zone (wasm32 has none), so the binaries install it at startup.
+static LOCAL_TO_UNIX: std::sync::OnceLock<LocalToUnix> = std::sync::OnceLock::new();
+
+/// Read `candump -tA` times as local time in the zone `to_unix` knows,
+/// usually the reading host's (`TZ` on Unix), as `candump2analyzer`'s `mktime()`
+/// does. A capture says nothing of the zone it was made in. Without this,
+/// such a time is kept as written.
+pub(crate) fn set_local_time_zone(to_unix: LocalToUnix) {
+    let _ = LOCAL_TO_UNIX.set(to_unix);
+}
+
+/// `candump -tA`'s local `2015-07-10 08:17:33.762905` in UTC, when a time
+/// zone is installed ([`set_local_time_zone`]).
+fn local_to_iso(date: &str, hms: &str, frac: &str) -> Option<String> {
+    let to_unix = LOCAL_TO_UNIX.get()?;
+    let mut d = date.split('-').map(str::parse::<u32>);
+    let mut t = hms.split(':').map(str::parse::<u32>);
+    let (y, mo, day) = (d.next()?.ok()?, d.next()?.ok()?, d.next()?.ok()?);
+    let (h, mi, sec) = (t.next()?.ok()?, t.next()?.ok()?, t.next()?.ok()?);
+    let unix = to_unix(y as i32, mo, day, h, mi, sec)?;
+    Some(epoch_to_iso(&format!("{unix}.{frac}")))
+}
+
+/// A `candump -t` timestamp in a form the emitters take: `-ta`'s epoch
+/// seconds as ISO UTC; `-tA`'s local `2015-07-10 08:17:33.762905` in UTC
+/// when the host's time zone is installed ([`set_local_time_zone`]), else as
+/// written, `2015-07-10-08:17:33.762`; and `-td` / `-tz`'s seconds since the
+/// previous or first frame as a time of day, `00:00:00.000123` → `00:00:00.000`.
+fn timed_to_canonical(ts: &str) -> String {
+    if ts.contains(' ') {
+        let (date, time) = ts.split_once(' ').unwrap_or((ts, ""));
+        let (hms, frac) = time.split_once('.').unwrap_or((time, ""));
+        if let Some(utc) = local_to_iso(date, hms, frac) {
+            return utc;
+        }
+        let millis: String = frac.chars().chain("000".chars()).take(3).collect();
+        return format!("{date}-{hms}.{millis}");
+    }
+    let secs_str = ts.split_once('.').map_or(ts, |(s, _)| s);
+    // Epoch seconds have ten digits now and nine since 1973; a relative
+    // time is a few, zero padded to three.
+    if secs_str.len() >= 9 {
+        return epoch_to_iso(ts);
+    }
+    let iso = epoch_to_iso(ts);
+    // `1970-01-01T` + `HH:MM:SS.mmm` + `Z`: the time of day only.
+    iso[11..iso.len() - 1].to_string()
 }
 
 /// `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0`: the pretty shape with the
@@ -479,6 +611,48 @@ mod tests {
         assert_eq!(f.timestamp.as_deref(), Some("2015-07-10T06:17:33.762Z"));
         assert_eq!(f.data.len(), 8);
         assert_eq!(f.data[0], 0x8E);
+    }
+
+    /// `candump -t` puts a timestamp in front of the pretty line: epoch
+    /// seconds (`-ta`), a local date and time (`-tA`), or seconds since
+    /// the previous or first frame (`-td`, `-tz`) (canboat#1187).
+    #[test]
+    fn parses_pretty_line_with_a_t_timestamp() {
+        let bytes = "  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40";
+        for (ts, want) in [
+            ("1436509053.762905", "2015-07-10T06:17:33.762Z"),
+            ("2015-07-10 08:17:33.762905", "2015-07-10-08:17:33.762"),
+            ("000.012345", "00:00:00.012"),
+            ("3725.5", "01:02:05.500"),
+        ] {
+            let line = format!(" ({ts}){bytes}");
+            assert!(looks_like_timed_pretty(line.trim_start()), "{line}");
+            assert!(!looks_like_log(line.trim_start()), "{line}");
+            let f = parse_line(&line).unwrap();
+            assert_eq!(f.pgn, 60928, "{line}");
+            assert_eq!(f.timestamp.as_deref(), Some(want), "{line}");
+            assert_eq!(
+                f.data.as_slice(),
+                &[0x8E, 0xF2, 0xDD, 0xE8, 0x00, 0x96, 0x64, 0x40]
+            );
+        }
+        assert_eq!(
+            crate::engine::format::detect(" (1436509053.762905)  can0  18EEFF00   [8]  8E F2"),
+            Some(crate::engine::format::InputFormat::Candump)
+        );
+        // `candump -a`'s ASCII column may hold a `#` (byte 23): still the
+        // pretty form, not the log form.
+        let f = parse_line(" (1436509053.762905)  can0  18EEFF00   [2]  23 41   '#A'").unwrap();
+        assert_eq!(f.data.as_slice(), &[0x23, 0x41]);
+        // Only the documented timestamp shapes.
+        for bad in [
+            "(1.2.3)  can0  18EEFF00   [1]  00",
+            "(.5)  can0  18EEFF00   [1]  00",
+            "(2015-07-10x08:17:33.1)  can0  18EEFF00   [1]  00",
+            "(2015-07-10 08:17:33.)  can0  18EEFF00   [1]  00",
+        ] {
+            assert!(!looks_like_timed_pretty(bad), "{bad}");
+        }
     }
 
     #[test]
