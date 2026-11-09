@@ -573,7 +573,7 @@ fn to_encode_value(
         }
         Value::Object(o) => match o.get("value") {
             Some(Value::Number(n)) => Some(raw_number(f, n)?),
-            Some(Value::String(s)) => Some(string_value(f, s)?),
+            Some(Value::String(s)) => Some(string_value(db, f, s)?),
             // -debug writes a bit lookup as {"value":[…],"bytes":…}; the
             // list reads as it does bare, `[]` as no bits set.
             Some(list @ Value::Array(_)) => to_encode_value(db, f, list)?,
@@ -608,7 +608,7 @@ fn to_encode_value(
                 ))
             }
         }
-        Value::String(s) => Some(string_value(f, s)?),
+        Value::String(s) => Some(string_value(db, f, s)?),
         // A bit lookup: the set bits, as `-nv` objects (mask values) or
         // bit names. OR them into one raw value.
         Value::Array(entries) => {
@@ -676,7 +676,7 @@ fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
 /// matched field's description, or a number (64-bit digit strings exactly).
 /// A key/value value of digits stays text, for the encoder to type by its
 /// key. Errors when the string can't be read back for that field.
-fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
+fn string_value(db: &PgnDatabase, f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
     match f.field_type {
         Some(FieldType::StringFix) | Some(FieldType::StringLz) | Some(FieldType::StringLau) => {
             Ok(EncodeValue::Text(s.to_string()))
@@ -713,11 +713,12 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             .map(EncodeValue::Number)
             .ok_or_else(|| anyhow!("field '{}': bad time '{s}'", f.name)),
         // A digit string on a lookup is the raw value beyond the
-        // enumeration (canboatjs renders unknown entries that way);
-        // anything else is a label.
+        // enumeration (canboatjs renders unknown entries that way), unless
+        // the enumeration names an entry so: a keypad's key "1" is a name,
+        // not the value 1. Anything else is a label.
         _ if is_lookup(f) => Ok(match s.parse::<i64>() {
-            Ok(raw) => EncodeValue::Int(raw),
-            Err(_) => EncodeValue::Lookup(s.to_string()),
+            Ok(raw) if !names_entry(db, f, s) => EncodeValue::Int(raw),
+            _ => EncodeValue::Lookup(s.to_string()),
         }),
         // A field that selects the PGN variant, named by its description
         // as the decoder writes it (canboat#1153).
@@ -844,6 +845,13 @@ fn bit_by_name(db: &'static PgnDatabase, f: &'static FieldInfo, name: &str) -> R
         .find(|bv| bv.name == name || bv.id == Some(name))
         .map(|bv| bv.bit)
         .ok_or_else(|| anyhow!("field '{}': unknown bit '{name}'", f.name))
+}
+
+/// Whether `f`'s enumeration has an entry named `name`.
+fn names_entry(db: &PgnDatabase, f: &FieldInfo, name: &str) -> bool {
+    f.lookup_enumeration
+        .and_then(|t| db.lookup(t))
+        .is_some_and(|t| t.values.iter().any(|lv| lv.name == name))
 }
 
 /// Parse analyzer hex-byte strings: `"d1 08 00"`, `"D108"`, with or
@@ -1371,6 +1379,31 @@ mod tests {
                 .unwrap_or_else(|| panic!("{pgn}: skipped\n{line}"));
             assert_eq!(back.data.to_vec(), data, "{pgn}: {line}");
         }
+    }
+
+    /// A lookup entry whose name is digits is written as its name, and read
+    /// back as that entry, not as the number: a ZC1/OP40 keypad's key "1"
+    /// is entry 30, not the value 1.
+    #[test]
+    fn a_lookup_name_of_digits_encodes_as_that_entry() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let data: Vec<u8> = vec![0x41, 0x9f, 0x1d, 0x84, 0x0e, 0x32, 0xb3, 0x1e];
+        let frame = RawFrame::new(None, 1, 65332, 239, 255, data.clone());
+        let decoded = db.decode(&frame).unwrap();
+        for name_value in [false, true] {
+            let opts = crate::engine::output::JsonOptions {
+                name_value,
+                ..Default::default()
+            };
+            let mut line = String::new();
+            crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+            let back = decoded_frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+        }
+        // A digit string the enumeration does not name is still its raw value.
+        let raw = r#"{"pgn":65332,"prio":1,"src":239,"dst":255,"fields":{"manufacturerCode":"Simrad","industryCode":"Marine Industry","address":29,"function":"Key","parameter":12814,"keyEvent":"Press","key":"200"}}"#;
+        let back = decoded_frame_from_json(db, raw).unwrap().unwrap();
+        assert_eq!(back.data[7], 200);
     }
 
     /// A 126208 Command for a proprietary PGN encodes back as it came,
