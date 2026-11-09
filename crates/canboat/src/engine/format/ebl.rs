@@ -83,9 +83,15 @@ pub fn frame_unix_ms(frame: &RawFrame) -> u64 {
         .max(0) as u64
 }
 
+/// The most data bytes an `N2K_MSG_RECEIVED` message is written with: a
+/// whole fast-packet, which is the most an NGT-1 delivers in one and the
+/// most canboat C's `actisense-serial` reads back. The length byte itself
+/// would allow 255 - 11.
+pub const MAX_DATA_LEN: usize = crate::engine::frame::FASTPACKET_MAX_SIZE;
+
 /// Encode `frame` as one `.ebl` record pair — a `TimeUTC` metatag plus an
 /// `N2K_MSG_RECEIVED` message — appended to `out`. Round-trips through
-/// [`EblDecoder`].
+/// [`EblDecoder`]. `frame.data` must hold at most [`MAX_DATA_LEN`] bytes.
 pub fn encode_frame(frame: &RawFrame, out: &mut Vec<u8>) {
     push_tag(
         out,
