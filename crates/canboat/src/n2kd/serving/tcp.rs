@@ -243,14 +243,29 @@ fn stream_accept(
     header: Option<&'static [u8]>,
     stop: Option<Arc<AtomicBool>>,
 ) {
-    accept_until(name, listener, stop, |stream, peer| {
+    let mut clients: Vec<JoinHandle<()>> = Vec::new();
+    let client_stop = stop.clone();
+    accept_until(name, listener, stop.clone(), |stream, peer| {
         log::info!("{name} client connected: {peer}");
         let h = hub.clone();
-        thread::Builder::new()
+        let s = client_stop.clone();
+        clients.retain(|c| !c.is_finished());
+        if let Ok(c) = thread::Builder::new()
             .name(format!("{name}-client"))
-            .spawn(move || run_stream_client(name, stream, h, header))
-            .ok();
+            .spawn(move || run_stream_client(name, stream, h, header, s))
+        {
+            clients.push(c);
+        }
     });
+    // A shutdown-aware server is not done until its clients are: each
+    // closes its socket within a poll of the stop flag, so when this
+    // thread joins, nothing holds the port any more. (A macOS bind of the
+    // port fails while an accepted socket on it is still open.)
+    if stop.is_some() {
+        for c in clients {
+            let _ = c.join();
+        }
+    }
 }
 
 fn run_stream_client(
@@ -258,6 +273,7 @@ fn run_stream_client(
     stream: TcpStream,
     hub: Arc<Hub>,
     header: Option<&'static [u8]>,
+    stop: Option<Arc<AtomicBool>>,
 ) {
     // FIN the read direction so any client write attempts get
     // ECONNRESET / EPIPE instead of silently piling up in the kernel's
@@ -284,7 +300,20 @@ fn run_stream_client(
     // more than one write.
     const MAX_BATCH: usize = 64 * 1024;
     let mut batch: Vec<u8> = Vec::with_capacity(4096);
-    while let Ok(line) = rx.recv() {
+    // A shutdown-aware server's client looks at the stop flag every
+    // ACCEPT_POLL, so it ends (and closes its socket) with the server even
+    // when no line comes; one without blocks until the next line.
+    let next = || match &stop {
+        None => rx.recv().ok(),
+        Some(s) => loop {
+            match rx.recv_timeout(ACCEPT_POLL) {
+                Ok(line) => break Some(line),
+                Err(std::sync::mpsc::RecvTimeoutError::Timeout) if !s.load(Ordering::Relaxed) => {}
+                Err(_) => break None,
+            }
+        },
+    };
+    while let Some(line) = next() {
         batch.clear();
         batch.extend_from_slice(line.as_bytes());
         while batch.len() < MAX_BATCH {
@@ -317,7 +346,7 @@ mod tests {
     /// parallel. Losing that race is not a product defect and must not
     /// fail the run (it did, on loaded macOS CI runners: `Address already
     /// in use (os error 48)`), so take a fresh port and try again.
-    fn spawn_on_a_free_port(stop: &Arc<AtomicBool>) -> (u16, JoinHandle<()>) {
+    fn spawn_on_a_free_port(stop: &Arc<AtomicBool>, hub: &Arc<Hub>) -> (u16, JoinHandle<()>) {
         for _ in 0..16 {
             let port = TcpListener::bind((Ipv4Addr::LOCALHOST, 0))
                 .expect("reserve an ephemeral port")
@@ -328,7 +357,7 @@ mod tests {
                 "test",
                 Ipv4Addr::LOCALHOST,
                 port,
-                Arc::new(Hub::new()),
+                hub.clone(),
                 None,
                 Some(stop.clone()),
             ) {
@@ -354,22 +383,50 @@ mod tests {
     #[test]
     fn shutdown_aware_listener_releases_its_port() {
         let stop = Arc::new(AtomicBool::new(false));
-        let (port, join) = spawn_on_a_free_port(&stop);
+        let hub = Arc::new(Hub::new());
+        let (port, join) = spawn_on_a_free_port(&stop, &hub);
 
-        // The port accepts connections while serving.
-        let mut connected = false;
+        // The port accepts connections while serving. The client stays
+        // connected through the shutdown: its accepted socket is on the
+        // port too, and macOS refuses to bind a port while one is open.
+        let mut client = None;
         for _ in 0..100 {
-            if TcpStream::connect((Ipv4Addr::LOCALHOST, port)).is_ok() {
-                connected = true;
+            if let Ok(c) = TcpStream::connect((Ipv4Addr::LOCALHOST, port)) {
+                client = Some(c);
                 break;
             }
             thread::sleep(Duration::from_millis(20));
         }
-        assert!(connected, "server should accept connections while running");
+        let mut client = client.expect("server should accept connections while running");
+        // Set while connected: macOS refuses the option (EINVAL) on a socket
+        // whose peer has already closed it.
+        client
+            .set_read_timeout(Some(Duration::from_secs(5)))
+            .expect("set read timeout");
+        // Until the server has accepted it, the connection only waits in the
+        // listener's backlog; wait for its client thread to subscribe.
+        for _ in 0..250 {
+            if hub.has_subscribers() {
+                break;
+            }
+            thread::sleep(Duration::from_millis(20));
+        }
+        assert!(hub.has_subscribers(), "the server accepts the connection");
 
-        // Trip the flag; the accept loop must exit and drop the listener.
+        // Trip the flag; the accept loop must exit, drop the listener, and
+        // wait for its client, which closes its socket.
         stop.store(true, Ordering::Relaxed);
         join.join().expect("accept thread joins after shutdown");
+
+        // The client sees the server close its end: end of file, or a reset
+        // (the server shut its read side, so its close may come as an RST),
+        // not a read that times out.
+        let mut buf = [0u8; 16];
+        match std::io::Read::read(&mut client, &mut buf) {
+            Ok(0) => {}
+            Err(e) if e.kind() == std::io::ErrorKind::ConnectionReset => {}
+            other => panic!("the server closes its client connections on shutdown: {other:?}"),
+        }
 
         // Port is free again — a fresh bind succeeds. Deliberately not
         // retried like the setup bind above: this one *is* the assertion,
