@@ -236,6 +236,9 @@ pub fn spawn_stream_server(
         .expect("spawn stream accept"))
 }
 
+/// The accept loop of a stream server: a thread per client, each fed by
+/// its own subscription to `hub`. With a `stop` flag it returns once the
+/// flag trips and every client thread has closed its socket.
 fn stream_accept(
     name: &'static str,
     listener: TcpListener,
@@ -268,6 +271,9 @@ fn stream_accept(
     }
 }
 
+/// Serve one stream client: `header`, then every line `hub` broadcasts,
+/// batched, until the client goes away or (with a `stop` flag) the server
+/// stops.
 fn run_stream_client(
     name: &'static str,
     stream: TcpStream,
@@ -285,8 +291,16 @@ fn run_stream_client(
     // Main: drain the subscription and write to the socket.
     let rx = hub.subscribe();
     let mut stream = stream;
+    // A client that stops reading fills the send buffer and blocks the
+    // write: with a stop flag, each write waits at most ACCEPT_POLL, so the
+    // flag is seen and the server's shutdown never waits on a stalled peer.
+    if stop.is_some()
+        && let Err(e) = stream.set_write_timeout(Some(ACCEPT_POLL))
+    {
+        log::debug!("{name}: set_write_timeout failed: {e}");
+    }
     if let Some(bytes) = header
-        && stream.write_all(bytes).is_err()
+        && !write_until_stopped(&mut stream, bytes, stop.as_deref())
     {
         return;
     }
@@ -322,12 +336,35 @@ fn run_stream_client(
                 Err(_) => break,
             }
         }
-        if stream.write_all(&batch).is_err() {
+        if !write_until_stopped(&mut stream, &batch, stop.as_deref()) {
             break;
         }
     }
     // Closing the write side drops the fd and ends the client.
     drop(stream);
+}
+
+/// Write all of `buf` to a stream client, as `write_all` does, but on a
+/// write timeout (set when the server has a `stop` flag) look at the flag:
+/// keep writing where the last write stopped while the server runs, give
+/// up once it stops. A slow client is not dropped for being slow. `false`
+/// when the client is gone or the server stopped.
+fn write_until_stopped(stream: &mut TcpStream, mut buf: &[u8], stop: Option<&AtomicBool>) -> bool {
+    use std::io::ErrorKind;
+    while !buf.is_empty() {
+        match stream.write(buf) {
+            Ok(0) => return false,
+            Ok(n) => buf = &buf[n..],
+            Err(e) if e.kind() == ErrorKind::Interrupted => {}
+            Err(e) if matches!(e.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) => {
+                if stop.is_none_or(|s| s.load(Ordering::Relaxed)) {
+                    return false;
+                }
+            }
+            Err(_) => return false,
+        }
+    }
+    true
 }
 
 #[cfg(test)]
@@ -375,6 +412,43 @@ mod tests {
         e.chain()
             .filter_map(|c| c.downcast_ref::<std::io::Error>())
             .any(|io| io.kind() == std::io::ErrorKind::AddrInUse)
+    }
+
+    /// A client that stops reading fills its send buffer and blocks the
+    /// server's write; the server still stops (and its accept thread joins)
+    /// within a poll or so, rather than waiting on the stalled peer.
+    #[test]
+    fn a_stalled_client_does_not_block_shutdown() {
+        let stop = Arc::new(AtomicBool::new(false));
+        let hub = Arc::new(Hub::new());
+        let (port, join) = spawn_on_a_free_port(&stop, &hub);
+        let client = TcpStream::connect((Ipv4Addr::LOCALHOST, port)).expect("connect");
+        for _ in 0..250 {
+            if hub.has_subscribers() {
+                break;
+            }
+            thread::sleep(Duration::from_millis(20));
+        }
+        assert!(hub.has_subscribers(), "the server accepts the connection");
+
+        // Far more than both socket buffers hold, and the client never reads.
+        let line: String = "x".repeat(64 * 1024) + "\n";
+        for _ in 0..512 {
+            hub.broadcast(&line);
+        }
+        thread::sleep(Duration::from_millis(500));
+
+        stop.store(true, Ordering::Relaxed);
+        let (done, joined) = std::sync::mpsc::channel();
+        thread::spawn(move || {
+            let _ = join.join();
+            let _ = done.send(());
+        });
+        assert!(
+            joined.recv_timeout(Duration::from_secs(5)).is_ok(),
+            "the server stops although its client stopped reading"
+        );
+        drop(client);
     }
 
     /// A shutdown-aware listener drops its socket when the stop flag trips,
