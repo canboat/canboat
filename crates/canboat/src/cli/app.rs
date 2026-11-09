@@ -74,6 +74,16 @@ enum Command {
 
 /// The `canboat` binary's entry point: argv[0] multiplexing, clap, dispatch.
 pub fn main() -> ExitCode {
+    // `candump -tA` prints the capturing host's local time; read it in the
+    // zone this host knows (`TZ`), as candump2analyzer's `mktime()` does.
+    crate::engine::format::candump::set_local_time_zone(|y, mo, d, h, mi, s| {
+        use chrono::TimeZone as _;
+        let naive = chrono::NaiveDate::from_ymd_opt(y, mo, d)?.and_hms_opt(h, mi, s)?;
+        chrono::Local
+            .from_local_datetime(&naive)
+            .earliest()
+            .map(|t| t.timestamp())
+    });
     // argv[0] multiplexing: a legacy name either runs its own
     // alias-module or rewrites into a `canboat <subcommand>` invocation.
     let argv = match legacy::route(crate::cli::canboat_argv()) {
