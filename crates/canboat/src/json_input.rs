@@ -1406,6 +1406,39 @@ mod tests {
         assert_eq!(back.data[7], 200);
     }
 
+    /// A 126208 Command for a proprietary PGN encodes back as it came,
+    /// whether it gives the Industry Code as parameter 3 or in parameter
+    /// 1's top bits (an Airmar setup tool's Access Level command).
+    #[test]
+    fn a_proprietary_command_encodes_back_with_its_industry_code() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        for hex in [
+            "01,07,ff,00,f8,04,01,87,98,04,01,05,01,07,78,56,34,12",
+            "01,07,ff,00,f8,05,01,87,00,03,04,04,01,05,01,07,78,56,34,12",
+            "01,07,ff,00,f8,05,01,87,00,04,01,03,04,05,01,07,78,56,34,12",
+        ] {
+            let data: Vec<u8> = hex
+                .split(',')
+                .map(|b| u8::from_str_radix(b, 16).unwrap())
+                .collect();
+            let frame = RawFrame::new(None, 0, 126208, 35, 51, data.clone());
+            let decoded = db.decode(&frame).unwrap();
+            for name_value in [false, true] {
+                let opts = crate::engine::output::JsonOptions {
+                    name_value,
+                    ..Default::default()
+                };
+                let mut line = String::new();
+                crate::engine::output::write_json(&mut line, &decoded, &opts).unwrap();
+                assert!(line.contains("accessSeedKey"), "{line}");
+                let back = decoded_frame_from_json(db, &line)
+                    .unwrap_or_else(|e| panic!("nv={name_value}: {e}\n{line}"))
+                    .unwrap();
+                assert_eq!(back.data.to_vec(), data, "nv={name_value}: {line}");
+            }
+        }
+    }
+
     /// A gateway's own record, canboat's startup record and a single frame
     /// shorter than 8 bytes come back as they were read (canboat#1152).
     #[test]
