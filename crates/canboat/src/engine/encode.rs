@@ -1038,10 +1038,12 @@ impl PgnBuilder {
         }
         let pairs = self.staged_parameter_pairs();
         // A proprietary target can only be narrowed by Manufacturer
-        // (field 1) followed by Industry Code (field 3); like the C,
-        // bail out rather than guess when they don't lead the list.
+        // (field 1), normally followed by Industry Code (field 3); like the
+        // C, bail out rather than guess when the manufacturer doesn't lead
+        // the list. Without field 3 the industry rides in parameter 1's top
+        // bits (see `industry_in_manufacturer`), so the manufacturer picks.
         if crate::engine::decode::is_pgn_proprietary(target_pgn)
-            && (pairs.len() < 2 || pairs[0].0 != 1 || pairs[1].0 != 3)
+            && pairs.first().is_none_or(|p| p.0 != 1)
         {
             return None;
         }
@@ -1076,6 +1078,27 @@ impl PgnBuilder {
             return Some(cand);
         }
         None
+    }
+
+    /// The Industry Code to write in parameter `param_idx`'s top bits: only
+    /// for parameter 1, the Manufacturer of a proprietary target, when the
+    /// command gives no Industry Code parameter. It is the target
+    /// definition's, as the decoder takes it from there.
+    fn industry_in_manufacturer(
+        &self,
+        target_pgn: u32,
+        target_info: &'static PgnInfo,
+        param_idx: u32,
+    ) -> Option<u64> {
+        if param_idx != 1
+            || !crate::engine::decode::is_pgn_proprietary(target_pgn)
+            || self.staged_parameter_pairs().iter().any(|p| p.0 == 3)
+        {
+            return None;
+        }
+        crate::engine::decode::parameter_field(target_info, 3)
+            .and_then(|f| f.match_value)
+            .map(|v| v as u64 & 0b111)
     }
 
     /// Write a dynamic value given as a value: `fields[at]`, in the scope
@@ -1417,6 +1440,17 @@ impl PgnBuilder {
                     .ok_or(EncodeError::NotFixedLength(target_field.name))?
                     as usize;
                 write_bits(buf, next_bit, bl, raw);
+                // A proprietary target's Manufacturer with no Industry Code
+                // parameter after it: its two bytes are the whole header
+                // word, the reserved bits and the Industry Code on top, as
+                // the decoder reads it (match_pgn_by_parameters).
+                if let Some(industry) =
+                    self.industry_in_manufacturer(target_pgn, target_info, param_idx)
+                    && bl == 11
+                {
+                    write_bits(buf, next_bit, 2, 0b11);
+                    write_bits(buf, next_bit, 3, industry);
+                }
                 // The decoder consumes VARIABLE values rounded up to
                 // whole bytes. Pad with 0s: that is what canboatjs
                 // transmits and what fielded devices have accepted for

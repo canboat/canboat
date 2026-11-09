@@ -218,6 +218,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
   const Pgn *pgn = searchForPgn(pgnId);
   int        prn;
   int        d;
+  int        industry = -1; // the Industry Code, when it comes inside parameter 1 rather than as parameter 3
 
   if (pgn == NULL)
   {
@@ -236,10 +237,18 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
     // [4]    = 0x03 = field 3 = Industry Code
     // [5]    = industry code
     //
-    if (length < 6 || data[0] < 2 || data[1] != 0x01 || data[4] != 3)
+    // Some devices (an Airmar setup tool, say) give only parameter 1, its two
+    // bytes holding the whole header word: the 11-bit company, 2 reserved bits
+    // and the 3-bit Industry Code in the top bits. Then the Industry Code is
+    // taken from there.
+    if (length < 4 || data[0] < 1 || data[1] != 0x01)
     {
       logError("PGN %u: refers to proprietary PGN but does not contain Company and Industry field values\n", pgnId);
       return NULL;
+    }
+    if (length < 6 || data[0] < 2 || data[4] != 3)
+    {
+      industry = (data[3] >> 5) & 0x07;
     }
   }
 
@@ -310,6 +319,19 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
                  desiredValue);
       }
       d += bytes;
+    }
+    if (matchedFixedField && industry >= 0)
+    {
+      const Field *field = getParameterField(pgn, 3);
+
+      if (field != NULL && field->hasMatchValue && field->matchValue != industry)
+      {
+        logDebug("getMatchingPgnByParameters: PGN %u industry %d in parameter 1 does not match %" PRId64 "\n",
+                 prn,
+                 industry,
+                 field->matchValue);
+        matchedFixedField = false;
+      }
     }
     if (matchedFixedField)
     {
