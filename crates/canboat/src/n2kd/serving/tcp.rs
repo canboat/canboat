@@ -322,10 +322,15 @@ fn run_stream_client(
     // when no line comes; one without blocks until the next line.
     let next = || match &stop {
         None => rx.recv().ok(),
+        // The flag is looked at before every receive, so a client that
+        // keeps getting lines still stops with the server.
         Some(s) => loop {
+            if s.load(Ordering::Relaxed) {
+                break None;
+            }
             match rx.recv_timeout(ACCEPT_POLL) {
                 Ok(line) => break Some(line),
-                Err(std::sync::mpsc::RecvTimeoutError::Timeout) if !s.load(Ordering::Relaxed) => {}
+                Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {}
                 Err(_) => break None,
             }
         },
@@ -347,23 +352,26 @@ fn run_stream_client(
     drop(stream);
 }
 
-/// Write all of `buf` to a stream client, as `write_all` does, but on a
-/// write timeout (set when the server has a `stop` flag) look at the flag:
-/// keep writing where the last write stopped while the server runs, give
-/// up once it stops. A slow client is not dropped for being slow. `false`
-/// when the client is gone or the server stopped.
+/// Write all of `buf` to a stream client, as `write_all` does, but with a
+/// `stop` flag look at it before every write (each of which, with the write
+/// timeout set, waits at most ACCEPT_POLL): keep writing where the last
+/// write stopped while the server runs, give up once it stops. A slow
+/// client is not dropped for being slow. `false` when the client is gone or
+/// the server stopped.
 fn write_until_stopped(stream: &mut TcpStream, mut buf: &[u8], stop: Option<&AtomicBool>) -> bool {
     use std::io::ErrorKind;
     while !buf.is_empty() {
+        if stop.is_some_and(|s| s.load(Ordering::Relaxed)) {
+            return false;
+        }
         match stream.write(buf) {
             Ok(0) => return false,
             Ok(n) => buf = &buf[n..],
             Err(e) if e.kind() == ErrorKind::Interrupted => {}
-            Err(e) if matches!(e.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) => {
-                if stop.is_none_or(|s| s.load(Ordering::Relaxed)) {
-                    return false;
-                }
-            }
+            // Timed out: the flag is looked at again before the next write.
+            Err(e)
+                if stop.is_some()
+                    && matches!(e.kind(), ErrorKind::WouldBlock | ErrorKind::TimedOut) => {}
             Err(_) => return false,
         }
     }
@@ -460,6 +468,55 @@ mod tests {
             "the server stops although its client stopped reading"
         );
         drop(client);
+    }
+
+    /// A client that keeps getting lines, from a busy hub, and reads them
+    /// all still stops with the server: the flag is looked at before every
+    /// receive and write, not only when the subscription is quiet.
+    #[test]
+    fn a_busy_client_stops_with_the_server() {
+        let stop = Arc::new(AtomicBool::new(false));
+        let hub = Arc::new(Hub::new());
+        let (port, join) = spawn_on_a_free_port(&stop, &hub);
+        let mut client = TcpStream::connect((Ipv4Addr::LOCALHOST, port)).expect("connect");
+        for _ in 0..250 {
+            if hub.has_subscribers() {
+                break;
+            }
+            thread::sleep(Duration::from_millis(20));
+        }
+        assert!(hub.has_subscribers(), "the server accepts the connection");
+
+        // The client reads everything; a producer broadcasts without pause.
+        let reader = thread::spawn(move || {
+            let mut buf = [0u8; 64 * 1024];
+            while matches!(std::io::Read::read(&mut client, &mut buf), Ok(n) if n > 0) {}
+        });
+        let producing = Arc::new(AtomicBool::new(true));
+        let producer = {
+            let (hub, producing) = (hub.clone(), producing.clone());
+            thread::spawn(move || {
+                while producing.load(Ordering::Relaxed) {
+                    hub.broadcast("busy line\n");
+                }
+            })
+        };
+        thread::sleep(Duration::from_millis(300));
+
+        stop.store(true, Ordering::Relaxed);
+        let (done, joined) = std::sync::mpsc::channel();
+        thread::spawn(move || {
+            let _ = join.join();
+            let _ = done.send(());
+        });
+        let stopped = joined.recv_timeout(Duration::from_secs(5)).is_ok();
+        producing.store(false, Ordering::Relaxed);
+        let _ = producer.join();
+        assert!(
+            stopped,
+            "the server stops although its client keeps getting lines"
+        );
+        let _ = reader.join();
     }
 
     /// A shutdown-aware listener drops its socket when the stop flag trips,
