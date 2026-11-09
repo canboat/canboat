@@ -126,20 +126,22 @@ static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSiz
   {
     // candump -tA prints the capturing host's localtime(); read it as local
     // time in this host's zone (TZ) and write UTC, as every other timestamp is.
-    struct tm local = {0};
-    time_t    unix;
-    char      hms[24];
+    struct tm  local = {0};
+    struct tm *utc;
+    time_t     localEpoch; // not `unix`: GCC predefines that as 1
+    char       hms[24];
 
     sscanf(ts, "%d-%d-%d %d:%d:%d", &local.tm_year, &local.tm_mon, &local.tm_mday, &local.tm_hour, &local.tm_min, &local.tm_sec);
     local.tm_year -= 1900;
     local.tm_mon -= 1;
     local.tm_isdst = -1;
-    unix           = mktime(&local);
-    if (unix == (time_t) -1)
+    localEpoch     = mktime(&local);
+    utc            = (localEpoch == (time_t) -1) ? NULL : gmtime(&localEpoch);
+    if (utc == NULL)
     {
       return false;
     }
-    strftime(hms, sizeof(hms), "%F-%T", gmtime(&unix));
+    strftime(hms, sizeof(hms), "%F-%T", utc);
     snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
     return true;
   }
@@ -153,6 +155,10 @@ static bool parseTimedPretty(const char *p, char *timestamp, size_t timestampSiz
     bool       epoch = strcspn(ts, ".") >= 9; // epoch seconds have nine or ten digits
     char       hms[24];
 
+    if (utc == NULL)
+    {
+      return false;
+    }
     strftime(hms, sizeof(hms), epoch ? "%F-%T" : "%T", utc);
     snprintf(timestamp, timestampSize, "%s.%03d", hms, fractionMillis(frac ? frac + 1 : NULL));
   }

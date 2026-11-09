@@ -542,7 +542,9 @@ fn candump_timed_matches_candump2analyzer() {
 }
 
 /// `candump -tA` prints the capturing host's local time: read in the zone
-/// `TZ` names and written in UTC, daylight saving time included.
+/// `TZ` names and written in UTC, daylight saving time included. Unix only:
+/// on Windows the local zone is the system's, whatever `TZ` says.
+#[cfg(unix)]
 #[test]
 fn candump_local_time_is_read_in_the_hosts_zone() {
     let input = " (2023-11-14 22:13:19.123456)  can0  09F80103   [8]  C1 30 8A C4 0C 5D E3 43\n\

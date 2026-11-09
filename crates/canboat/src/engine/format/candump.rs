@@ -257,7 +257,7 @@ pub(crate) type LocalToUnix = fn(i32, u32, u32, u32, u32, u32) -> Option<i64>;
 static LOCAL_TO_UNIX: std::sync::OnceLock<LocalToUnix> = std::sync::OnceLock::new();
 
 /// Read `candump -tA` times as local time in the zone `to_unix` knows,
-/// usually the reading host's (`TZ`), as `candump2analyzer`'s `mktime()`
+/// usually the reading host's (`TZ` on Unix), as `candump2analyzer`'s `mktime()`
 /// does. A capture says nothing of the zone it was made in. Without this,
 /// such a time is kept as written.
 pub(crate) fn set_local_time_zone(to_unix: LocalToUnix) {
