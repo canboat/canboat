@@ -294,10 +294,13 @@ fn run_stream_client(
     // A client that stops reading fills the send buffer and blocks the
     // write: with a stop flag, each write waits at most ACCEPT_POLL, so the
     // flag is seen and the server's shutdown never waits on a stalled peer.
+    // Without the timeout such a write could block for good, and with it
+    // the server's shutdown: close the client instead.
     if stop.is_some()
         && let Err(e) = stream.set_write_timeout(Some(ACCEPT_POLL))
     {
-        log::debug!("{name}: set_write_timeout failed: {e}");
+        log::warn!("{name}: closing client, set_write_timeout failed: {e}");
+        return;
     }
     if let Some(bytes) = header
         && !write_until_stopped(&mut stream, bytes, stop.as_deref())
@@ -437,6 +440,14 @@ mod tests {
             hub.broadcast(&line);
         }
         thread::sleep(Duration::from_millis(500));
+        // The client thread is still serving: a broadcast keeps a
+        // subscription only while its receiver lives. Having 32 MiB to write
+        // to a client that reads nothing, its write is stalled.
+        hub.broadcast("\n");
+        assert!(
+            hub.has_subscribers(),
+            "the client thread is still writing when the server stops"
+        );
 
         stop.store(true, Ordering::Relaxed);
         let (done, joined) = std::sync::mpsc::channel();
