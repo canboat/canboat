@@ -213,11 +213,21 @@ const Field *getParameterField(const Pgn *pgn, int index)
   return &pgn->fieldList[(index - start) % count + start - 1];
 }
 
+/*
+ * The definition of PGN `pgnId` that a 126208 group function's parameter list
+ * describes. `data` starts at the parameter count, followed by that many
+ * {field index, value} pairs. The first definition whose match fields all
+ * agree with the parameters given wins. For a proprietary PGN the Manufacturer
+ * (parameter 1) is required; its Industry Code comes from parameter 3 or, when
+ * no parameter 3 is given, from parameter 1's top bits. Returns NULL when
+ * nothing matches.
+ */
 const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length)
 {
   const Pgn *pgn = searchForPgn(pgnId);
   int        prn;
   int        d;
+  int        industry = -1; // the Industry Code, when it comes inside parameter 1 rather than as parameter 3
 
   if (pgn == NULL)
   {
@@ -236,10 +246,18 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
     // [4]    = 0x03 = field 3 = Industry Code
     // [5]    = industry code
     //
-    if (length < 6 || data[0] < 2 || data[1] != 0x01 || data[4] != 3)
+    // Some devices (an Airmar setup tool, say) give only parameter 1, its two
+    // bytes holding the whole header word: the 11-bit company, 2 reserved bits
+    // and the 3-bit Industry Code in the top bits. Then the Industry Code is
+    // taken from there.
+    if (length < 4 || data[0] < 1 || data[1] != 0x01)
     {
       logError("PGN %u: refers to proprietary PGN but does not contain Company and Industry field values\n", pgnId);
       return NULL;
+    }
+    if (length < 6 || data[0] < 2 || data[4] != 3)
+    {
+      industry = (data[3] >> 5) & 0x07;
     }
   }
 
@@ -255,6 +273,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
   for (prn = pgn->pgn; pgn->pgn == prn; pgn++)
   {
     bool matchedFixedField = true;
+    bool explicitIndustry  = false; // a parameter 3 anywhere in the list
 
     logDebug("getMatchingPgnByParameters: PGN %u parameters %d try match with manufacturer specific '%s'\n",
              prn,
@@ -275,6 +294,10 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
     {
       int index = data[d++];
 
+      if (index == 3)
+      {
+        explicitIndustry = true;
+      }
       logDebug("getMatchingPgnByParameters: offset %d parameter #%d\n", d, index);
       const Field *field = getParameterField(pgn, index);
       if (field == NULL)
@@ -310,6 +333,19 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
                  desiredValue);
       }
       d += bytes;
+    }
+    if (matchedFixedField && industry >= 0 && !explicitIndustry)
+    {
+      const Field *field = getParameterField(pgn, 3);
+
+      if (field != NULL && field->hasMatchValue && field->matchValue != industry)
+      {
+        logDebug("getMatchingPgnByParameters: PGN %u industry %d in parameter 1 does not match %" PRId64 "\n",
+                 prn,
+                 industry,
+                 field->matchValue);
+        matchedFixedField = false;
+      }
     }
     if (matchedFixedField)
     {

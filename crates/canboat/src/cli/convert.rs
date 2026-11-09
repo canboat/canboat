@@ -46,7 +46,7 @@ enum OutFormat {
     /// Actisense N2K ASCII: one reassembled message per line, `A<time> …`.
     #[value(name = "n2k-ascii", alias = "actisense")]
     Actisense,
-    /// Actisense `.ebl` binary log (raw frames).
+    /// Actisense `.ebl` binary log, one N2K message per record.
     #[value(name = "actisense-ebl", alias = "ebl")]
     ActisenseEbl,
     /// ShipModul MiniPlex `$MXPGN` sentences, one CAN frame each.
@@ -216,7 +216,7 @@ Output formats (--to, default json):
   text           canboat human-readable text, one line per record
   raw-ascii      RAW ASCII lines, as a YDWG-02 sends them (raw frames)
   n2k-ascii      Actisense N2K ASCII lines (reassembled messages)
-  actisense-ebl  Actisense .ebl binary log (raw frames)
+  actisense-ebl  Actisense .ebl binary log (whole messages)
   mxpgn          $MXPGN sentences, as a ShipModul MiniPlex sends them (raw frames)
   actisense-mxpgn  $MXPGN sentences, as an Actisense gateway sends them (raw frames)
   seasmart       $PCDIN sentences, as a SeaSmart gateway takes them (whole messages)
@@ -490,7 +490,11 @@ fn convert_raw<W: Write>(
     let binary_or_json = binary.is_some() || args.from == Some(FromFormat::Json);
     let joined = matches!(
         args.to,
-        OutFormat::Mxpgn | OutFormat::ActisenseMxpgn | OutFormat::SeaSmart
+        OutFormat::Actisense
+            | OutFormat::ActisenseEbl
+            | OutFormat::Mxpgn
+            | OutFormat::ActisenseMxpgn
+            | OutFormat::SeaSmart
     );
     let mut manufacturers = manufacturers.map(|list| {
         let mut filter =
@@ -518,9 +522,9 @@ fn convert_raw<W: Write>(
         }
         .protocol(protocol)
         .ignore_checksum(args.ignore_checksum);
-        // MXPGN splits a fast-packet into its frames itself, and SeaSmart
-        // carries it whole, so both need whole messages; the binary
-        // readers above join them already.
+        // N2K ASCII, an .ebl's N2K messages and SeaSmart carry a fast-packet
+        // whole, and MXPGN splits it into its frames itself, so all need
+        // whole messages; the binary readers above join them already.
         if joined {
             Box::new(Joined::new(lines, protocol))
         } else if let Some(filter) = manufacturers.take() {

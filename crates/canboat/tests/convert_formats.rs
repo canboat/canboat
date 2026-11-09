@@ -162,6 +162,47 @@ fn a_short_pseudo_pgn_is_counted_when_frames_are_joined() {
     }
 }
 
+/// N2K ASCII and an `.ebl`'s N2K records carry whole messages: a
+/// fast-packet read as its frames is joined first, not written one frame
+/// per message.
+#[test]
+fn n2k_ascii_and_ebl_get_whole_messages() {
+    let input = "$MXPGN,01F805,3824,C69C803AF1E62B00*16\r\n\
+                 $MXPGN,01F805,3824,EB49AA3812000D01*60\r\n\
+                 $MXPGN,01F805,3824,FB95440C00075102*6D\r\n\
+                 $MXPGN,01F805,3824,0033E14000B81503*1A\r\n\
+                 $MXPGN,01F805,3824,09FC130000000004*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFF008C005A05*1D\r\n\
+                 $MXPGN,01F805,3824,FFFFFFFFFF007F06*60\r\n\
+                 $MXPGN,01F801,2801,C1308AC40C5DE343*19\r\n";
+    let ascii = run(
+        &["convert", "--from", "mxpgn", "--to", "n2k-ascii"],
+        input.as_bytes(),
+    );
+    let ascii = String::from_utf8(ascii).unwrap();
+    let lines: Vec<&str> = ascii.lines().collect();
+    assert_eq!(lines.len(), 2, "{ascii}");
+    let gnss = lines[0].split(' ').collect::<Vec<_>>();
+    assert_eq!(gnss[2], "1F805", "{ascii}");
+    assert_eq!(gnss[3].len(), 2 * 43, "{ascii}");
+
+    let ebl = run(
+        &["convert", "--from", "mxpgn", "--to", "actisense-ebl"],
+        input.as_bytes(),
+    );
+    let back = run(
+        &["convert", "--from", "actisense-ebl", "--to", "n2k-ascii"],
+        &ebl,
+    );
+    let back = String::from_utf8(back).unwrap();
+    let data = |s: &str| -> Vec<String> {
+        s.lines()
+            .map(|l| l.split(' ').skip(1).collect::<Vec<_>>().join(" "))
+            .collect()
+    };
+    assert_eq!(data(&back), data(&ascii), "{back}");
+}
+
 /// A fast-packet in its `$MXPGN` frames comes out in the same frames: they
 /// are joined first, not split a second time.
 #[test]
@@ -529,6 +570,58 @@ fn candump_angstrom_matches_candump2analyzer() {
 fn candump_bad_lengths_match_candump2analyzer() {
     assert_eq!(candump_matches_candump2analyzer("angstrom-bad-length"), 5);
     assert_eq!(candump_matches_candump2analyzer("debian-bad-length"), 2);
+}
+
+/// candump's pretty style after a `candump -t` timestamp: epoch seconds,
+/// a local date and time, and seconds since the previous or first frame
+/// (#1187). The timestamps are checked in the candump reader's own tests.
+#[test]
+fn candump_timed_matches_candump2analyzer() {
+    for name in ["candump-t-epoch", "candump-t-date", "candump-t-relative"] {
+        assert_eq!(candump_matches_candump2analyzer(name), 2, "{name}");
+    }
+}
+
+/// `candump -tA` prints the capturing host's local time: read in the zone
+/// `TZ` names and written in UTC, daylight saving time included. Unix only:
+/// on Windows the local zone is the system's, whatever `TZ` says.
+#[cfg(unix)]
+#[test]
+fn candump_local_time_is_read_in_the_hosts_zone() {
+    let input = " (2023-11-14 22:13:19.123456)  can0  09F80103   [8]  C1 30 8A C4 0C 5D E3 43\n\
+                  (2023-07-14 22:13:19.123456)  can0  09F80103   [8]  C1 30 8A C4 0C 5D E3 43\n";
+    for (tz, want) in [
+        (
+            "UTC",
+            ["2023-11-14T22:13:19.123Z", "2023-07-14T22:13:19.123Z"],
+        ),
+        (
+            "Europe/Amsterdam",
+            ["2023-11-14T21:13:19.123Z", "2023-07-14T20:13:19.123Z"],
+        ),
+    ] {
+        let mut child = Command::new(canboat())
+            .args(["convert", "--to", "plain"])
+            .env("TZ", tz)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .expect("spawn canboat");
+        child
+            .stdin
+            .as_mut()
+            .unwrap()
+            .write_all(input.as_bytes())
+            .expect("write stdin");
+        let out = child.wait_with_output().expect("wait canboat");
+        let got: Vec<String> = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|l| l.split(',').next().unwrap_or("").to_string())
+            .collect();
+        assert_eq!(got, want, "TZ={tz}");
+    }
 }
 
 /// One BDTP-framed BST-95 message from the bus: `data` (at most 8 bytes)

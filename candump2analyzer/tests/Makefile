@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 CANDUMP2ANALYZER=$(TARGETDIR)/candump2analyzer
 TEMPDIR=/tmp
 
-.PHONY: test-pcan-view test-angstrom test-bad-length tests all
+.PHONY: test-pcan-view test-angstrom test-bad-length test-timed tests all
 
 all:	tests
 
@@ -34,7 +34,7 @@ test-pcan-view:
 	$(CANDUMP2ANALYZER) pcan-view.in > $(TEMPDIR)/pcan-view.out 2> $(TEMPDIR)/pcan-view.err
 	diff $(TEMPDIR)/pcan-view.out pcan-view.out
 
-tests:	test-pcan-view test-angstrom test-bad-length
+tests:	test-pcan-view test-angstrom test-bad-length test-timed
 
 #
 # The Angstrom candump style ("<0x18eeff01> [8] 05 a0 ..."), FMT_1. Its lines
@@ -56,4 +56,19 @@ test-bad-length:
 	  $(CANDUMP2ANALYZER) $$f.in 2> $(TEMPDIR)/$$f.err | cut -d, -f2- > $(TEMPDIR)/$$f.out || exit 1; \
 	  diff $(TEMPDIR)/$$f.out $$f.out || exit 1; \
 	  diff $(TEMPDIR)/$$f.err $$f.err || exit 1; \
+	done
+
+#
+# The pretty (Debian) style after the timestamp `candump -t` puts in front of
+# it: epoch seconds (-ta), a local date and time (-tA), seconds since the
+# previous or first frame (-td, -tz), FMT_7 (#1187). -tA is local time, read
+# in the zone TZ names (Amsterdam: UTC+1 in November). The frames are checked
+# against <name>.out, as the Rust candump reader is
+# (crates/canboat/tests/convert_formats.rs), the timestamps against <name>.ts.
+#
+test-timed:
+	for f in candump-t-epoch candump-t-date candump-t-relative; do \
+	  TZ=Europe/Amsterdam $(CANDUMP2ANALYZER) $$f.in > $(TEMPDIR)/$$f.full 2> $(TEMPDIR)/$$f.err || exit 1; \
+	  cut -d, -f2- $(TEMPDIR)/$$f.full | diff - $$f.out || exit 1; \
+	  cut -d, -f1 $(TEMPDIR)/$$f.full | diff - $$f.ts || exit 1; \
 	done

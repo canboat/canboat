@@ -286,6 +286,19 @@ fn pgn_126208_request_126720_json() {
     );
 }
 
+/// 126208 Commands for proprietary 65287 (test-pgn-126208-command-65287 in
+/// analyzer/tests/): one that gives the Industry Code in parameter 1's top
+/// bits rather than as parameter 3 resolves Airmar's Access Level, as the
+/// same command with both parameters does.
+#[test]
+fn pgn_126208_command_65287_json() {
+    run_case(
+        "pgn-126208-command-65287.in",
+        "pgn-126208-command-65287.out",
+        &["--json", "--nv", "--fixtime", "pgn-126208-command-65287"],
+    );
+}
+
 /// `-si`: the database's non-SI units leave in SI (test-si-units in
 /// analyzer/tests/Makefile) — kWh/Ah/% as J/C/ratio (65005, 127505,
 /// 127506, 127513, 130576 signed), rpm as Hz (127488, 130825), L and L/h

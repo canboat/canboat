@@ -464,7 +464,23 @@ impl<W: Write> EblWriter<W> {
 }
 
 impl<W: Write> FrameWriter for EblWriter<W> {
+    /// Write `frame` as a `TimeUTC` metatag and an `N2K_MSG_RECEIVED`
+    /// record, after the file's preamble on the first call. A message
+    /// longer than [`MAX_DATA_LEN`](crate::engine::format::ebl::MAX_DATA_LEN)
+    /// is left out with a warning.
     fn write_frame(&mut self, frame: &RawFrame) -> io::Result<()> {
+        // A message longer than an N2K record holds (an ISO TP one, say)
+        // would get a length byte that wraps: skipped with a warning, as the
+        // MXPGN and SeaSmart writers skip what they cannot carry.
+        if frame.data.len() > crate::engine::format::ebl::MAX_DATA_LEN {
+            log::warn!(
+                "not writing PGN {}: {} bytes exceed an .ebl record's {}",
+                frame.pgn,
+                frame.data.len(),
+                crate::engine::format::ebl::MAX_DATA_LEN
+            );
+            return Ok(());
+        }
         self.buf.clear();
         if !self.started {
             self.started = true;
@@ -768,6 +784,39 @@ impl FrameWriter for crate::io::device::FrameSender {
 mod tests {
     use super::*;
     use std::io::Cursor;
+
+    /// An `.ebl` N2K record is written with at most a fast-packet's 223
+    /// data bytes, as an NGT-1 delivers and canboat C reads them: one that
+    /// long reads back whole, a longer one (an ISO TP message) is left out
+    /// rather than written in a record other readers refuse, or with a
+    /// length byte that wraps.
+    #[test]
+    fn ebl_writer_leaves_out_what_a_record_cannot_hold() {
+        let frame = |len: usize| {
+            RawFrame::new(
+                Some("2023-01-01T00:00:00.000Z".into()),
+                6,
+                126208,
+                1,
+                255,
+                (0..len).map(|i| i as u8),
+            )
+        };
+        let mut out = Vec::new();
+        {
+            let mut w = EblWriter::new(&mut out);
+            w.write_frame(&frame(300)).unwrap();
+            w.write_frame(&frame(crate::engine::format::ebl::MAX_DATA_LEN + 1))
+                .unwrap();
+            w.write_frame(&frame(crate::engine::format::ebl::MAX_DATA_LEN))
+                .unwrap();
+            w.flush().unwrap();
+        }
+        let mut r = EblReader::new(Cursor::new(out));
+        let back = r.read_frame().unwrap().expect("the 244-byte message");
+        assert_eq!(back.data.len(), crate::engine::format::ebl::MAX_DATA_LEN);
+        assert!(r.read_frame().unwrap().is_none());
+    }
 
     #[test]
     fn line_reader_yields_frames_and_skips_noise() {
