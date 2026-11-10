@@ -1,0 +1,147 @@
+pgn: 130822
+id: navicoUdbDatabaseTableDump15
+description: 'Navico: UDB Database, Table Dump'
+type: Fast
+variantOrder: 14
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Object Dump (Command 6) of Section 15, which holds tables of 32-bit floats; a B&G H5000 CPU broadcasts Sections
+  11 to 15 and 18 about once a minute. After the Token come one or more tables, each a 16-bit count followed by that many
+  records of a length byte (4) and a 32-bit float. Sections 11 to 14 and 18 hold tables of 7 values, which look like wind
+  and boat speed correction tables; Section 15 holds tables of 22 values, and the H5000 cuts its dump off at the 223-byte
+  Fast Packet maximum. Only the first table is decoded: the count of the next table follows a repeating set, which a PGN definition
+  cannot express. With -empty the rest of the dump is shown as trailing bytes.'
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Dump
+  match: 6
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+  match: 15
+  primaryKey: true
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object
+- id: count1
+  name: Table 1 Count
+  type: UINT16
+- repeat:
+    countField: count1
+    fields:
+    - id: length1
+      name: Length
+      type: UINT8
+      description: Always 4
+    - id: value1
+      name: Value
+      type: FLOAT
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,27,255,223,13,99,ff,06,00,0f,00,97,fe,60,04,00,a2,83,16,00,04,00,00,80,40,04,00,00,00,3f,04,cd,cc,cc,3f,04,cd,cc,0c,40,04,cd,cc,2c,40,04,00,00,40,40,04,33,33,53,40,04,33,33,53,40,04,33,33,53,40,04,00,00,40,40,04,33,33,33,40,04,00,00,20,40,04,cd,cc,0c,40,04,00,00,00,40,04,33,33,f3,3f,04,66,66,e6,3f,04,66,66,e6,3f,04,9a,99,d9,3f,04,cd,cc,0c,40,04,00,00,64,42,04,cd,cc,0c,40,04,00,00,09,43,16,00,04,00,00,c0,40,04,00,00,80,3f,04,9a,99,19,40,04,cd,cc,4c,40,04,00,00,80,40,04,cd,cc,8c,40,04,9a,99,99,40,04,9a,99,99,40,04,9a,99,99,40,04,00,00,90,40,04,33,33,83,40,04,66,66,66,40,04,cd,cc,4c,40,04,00,00,40,40,04,33,33,33,40,04,cd,cc,2c,40,04,cd,cc,2c,40,04,66,66,26,40,04,3d,0a,47,40"  # from h5000-settings-dumps.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 15
+    item: 0
+    objectValue: 65175
+    sub: "0x600400"
+    token: 33698
+    count1: 22
+    length1: 4
+    value1: 4.0000
+    length1.2: 4
+    value1.2: 0.5000
+    length1.3: 4
+    value1.3: 1.6000
+    length1.4: 4
+    value1.4: 2.2000
+    length1.5: 4
+    value1.5: 2.7000
+    length1.6: 4
+    value1.6: 3.0000
+    length1.7: 4
+    value1.7: 3.3000
+    length1.8: 4
+    value1.8: 3.3000
+    length1.9: 4
+    value1.9: 3.3000
+    length1.10: 4
+    value1.10: 3.0000
+    length1.11: 4
+    value1.11: 2.8000
+    length1.12: 4
+    value1.12: 2.5000
+    length1.13: 4
+    value1.13: 2.2000
+    length1.14: 4
+    value1.14: 2.0000
+    length1.15: 4
+    value1.15: 1.9000
+    length1.16: 4
+    value1.16: 1.8000
+    length1.17: 4
+    value1.17: 1.8000
+    length1.18: 4
+    value1.18: 1.7000
+    length1.19: 4
+    value1.19: 2.2000
+    length1.20: 4
+    value1.20: 57.0000
+    length1.21: 4
+    value1.21: 2.2000
+    length1.22: 4
+    value1.22: 137.0000

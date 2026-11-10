@@ -1,0 +1,117 @@
+pgn: 130822
+id: navicoUdbDatabaseTableDump13
+description: 'Navico: UDB Database, Table Dump'
+type: Fast
+variantOrder: 12
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Object Dump (Command 6) of Section 13, which holds tables of 32-bit floats; a B&G H5000 CPU broadcasts Sections
+  11 to 15 and 18 about once a minute. After the Token come one or more tables, each a 16-bit count followed by that many
+  records of a length byte (4) and a 32-bit float. Sections 11 to 14 and 18 hold tables of 7 values, which look like wind
+  and boat speed correction tables; Section 15 holds tables of 22 values, and the H5000 cuts its dump off at the 223-byte
+  Fast Packet maximum. Only the first table is decoded: the count of the next table follows a repeating set, which a PGN definition
+  cannot express. With -empty the rest of the dump is shown as trailing bytes.'
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Dump
+  match: 6
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+  match: 13
+  primaryKey: true
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object
+- id: count1
+  name: Table 1 Count
+  type: UINT16
+- repeat:
+    countField: count1
+    fields:
+    - id: length1
+      name: Length
+      type: UINT8
+      description: Always 4
+    - id: value1
+      name: Value
+      type: FLOAT
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,27,255,125,13,99,ff,06,00,0d,01,06,fc,6f,00,00,85,9e,07,00,04,00,00,00,00,04,00,00,00,bf,04,00,00,80,bf,04,00,00,c0,bf,04,00,00,00,c0,04,00,00,20,c0,04,00,00,40,c0,07,00,04,00,00,00,00,04,00,00,00,bf,04,00,00,80,bf,04,00,00,c0,bf,04,00,00,00,c0,04,00,00,20,c0,04,00,00,40,c0,07,00,04,00,00,00,00,04,00,00,00,00,04,00,00,00,00,04,00,00,00,00,04,00,00,00,00,04,00,00,00,00,04,00,00,00,00"  # from h5000-settings-dumps.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 13
+    item: 1
+    objectValue: 64518
+    sub: "0x6f0000"
+    token: 40581
+    count1: 7
+    length1: 4
+    value1: 0.0000
+    length1.2: 4
+    value1.2: -0.5000
+    length1.3: 4
+    value1.3: -1.0000
+    length1.4: 4
+    value1.4: -1.5000
+    length1.5: 4
+    value1.5: -2.0000
+    length1.6: 4
+    value1.6: -2.5000
+    length1.7: 4
+    value1.7: -3.0000
