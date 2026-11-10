@@ -72,6 +72,11 @@ fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
                         rep.start + rep.count
                     )),
                 }
+            if rep.nested {
+                out.push_str(
+                    "     These fields repeat within each repetition of the first set.\n\n",
+                );
+            }
         }
     }
 

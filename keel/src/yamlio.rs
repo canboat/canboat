@@ -488,17 +488,20 @@ fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
 }
 
 /// A `- repeat:` block as authored: `start` and `count` come from its position
-/// and length in the field list, `countField` names a field by id.
+/// and length in the field list, `countField` names a field by id. A block may
+/// hold one nested block (`inner`), a set that repeats within each record.
 struct RepeatBlock {
     start: u32,
     count: u32,
     count_field: Option<String>,
+    inner: Option<Box<RepeatBlock>>,
 }
 
 const REPEAT_KEYS: [&str; 2] = ["countField", "fields"];
 
 /// Parse the value of a `repeat:` key, appending its fields to `fields`.
-fn repeat_block(y: &Yaml, ctx: &str, fields: &mut Vec<Field>) -> Result<RepeatBlock> {
+/// `nested` is true for a block inside another: that one cannot nest again.
+fn repeat_block(y: &Yaml, ctx: &str, fields: &mut Vec<Field>, nested: bool) -> Result<RepeatBlock> {
     let Yaml::Hash(h) = y else {
         return Err(format!("{ctx}: repeat must be a map"));
     };
@@ -510,30 +513,41 @@ fn repeat_block(y: &Yaml, ctx: &str, fields: &mut Vec<Field>) -> Result<RepeatBl
         }
     }
     let start = fields.len() as u32 + 1;
-    let Some(Yaml::Array(nested)) = get(y, "fields") else {
+    let Some(Yaml::Array(items)) = get(y, "fields") else {
         return Err(format!("{ctx}: repeat block needs a fields list"));
     };
-    if nested.is_empty() {
+    if items.is_empty() {
         return Err(format!("{ctx}: repeat block has no fields"));
     }
-    for fy in nested {
-        if get(fy, "repeat").is_some() {
-            return Err(format!("{ctx}: repeat blocks cannot nest"));
+    let mut inner = None;
+    for fy in items {
+        match get(fy, "repeat") {
+            Some(_) if nested => {
+                return Err(format!("{ctx}: a nested repeat block cannot nest again"));
+            }
+            Some(_) if inner.is_some() => {
+                return Err(format!(
+                    "{ctx}: a repeat block holds at most one nested repeat block"
+                ));
+            }
+            Some(rb) => inner = Some(Box::new(repeat_block(rb, ctx, fields, true)?)),
+            None => fields.push(field(fy, ctx)?),
         }
-        fields.push(field(fy, ctx)?);
     }
     Ok(RepeatBlock {
         start,
-        count: nested.len() as u32,
+        count: fields.len() as u32 + 1 - start,
         count_field: opt_str(y, "countField"),
+        inner,
     })
 }
 
 /// Flatten the authored field list, lifting `- repeat:` blocks out into the
-/// (at most two) repeating sets the emitters and the C runtime expect.
+/// (at most two) repeating sets the emitters and the C runtime expect. A
+/// nested block becomes set 2, inside set 1.
 fn fields_and_repeats(y: &Yaml, ctx: &str) -> Result<(Vec<Field>, Vec<Repeating>)> {
     let mut fields = Vec::new();
-    let mut blocks: Vec<RepeatBlock> = Vec::new();
+    let mut blocks: Vec<(RepeatBlock, bool)> = Vec::new();
     if let Some(Yaml::Array(items)) = get(y, "fields") {
         for item in items {
             match get(item, "repeat") {
@@ -541,15 +555,32 @@ fn fields_and_repeats(y: &Yaml, ctx: &str) -> Result<(Vec<Field>, Vec<Repeating>
                     if blocks.len() == 2 {
                         return Err(format!("{ctx}: at most two repeat blocks per PGN"));
                     }
-                    blocks.push(repeat_block(rb, ctx, &mut fields)?);
+                    let mut b = repeat_block(rb, ctx, &mut fields, false)?;
+                    let inner = b.inner.take();
+                    blocks.push((b, false));
+                    if let Some(inner) = inner {
+                        blocks.push((*inner, true));
+                    }
+                    if blocks.len() > 2 {
+                        return Err(format!(
+                            "{ctx}: a PGN with a nested repeat block has no other repeat block"
+                        ));
+                    }
                 }
-                None => fields.push(field(item, ctx)?),
+                None => {
+                    if blocks.iter().any(|(_, nested)| *nested) {
+                        return Err(format!(
+                            "{ctx}: a repeat block with a nested block must be the last item"
+                        ));
+                    }
+                    fields.push(field(item, ctx)?)
+                }
             }
         }
     }
     let repeats = blocks
         .into_iter()
-        .map(|b| {
+        .map(|(b, nested)| {
             let count_field = match &b.count_field {
                 None => None,
                 Some(id) => Some(
@@ -564,6 +595,7 @@ fn fields_and_repeats(y: &Yaml, ctx: &str) -> Result<(Vec<Field>, Vec<Repeating>
                 count: b.count,
                 start: b.start,
                 count_field,
+                nested,
             })
         })
         .collect::<Result<Vec<_>>>()?;
@@ -765,6 +797,46 @@ fields:
         let p = parse(PGN_YAML).unwrap();
         assert_eq!(p.type_, "Single");
         assert_eq!(p.missing, vec!["SampleData"]);
+    }
+
+    /// A repeat block nested in another becomes set 2, inside set 1: set 1
+    /// counts its fields too, and its count field is a field of set 1.
+    #[test]
+    fn a_nested_repeat_block_is_set_2_inside_set_1() {
+        let nested = PGN_YAML.to_string()
+            + "\
+- repeat:
+    fields:
+    - id: count
+      name: Count
+      type: UINT16
+    - repeat:
+        countField: count
+        fields:
+        - id: value
+          name: Value
+          type: FLOAT
+";
+        let p = parse(&nested).unwrap();
+        let (r1, r2) = (p.repeating1.unwrap(), p.repeating2.unwrap());
+        assert_eq!(
+            (r1.start, r1.count, r1.count_field, r1.nested),
+            (2, 2, None, false)
+        );
+        assert_eq!(
+            (r2.start, r2.count, r2.count_field, r2.nested),
+            (3, 1, Some(2), true)
+        );
+
+        // Nesting stops at two levels, and leaves no room for another set.
+        let deeper = nested.replace(
+            "        - id: value\n",
+            "        - repeat:\n            fields:\n            - id: x\n              name: X\n              type: UINT8\n        - id: value\n",
+        );
+        assert!(parse(&deeper).unwrap_err().contains("cannot nest again"));
+        let another = nested.clone()
+            + "- repeat:\n    fields:\n    - id: y\n      name: Y\n      type: UINT8\n";
+        assert!(parse(&another).is_err());
     }
 
     // The case that motivated the rule: `Plain` is not a packet type, but it

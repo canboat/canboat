@@ -247,6 +247,7 @@ pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>
         let set = &pgn.fields[rep_start - 1..rep_start - 1 + rep_count];
         let set_bits: usize = set.iter().map(|f| f.res_bits as usize).sum();
         let mut instance = 1u32;
+        let mut inner_instance = 0u32;
         loop {
             match n {
                 Some(n) if instance as u64 > n => break,
@@ -256,12 +257,43 @@ pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>
             if ctx.bit >= data.len() * 8 || instance > 1024 {
                 break;
             }
-            for f in set {
-                decode_one(db, f, data, &mut ctx, instance, &mut out)?;
+            match pgn.repeating2.as_ref().filter(|r| r.nested && r.count > 0) {
+                None => {
+                    for f in set {
+                        decode_one(db, f, data, &mut ctx, instance, &mut out)?;
+                    }
+                }
+                Some(inner) => {
+                    // Set 2 repeats inside each record of set 1; its records are
+                    // numbered on across the records of set 1.
+                    let before = (inner.start - rep.start) as usize;
+                    let inner_set = &set[before..before + inner.count as usize];
+                    for f in &set[..before] {
+                        decode_one(db, f, data, &mut ctx, instance, &mut out)?;
+                    }
+                    let m = inner
+                        .count_field
+                        .and_then(|cf| ctx.by_order.get(&cf).copied())
+                        .map(|v| v.max(0) as u64)
+                        .unwrap_or(0);
+                    for _ in 0..m {
+                        if ctx.bit >= data.len() * 8 {
+                            break;
+                        }
+                        inner_instance += 1;
+                        for f in inner_set {
+                            decode_one(db, f, data, &mut ctx, inner_instance, &mut out)?;
+                        }
+                    }
+                    for f in &set[before + inner.count as usize..] {
+                        decode_one(db, f, data, &mut ctx, instance, &mut out)?;
+                    }
+                }
             }
             instance += 1;
         }
-        // fields after the set (incl. a possible second set): decode once
+        // fields after the set (incl. a possible second set that is not
+        // nested in it): decode once
         for f in &pgn.fields[rep_start - 1 + rep_count..] {
             if ctx.bit >= data.len() * 8 {
                 break;

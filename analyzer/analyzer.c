@@ -1769,6 +1769,162 @@ static void printEmptyList(const char *key, bool *listOpen)
 }
 
 /*
+ * Print field `order` (1-based) of `pgn` at *startBit and move past it. In
+ * text, a field of a repeating set gets its record number: "Value 2", or
+ * "Value 2.3" for the third record of a nested set in the second record.
+ */
+static bool printNumberedField(const Pgn *pgn, size_t order, int outer, int inner, const uint8_t *data, int length, size_t *startBit, bool showJson)
+{
+  const Field *field = &pgn->fieldList[order - 1];
+  char         fieldName[256];
+  size_t       bits;
+  size_t       len;
+
+  snprintf(fieldName, sizeof(fieldName), "%s", (showCamel && field->camelName) ? field->camelName : field->name);
+  if (outer >= 1 && !showJson)
+  {
+    len = strlen(fieldName);
+    snprintf(fieldName + len, sizeof(fieldName) - len, "%s%d", showCamel ? "_" : " ", outer);
+    if (inner >= 1)
+    {
+      len = strlen(fieldName);
+      snprintf(fieldName + len, sizeof(fieldName) - len, "%s%d", showCamel ? "_" : ".", inner);
+    }
+  }
+  if (!printField(field, fieldName, data, length, *startBit, &bits, true))
+  {
+    return false;
+  }
+  *startBit += bits;
+  return true;
+}
+
+/*
+ * printFields for a PGN whose second repeating set is nested in the first
+ * (repeatingParent2): each record of set 1 holds the records of set 2, as
+ * many as set 2's count field in that record says. In JSON they are the
+ * record's "list2". Set 1 repeats as often as its count field says, or until
+ * the data runs out.
+ */
+static bool printNestedFields(const Pgn *pgn, const uint8_t *data, int length, bool showJson)
+{
+  const size_t start1 = pgn->repeatingStart1;
+  const size_t end1   = start1 + pgn->repeatingCount1; // first field after set 1
+  const size_t start2 = pgn->repeatingStart2;
+  const size_t end2   = start2 + pgn->repeatingCount2; // first field after set 2
+  size_t       startBit = 0;
+  size_t       order;
+  int          outer;
+  int          inner;
+  int          records;
+  bool         listOpen = false;
+
+  g_variableFieldRepeat[0] = 255;
+  g_variableFieldRepeat[1] = 0;
+  g_ftf                    = NULL;
+  g_length                 = 0;
+  g_lengthValid            = false;
+
+  for (order = 1; order < start1; order++)
+  {
+    if ((startBit >> 3) >= (size_t) length)
+    {
+      break;
+    }
+    if (!printNumberedField(pgn, order, 0, 0, data, length, &startBit, showJson))
+    {
+      return false;
+    }
+  }
+
+  for (outer = 1; (startBit >> 3) < (size_t) length; outer++)
+  {
+    if ((pgn->repeatingField1 != 255 && outer > g_variableFieldRepeat[0])
+        || fieldIsCutShort(&pgn->fieldList[start1 - 1], length, startBit))
+    {
+      break;
+    }
+    if (showJson)
+    {
+      if (listOpen)
+      {
+        mprintf("},{");
+      }
+      else
+      {
+        mprintf("%s\"list\":[{", getSep());
+        strcat(closingBraces, "]}");
+        listOpen = true;
+      }
+      sep = "";
+    }
+    for (order = start1; order < start2; order++)
+    {
+      if (!printNumberedField(pgn, order, outer, 0, data, length, &startBit, showJson))
+      {
+        return false;
+      }
+    }
+
+    // The count was read anew in this record.
+    records = g_variableFieldRepeat[1];
+    if (showJson)
+    {
+      mprintf("%s\"list2\":[", getSep());
+    }
+    for (inner = 1; inner <= records; inner++)
+    {
+      if ((startBit >> 3) >= (size_t) length || fieldIsCutShort(&pgn->fieldList[start2 - 1], length, startBit))
+      {
+        break;
+      }
+      if (showJson)
+      {
+        mprintf("%s{", inner > 1 ? "}," : "");
+        sep = "";
+      }
+      for (order = start2; order < end2; order++)
+      {
+        if (!printNumberedField(pgn, order, outer, inner, data, length, &startBit, showJson))
+        {
+          return false;
+        }
+      }
+    }
+    if (showJson)
+    {
+      mprintf("%s]", inner > 1 ? "}" : "");
+      sep = ",";
+    }
+
+    for (order = end2; order < end1; order++)
+    {
+      if (!printNumberedField(pgn, order, outer, 0, data, length, &startBit, showJson))
+      {
+        return false;
+      }
+    }
+  }
+
+  if (showJson)
+  {
+    if (listOpen)
+    {
+      mprintf("}]");
+      closingBraces[strlen(closingBraces) - 2] = '\0'; /* drop the list's "]}" */
+      sep                                       = ",";
+    }
+    else
+    {
+      mprintf("%s\"list\":[]", getSep());
+    }
+  }
+
+  g_fieldsEndBit = startBit;
+  return true;
+}
+
+/*
  * Print the fields of `pgn` from `data`, as text or (showJson) JSON, with
  * each repeating set as a list of records. In JSON, a set the PGN defines
  * but the message has no records for is written as an empty list.
@@ -1790,6 +1946,12 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   bool r = true;
 
   logDebug("fieldCount=%d repeatingStart1=%" PRIu8 "\n", pgn->fieldCount, pgn->repeatingStart1);
+
+  if (pgn->repeatingParent2 != 0)
+  {
+    *variableFields = 0;
+    return printNestedFields(pgn, data, length, showJson);
+  }
 
   g_variableFieldRepeat[0] = 255; // Can be overridden by '# of parameters'
   g_variableFieldRepeat[1] = 0;   // Can be overridden by '# of parameters'

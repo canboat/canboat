@@ -492,6 +492,9 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
                 ".repeatingField{n} = {}",
                 rep.count_field.unwrap_or(255)
             ));
+            if rep.nested {
+                named.push(format!(".repeatingParent{n} = 1"));
+            }
         }
     }
     if let Some(v) = &p.explanation {

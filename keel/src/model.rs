@@ -225,6 +225,10 @@ pub struct Repeating {
     pub count: u32,
     pub start: u32,
     pub count_field: Option<u32>,
+    /// Set 2 only: it lies inside set 1, so it repeats in full in every
+    /// record of set 1 (a list of lists). Its fields are counted in set 1's
+    /// `count` as well, and its count field is a field of set 1.
+    pub nested: bool,
 }
 
 #[derive(Debug, Clone, Default)]

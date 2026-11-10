@@ -162,6 +162,10 @@ pub struct PgnInfo {
     pub repeating_field_set2_size: Option<u32>,
     pub repeating_field_set2_start_field: Option<u32>,
     pub repeating_field_set2_count_field: Option<u32>,
+    /// `Some(1)` when set 2 is nested in set 1: it lies inside set 1's
+    /// fields and repeats in full within each record of set 1, its count
+    /// field being a field of that record.
+    pub repeating_field_set2_parent: Option<u32>,
     /// `true` when the canboat C source pinned the PGN's
     /// `Id` explicitly (i.e. it doesn't match the natural camelCase
     /// of [`Self::description`]). canboat 7.1.0's JSON formatter

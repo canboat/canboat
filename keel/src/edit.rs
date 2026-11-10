@@ -389,12 +389,13 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .collect();
     let rep = |r: &Option<crate::model::Repeating>| match r {
         Some(r) => format!(
-            "{{\"count\":{},\"start\":{},\"countField\":{}}}",
+            "{{\"count\":{},\"start\":{},\"countField\":{},\"nested\":{}}}",
             r.count,
             r.start,
             r.count_field
                 .map(|c| c.to_string())
-                .unwrap_or_else(|| "null".into())
+                .unwrap_or_else(|| "null".into()),
+            r.nested
         ),
         None => "null".into(),
     };

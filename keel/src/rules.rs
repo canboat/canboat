@@ -106,7 +106,9 @@ pub const RULES: &[Rule] = &[
         title: "Repeating sets are self-consistent.",
         detail: "start and count stay within the field list; countField, when \
                  present, references an integer field before the set; its \
-                 absence means repeat-until-data-exhausted.",
+                 absence means repeat-until-data-exhausted. A set nested in \
+                 another (set 2 inside set 1) has its countField in the \
+                 enclosing record.",
     },
     Rule {
         id: "R06",

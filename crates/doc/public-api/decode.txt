@@ -772,6 +772,7 @@ pub canboat::prelude::DecodedField::bit_length: core::option::Option<u32>
 pub canboat::prelude::DecodedField::bit_offset: core::option::Option<u32>
 pub canboat::prelude::DecodedField::info: &'static canboat::schema::FieldInfo
 pub canboat::prelude::DecodedField::repeat_index: core::option::Option<u32>
+pub canboat::prelude::DecodedField::repeat_parent: core::option::Option<u32>
 pub canboat::prelude::DecodedField::repeat_set: u8
 pub canboat::prelude::DecodedField::value: canboat::FieldValue
 impl canboat::DecodedField
@@ -1104,6 +1105,7 @@ pub canboat::schema::PgnInfo::repeating_field_set1_count_field: core::option::Op
 pub canboat::schema::PgnInfo::repeating_field_set1_size: core::option::Option<u32>
 pub canboat::schema::PgnInfo::repeating_field_set1_start_field: core::option::Option<u32>
 pub canboat::schema::PgnInfo::repeating_field_set2_count_field: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set2_parent: core::option::Option<u32>
 pub canboat::schema::PgnInfo::repeating_field_set2_size: core::option::Option<u32>
 pub canboat::schema::PgnInfo::repeating_field_set2_start_field: core::option::Option<u32>
 pub canboat::schema::PgnInfo::transmission_interval: core::option::Option<u32>
@@ -1364,6 +1366,7 @@ pub canboat::DecodedField::bit_length: core::option::Option<u32>
 pub canboat::DecodedField::bit_offset: core::option::Option<u32>
 pub canboat::DecodedField::info: &'static canboat::schema::FieldInfo
 pub canboat::DecodedField::repeat_index: core::option::Option<u32>
+pub canboat::DecodedField::repeat_parent: core::option::Option<u32>
 pub canboat::DecodedField::repeat_set: u8
 pub canboat::DecodedField::value: canboat::FieldValue
 impl canboat::DecodedField

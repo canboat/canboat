@@ -104,13 +104,14 @@ pub fn check(db: &Database) -> Vec<Violation> {
 fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
     let set_of = |i: usize| -> u32 {
         let order = i as u32 + 1;
-        [&p.repeating1, &p.repeating2]
+        // Set 2 first: a set nested in set 1 lies inside it, and its fields
+        // belong to the inner record.
+        [(2, &p.repeating2), (1, &p.repeating1)]
             .iter()
-            .enumerate()
             .find_map(|(n, r)| {
                 r.as_ref()
                     .filter(|r| r.count > 0 && order >= r.start && order < r.start + r.count)
-                    .map(|_| n as u32 + 1)
+                    .map(|_| *n)
             })
             .unwrap_or(0)
     };
@@ -521,6 +522,24 @@ fn check_repeating(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
             bad.push(format!(
                 "countField {cf} must reference a field before the set"
             ));
+        }
+        if rep.nested {
+            // A set nested in set 1 lies inside it and repeats once per
+            // record of set 1, so its count is a field of that same record.
+            match &p.repeating1 {
+                Some(outer)
+                    if n == 2
+                        && rep.start > outer.start
+                        && rep.start + rep.count <= outer.start + outer.count =>
+                {
+                    if rep.count_field.is_none_or(|cf| cf < outer.start) {
+                        bad.push(
+                            "a nested set needs a countField inside the enclosing set".to_string(),
+                        );
+                    }
+                }
+                _ => bad.push("a nested set must be set 2, inside set 1".to_string()),
+            }
         }
         for msg in bad {
             v.push(Violation {

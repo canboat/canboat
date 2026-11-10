@@ -54,6 +54,7 @@ struct RawPgn {
     repeating_field_set2_size: Option<u32>,
     repeating_field_set2_start_field: Option<u32>,
     repeating_field_set2_count_field: Option<u32>,
+    repeating_field_set2_parent: Option<u32>,
 }
 
 #[derive(Clone)]
@@ -695,7 +696,7 @@ fn emit_pgn(out: &mut String, p: &RawPgn, fields_ident: &str, is_bem: bool) {
          repeating_field_set1_size:{r1s},repeating_field_set1_start_field:{r1sf},\
          repeating_field_set1_count_field:{r1cf},repeating_field_set2_size:{r2s},\
          repeating_field_set2_start_field:{r2sf},repeating_field_set2_count_field:{r2cf},\
-         id_is_pinned:{pinned}}},",
+         repeating_field_set2_parent:{r2p},id_is_pinned:{pinned}}},",
         pgn = p.pgn,
         id = quote(&p.id),
         description = quote(&p.description),
@@ -717,6 +718,7 @@ fn emit_pgn(out: &mut String, p: &RawPgn, fields_ident: &str, is_bem: bool) {
         r2s = opt_int(&p.repeating_field_set2_size),
         r2sf = opt_int(&p.repeating_field_set2_start_field),
         r2cf = opt_int(&p.repeating_field_set2_count_field),
+        r2p = opt_int(&p.repeating_field_set2_parent),
         pinned = id_is_pinned,
     )
     .unwrap();
@@ -1236,6 +1238,11 @@ fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> C
             repeating_field_set2_size: r2.map(|r| r.0),
             repeating_field_set2_start_field: r2.map(|r| r.1),
             repeating_field_set2_count_field: r2.and_then(|r| r.2),
+            repeating_field_set2_parent: p
+                .repeating2
+                .as_ref()
+                .filter(|r| r.count > 0 && r.nested)
+                .map(|_| 1),
         });
     }
 

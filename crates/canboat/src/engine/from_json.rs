@@ -65,6 +65,7 @@ pub fn json_to_decoded(line: &str, db: &PgnDatabase) -> Option<DecodedPgn> {
                 bit_length: None,
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             });
         }

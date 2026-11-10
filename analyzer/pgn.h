@@ -204,6 +204,7 @@ struct Pgn
   uint8_t     repeatingStart2;  /* At which field does the second set start? */
   uint8_t     repeatingField1;  /* Which field explains how often the repeating fields set #1 repeats? 255 = there is no field */
   uint8_t     repeatingField2;  /* Which field explains how often the repeating fields set #2 repeats? 255 = there is no field */
+  uint8_t     repeatingParent2; /* 1 = set #2 lies inside set #1 and repeats within each of its records; 0 = it follows set #1 */
 };
 
 typedef struct PgnRange

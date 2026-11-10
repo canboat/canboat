@@ -336,9 +336,91 @@ fn write_json_inner<W: fmt::Write>(
         buf.write_char(']')
     };
 
+    // A set nested in set 1 is written inside each record of set 1, as
+    // that record's "list2", where its fields sit among set 1's.
+    let nested = opts
+        .protocol
+        .database(crate::engine::Units::Si)
+        .pgn_by_id(pgn.id)
+        .filter(|i| i.repeating_field_set2_parent == Some(1))
+        .and_then(|i| i.repeating_field_set2_start_field);
+    if let Some(start2) = nested {
+        let mut top_sep = "";
+        for f in pgn
+            .fields
+            .iter()
+            .filter(|f| f.repeat_set == 0 && visible(f))
+        {
+            write_field(fields_buf, top_sep, f)?;
+            top_sep = ",";
+        }
+        let records = pgn
+            .fields
+            .iter()
+            .filter_map(|f| match f.repeat_set {
+                1 => f.repeat_index,
+                2 => f.repeat_parent,
+                _ => None,
+            })
+            .map(|i| i + 1)
+            .fold(pgn.repeat_records[0], u32::max);
+        fields_buf.write_str(top_sep)?;
+        fields_buf.write_str("\"list\":[")?;
+        for record in 0..records {
+            fields_buf.write_str(if record == 0 { "{" } else { ",{" })?;
+            let outer = |before: bool| {
+                pgn.fields.iter().filter(move |f| {
+                    f.repeat_set == 1
+                        && f.repeat_index == Some(record)
+                        && (u32::from(f.info.order) < start2) == before
+                })
+            };
+            let mut sep = "";
+            for f in outer(true).filter(|f| visible(f)) {
+                write_field(fields_buf, sep, f)?;
+                sep = ",";
+            }
+            let inner: Vec<&DecodedField> = pgn
+                .fields
+                .iter()
+                .filter(|f| f.repeat_set == 2 && f.repeat_parent == Some(record))
+                .collect();
+            let inner_records = inner
+                .iter()
+                .filter_map(|f| f.repeat_index.map(|i| i + 1))
+                .max()
+                .unwrap_or(0);
+            fields_buf.write_str(sep)?;
+            fields_buf.write_str("\"list2\":[")?;
+            for r in 0..inner_records {
+                fields_buf.write_str(if r == 0 { "{" } else { ",{" })?;
+                let mut sep = "";
+                for f in inner
+                    .iter()
+                    .filter(|f| f.repeat_index == Some(r) && visible(f))
+                {
+                    write_field(fields_buf, sep, f)?;
+                    sep = ",";
+                }
+                fields_buf.write_char('}')?;
+            }
+            fields_buf.write_char(']')?;
+            for f in outer(false).filter(|f| visible(f)) {
+                write_field(fields_buf, ",", f)?;
+            }
+            fields_buf.write_char('}')?;
+        }
+        fields_buf.write_char(']')?;
+    }
+
     let mut top_sep = "";
-    let mut written = [false, false];
-    let mut rest = &pgn.fields[..];
+    // A nested PGN's fields, and both its sets, are written above.
+    let mut written = [nested.is_some(); 2];
+    let mut rest = if nested.is_some() {
+        &[][..]
+    } else {
+        &pgn.fields[..]
+    };
     while let Some(first) = rest.first() {
         let set = first.repeat_set;
         let len = rest.iter().take_while(|f| f.repeat_set == set).count();
@@ -1204,6 +1286,7 @@ mod tests {
                 bit_length: None,
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             }],
             has_repeating_set: [false, false],

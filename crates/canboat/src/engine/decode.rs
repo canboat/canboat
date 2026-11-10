@@ -197,6 +197,11 @@ pub struct DecodedField {
     /// Which RepeatingFieldSet this field belongs to: 1 → emitted
     /// under JSON `"list"`, 2 → under `"list2"`. `0` for non-repeating.
     pub repeat_set: u8,
+    /// For a field of a set nested in set 1
+    /// ([`PgnInfo::repeating_field_set2_parent`]): the zero-based record of
+    /// set 1 that holds it, and [`Self::repeat_index`] counts within that
+    /// record. `None` otherwise.
+    pub repeat_parent: Option<u32>,
     /// VARIABLE / DYNAMIC_FIELD_VALUE override metadata. `None` for
     /// the common path. Internal: the `unit()` / `resolution()` /
     /// `precision()` accessors are how a consumer sees its effect.
@@ -790,6 +795,17 @@ fn decode_fields(
         // until the payload runs out.
         if let (Some(start), Some(size)) = (start1, size1)
             && (f.order as u32) == start
+            && info.repeating_field_set2_parent == Some(1)
+        {
+            let (cursor, outer, inner) =
+                decode_nested(info, data, db, &mut out, &mut ctx, i, cursor_bits);
+            cursor_bits = cursor;
+            records = [Some(outer), Some(inner)];
+            i += size as usize;
+            continue;
+        }
+        if let (Some(start), Some(size)) = (start1, size1)
+            && (f.order as u32) == start
         {
             let (cursor, n) = decode_repeating(
                 info,
@@ -897,15 +913,49 @@ fn decode_repeating(
     base_cursor: u32,
     set_number: u8,
 ) -> (u32, u32) {
+    decode_repeating_at(
+        info,
+        data,
+        db,
+        out,
+        ctx,
+        start_idx,
+        set_size,
+        count_field_order,
+        base_cursor,
+        set_number,
+        true,
+    )
+}
+
+/// [`decode_repeating`], where `anchored` says whether the set's first
+/// record sits where the schema's bit offsets put it. A set nested in
+/// another is not anchored: it follows the record that holds it.
+#[allow(clippy::too_many_arguments)]
+fn decode_repeating_at(
+    info: &'static PgnInfo,
+    data: &[u8],
+    db: &PgnDatabase,
+    out: &mut Vec<DecodedField>,
+    ctx: &mut DecodeContext,
+    start_idx: usize,
+    set_size: usize,
+    count_field_order: Option<u32>,
+    base_cursor: u32,
+    set_number: u8,
+    anchored: bool,
+) -> (u32, u32) {
     // Look up the count from the already-decoded fields when a count
     // field is set; otherwise repeat until the payload runs out
     // (matches canboat's default g_variableFieldRepeat[0] = 255 path).
     // A count of 0 means no records: bytes after the count are
     // padding, not a record. A count that is NotAvailable or otherwise
     // unresolved repeats until the payload runs out.
+    // The latest occurrence: a nested set's count is read anew in each
+    // record of the set that holds it.
     let raw_count: Option<u32> = count_field_order.and_then(|cf| {
         out.iter()
-            .find(|d| (d.order() as u32) == cf)
+            .rfind(|d| (d.order() as u32) == cf)
             .and_then(|d| match &d.value {
                 FieldValue::Integer(n) if *n >= 0 => Some(*n as u32),
                 FieldValue::Number(n) if *n >= 0.0 => Some(*n as u32),
@@ -924,7 +974,14 @@ fn decode_repeating(
     // anchors iteration 0 to the canboat.json layout. After that we
     // run on a per-iteration sub-cursor that advances by each field's
     // actual `bits_consumed` (handles variable-length VARIABLE fields).
-    let mut iter_cursor = set[0].bit_offset.unwrap_or(base_cursor);
+    let static_offset = |f: &FieldInfo, cursor: u32| {
+        if anchored {
+            f.bit_offset.unwrap_or(cursor)
+        } else {
+            cursor
+        }
+    };
+    let mut iter_cursor = static_offset(&set[0], base_cursor);
     let mut records = 0;
 
     for iter in 0..max_iters {
@@ -938,7 +995,7 @@ fn decode_repeating(
             .find(|sf| field_present(sf.condition, ctx.target_pgn))
         {
             let off = if iter == 0 {
-                first.bit_offset.unwrap_or(iter_cursor)
+                static_offset(first, iter_cursor)
             } else {
                 iter_cursor
             };
@@ -956,7 +1013,7 @@ fn decode_repeating(
             // later iterations follow the running sub_cursor since
             // bit_offsets aren't repeated per iteration in JSON.
             let off = if iter == 0 {
-                sf.bit_offset.unwrap_or(sub_cursor)
+                static_offset(sf, sub_cursor)
             } else {
                 sub_cursor
             };
@@ -989,6 +1046,96 @@ fn decode_repeating(
     (iter_cursor, records)
 }
 
+/// Decode set 1 of a PGN whose set 2 is nested in it
+/// ([`PgnInfo::repeating_field_set2_parent`]): each record of set 1 holds
+/// the records of set 2, as many as set 2's count field in that record
+/// says. Set 1 repeats as often as its own count field says, or until the
+/// data runs out. Returns the bit cursor after set 1, its number of records
+/// and the number of set 2 records over all of them.
+fn decode_nested(
+    info: &'static PgnInfo,
+    data: &[u8],
+    db: &PgnDatabase,
+    out: &mut Vec<DecodedField>,
+    ctx: &mut DecodeContext,
+    start_idx: usize,
+    base_cursor: u32,
+) -> (u32, u32, u32) {
+    let size1 = info.repeating_field_set1_size.unwrap_or(0) as usize;
+    let size2 = info.repeating_field_set2_size.unwrap_or(0) as usize;
+    let (Some(start1), Some(start2)) = (
+        info.repeating_field_set1_start_field,
+        info.repeating_field_set2_start_field,
+    ) else {
+        return (base_cursor, 0, 0);
+    };
+    let inner_idx = start_idx + (start2 - start1) as usize;
+    let set = &info.fields[start_idx..start_idx + size1];
+    let payload_bits = (data.len() as u32).saturating_mul(8);
+    let max_outer = info
+        .repeating_field_set1_count_field
+        .and_then(|cf| {
+            out.iter()
+                .rfind(|d| (d.order() as u32) == cf)
+                .and_then(|d| d.value.as_i64())
+        })
+        .map_or(u32::MAX, |n| n.max(0) as u32);
+
+    let mut cursor = set[0].bit_offset.unwrap_or(base_cursor);
+    let mut outer = 0u32;
+    let mut inner_total = 0u32;
+    while outer < max_outer && cursor < payload_bits && !is_cut_short(&set[0], cursor, payload_bits)
+    {
+        let mut i = start_idx;
+        while i < start_idx + size1 {
+            if i == inner_idx {
+                let first = out.len();
+                let (c, n) = decode_repeating_at(
+                    info,
+                    data,
+                    db,
+                    out,
+                    ctx,
+                    inner_idx,
+                    size2,
+                    info.repeating_field_set2_count_field,
+                    cursor,
+                    2,
+                    false,
+                );
+                for d in &mut out[first..] {
+                    d.repeat_parent = Some(outer);
+                }
+                cursor = c;
+                inner_total += n;
+                i += size2;
+                continue;
+            }
+            let f = &info.fields[i];
+            i += 1;
+            if !field_present(f.condition, ctx.target_pgn) {
+                continue;
+            }
+            match decode_one_field_at(f, info, data, db, cursor, ctx) {
+                Some((mut d, bits)) => {
+                    cursor += bits;
+                    d.repeat_set = 1;
+                    d.repeat_index = Some(outer);
+                    if !core::mem::take(&mut ctx.skip_field) {
+                        out.push(d);
+                    }
+                }
+                None => match f.bit_length {
+                    Some(bl) => cursor += bl,
+                    None => return (cursor, outer + 1, inner_total),
+                },
+            }
+        }
+        outer += 1;
+    }
+    (cursor, outer, inner_total)
+}
+
 /// Decode one field. Returns the `DecodedField` and the number of
 /// payload bits it actually consumed (which differs from `bit_length`
 /// for variable-length types like STRING_LAU and VARIABLE).
@@ -1014,6 +1161,7 @@ fn decode_one_field_at(
                 bit_length: Some(bits_consumed),
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             },
             bits_consumed,
@@ -1056,6 +1204,7 @@ fn decode_one_field_at(
                 bit_length: Some(consumed_bits),
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides,
             },
             consumed_bits,
@@ -1100,6 +1249,7 @@ fn decode_one_field_at(
                 bit_length: Some(width),
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             },
             width,
@@ -1125,6 +1275,7 @@ fn decode_one_field_at(
                 bit_length: Some(avail),
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             },
             avail,
@@ -1333,6 +1484,7 @@ fn finish_scalar(
             bit_length: Some(bit_length),
             repeat_index: None,
             repeat_set: 0,
+            repeat_parent: None,
             overrides: None,
         },
         bit_length,
@@ -1571,6 +1723,7 @@ fn decode_variable(
                 bit_length: Some(bits),
                 repeat_index: None,
                 repeat_set: 0,
+                repeat_parent: None,
                 overrides: None,
             },
             bits,
@@ -1620,6 +1773,7 @@ fn decode_variable(
             bit_length: target_field.bit_length.or(Some(bits_byte_aligned)),
             repeat_index: None,
             repeat_set: 0,
+            repeat_parent: None,
             overrides,
         },
         bits_byte_aligned,

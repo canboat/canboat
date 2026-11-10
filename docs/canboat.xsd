@@ -924,6 +924,19 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:byte" name="RepeatingFieldSet2Parent" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When present (its only value is 1), the second set is nested in the first: its
+            fields lie inside the first set's fields, and it repeats in full within each
+            repetition of the first set, so the data is a list of records that each hold a
+            list. RepeatingFieldSet2CountField is then a field of the first set, read anew
+            in each of its repetitions, and RepeatingFieldSet1Size counts the second set's
+            fields too.
+            When not present, the second set follows the first.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:unsignedShort" name="TransmissionInterval" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
