@@ -1,0 +1,202 @@
+pgn: 130822
+id: navicoUdbDatabaseSettingsDump
+description: 'Navico: UDB Database, Settings Dump'
+type: Fast
+variantOrder: 7
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Object Dump (Command 6) of Section 10, Item 1: the settings object that the Command 3 Configuration Set updates
+  one record at a time. A B&G H5000 CPU broadcasts it about once a minute. The records carry no id: record n holds Source
+  Setting Id n (NAVICO_SOURCE_SETTING_ID), so records 17 to 22 are the wind and boat speed sources (a count, or a source''s
+  64-bit NMEA 2000 NAME) and record 24 is the true wind direction damping. On an H5000 the other records hold boat settings,
+  mostly as 32-bit floats; by value, record 0 matches the GPS offset from the center line, 1 the GPS to bow distance,
+  3 the leeway coefficient, 7 the mast height, 13 the boat length and 14 the boat speed calibration distance.'
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Dump
+  match: 6
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+  match: 10
+  primaryKey: true
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object
+- repeat:
+    fields:
+    - id: flag
+      name: Flag
+      type: UINT8
+      description: Always 1
+    - id: reserved15
+      name: Reserved
+      type: RESERVED
+      bits: 8
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 8
+      description: Byte length of the Value field that follows
+      dynamicFieldLength: true
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: The value of the setting this record's position selects; a 32-bit float, a 1-byte count or flag, or a 64-bit NMEA 2000 NAME.
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,26,255,208,13,99,ff,06,00,0a,01,9b,fd,c2,00,00,07,bf,01,00,04,00,00,00,00,01,00,04,33,33,87,41,01,00,04,00,00,00,00,01,00,04,00,00,00,40,01,00,04,00,00,00,00,01,00,01,00,01,00,04,00,00,00,00,01,00,04,25,b3,84,3c,01,00,04,00,00,c8,42,01,00,04,00,00,c8,42,01,00,04,01,00,00,00,01,00,01,00,01,00,01,00,01,00,04,cd,cc,88,41,01,00,04,00,a0,e7,44,01,00,04,00,00,c8,42,01,00,01,01,01,00,01,01,01,00,08,ff,ff,e0,ff,00,ff,ff,f0,01,00,08,58,87,b0,2f,00,82,aa,c0,01,00,01,01,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,01,01,01,00,01,09,01,00,01,00,01,00,04,19,00,38,0a,01,00,01,01,01,00,01,01,01,00,01,00,01,00,01,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 10
+    item: 1
+    objectValue: 64923
+    sub: "0xc20000"
+    token: 48903
+    flag: 1
+    length: 4
+    value: "0x00000000"
+    flag.2: 1
+    length.2: 4
+    value.2: "0x33338741"
+    flag.3: 1
+    length.3: 4
+    value.3: "0x00000000"
+    flag.4: 1
+    length.4: 4
+    value.4: "0x00000040"
+    flag.5: 1
+    length.5: 4
+    value.5: "0x00000000"
+    flag.6: 1
+    length.6: 1
+    value.6: "0x00"
+    flag.7: 1
+    length.7: 4
+    value.7: "0x00000000"
+    flag.8: 1
+    length.8: 4
+    value.8: "0x25b3843c"
+    flag.9: 1
+    length.9: 4
+    value.9: "0x0000c842"
+    flag.10: 1
+    length.10: 4
+    value.10: "0x0000c842"
+    flag.11: 1
+    length.11: 4
+    value.11: "0x01000000"
+    flag.12: 1
+    length.12: 1
+    value.12: "0x00"
+    flag.13: 1
+    length.13: 1
+    value.13: "0x00"
+    flag.14: 1
+    length.14: 4
+    value.14: "0xcdcc8841"
+    flag.15: 1
+    length.15: 4
+    value.15: "0x00a0e744"
+    flag.16: 1
+    length.16: 4
+    value.16: "0x0000c842"
+    flag.17: 1
+    length.17: 1
+    value.17: "0x01"
+    flag.18: 1
+    length.18: 1
+    value.18: "0x01"
+    flag.19: 1
+    length.19: 8
+    value.19: "0xffffe0ff00fffff0"
+    flag.20: 1
+    length.20: 8
+    value.20: "0x5887b02f0082aac0"
+    flag.21: 1
+    length.21: 1
+    value.21: "0x01"
+    flag.22: 1
+    length.22: 8
+    value.22: "0x19e8e410008278c0"
+    flag.23: 1
+    length.23: 8
+    value.23: "0x19e8e410008278c0"
+    flag.24: 1
+    length.24: 1
+    value.24: "0x01"
+    flag.25: 1
+    length.25: 1
+    value.25: "0x09"
+    flag.26: 1
+    length.26: 1
+    value.26: "0x00"
+    flag.27: 1
+    length.27: 4
+    value.27: "0x1900380a"
+    flag.28: 1
+    length.28: 1
+    value.28: "0x01"
+    flag.29: 1
+    length.29: 1
+    value.29: "0x01"
+    flag.30: 1
+    length.30: 1
+    value.30: "0x00"
+    flag.31: 1
+    length.31: 1
+    value.31: "0x00"
