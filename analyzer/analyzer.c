@@ -23,6 +23,9 @@ limitations under the License.
 #define GLOBALS
 #include "analyzer.h"
 
+#include <errno.h>
+#include <limits.h>
+
 #include "parse.h"
 
 enum RawFormats
@@ -411,9 +414,12 @@ int main(int argc, char **argv)
 
     else
     {
-      int prn = strtol(av[1], 0, 10);
-      if (prn > 0 && onlyPgn < ARRAY_SIZE(onlyPgnList))
+      char *end;
+      errno    = 0;
+      long pgn = strtol(av[1], &end, 10);
+      if (errno != ERANGE && *end == '\0' && pgn > 0 && pgn <= INT_MAX && onlyPgn < ARRAY_SIZE(onlyPgnList))
       {
+        int prn                = (int) pgn;
         onlyPgnList[onlyPgn++] = prn;
         if (onlyPgn == 1)
         {
