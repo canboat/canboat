@@ -507,6 +507,12 @@ FieldType fieldTypeList[] = {
      .resolution = 0.001,
      .physical = &TEMPERATURE},
 
+    {.name = "TEMPERATURE_DELTA_FIX16_CK",
+     .description = "Temperature difference, 16 bit signed in 0.01 K resolution",
+     .baseFieldType = "FIX16",
+     .resolution = 0.01,
+     .physical = &TEMPERATURE},
+
     {.name = "VOLUMETRIC_FLOW",
      .description = "Volumetric flow",
      .baseFieldType = "FIX16",
@@ -1142,6 +1148,12 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "FIX16",
      .resolution = 10.0,
      .physical = &PRESSURE_RATE},
+
+    {.name = "PRESSURE_FIX16_HPA",
+     .description = "Pressure, 16 bit signed in hectopascal resolution.",
+     .baseFieldType = "FIX16",
+     .resolution = 100.0,
+     .physical = &PRESSURE},
 
     {.name = "PRESSURE_FIX16_KPA",
      .description = "Pressure, 16 bit signed in kilopascal resolution.",

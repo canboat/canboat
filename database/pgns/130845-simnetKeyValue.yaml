@@ -97,3 +97,36 @@ samples:
     key: 31000
     operation: "Read"
     value: "0xffffffff"
+- raw: "2026-11-08-12:56:13.033,3,130845,34,255,14,41,9f,ff,ff,ff,02,03,00,00,02,17,04,ff,ff"  # from canboat/canboat#1184
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 255
+    instance: ~
+    networkGroup: ~
+    source: 2
+    key: "Mast head unit offset"
+    operation: "Reply"
+    value: 0.1047
+- raw: "2026-11-08-12:54:48.392,3,130845,128,255,14,41,9f,ff,ff,ff,ff,39,00,00,02,00,00,00,00"  # from canboat/canboat#1184
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 255
+    instance: ~
+    networkGroup: ~
+    source: ~
+    key: "Heel offset"
+    operation: "Reply"
+    value: 0
+- raw: "2026-11-08-12:55:44.867,3,130845,38,255,14,41,9f,ff,ff,ff,ff,3a,00,00,02,ec,fa,ff,ff"  # from canboat/canboat#1184
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 255
+    instance: ~
+    networkGroup: ~
+    source: ~
+    key: "Air temperature offset"
+    operation: "Reply"
+    value: -13
