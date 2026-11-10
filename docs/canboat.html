@@ -4154,6 +4154,83 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65358">0xFF4E:
+            PGN 65358
+            - Malibu Boats: Surf Band Remote Status</h3><p>Broadcast by the "Surf Band Dongle Universal" receiver (Medallion PN
+1539-10855-01, Malibu PN 3962071.1) that pairs with the Malibu/Axis Surf
+Band wrist remote (FCC ID 2AFN315RM01), an 8-button RF remote for the surf
+system, ballast wedge, cruise speed and stereo volume. Sent continuously
+every ~100ms regardless of button state; the receiver has no PGN for
+button press/release/hold events as such - only the current state of
+whichever single button is active.
+
+Observed on a standalone 250kbit bus with only this one sender (source
+address 158/0x9E) and this one PGN; reverse engineered entirely by
+injecting known-good RF frames (see notes) and watching this PGN change.
+
+This is almost certainly NOT a compliant NMEA 2000/J1939 node, despite the
+PGN falling in the proprietary range and the bus running at the standard
+NMEA 2000 bitrate: across 3 power cycles it never sent an ISO Address
+Claim (PGN 60928), it did not respond to an explicit ISO Request (PGN
+59904) for one, and its source address never varied. Its CAN transceiver
+(NXP TJA1043, confirmed from the board) is a plain physical-layer part
+with no protocol stack of its own, so this would be a firmware choice.
+Treat the Frame Counter fields as specific to this message, not a
+manufacturer/industry code field, even though they occupy the byte
+position where NMEA 2000 proprietary PGNs conventionally place one - the
+value free-runs and is unrelated to any manufacturer code.
+
+The remote's own RF protocol (not this PGN) is documented at
+https://github.com/merbanan/rtl_433/pull/3746 (decoder) and
+https://github.com/merbanan/rtl_433_tests/pull/569 (captures); that
+protocol's button codes do not correspond numerically to the bit
+assignments here, the dongle remaps them.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The manufacturer specific PGN seems to not contain the mandatory Company and Industry fields; this is likely a bug or at least incompatibility in the device</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 14 fields.
+
+            
+              The default priority (as observed in the field) is 6.
+            
+              It is normally transmitted every 100 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Frame Counter, High Byte</td><td>High byte of a 16-bit (High&lt;&lt;8 | Low) counter; see PGN notes.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Frame Counter, Low Byte</td><td>Low byte of a 16-bit (High&lt;&lt;8 | Low) counter; see PGN notes.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Speed Up</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>4</td><td>Speed Down</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>5</td><td>Spare</td><td>Never observed set; possibly unused on this remote model</td><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Surf Left</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>7</td><td>Spare</td><td>Never observed set; possibly unused on this remote model</td><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>8</td><td>Surf Right</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>9</td><td>Wedge Up</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>10</td><td>Wedge Down</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>11</td><td>Volume Up</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>12</td><td>Volume Down</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>13</td><td>Spare</td><td>Never observed set</td><td/><td>6 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td>Always 0xFFFFFFFF in every capture ("not available")</td><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65359">0xFF4F:
             PGN 65359
             - Seatalk: Pilot Heading</h3><p>

@@ -1,0 +1,25 @@
+# format=PLAIN
+# Malibu Surf Band Dongle (Medallion PN 1539-10855-01) at source 158 (0x9E),
+# standalone 250kbit bus, captured 2026-11-09. CANable 2.0 in listen-only mode.
+#
+# Idle heartbeat, then a Surf Left tap (press -> release):
+2026-11-09-16:16:05.000,6,65358,158,255,8,00,B5,00,00,FF,FF,FF,FF
+2026-11-09-16:16:05.101,6,65358,158,255,8,00,01,08,00,FF,FF,FF,FF
+2026-11-09-16:16:05.202,6,65358,158,255,8,00,02,08,00,FF,FF,FF,FF
+2026-11-09-16:16:05.303,6,65358,158,255,8,00,03,08,00,FF,FF,FF,FF
+2026-11-09-16:16:05.404,6,65358,158,255,8,00,01,00,00,FF,FF,FF,FF
+#
+# A Volume Up tap, same pattern on byte 3 instead of byte 2:
+2026-11-09-16:16:06.810,6,65358,158,255,8,00,47,00,00,FF,FF,FF,FF
+2026-11-09-16:16:06.911,6,65358,158,255,8,00,01,00,01,FF,FF,FF,FF
+2026-11-09-16:16:07.012,6,65358,158,255,8,00,02,00,01,FF,FF,FF,FF
+2026-11-09-16:16:07.113,6,65358,158,255,8,00,03,00,01,FF,FF,FF,FF
+2026-11-09-16:16:07.214,6,65358,158,255,8,00,01,00,00,FF,FF,FF,FF
+#
+# The frame counter free-running during a ~2 hour idle capture: it skips
+# 0xFFFF and wraps FFFE -> 0000 directly, the only two bytes that ever vary
+# outside a button press:
+2026-11-09-18:05:53.373,6,65358,158,255,8,FF,FD,00,00,FF,FF,FF,FF
+2026-11-09-18:05:53.474,6,65358,158,255,8,FF,FE,00,00,FF,FF,FF,FF
+2026-11-09-18:05:53.575,6,65358,158,255,8,00,00,00,00,FF,FF,FF,FF
+2026-11-09-18:05:53.676,6,65358,158,255,8,00,01,00,00,FF,FF,FF,FF
