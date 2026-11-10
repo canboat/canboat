@@ -227,6 +227,17 @@ static void usage(char **argv, char **av)
   exit(1);
 }
 
+static int parseAddressFilter(const char *option, const char *value)
+{
+  char *end;
+  long  address = strtol(value, &end, 10);
+  if (end == value || *end != '\0' || address < 0 || address > UINT8_MAX)
+  {
+    logAbort("Invalid address for %s: '%s' (expected 0 to 255)\n", option, value);
+  }
+  return (int) address;
+}
+
 int main(int argc, char **argv)
 {
   int    r;
@@ -355,13 +366,13 @@ int main(int argc, char **argv)
     }
     else if (ac > 2 && strcasecmp(av[1], "-src") == 0)
     {
-      onlySrc = strtol(av[2], 0, 10);
+      onlySrc = parseAddressFilter(av[1], av[2]);
       ac--;
       av++;
     }
     else if (ac > 2 && strcasecmp(av[1], "-dst") == 0)
     {
-      onlyDst = strtol(av[2], 0, 10);
+      onlyDst = parseAddressFilter(av[1], av[2]);
       ac--;
       av++;
     }
