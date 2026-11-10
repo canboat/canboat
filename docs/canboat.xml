@@ -4794,7 +4794,13 @@ limitations under the License.
     </LookupFieldTypeEnumeration>
     <LookupFieldTypeEnumeration Name="SIMNET_KEY_VALUE" MaxValue="16777215">
       <EnumFieldType Value="0" Name="Heading Offset" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="3" Name="Mast head unit offset" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="6" Name="Sea temperature offset" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="41" Name="Timezone offset" FieldType="DURATION" Signed="true" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="49" Name="Trim offset" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="51" Name="Barometric pressure offset" FieldType="NUMBER" Signed="true" Resolution="100" Unit="Pa" Bits="16"/>
+      <EnumFieldType Value="57" Name="Heel offset" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
+      <EnumFieldType Value="58" Name="Air temperature offset" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="K" Bits="16"/>
       <EnumFieldType Value="260" Name="True wind high" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="264" Name="Deep water" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="16"/>
       <EnumFieldType Value="516" Name="True wind low" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
@@ -4849,6 +4855,7 @@ limitations under the License.
           <LookupEnumeration>SIMNET_BARO_PRESSURE_UNIT</LookupEnumeration>
       </EnumFieldType>
       <EnumFieldType Value="5174" Name="Distance unit (companion)" FieldType="NUMBER" Signed="false" Bits="8"/>
+      <EnumFieldType Value="6144" Name="Compass calibration status" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="9983" Name="Night mode" FieldType="LOOKUP" Signed="false" Bits="8">
           <LookupEnumeration>SIMNET_NIGHT_MODE</LookupEnumeration>
       </EnumFieldType>
@@ -6386,7 +6393,7 @@ limitations under the License.
       <Id>simnetKeepAlive</Id>
       <Description>Simnet: Keep Alive</Description>
       <Priority>7</Priority>
-      <Explanation>Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status.</Explanation>
+      <Explanation>Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status. A B&amp;G wind sensor (WS310, WS320) also answers it with a PGN 130845 Key Value Reply of key 3, its mast head unit offset.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -77175,10 +77182,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130822</PGN>
-      <Id>navicoUdbDatabaseObjectDump</Id>
-      <Description>Navico: UDB Database, Object Dump</Description>
+      <Id>navicoUdbDatabaseSettingsDump</Id>
+      <Description>Navico: UDB Database, Settings Dump</Description>
       <Priority>3</Priority>
-      <Explanation>Verbose dump (Command 6) of a source-selection object: it carries the same Value and Token as the Command 1 report for the object, followed by a list of every data type the object covers and the selected source for each. Each record is a length, a constant class byte, a data-type id and the selected source's value.</Explanation>
+      <Explanation>Object Dump (Command 6) of Section 10, Item 1: the settings object that the Command 3 Configuration Set updates one record at a time. A B&amp;G H5000 CPU broadcasts it about once a minute. The records carry no id: record n holds Source Setting Id n (NAVICO_SOURCE_SETTING_ID), so records 17 to 22 are the wind and boat speed sources (a count, or a source's 64-bit NMEA 2000 NAME) and record 24 is the true wind direction damping. On an H5000 the other records hold boat settings, mostly as 32-bit floats; by value, record 0 matches the GPS offset from the center line, 1 the GPS to bow distance, 3 the leeway coefficient, 7 the mast height, 13 the boat length and 14 the boat speed calibration distance.</Explanation>
       <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -77302,14 +77309,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Match>10</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
@@ -77374,29 +77380,11 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>length</Id>
-          <Name>Length</Name>
-          <Description>Bytes following in this record: a class byte, a 16-bit data-type id and the value</Description>
+          <Id>flag</Id>
+          <Name>Flag</Name>
+          <Description>Always 1</Description>
           <BitLength>8</BitLength>
           <BitOffset>112</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <DynamicFieldLengthOverhead>3</DynamicFieldLengthOverhead>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
-        </Field>
-        <Field>
-          <Order>14</Order>
-          <Id>class</Id>
-          <Name>Class</Name>
-          <Description>Record class, always 0x02</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -77408,29 +77396,39 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
+          <Order>14</Order>
+          <Id>reserved15</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
           <Order>15</Order>
-          <Id>dataType</Id>
-          <Name>Data Type</Name>
-          <BitLength>16</BitLength>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Byte length of the Value field that follows</Description>
+          <BitLength>8</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>NAVICO_DATA_TYPE</LookupEnumeration>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
         </Field>
         <Field>
           <Order>16</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's 64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.</Description>
+          <Description>The value of the setting this record's position selects; a 32-bit float, a 1-byte count or flag, or a 64-bit NMEA 2000 NAME.</Description>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>144</BitOffset>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
@@ -77810,6 +77808,269 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseObjectDump</Id>
+      <Description>Navico: UDB Database, Object Dump</Description>
+      <Priority>3</Priority>
+      <Explanation>Verbose dump (Command 6) of a source-selection object: it carries the same Value and Token as the Command 1 report for the object, followed by a list of every data type the object covers and the selected source for each. Each record is a length, a constant class byte, a data-type id and the selected source's value.</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>16</FieldCount>
+      <MinLength>14</MinLength>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>13</RepeatingFieldSet1StartField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Object Dump</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>6</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>objectValue</Id>
+          <Name>Object Value</Name>
+          <Description>Current value (A); 0xFC00 means no value</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>sub</Id>
+          <Name>Sub</Name>
+          <Description>Sub-index and auxiliary bytes</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>token</Id>
+          <Name>Token</Name>
+          <Description>Per-object identity/CRC-like token (B), constant per object</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Bytes following in this record: a class byte, a 16-bit data-type id and the value</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <DynamicFieldLengthOverhead>3</DynamicFieldLengthOverhead>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>class</Id>
+          <Name>Class</Name>
+          <Description>Record class, always 0x02</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>dataType</Id>
+          <Name>Data Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_DATA_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's 64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

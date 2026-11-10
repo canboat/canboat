@@ -406,6 +406,11 @@
   description: Temperature difference
   resolution: 0.001
   physical: TEMPERATURE
+- name: TEMPERATURE_DELTA_FIX16_CK
+  base: FIX16
+  description: Temperature difference, 16 bit signed in 0.01 K resolution
+  resolution: 0.01
+  physical: TEMPERATURE
 - name: VOLUMETRIC_FLOW
   base: FIX16
   description: Volumetric flow
@@ -947,6 +952,11 @@
   description: Pressure change rate, 16 bit signed in decapascal resolution.
   resolution: 10.0
   physical: PRESSURE_RATE
+- name: PRESSURE_FIX16_HPA
+  base: FIX16
+  description: Pressure, 16 bit signed in hectopascal resolution.
+  resolution: 100.0
+  physical: PRESSURE
 - name: PRESSURE_FIX16_KPA
   base: FIX16
   description: Pressure, 16 bit signed in kilopascal resolution.

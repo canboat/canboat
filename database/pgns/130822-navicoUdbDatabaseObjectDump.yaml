@@ -2,7 +2,7 @@ pgn: 130822
 id: navicoUdbDatabaseObjectDump
 description: 'Navico: UDB Database, Object Dump'
 type: Fast
-variantOrder: 7
+variantOrder: 9
 priority: 3
 missing:
 - Fields
@@ -92,42 +92,6 @@ fields:
       type: DYNAMIC_FIELD_VALUE
       description: Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's 64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.
 samples:
-- raw: "2023-01-01-00:00:00.000,3,130822,26,255,208,13,99,ff,06,00,0a,01,9b,fd,c2,00,00,07,bf,01,00,04,00,00,00,00,01,00,04,33,33,87,41,01,00,04,00,00,00,00,01,00,04,00,00,00,40,01,00,04,00,00,00,00,01,00,01,00,01,00,04,00,00,00,00,01,00,04,25,b3,84,3c,01,00,04,00,00,c8,42,01,00,04,00,00,c8,42,01,00,04,01,00,00,00,01,00,01,00,01,00,01,00,01,00,04,cd,cc,88,41,01,00,04,00,a0,e7,44,01,00,04,00,00,c8,42,01,00,01,01,01,00,01,01,01,00,08,ff,ff,e0,ff,00,ff,ff,f0,01,00,08,58,87,b0,2f,00,82,aa,c0,01,00,01,01,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,01,01,01,00,01,09,01,00,01,00,01,00,04,19,00,38,0a,01,00,01,01,01,00,01,01,01,00,01,00,01,00,01,00"  # from merrimac-2022.raw
-  expects:
-    manufacturerCode: "Navico"
-    industryCode: "Marine Industry"
-    marker: ~
-    command: 6
-    address: 0
-    section: 10
-    item: 1
-    objectValue: 64923
-    sub: "0xc20000"
-    token: 48903
-    length: 1
-    class: 0
-    dataType: "VDOP"
-    value: "0x"
-    length.2: 0
-    class.2: 0
-    dataType.2: "GPS All"
-    value.2: "0x"
-    length.3: 0
-    class.3: 4
-    dataType.3: 13107
-    value.3: "0x"
-    length.4: 135
-    class.4: 65
-    dataType.4: "Position"
-    value.4: "0x04000000000100040000004001000400000000010001000100040000000001000425b3843c0100040000c8420100040000c842010004010000000100010001000100010004cdcc884101000400a0e7440100040000c8420100010101000101010008ffffe0ff00fffff00100085887b02f0082aac00100010101000819e8e410008278c0"
-    length.5: 1
-    class.5: 0
-    dataType.5: 6408
-    value.5: "0x"
-    length.6: 232
-    class.6: 228
-    dataType.6: "Course To Steer"
-    value.6: "0x8278c00100010101000109010001000100041900380a01000101010001010100010001000100"
 - raw: "2023-01-01-00:00:00.000,3,130822,38,255,223,13,99,ff,06,00,0f,00,aa,6f,60,04,00,4e,a9,16,00,04,00,00,20,40,04,51,36,cc,3f,04,f2,3e,38,40,04,11,ac,76,40,04,67,3a,86,40,04,9a,99,99,40,04,35,ef,98,40,04,e2,58,97,40,04,eb,73,95,40,04,98,dd,93,40,04,33,33,93,40,04,33,33,86,40,04,33,33,53,40,04,00,00,1a,40,04,00,00,00,40,04,a2,f7,f8,3f,04,3a,44,ec,3f,04,66,66,e6,3f,04,d5,f4,32,40,04,00,00,3c,42,04,66,66,e6,3f,04,00,00,34,43,16,00,04,00,00,a0,40,04,d2,c8,01,40,04,8c,f9,67,40,04,aa,d4,98,40,04,24,d5,a4,40,04,00,00,b8,40,04,9b,55,b7,40,04,48,bf,b5,40,04,51,da,b3,40,04,fe,43,b2,40,04,9a,99,b1,40,04,9a,19,a3,40,04,33,33,83,40,04,9a,99,46,40,04,9a,99,29,40,04,54,53,24,40,04,c6,cc,1a,40,04,66,66,16,40,04,de,fa,5e,40"  # from navico-source-selection.raw
   expects:
     manufacturerCode: "Navico"

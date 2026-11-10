@@ -5,9 +5,27 @@ values:
 - value: 0
   name: Heading Offset
   type: ANGLE_FIX16
+- value: 3
+  name: Mast head unit offset
+  type: ANGLE_FIX16
+- value: 6
+  name: Sea temperature offset
+  type: TEMPERATURE_DELTA_FIX16_CK
 - value: 41
   name: Timezone offset
   type: DURATION_FIX16_MIN
+- value: 49
+  name: Trim offset
+  type: ANGLE_FIX16
+- value: 51
+  name: Barometric pressure offset
+  type: PRESSURE_FIX16_HPA
+- value: 57
+  name: Heel offset
+  type: ANGLE_FIX16
+- value: 58
+  name: Air temperature offset
+  type: TEMPERATURE_DELTA_FIX16_CK
 - value: 260
   name: True wind high
   type: SPEED_UFIX16_CM
@@ -122,6 +140,9 @@ values:
 - value: 5174
   name: Distance unit (companion)
   type: UINT8
+- value: 6144
+  name: Compass calibration status
+  type: UINT16
 - value: 9983
   name: Night mode
   type: LOOKUP
