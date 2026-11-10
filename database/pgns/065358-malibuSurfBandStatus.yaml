@@ -1,0 +1,160 @@
+pgn: 65358
+id: malibuSurfBandStatus
+description: 'Malibu Boats: Surf Band Remote Status'
+type: Single
+priority: 6
+interval: 100
+missing:
+- MissingCompanyFields
+explanation: |-
+  Broadcast by the "Surf Band Dongle Universal" receiver (Medallion PN
+  1539-10855-01, Malibu PN 3962071.1) that pairs with the Malibu/Axis Surf
+  Band wrist remote (FCC ID 2AFN315RM01), an 8-button RF remote for the surf
+  system, ballast wedge, cruise speed and stereo volume. Sent continuously
+  every ~100ms regardless of button state; the receiver has no PGN for
+  button press/release/hold events as such - only the current state of
+  whichever single button is active.
+
+  Observed on a standalone 250kbit bus with only this one sender (source
+  address 158/0x9E) and this one PGN; reverse engineered entirely by
+  injecting known-good RF frames (see notes) and watching this PGN change.
+
+  This is almost certainly NOT a compliant NMEA 2000/J1939 node, despite the
+  PGN falling in the proprietary range and the bus running at the standard
+  NMEA 2000 bitrate: across 3 power cycles it never sent an ISO Address
+  Claim (PGN 60928), it did not respond to an explicit ISO Request (PGN
+  59904) for one, and its source address never varied. Its CAN transceiver
+  (NXP TJA1043, confirmed from the board) is a plain physical-layer part
+  with no protocol stack of its own, so this would be a firmware choice.
+  Treat the Frame Counter fields as specific to this message, not a
+  manufacturer/industry code field, even though they occupy the byte
+  position where NMEA 2000 proprietary PGNs conventionally place one - the
+  value free-runs and is unrelated to any manufacturer code.
+
+  The remote's own RF protocol (not this PGN) is documented at
+  https://github.com/merbanan/rtl_433/pull/3746 (decoder) and
+  https://github.com/merbanan/rtl_433_tests/pull/569 (captures); that
+  protocol's button codes do not correspond numerically to the bit
+  assignments here, the dongle remaps them.
+notes: |-
+  Only one button is ever reported active at a time. Pressing a second
+  button while one is already held switches directly to the new one with
+  no idle frame in between, and two physical buttons pressed simultaneously
+  only ever showed one bit set, varying by which test - this receiver does
+  not appear to latch a true bitmask of concurrently-held buttons.
+
+  The frame counter resets to 1 on every change to the button fields below
+  (a press, a release, or switching from one button directly to another),
+  then increments once per ~100ms frame while unchanged. It free-runs
+  during idle and wraps from 0xFFFE straight to 0x0000, skipping 0xFFFF -
+  consistent with the J1939/NMEA 2000 convention that reserves 0xFFFF to
+  mean "not available", even though (per above) this does not appear to be
+  a compliant node otherwise.
+
+  Evidence: samples/malibu-surfband-dongle.raw.
+fields:
+- id: frameCounterHigh
+  name: Frame Counter, High Byte
+  type: UINT8
+  description: High byte of a 16-bit (High<<8 | Low) counter; see PGN notes.
+- id: frameCounterLow
+  name: Frame Counter, Low Byte
+  type: UINT8
+  description: Low byte of a 16-bit (High<<8 | Low) counter; see PGN notes.
+- id: speedUp
+  name: Speed Up
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: speedDown
+  name: Speed Down
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare1
+  name: Spare
+  type: SPARE
+  bits: 1
+  description: Never observed set; possibly unused on this remote model
+- id: surfLeft
+  name: Surf Left
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare2
+  name: Spare
+  type: SPARE
+  bits: 1
+  description: Never observed set; possibly unused on this remote model
+- id: surfRight
+  name: Surf Right
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: wedgeUp
+  name: Wedge Up
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: wedgeDown
+  name: Wedge Down
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: volumeUp
+  name: Volume Up
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: volumeDown
+  name: Volume Down
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: spare3
+  name: Spare
+  type: SPARE
+  bits: 6
+  description: Never observed set
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 32
+  description: Always 0xFFFFFFFF in every capture ("not available")
+samples:
+- raw: "2026-11-09-16:16:05.000,6,65358,158,255,8,00,02,00,00,ff,ff,ff,ff"  # idle heartbeat, from malibu-surfband-dongle.raw
+  expects:
+    frameCounterHigh: 0
+    frameCounterLow: 2
+    speedUp: 'No'
+    speedDown: 'No'
+    surfLeft: 'No'
+    surfRight: 'No'
+    wedgeUp: 'No'
+    wedgeDown: 'No'
+    volumeUp: 'No'
+    volumeDown: 'No'
+- raw: "2026-11-09-16:16:05.202,6,65358,158,255,8,00,02,08,00,ff,ff,ff,ff"  # Surf Left pressed, from malibu-surfband-dongle.raw
+  expects:
+    frameCounterHigh: 0
+    frameCounterLow: 2
+    speedUp: 'No'
+    speedDown: 'No'
+    surfLeft: 'Yes'
+    surfRight: 'No'
+    wedgeUp: 'No'
+    wedgeDown: 'No'
+    volumeUp: 'No'
+    volumeDown: 'No'
+- raw: "2026-11-09-16:16:07.012,6,65358,158,255,8,00,02,00,01,ff,ff,ff,ff"  # Volume Up pressed, from malibu-surfband-dongle.raw
+  expects:
+    frameCounterHigh: 0
+    frameCounterLow: 2
+    speedUp: 'No'
+    speedDown: 'No'
+    surfLeft: 'No'
+    surfRight: 'No'
+    wedgeUp: 'No'
+    wedgeDown: 'No'
+    volumeUp: 'Yes'
+    volumeDown: 'No'

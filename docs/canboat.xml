@@ -18770,6 +18770,241 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65358</PGN>
+      <Id>malibuSurfBandStatus</Id>
+      <Description>Malibu Boats: Surf Band Remote Status</Description>
+      <Priority>6</Priority>
+      <Explanation>Broadcast by the &quot;Surf Band Dongle Universal&quot; receiver (Medallion PN
+1539-10855-01, Malibu PN 3962071.1) that pairs with the Malibu/Axis Surf
+Band wrist remote (FCC ID 2AFN315RM01), an 8-button RF remote for the surf
+system, ballast wedge, cruise speed and stereo volume. Sent continuously
+every ~100ms regardless of button state; the receiver has no PGN for
+button press/release/hold events as such - only the current state of
+whichever single button is active.
+
+Observed on a standalone 250kbit bus with only this one sender (source
+address 158/0x9E) and this one PGN; reverse engineered entirely by
+injecting known-good RF frames (see notes) and watching this PGN change.
+
+This is almost certainly NOT a compliant NMEA 2000/J1939 node, despite the
+PGN falling in the proprietary range and the bus running at the standard
+NMEA 2000 bitrate: across 3 power cycles it never sent an ISO Address
+Claim (PGN 60928), it did not respond to an explicit ISO Request (PGN
+59904) for one, and its source address never varied. Its CAN transceiver
+(NXP TJA1043, confirmed from the board) is a plain physical-layer part
+with no protocol stack of its own, so this would be a firmware choice.
+Treat the Frame Counter fields as specific to this message, not a
+manufacturer/industry code field, even though they occupy the byte
+position where NMEA 2000 proprietary PGNs conventionally place one - the
+value free-runs and is unrelated to any manufacturer code.
+
+The remote's own RF protocol (not this PGN) is documented at
+https://github.com/merbanan/rtl_433/pull/3746 (decoder) and
+https://github.com/merbanan/rtl_433_tests/pull/569 (captures); that
+protocol's button codes do not correspond numerically to the bit
+assignments here, the dongle remaps them.</Explanation>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>MissingCompanyFields</MissingAttribute>
+      </Missing>
+      <FieldCount>14</FieldCount>
+      <Length>8</Length>
+      <TransmissionInterval>100</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>frameCounterHigh</Id>
+          <Name>Frame Counter, High Byte</Name>
+          <Description>High byte of a 16-bit (High&lt;&lt;8 | Low) counter; see PGN notes.</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>frameCounterLow</Id>
+          <Name>Frame Counter, Low Byte</Name>
+          <Description>Low byte of a 16-bit (High&lt;&lt;8 | Low) counter; see PGN notes.</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>speedUp</Id>
+          <Name>Speed Up</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>speedDown</Id>
+          <Name>Speed Down</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>17</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>spare1</Id>
+          <Name>Spare</Name>
+          <Description>Never observed set; possibly unused on this remote model</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>surfLeft</Id>
+          <Name>Surf Left</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>19</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spare2</Id>
+          <Name>Spare</Name>
+          <Description>Never observed set; possibly unused on this remote model</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>surfRight</Id>
+          <Name>Surf Right</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>wedgeUp</Id>
+          <Name>Wedge Up</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>wedgeDown</Id>
+          <Name>Wedge Down</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>23</BitOffset>
+          <BitStart>7</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>volumeUp</Id>
+          <Name>Volume Up</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>volumeDown</Id>
+          <Name>Volume Down</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>25</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>spare3</Id>
+          <Name>Spare</Name>
+          <Description>Never observed set</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <Description>Always 0xFFFFFFFF in every capture (&quot;not available&quot;)</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65359</PGN>
       <Id>seatalkPilotHeading</Id>
       <Description>Seatalk: Pilot Heading</Description>
