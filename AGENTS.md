@@ -480,8 +480,9 @@ keel/keel edit
   prefix is accepted); a `bit` enum's value is the bit position.
 - **Repeating field sets:** "+ repeating field set" marks the trailing fields
   that repeat (at most two, second after first) and its optional count field.
-  A set nested in another is shown but not laid out by the form: edit that
-  PGN's fields in the YAML.
+  "+ nested set" starts set 2 inside each record of set 1 instead (the "nested
+  in set 1" box switches an existing set 2), and "end nested set" ends it, so
+  the fields added next are set 1's again.
 - **Saving is rule-gated:** the editor refuses to write while any rule fails,
   names the target file from the PGN + `id`, and then offers to regenerate the
   artifacts. Scratch mode validates without writing; undo reverts the last save.
