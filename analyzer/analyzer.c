@@ -174,6 +174,29 @@ static void            printCanRaw(const RawMessage *msg);
 static void            showBuffers(void);
 static unsigned int    getMessageByteCount(const char *const msg);
 
+/*
+ * Parse a PGN filter argument. It must be a whole positive decimal number that fits
+ * in an int: strtol() alone would also take leading whitespace, a sign, or trailing
+ * junk, and a value too big for an int would wrap. Returns 0 when it is not one.
+ */
+static int parsePgnFilter(const char *value)
+{
+  char *end;
+  long  pgn;
+
+  if (!isdigit((unsigned char) value[0]))
+  {
+    return 0;
+  }
+  errno = 0;
+  pgn   = strtol(value, &end, 10);
+  if (errno == ERANGE || *end != '\0' || pgn <= 0 || pgn > INT_MAX)
+  {
+    return 0;
+  }
+  return (int) pgn;
+}
+
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
@@ -228,29 +251,6 @@ static void usage(char **argv, char **av)
   printf("     -fixtime str      Print str as timestamp in logging\n");
   printf("\n");
   exit(1);
-}
-
-/*
- * Parse a PGN filter argument. It must be a whole positive decimal number that fits
- * in an int: strtol() alone would also take leading whitespace, a sign, or trailing
- * junk, and a value too big for an int would wrap. Returns 0 when it is not one.
- */
-static int parsePgnFilter(const char *value)
-{
-  char *end;
-  long  pgn;
-
-  if (!isdigit((unsigned char) value[0]))
-  {
-    return 0;
-  }
-  errno = 0;
-  pgn   = strtol(value, &end, 10);
-  if (errno == ERANGE || *end != '\0' || pgn <= 0 || pgn > INT_MAX)
-  {
-    return 0;
-  }
-  return (int) pgn;
 }
 
 /*
