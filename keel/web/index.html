@@ -831,6 +831,9 @@ function setNested(on) {
     flash("set 1 ends before set 2: remove that end first", false);
   } else {
     repNested = on;
+    // A nested set counts from a field of set 1; drop one from before it.
+    if (on && fieldsState.findIndex(f => f.id === repCountField[1]) < repAt[0])
+      repCountField[1] = "";
     normEnds();
   }
   renderAll();
@@ -850,6 +853,9 @@ function deleteField(i) {
   // a field of set 1, so set 1 keeps at least one field ahead of set 2.
   if (repAt[1] >= 0 && i >= repAt[0] && i < repAt[1] && repAt[1] - repAt[0] === 1)
     return flash("set 1 needs a field before set 2: remove set 2 first", false);
+  // A set no longer counts from a deleted field, even if a later one reuses its id.
+  for (let k = 0; k < 2; k++)
+    if (repCountField[k] === fieldsState[i].id) repCountField[k] = "";
   fieldsState.splice(i, 1);
   // keep set boundaries anchored to the same fields
   for (let k = 0; k < 2; k++) {
