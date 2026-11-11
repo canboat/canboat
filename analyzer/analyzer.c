@@ -253,6 +253,10 @@ static int parsePgnFilter(const char *value)
   return (int) pgn;
 }
 
+/*
+ * Parse the options, then decode every raw message read from stdin (or -file) and
+ * print it as text or JSON, keeping only those that pass the -src, -dst and PGN filters.
+ */
 int main(int argc, char **argv)
 {
   int    r;
