@@ -500,7 +500,13 @@ fn fill_pgn_length(pgn: &mut crate::model::Pgn) -> Result<(), String> {
     if let Some(rep1) = &pgn.repeating1
         && rep1.count > 0
     {
-        let rep2 = pgn.repeating2.as_ref().map(|r| r.count).unwrap_or(0);
+        // A set nested in set 1 is already counted in set 1.
+        let rep2 = pgn
+            .repeating2
+            .as_ref()
+            .filter(|r| !r.nested)
+            .map(|r| r.count)
+            .unwrap_or(0);
         counted -= (rep1.count + rep2) as usize;
         is_variable = true;
     }

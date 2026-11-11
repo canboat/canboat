@@ -684,6 +684,28 @@ fn empty_writes_trailing_padding_and_bytes() {
     );
 }
 
+/// A repeating set nested in another: the B&G H5000 table dumps of PGN
+/// 130822, each a list of tables that each hold a list of values (#1198).
+#[test]
+fn nested_repeating_json() {
+    run_case(
+        "nested-repeating.in",
+        "nested-repeating.out",
+        &["--json", "--fixtime", "nested-repeating"],
+    );
+}
+
+/// The same dumps as text: a nested value is numbered by its table and
+/// its place in it ("Value 2.3").
+#[test]
+fn nested_repeating_text() {
+    run_case(
+        "nested-repeating.in",
+        "nested-repeating-text.out",
+        &["--fixtime", "nested-repeating"],
+    );
+}
+
 /// A real Yamaha outboard J1939 capture in candump's pretty format,
 /// against the C fixture (regenerated with today's database via
 /// `candump2analyzer | analyzer-j1939`). Exercises the J1939 schema
