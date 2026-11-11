@@ -394,6 +394,12 @@ function defToState(f) {
     bitLengthField: f.bitLengthField ?? "",
     allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
     primaryKey: !!f.primaryKey,
+    // Not editable here, but carried through so a rewrite keeps them.
+    spn: f.spn ?? "", continues: f.continues ?? "", encoding: f.encoding ?? "",
+    trailingZeroIsDigit: f.trailingZeroIsDigit ?? null,
+    proprietary: !!f.proprietary,
+    dynamicFieldLength: !!f.dynamicFieldLength,
+    dynamicFieldLengthOverhead: f.dynamicFieldLengthOverhead || "",
   };
 }
 
@@ -1344,6 +1350,11 @@ function fieldYaml(f, pad) {
       : "lookup";
     y += `${p}${key}: ${f.lookup}\n`;
   }
+  // Not editable here, but carried through so a rewrite keeps them.
+  if (f.proprietary) y += `${p}proprietary: true\n`;
+  if (f.dynamicFieldLength) y += `${p}dynamicFieldLength: true\n`;
+  if (has(f.dynamicFieldLengthOverhead))
+    y += `${p}dynamicFieldLengthOverhead: ${Number(f.dynamicFieldLengthOverhead)}\n`;
   if (has(f.note)) y += noteYaml(f.note, p);
   if (has(f.unit) && f.unit !== ft.unit) y += `${p}unit: ${yq(f.unit)}\n`;
   if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
@@ -1360,8 +1371,8 @@ function fieldYaml(f, pad) {
 // Format a range bound as the converter does: a float, so a whole number
 // still carries a trailing .0 (rangeMin: 0.0, not 0).
 function asFloat(v) {
-  const n = Number(v);
-  return Number.isInteger(n) ? n + ".0" : String(n);
+  const s = String(Number(v));
+  return /^-?\d+$/.test(s) ? s + ".0" : s;   // not on 3.4e+38
 }
 
 // A note: is a plain scalar, or a `|-` block scalar when it spans lines.

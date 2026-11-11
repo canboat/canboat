@@ -357,7 +357,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .map(|f| {
             let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
             format!(
-                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"continues\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"trailingZeroIsDigit\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"continues\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"trailingZeroIsDigit\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{},\"proprietary\":{},\"dynamicFieldLength\":{},\"dynamicFieldLengthOverhead\":{}}}",
                 js(&f.id),
                 js(&f.name),
                 js(&f.type_),
@@ -386,6 +386,9 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 opt_s(&f.encoding),
                 f.allow_lookup_width_mismatch,
                 f.primary_key,
+                f.proprietary,
+                f.dynamic_field_length,
+                f.dynamic_field_length_overhead,
             )
         })
         .collect();
