@@ -230,6 +230,29 @@ static void usage(char **argv, char **av)
   exit(1);
 }
 
+/*
+ * Parse a PGN filter argument. It must be a whole positive decimal number that fits
+ * in an int: strtol() alone would also take leading whitespace, a sign, or trailing
+ * junk, and a value too big for an int would wrap. Returns 0 when it is not one.
+ */
+static int parsePgnFilter(const char *value)
+{
+  char *end;
+  long  pgn;
+
+  if (!isdigit((unsigned char) value[0]))
+  {
+    return 0;
+  }
+  errno = 0;
+  pgn   = strtol(value, &end, 10);
+  if (errno == ERANGE || *end != '\0' || pgn <= 0 || pgn > INT_MAX)
+  {
+    return 0;
+  }
+  return (int) pgn;
+}
+
 int main(int argc, char **argv)
 {
   int    r;
@@ -414,12 +437,9 @@ int main(int argc, char **argv)
 
     else
     {
-      char *end;
-      errno    = 0;
-      long pgn = strtol(av[1], &end, 10);
-      if (errno != ERANGE && *end == '\0' && pgn > 0 && pgn <= INT_MAX && onlyPgn < ARRAY_SIZE(onlyPgnList))
+      int prn = parsePgnFilter(av[1]);
+      if (prn > 0 && onlyPgn < ARRAY_SIZE(onlyPgnList))
       {
-        int prn                = (int) pgn;
         onlyPgnList[onlyPgn++] = prn;
         if (onlyPgn == 1)
         {
