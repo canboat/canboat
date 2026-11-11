@@ -846,6 +846,10 @@ function removeRepeatingSet(k) {
 }
 
 function deleteField(i) {
+  // Set 2 starts after set 1's first field, and a nested set 2 counts from
+  // a field of set 1, so set 1 keeps at least one field ahead of set 2.
+  if (repAt[1] >= 0 && i >= repAt[0] && i < repAt[1] && repAt[1] - repAt[0] === 1)
+    return flash("set 1 needs a field before set 2: remove set 2 first", false);
   fieldsState.splice(i, 1);
   // keep set boundaries anchored to the same fields
   for (let k = 0; k < 2; k++) {
@@ -873,10 +877,14 @@ function repDividerRow(k) {
   const sel = document.createElement("select");
   sel.style.width = "auto";
   const none = document.createElement("option");
-  none.value = ""; none.textContent = "(fills remaining bytes)";
+  // A nested set repeats once per record of set 1, so it counts from a
+  // field of that record (R05).
+  const nestedSet = k === 1 && repNested;
+  none.value = "";
+  none.textContent = nestedSet ? "(choose a set 1 field)" : "(fills remaining bytes)";
   sel.appendChild(none);
   fieldsState.forEach((f, i) => {
-    if (i < repAt[k]) {
+    if (i < repAt[k] && (!nestedSet || i >= repAt[0])) {
       const o = document.createElement("option");
       o.value = f.id; o.textContent = f.id;
       sel.appendChild(o);

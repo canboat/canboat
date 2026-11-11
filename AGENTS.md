@@ -481,7 +481,8 @@ keel/keel edit
 - **Repeating field sets:** "+ repeating field set" starts a set of fields
   that repeat (at most two, second after first) and sets its optional count field.
   "+ nested set" starts set 2 inside each record of set 1 instead (the "nested
-  in set 1" box switches an existing set 2). "End set" ends the current set,
+  in set 1" box switches an existing set 2); a nested set must count from a
+  set 1 field that comes before it (R05). "End set" ends the current set,
   so the fields added next do not repeat, or are set 1's again after a nested
   set.
 - **Saving is rule-gated:** the editor refuses to write while any rule fails,
