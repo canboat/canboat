@@ -1435,6 +1435,9 @@ fn decode_scalar(
     }
 }
 
+/// Wrap a decoded scalar `value` of field `f` as a [`DecodedField`], and note
+/// in `ctx` what later fields need from it: the PGN or parameter index that a
+/// VARIABLE field resolves against, the previous value, or a dynamic length.
 fn finish_scalar(
     f: &'static FieldInfo,
     value: FieldValue,
@@ -1647,6 +1650,9 @@ fn match_pgn_by_parameters(
     None
 }
 
+/// Decode a VARIABLE field: its type is that of the parameter `ctx` names,
+/// a field of the PGN an earlier PGN field named. Returns `None` when
+/// either is missing or unknown.
 fn decode_variable(
     f: &'static FieldInfo,
     data: &[u8],

@@ -1172,6 +1172,8 @@ fn raw_field(
     }
 }
 
+/// Build the canboat.json model of the `protocol` PGNs in `db`, the input to
+/// the Rust schema emitter.
 fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> CanboatJson {
     let mut pgns = Vec::new();
     let source = db.flavor_pgns(protocol);

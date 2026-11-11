@@ -343,6 +343,8 @@ fn api_model(server: &EditServer) -> Result<String, String> {
     ))
 }
 
+/// `GET /api/pgn?id=`: one PGN's definition as the editor's JSON, its
+/// repeating sets included, read from its YAML file.
 fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
     let protocol = protocol_from_query(query)?;
     let id = query_param(query, "id").ok_or("missing id=")?;

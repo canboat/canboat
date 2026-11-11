@@ -195,6 +195,9 @@ fn in_same_repeating_set(rep_sets: &[(u32, u32)], a: u32, b: u32) -> bool {
         .any(|(s, n)| (*s..*s + *n).contains(&a) && (*s..*s + *n).contains(&b))
 }
 
+/// Decode `data` as `pgn`, field by field, for checking samples. Each
+/// record of a repeating set gets its instance number; the records of a
+/// set nested in set 1 are numbered over the whole message.
 pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>> {
     let mut out = Vec::new();
     let mut static_off = std::collections::HashMap::new();

@@ -16,6 +16,7 @@ pub enum Scope {
 }
 
 impl Scope {
+    /// Heading of this scope's section in the rules list.
     fn title(self) -> &'static str {
         match self {
             Scope::Shape => "Shape (schema over the YAML)",

@@ -457,6 +457,7 @@ fn emit_field(db: &Database, f: &Field) -> String {
     format!("      {{{}}}", parts.join(", "))
 }
 
+/// One PGN's initializer in the C `pgnList`.
 fn emit_pgn(db: &Database, p: &Pgn) -> String {
     let mut out = String::with_capacity(2 << 10);
     out.push_str(&format!(

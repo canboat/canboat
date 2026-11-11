@@ -451,6 +451,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
     })
 }
 
+/// Parse one entry of a PGN's `samples:` list.
 fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
     check_keys(y, &SAMPLE_KEYS, "sample", ctx)?;
     let raw = match get(y, "raw") {

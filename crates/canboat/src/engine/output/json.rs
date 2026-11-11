@@ -338,10 +338,14 @@ fn write_json_inner<W: fmt::Write>(
 
     // A set nested in set 1 is written inside each record of set 1, as
     // that record's "list2", where its fields sit among set 1's.
-    let nested = opts
-        .protocol
-        .database(crate::engine::Units::Si)
-        .pgn_by_id(pgn.id)
+    // Only a PGN that decoded a set 2 pays for the definition lookup.
+    let nested = pgn.has_repeating_set[1]
+        .then(|| {
+            opts.protocol
+                .database(crate::engine::Units::Si)
+                .pgn_by_id(pgn.id)
+        })
+        .flatten()
         .filter(|i| i.repeating_field_set2_parent == Some(1))
         .and_then(|i| i.repeating_field_set2_start_field);
     if let Some(start2) = nested {
