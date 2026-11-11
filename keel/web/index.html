@@ -750,10 +750,13 @@ function seedRepeats(def) {
   [def.repeating1, def.repeating2].forEach((rp, k) => {
     if (!rp) return;
     repAt[k] = rp.start - 1;
-    repEnd[k] = rp.start - 1 + rp.count;
     if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
   });
   repNested = !!(def.repeating2 && def.repeating2.nested);
+  // a set that runs on as far as it can has no end of its own
+  [def.repeating1, def.repeating2].forEach((rp, k) => {
+    if (rp && rp.start - 1 + rp.count < runsTo(k)) repEnd[k] = rp.start - 1 + rp.count;
+  });
   normEnds();
 }
 
@@ -762,11 +765,16 @@ function runsTo(k) {
   return k === 0 && repAt[1] >= 0 && !repNested ? repAt[1] : fieldsState.length;
 }
 
-// Drop an end that says no more than running on would, and the end of a set
-// that holds a nested set.
+// Drop the end of a set that is gone, that holds a nested set, or that lies
+// where set 1 runs into set 2 anyway. An end at the end of the field list
+// stays: the fields added next go after it.
 function normEnds() {
-  for (let k = 0; k < 2; k++)
-    if (repAt[k] < 0 || repEnd[k] >= runsTo(k) || (k === 0 && repNested)) repEnd[k] = -1;
+  for (let k = 0; k < 2; k++) {
+    const intoSet2 = k === 0 && repAt[1] >= 0 && !repNested;
+    if (repAt[k] < 0 || (k === 0 && repNested) || repEnd[k] > runsTo(k) ||
+        (intoSet2 && repEnd[k] === repAt[1]))
+      repEnd[k] = -1;
+  }
 }
 
 // The set the fields added next go into, when it can be ended there: the
@@ -817,7 +825,7 @@ function removeSetEnd(k) {
 // only stop being nested when no set 1 fields follow it, and only be nested
 // when set 1 runs on into it.
 function setNested(on) {
-  if (!on && repEnd[1] >= 0) {
+  if (!on && repEnd[1] >= 0 && repEnd[1] < fieldsState.length) {
     flash("set 1 has fields after set 2: remove them, or the end of set 2, first", false);
   } else if (on && repEnd[0] >= 0) {
     flash("set 1 ends before set 2: remove that end first", false);
