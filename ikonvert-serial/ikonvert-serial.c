@@ -73,6 +73,10 @@ static bool processReadBuffer(StringBuffer *in, int out);
 static void initializeDevice(void);
 static void sendNextInitCommand(void);
 
+/*
+ * Parse the options, then relay between a Digital Yacht iKonvert and stdin/stdout:
+ * received frames go out in canboat format, lines read in are sent to the bus.
+ */
 int main(int argc, char **argv)
 {
   int            handle;

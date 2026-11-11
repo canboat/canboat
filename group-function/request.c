@@ -97,6 +97,10 @@ static uint8_t *encodeField(char **argv, char **av, uint8_t *b)
   return b;
 }
 
+/*
+ * Print, in canboat PLAIN format, a PGN 126208 Request that asks device <dest> to send
+ * <pgn> every <interval> ms, from the fields and values on the command line.
+ */
 int main(int argc, char **argv)
 {
   int                      ac = argc;

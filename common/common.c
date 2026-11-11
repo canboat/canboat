@@ -816,6 +816,10 @@ uint8_t scanNibble(char c)
   return 16;
 }
 
+/*
+ * Parse a command-line option value as a whole decimal number from min to max, or abort
+ * naming the option. See common.h.
+ */
 uint64_t parseNumberOption(const char *option, const char *value, uint64_t min, uint64_t max)
 {
   char              *end = NULL;

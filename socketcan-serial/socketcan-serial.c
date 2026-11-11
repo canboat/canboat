@@ -281,6 +281,10 @@ static uint32_t readSysfsBitrate(const char *iface);
 static bool     readLoadSample(const char *iface, uint64_t now, LoadSample *out);
 static bool     computeLoadPct(const LoadSample *prev, const LoadSample *curr, uint32_t bitrate, uint8_t *out);
 
+/*
+ * Parse the options, then claim an address on a SocketCAN interface and relay between
+ * it and stdin/stdout in canboat format.
+ */
 int main(int argc, char **argv)
 {
   const char *name   = argv[0];

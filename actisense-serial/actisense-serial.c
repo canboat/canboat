@@ -119,6 +119,10 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, unsigned
 static void ngtMessageReceived(const unsigned char *msg, size_t msgLen);
 static void emitNetworkStatus(void);
 
+/*
+ * Parse the options, then relay between an Actisense NGT-1 (or a capture file) and
+ * stdin/stdout: received frames go out in canboat FAST format, lines read in are sent.
+ */
 int main(int argc, char **argv)
 {
   int            handle;
