@@ -816,6 +816,23 @@ uint8_t scanNibble(char c)
   return 16;
 }
 
+uint64_t parseNumberOption(const char *option, const char *value, uint64_t min, uint64_t max)
+{
+  char              *end = NULL;
+  unsigned long long n   = 0;
+
+  if (isdigit((unsigned char) value[0]))
+  {
+    errno = 0;
+    n     = strtoull(value, &end, 10);
+  }
+  if (end == NULL || *end != '\0' || errno == ERANGE || n < min || n > max)
+  {
+    logAbort("Invalid value for %s: '%s' (expected %" PRIu64 " to %" PRIu64 ")\n", option, value, min, max);
+  }
+  return (uint64_t) n;
+}
+
 int scanHex(char **p, uint8_t *m)
 {
   uint8_t hi, lo;

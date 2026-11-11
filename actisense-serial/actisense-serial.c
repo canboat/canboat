@@ -160,14 +160,14 @@ int main(int argc, char **argv)
     {
       argc--;
       argv++;
-      timeout = strtol(argv[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", argv[1], 0, INT32_MAX);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
     {
       argc--;
       argv++;
-      speed = strtol(argv[1], 0, 10);
+      speed = (int) parseNumberOption("-s", argv[1], 1, INT32_MAX);
       switch (speed)
       {
         case 38400:

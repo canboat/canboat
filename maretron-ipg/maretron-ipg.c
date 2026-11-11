@@ -123,7 +123,7 @@ int main(int argc, char **argv)
     {
       ac--;
       av++;
-      timeout = strtol(av[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", av[1], 0, INT32_MAX);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(av[1], "-d") == 0)
