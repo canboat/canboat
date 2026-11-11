@@ -227,11 +227,16 @@ static void usage(char **argv, char **av)
   exit(1);
 }
 
+/*
+ * Parse the value of -src or -dst. It must be a whole decimal number from 0 to 255:
+ * strtol() alone would also take leading whitespace, a sign, or trailing junk.
+ * Aborts with a message naming the option when it is not.
+ */
 static int parseAddressFilter(const char *option, const char *value)
 {
   char *end;
   long  address = strtol(value, &end, 10);
-  if (end == value || *end != '\0' || address < 0 || address > UINT8_MAX)
+  if (!isdigit((unsigned char) value[0]) || *end != '\0' || address < 0 || address > UINT8_MAX)
   {
     logAbort("Invalid address for %s: '%s' (expected 0 to 255)\n", option, value);
   }
