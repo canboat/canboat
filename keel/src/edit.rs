@@ -381,7 +381,9 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 opt_s(&f.bit_length_field),
                 f.trailing_zero_is_digit
                     .as_ref()
-                    .map(|(field, value)| format!("{{\"field\":{},\"value\":{value}}}", js(field)))
+                    // The value is an i64, more than a JS number holds exactly, so it
+                    // travels as a decimal string and is written back verbatim.
+                    .map(|(field, value)| format!("{{\"field\":{},\"value\":\"{value}\"}}", js(field)))
                     .unwrap_or_else(|| "null".into()),
                 opt_s(&f.encoding),
                 f.allow_lookup_width_mismatch,
