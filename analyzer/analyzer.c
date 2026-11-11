@@ -155,6 +155,22 @@ static bool isNmea0183(const char *msg)
 {
   return msg[0] == '$' || msg[0] == '!' || msg[0] == '\\';
 }
+
+/*
+ * Parse the value of -src or -dst. It must be a whole decimal number from 0 to 255:
+ * strtol() alone would also take leading whitespace, a sign, or trailing junk.
+ * Aborts with a message naming the option when it is not.
+ */
+static int parseAddressFilter(const char *option, const char *value)
+{
+  char *end;
+  long  address = strtol(value, &end, 10);
+  if (!isdigit((unsigned char) value[0]) || *end != '\0' || address < 0 || address > UINT8_MAX)
+  {
+    logAbort("Invalid address for %s: '%s' (expected 0 to 255)\n", option, value);
+  }
+  return (int) address;
+}
 static bool            isMsgAllowed(const RawMessage *msg);
 static bool            isTargetPgnAllowed(uint32_t pgn);
 static void            printCanFormat(RawMessage *msg);
@@ -225,22 +241,6 @@ static void usage(char **argv, char **av)
   printf("     -fixtime str      Print str as timestamp in logging\n");
   printf("\n");
   exit(1);
-}
-
-/*
- * Parse the value of -src or -dst. It must be a whole decimal number from 0 to 255:
- * strtol() alone would also take leading whitespace, a sign, or trailing junk.
- * Aborts with a message naming the option when it is not.
- */
-static int parseAddressFilter(const char *option, const char *value)
-{
-  char *end;
-  long  address = strtol(value, &end, 10);
-  if (!isdigit((unsigned char) value[0]) || *end != '\0' || address < 0 || address > UINT8_MAX)
-  {
-    logAbort("Invalid address for %s: '%s' (expected 0 to 255)\n", option, value);
-  }
-  return (int) address;
 }
 
 /*
