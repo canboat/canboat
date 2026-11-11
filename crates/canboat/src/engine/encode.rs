@@ -321,6 +321,9 @@ pub struct PgnBuilder {
     /// within the set (`order - start_field`). Zero instances → the
     /// payload simply ends before the set, mirroring decode.
     sets: [Vec<Vec<Option<Staged>>>; 2],
+    /// When set 2 is nested in set 1: for each instance of set 2, the
+    /// instance of set 1 that holds it.
+    set2_parent: Vec<usize>,
     /// Read the values left out as the decoder leaves them out
     /// ([`read_as_decoded`](Self::read_as_decoded)): off, so a key/value value left
     /// unset is refused rather than sent as "unknown".
@@ -375,6 +378,7 @@ impl PgnBuilder {
             timestamp: None,
             staged: vec![None; pgn.fields.len()],
             sets: [Vec::new(), Vec::new()],
+            set2_parent: Vec::new(),
             decoded: false,
         }
     }
@@ -519,6 +523,11 @@ impl PgnBuilder {
                 })
     }
 
+    /// Whether set 2 is nested in set 1.
+    fn nested(&self) -> bool {
+        self.pgn.repeating_field_set2_parent == Some(1)
+    }
+
     /// Resolve repeating set `set` (1 or 2) to `(start index, size,
     /// count-field index)`, all zero-based, or `None` if this PGN does
     /// not declare that set.
@@ -549,11 +558,27 @@ impl PgnBuilder {
     /// defaults at build time, exactly like top-level fields. The set's
     /// count field (when the schema declares one) is set automatically
     /// from the number of instances unless staged explicitly.
+    ///
+    /// When set 2 is nested in set 1
+    /// ([`PgnInfo::repeating_field_set2_parent`]), an instance of set 2
+    /// belongs to the latest instance of set 1, and its count field in that
+    /// record counts the instances of set 2 it holds.
     pub fn add_set_instance(&mut self, set: usize) -> Result<usize, EncodeError> {
         let (_, size, _) = self.set_layout(set).ok_or(EncodeError::NoRepeatingSet {
             pgn_id: self.pgn.id,
             set,
         })?;
+        if set == 2 && self.nested() {
+            let parent = self.sets[0]
+                .len()
+                .checked_sub(1)
+                .ok_or(EncodeError::NoSuchInstance {
+                    pgn_id: self.pgn.id,
+                    set: 1,
+                    instance: 0,
+                })?;
+            self.set2_parent.push(parent);
+        }
         let instances = &mut self.sets[set - 1];
         instances.push(vec![None; size]);
         Ok(instances.len() - 1)
@@ -617,6 +642,14 @@ impl PgnBuilder {
         let set2 = self.set_layout(2);
         let mut idx = 0usize;
         while idx < self.pgn.fields.len() {
+            if let Some((start, size, _)) = set1
+                && idx == start
+                && self.nested()
+            {
+                self.emit_nested(&mut buf, &mut next_bit)?;
+                idx += size;
+                continue;
+            }
             // A repeating set starts at this field? Emit its staged
             // instances and skip past the group's schema fields.
             let mut in_set = false;
@@ -857,6 +890,85 @@ impl PgnBuilder {
         })
     }
 
+    /// Emit the instances of set 1 when set 2 is nested in it: each with
+    /// the instances of set 2 it holds, at set 2's place among its fields,
+    /// and its count of them filled in when not staged.
+    fn emit_nested(&self, buf: &mut Vec<u8>, next_bit: &mut usize) -> Result<(), EncodeError> {
+        let (Some((start1, size1, _)), Some((start2, size2, count2))) =
+            (self.set_layout(1), self.set_layout(2))
+        else {
+            return Ok(());
+        };
+        let fields1 = &self.pgn.fields[start1..start1 + size1];
+        let fields2 = &self.pgn.fields[start2..start2 + size2];
+        for (n, inst) in self.sets[0].iter().enumerate() {
+            let inner: Vec<&Vec<Option<Staged>>> = self.sets[1]
+                .iter()
+                .zip(&self.set2_parent)
+                .filter(|(_, p)| **p == n)
+                .map(|(i, _)| i)
+                .collect();
+            let mut j = 0;
+            while j < size1 {
+                if start1 + j == start2 {
+                    for record in &inner {
+                        self.emit_record(buf, next_bit, fields2, record)?;
+                    }
+                    j += size2;
+                    continue;
+                }
+                if count2 == Some(start1 + j) && inst[j].is_none() && !self.decoded {
+                    let count = Staged::Scalar(inner.len() as u64);
+                    emit_field(buf, next_bit, self.pgn.pgn, &fields1[j], Some(&count))?;
+                } else {
+                    self.emit_field_of(buf, next_bit, fields1, inst, j)?;
+                }
+                j += 1;
+            }
+        }
+        Ok(())
+    }
+
+    /// Emit every field of one record of a repeating set.
+    fn emit_record(
+        &self,
+        buf: &mut Vec<u8>,
+        next_bit: &mut usize,
+        fields: &'static [FieldInfo],
+        record: &[Option<Staged>],
+    ) -> Result<(), EncodeError> {
+        for j in 0..fields.len() {
+            self.emit_field_of(buf, next_bit, fields, record, j)?;
+        }
+        Ok(())
+    }
+
+    /// Emit field `j` of a record, `fields` and `record` being its
+    /// schema fields and staged values.
+    fn emit_field_of(
+        &self,
+        buf: &mut Vec<u8>,
+        next_bit: &mut usize,
+        fields: &'static [FieldInfo],
+        record: &[Option<Staged>],
+        j: usize,
+    ) -> Result<(), EncodeError> {
+        let f = &fields[j];
+        match &record[j] {
+            Some(Staged::Dynamic(v)) => {
+                self.emit_dynamic(buf, next_bit, fields, record, j, Some(v), false)
+            }
+            None if self.decoded && f.field_type == Some(FieldType::DynamicFieldValue) => {
+                self.emit_dynamic(buf, next_bit, fields, record, j, None, false)
+            }
+            None => {
+                let derived = continuing_staged(fields, record, j);
+                emit_field(buf, next_bit, self.pgn.pgn, f, derived.as_ref())
+            }
+            other => emit_field(buf, next_bit, self.pgn.pgn, f, other.as_ref()),
+        }
+    }
+
     /// A copy with every `INDIRECT_LOOKUP` name replaced by its code,
     /// looked up under the value of its key field: in the same record
     /// when the key is in the field's repeating set, else at the top.
@@ -870,6 +982,7 @@ impl PgnBuilder {
             timestamp: self.timestamp.clone(),
             staged: self.staged.clone(),
             sets: self.sets.clone(),
+            set2_parent: self.set2_parent.clone(),
             decoded: self.decoded,
         };
         for idx in 0..self.pgn.fields.len() {

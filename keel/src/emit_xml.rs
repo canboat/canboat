@@ -455,6 +455,9 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
                 if let Some(cf) = rep.count_field {
                     self.xml_u(6, &format!("RepeatingFieldSet{n}CountField"), cf as u64);
                 }
+                if rep.nested {
+                    self.xml_u(6, &format!("RepeatingFieldSet{n}Parent"), 1);
+                }
             }
         }
 

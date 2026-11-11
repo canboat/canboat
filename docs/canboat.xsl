@@ -79,6 +79,9 @@
         (with name "<xsl:value-of select="Fields/Field[Order = $Set2StartField]/Name"/>")
         form repeating set 2. The set is repeated until there is no more data in the PGN.
       </xsl:if>
+      <xsl:if test="RepeatingFieldSet2Parent">
+        Set 2 lies inside set 1: it is repeated in full within each repetition of set 1.
+      </xsl:if>
     </xsl:if>
 
   </xsl:template>

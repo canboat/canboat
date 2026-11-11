@@ -307,6 +307,7 @@ mod tests {
             bit_length: None,
             repeat_index: idx,
             repeat_set: set,
+            repeat_parent: None,
             overrides: None,
         };
         let pgn = DecodedPgn {
