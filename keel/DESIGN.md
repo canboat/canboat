@@ -193,8 +193,13 @@ and it *contains* the fields that repeat. The three numbers the C runtime
 wants are derived, never authored: `count` is the length of the nested list,
 `start` its position once flattened, and `countField` the order of the field
 whose id it names. Nesting makes a set that starts mid-field or runs past the
-end unrepresentable rather than merely invalid. At most two blocks per PGN
-(the C carries `repeating1` and `repeating2`); they may not nest.
+end unrepresentable rather than merely invalid. At most two sets per PGN
+(the C carries `repeating1` and `repeating2`). The second may be nested in
+the first, as the last item of its block: it then repeats in full within each
+record of the first, its `countField` is a field of that record, and the
+first set's `count` includes its fields. It is emitted as
+`RepeatingFieldSet2Parent` (1) in the XML and `repeatingParent2` in C, and a
+nested set cannot nest again.
 
 Other field-level keys, replacing today's macro zoo: `signed`, `precision`,
 `primaryKey: true`, `proprietary: true` (field only

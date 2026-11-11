@@ -329,6 +329,61 @@ fn frame_from_json_as(
     Ok(Some(frame))
 }
 
+/// Stage the records of repeating set `set`, the array `value` under `key`,
+/// as instances. A record of set 1 may hold a `"list2"` of its own: the
+/// records of set 2 when that set is nested in set 1.
+fn stage_instances<'a>(
+    db: &'static PgnDatabase,
+    builder: &mut PgnBuilder,
+    key: &str,
+    set: usize,
+    value: &'a Value,
+    by_id: &mut Vec<(usize, usize, &'a str, &'static str)>,
+) -> Result<()> {
+    let Value::Array(instances) = value else {
+        bail!("'{key}' is not an array");
+    };
+    let nested = builder.pgn_info().repeating_field_set2_parent == Some(1);
+    for inst in instances {
+        let Value::Object(inst_fields) = inst else {
+            bail!("'{key}' entry is not an object");
+        };
+        let idx = builder.add_set_instance(set).map_err(|e| anyhow!("{e}"))?;
+        // A group-function parameter given by the id of the field it
+        // names, as `parameterId` (canboat#1157), when its number
+        // is not given.
+        if let Some(id) = inst_fields.get("parameterId").and_then(Value::as_str)
+            && let Some(index_field) = set_fields(builder.pgn_info(), set)
+                .find(|f| f.field_type == Some(FieldType::FieldIndex))
+            && !inst_fields.contains_key(index_field.id)
+            && !inst_fields.contains_key(index_field.name)
+        {
+            by_id.push((set, idx, id, index_field.id));
+        }
+        for (fkey, fval) in inst_fields {
+            if fkey == "parameterId" {
+                continue;
+            }
+            if fkey == "list2" && set == 1 && nested {
+                stage_instances(db, builder, &format!("{key}[{idx}].list2"), 2, fval, by_id)?;
+                continue;
+            }
+            let Some(info) = find_field(builder, fkey) else {
+                log::warn!("{key}[{idx}]: unknown field '{fkey}' ignored");
+                continue;
+            };
+            if let Some(ev) =
+                to_encode_value(db, info, fval).with_context(|| format!("{key}[{idx}].{fkey}"))?
+            {
+                builder
+                    .push_in_set(set, idx, info.id, ev)
+                    .map_err(|e| anyhow!("{key}[{idx}].{fkey}: {e}"))?;
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Stage every member of a `fields` object onto the builder —
 /// top-level fields directly, `"list"` / `"list2"` arrays as repeating
 /// set 1 / 2 instances.
@@ -347,42 +402,7 @@ fn stage_fields(
             _ => None,
         };
         if let Some(set) = set {
-            let Value::Array(instances) = value else {
-                bail!("'{key}' is not an array");
-            };
-            for inst in instances {
-                let Value::Object(inst_fields) = inst else {
-                    bail!("'{key}' entry is not an object");
-                };
-                let idx = builder.add_set_instance(set).map_err(|e| anyhow!("{e}"))?;
-                // A group-function parameter given by the id of the field it
-                // names, as `parameterId` (canboat#1157), when its number
-                // is not given.
-                if let Some(id) = inst_fields.get("parameterId").and_then(Value::as_str)
-                    && let Some(index_field) = set_fields(builder.pgn_info(), set)
-                        .find(|f| f.field_type == Some(FieldType::FieldIndex))
-                    && !inst_fields.contains_key(index_field.id)
-                    && !inst_fields.contains_key(index_field.name)
-                {
-                    by_id.push((set, idx, id, index_field.id));
-                }
-                for (fkey, fval) in inst_fields {
-                    if fkey == "parameterId" {
-                        continue;
-                    }
-                    let Some(info) = find_field(builder, fkey) else {
-                        log::warn!("{key}[{idx}]: unknown field '{fkey}' ignored");
-                        continue;
-                    };
-                    if let Some(ev) = to_encode_value(db, info, fval)
-                        .with_context(|| format!("{key}[{idx}].{fkey}"))?
-                    {
-                        builder
-                            .push_in_set(set, idx, info.id, ev)
-                            .map_err(|e| anyhow!("{key}[{idx}].{fkey}: {e}"))?;
-                    }
-                }
-            }
+            stage_instances(db, builder, key, set, value, &mut by_id)?;
             continue;
         }
         let Some(info) = find_field(builder, key) else {
@@ -1121,6 +1141,42 @@ mod tests {
         let mut line = String::new();
         crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
         assert!(line.contains(r#""value":"-1""#), "{line}");
+    }
+
+    /// A set nested in another (#1198): each table of a B&G H5000 table
+    /// dump holds its own values, as "list2" in its record of "list", and
+    /// the JSON encodes back to the same bytes, each table's count with it.
+    #[test]
+    fn a_nested_set_is_written_per_record_and_reads_back() {
+        let db = PgnDatabase::embedded(crate::engine::Units::Si);
+        let mut data = vec![
+            0x13, 0x99, 0xff, 0x06, 0x00, 0x0e, 0x01, 0x2b, 0xfc, 0x4a, 0x00, 0x00, 0x10, 0xb7,
+        ];
+        for (count, values) in [(2u8, [155.0f32, 170.0]), (2, [40.0, 35.0])] {
+            data.extend([count, 0x00]);
+            for v in values {
+                data.push(4);
+                data.extend(v.to_le_bytes());
+            }
+        }
+        let decoded = db
+            .decode(&RawFrame::new(None, 3, 130822, 27, 255, data.clone()))
+            .unwrap();
+        let mut line = String::new();
+        crate::engine::output::write_json(&mut line, &decoded, &Default::default()).unwrap();
+        assert!(
+            line.contains(
+                r#""list":[{"count":2,"list2":[{"length":4,"value":155},{"length":4,"value":170}]},{"count":2,"list2":[{"length":4,"value":40},{"length":4,"value":35}]}]"#
+            ),
+            "{line}"
+        );
+        let frame = frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(frame.data[..], data[..]);
+
+        // Counts left out are filled in per table.
+        let line = line.replace(r#""count":2,"#, "");
+        let frame = frame_from_json(db, &line).unwrap().unwrap();
+        assert_eq!(frame.data[..], data[..]);
     }
 
     /// A NAME and a 64-bit number are written as their digits, as most

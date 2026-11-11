@@ -114,7 +114,19 @@ pub fn write_text<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &TextOptions
         // belongs to a forced count=0 iteration past its first field —
         // canboat's `repetition` counter resets to 0 there, so the
         // suffix is suppressed for these fields only.
-        if let (Some(iter), true) = (f.repeat_index, f.repeat_set != 0) {
+        // A field of a nested set also gets the record that holds it
+        // first: "Value 2.3" is the third value of the second table.
+        if let (Some(iter), Some(parent), true) =
+            (f.repeat_index, f.repeat_parent, f.repeat_set != 0)
+        {
+            write!(
+                w,
+                "{name} {parent}.{iter} = ",
+                name = f.name(),
+                parent = parent + 1,
+                iter = iter + 1
+            )?;
+        } else if let (Some(iter), true) = (f.repeat_index, f.repeat_set != 0) {
             write!(w, "{name} {iter} = ", name = f.name(), iter = iter + 1)?;
         } else {
             write!(w, "{name} = ", name = f.name())?;
@@ -452,6 +464,7 @@ mod tests {
                         bit_length: None,
                         repeat_index: None,
                         repeat_set: 0,
+                        repeat_parent: None,
                         overrides: None,
                     },
                     DecodedField {
@@ -464,6 +477,7 @@ mod tests {
                         bit_length: None,
                         repeat_index: None,
                         repeat_set: 0,
+                        repeat_parent: None,
                         overrides: None,
                     },
                 ]

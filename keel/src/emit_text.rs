@@ -35,6 +35,8 @@ pub fn emit_text(db: &Database, protocol: Protocol) -> String {
     out
 }
 
+/// Append the text explanation of one PGN to `out`: its header, then a
+/// line per field, and how its repeating sets repeat.
 fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
     out.push_str(&format!(
         "PGN: {} / {:08o} / {:05X} - {}\n\n",
@@ -72,6 +74,11 @@ fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
                         rep.start + rep.count
                     )),
                 }
+            if rep.nested {
+                out.push_str(
+                    "     These fields repeat within each repetition of the first set.\n\n",
+                );
+            }
         }
     }
 

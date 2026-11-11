@@ -405,6 +405,9 @@ let fieldsState = [];        // wizard field rows
 // second following the first. -1 = that set is not defined.
 let repAt = [-1, -1];
 let repCountField = ["", ""]; // per set: id of the field holding the repeat count
+// The loaded PGN has a set nested in another, which the form cannot lay out:
+// its fields are then edited in the YAML only.
+let repNested = false;
 let lastDecode = null;       // last /api/decode response
 let yamlDirty = false;       // textarea hand-edited: it wins over the form
 let baseYaml = null;         // existing PGN: full original YAML (fields: block
@@ -563,7 +566,7 @@ function flash(msg, ok) {
 
 function newWizard() {
   samplesHex = []; fieldsState = []; yamlDirty = false;
-  repAt = [-1, -1]; repCountField = ["", ""];
+  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false;
   baseYaml = null; currentPgn = null;
   $("sampleInput").placeholder = "";
   $("sampleInput").value = ""; $("messages").innerHTML = "";
@@ -600,6 +603,7 @@ async function openExisting(id) {
   fieldsState = r.def.fields.map(defToState);
   // seed repeating sets from the stored definition (start is 1-based order)
   repAt = [-1, -1]; repCountField = ["", ""];
+  repNested = !!(r.def.repeating2 && r.def.repeating2.nested);
   [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
     if (!rp) return;
     repAt[k] = rp.start - 1;
@@ -694,6 +698,7 @@ async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
   if (df) df.match = gotValue;
   // clone repeating sets too
   repAt = [-1, -1]; repCountField = ["", ""];
+  repNested = !!(r.def.repeating2 && r.def.repeating2.nested);
   [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
     if (!rp) return;
     repAt[k] = rp.start - 1;
@@ -714,7 +719,7 @@ async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
 function startDefinition(pgn, msgs) {
   samplesHex = msgs.map(m => m.hex);
   fieldsState = [];
-  repAt = [-1, -1]; repCountField = ["", ""];
+  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false;
   yamlDirty = false;
   $("m_pgn").value = pgn;
   $("m_prio").value = msgs[0].prio;
@@ -1495,6 +1500,10 @@ function syncSavePath() {
 
 function regenerateYaml() {
   if (yamlDirty) { syncSavePath(); return; }
+  if (repNested) {
+    flash("this PGN has a nested repeating set: edit its fields in the YAML", false);
+    return;
+  }
   if (baseYaml !== null) {
     // Existing PGN: replace the fields: block, repeating sets and all; notes,
     // samples and every other authored key survive. The repeating1/repeating2

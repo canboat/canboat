@@ -375,10 +375,13 @@ Essential facts before editing:
   multi-frame), `ISO`, or `Mixed`.
 - `interval` is **milliseconds** (absent = unknown, on-request handled via
   `missing`/interval sentinels); `priority` is the default N2K priority.
-- **Repeating sets:** a `repeating1:`/`repeating2:` block has `count` (how many
-  consecutive fields repeat), `start` (1-based order of the first repeating
-  field), and an optional `countField` (1-based order of the field holding the
-  repetition count). At most two, both trailing, the second after the first.
+- **Repeating sets:** a `- repeat:` item holds the fields that repeat, with an
+  optional `countField` (the id of the field holding the repetition count;
+  absent = repeat until the data runs out). At most two, both trailing, the
+  second after the first, or the second nested inside the first: a table of
+  records that each hold a counted list, as PGN 130822's Table Dumps
+  (`RepeatingFieldSet2Parent` in the XML, `"list2"` inside each `"list"`
+  record in JSON).
 - **Special (sentinel) values:** NMEA 2000 reserves the top of an integer range
   as non-data sentinels — most-positive = *Unknown* (data not available), max-1 =
   *OutOfRange*, max-2 = *Reserved*. The count is derived from the bit width (3 for
@@ -477,6 +480,8 @@ keel/keel edit
   prefix is accepted); a `bit` enum's value is the bit position.
 - **Repeating field sets:** "+ repeating field set" marks the trailing fields
   that repeat (at most two, second after first) and its optional count field.
+  A set nested in another is shown but not laid out by the form: edit that
+  PGN's fields in the YAML.
 - **Saving is rule-gated:** the editor refuses to write while any rule fails,
   names the target file from the PGN + `id`, and then offers to regenerate the
   artifacts. Scratch mode validates without writing; undo reverts the last save.

@@ -1,0 +1,179 @@
+pgn: 130822
+id: navicoUdbDatabaseTableDump18
+description: 'Navico: UDB Database, Table Dump'
+type: Fast
+variantOrder: 15
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Object Dump (Command 6) of Section 18, which holds tables of 32-bit floats; a B&G H5000 CPU broadcasts Sections
+  11 to 15 and 18 about once a minute. After the Token come one or more tables until the data runs out, each a 16-bit count
+  followed by that many records of a length byte (4) and a 32-bit float. Sections 11 to 14 and 18 hold tables of 7 values, which look like wind
+  and boat speed correction tables; Section 15 holds tables of 22 values, and the H5000 cuts its dump off at the 223-byte
+  Fast Packet maximum.'
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Dump
+  match: 6
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+  match: 18
+  primaryKey: true
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object
+- repeat:
+    fields:
+    - id: count
+      name: Count
+      type: UINT16
+      description: Number of values in this table
+    - repeat:
+        countField: count
+        fields:
+        - id: length
+          name: Length
+          type: UINT8
+          description: Always 4
+        - id: value
+          name: Value
+          type: FLOAT
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,27,255,199,13,99,ff,06,00,12,00,d2,06,b9,00,00,d0,f1,07,00,04,00,00,00,00,04,34,33,33,bf,04,cc,cc,4c,bf,04,00,00,80,bf,04,cd,cc,8c,bf,04,00,00,80,bf,04,cd,cc,8c,bf,07,00,04,00,00,00,00,04,cd,cc,cc,be,04,cc,cc,4c,bf,04,66,66,66,bf,04,00,00,80,bf,04,cd,cc,8c,bf,04,cd,cc,8c,bf,07,00,04,00,00,00,00,04,cd,cc,cc,bd,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,4c,be,07,00,04,00,00,00,00,04,cd,cc,cc,bd,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,cc,bd,04,cd,cc,4c,be,04,cd,cc,4c,be,07,00,04,00,00,00,00,04,00,00,00,00,04,cd,cc,cc,bd,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,4c,be,04,cd,cc,4c,be"  # from h5000-settings-dumps.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 18
+    item: 0
+    objectValue: 1746
+    sub: "0xb90000"
+    token: 61904
+    count: 7
+    length: 4
+    value: 0.0000
+    length.2: 4
+    value.2: -0.7000
+    length.3: 4
+    value.3: -0.8000
+    length.4: 4
+    value.4: -1.0000
+    length.5: 4
+    value.5: -1.1000
+    length.6: 4
+    value.6: -1.0000
+    length.7: 4
+    value.7: -1.1000
+    count.2: 7
+    length.8: 4
+    value.8: 0.0000
+    length.9: 4
+    value.9: -0.4000
+    length.10: 4
+    value.10: -0.8000
+    length.11: 4
+    value.11: -0.9000
+    length.12: 4
+    value.12: -1.0000
+    length.13: 4
+    value.13: -1.1000
+    length.14: 4
+    value.14: -1.1000
+    count.3: 7
+    length.15: 4
+    value.15: 0.0000
+    length.16: 4
+    value.16: -0.1000
+    length.17: 4
+    value.17: -0.2000
+    length.18: 4
+    value.18: -0.2000
+    length.19: 4
+    value.19: -0.2000
+    length.20: 4
+    value.20: -0.2000
+    length.21: 4
+    value.21: -0.2000
+    count.4: 7
+    length.22: 4
+    value.22: 0.0000
+    length.23: 4
+    value.23: -0.1000
+    length.24: 4
+    value.24: -0.2000
+    length.25: 4
+    value.25: -0.2000
+    length.26: 4
+    value.26: -0.1000
+    length.27: 4
+    value.27: -0.2000
+    length.28: 4
+    value.28: -0.2000
+    count.5: 7
+    length.29: 4
+    value.29: 0.0000
+    length.30: 4
+    value.30: 0.0000
+    length.31: 4
+    value.31: -0.1000
+    length.32: 4
+    value.32: -0.2000
+    length.33: 4
+    value.33: -0.2000
+    length.34: 4
+    value.34: -0.2000
+    length.35: 4
+    value.35: -0.2000

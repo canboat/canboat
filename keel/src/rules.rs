@@ -16,6 +16,7 @@ pub enum Scope {
 }
 
 impl Scope {
+    /// Heading of this scope's section in the rules list.
     fn title(self) -> &'static str {
         match self {
             Scope::Shape => "Shape (schema over the YAML)",
@@ -106,7 +107,9 @@ pub const RULES: &[Rule] = &[
         title: "Repeating sets are self-consistent.",
         detail: "start and count stay within the field list; countField, when \
                  present, references an integer field before the set; its \
-                 absence means repeat-until-data-exhausted.",
+                 absence means repeat-until-data-exhausted. A set nested in \
+                 another (set 2 inside set 1) has its countField in the \
+                 enclosing record.",
     },
     Rule {
         id: "R06",
