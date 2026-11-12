@@ -985,12 +985,26 @@ impl App {
                     return;
                 }
                 // Accept "host", "host port port", or "host:port:port";
-                // ports default to 2597 / 2598.
+                // ports default to 2597 / 2598. A port that is given but
+                // is not a port number is refused rather than defaulted.
                 let norm = raw.replace(':', " ");
                 let mut it = norm.split_whitespace();
                 let host = it.next().unwrap_or("localhost").to_string();
-                let snapshot_port = it.next().and_then(|s| s.parse().ok()).unwrap_or(2597);
-                let stream_port = it.next().and_then(|s| s.parse().ok()).unwrap_or(2598);
+                let mut port = |default: u16| match it.next() {
+                    None => Ok(default),
+                    Some(s) => s.parse::<u16>().map_err(|_| s.to_string()),
+                };
+                let (snapshot_port, stream_port) = match (port(2597), port(2598)) {
+                    (Ok(a), Ok(b)) => (a, b),
+                    (Err(s), _) | (_, Err(s)) => {
+                        self.toast = Some(format!("'{s}' is not a port number"));
+                        return;
+                    }
+                };
+                if let Some(extra) = it.next() {
+                    self.toast = Some(format!("unexpected '{extra}' after the ports"));
+                    return;
+                }
                 self.pending_command = Some(PendingCommand::Connect {
                     host,
                     snapshot_port,

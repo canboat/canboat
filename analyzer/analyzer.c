@@ -155,6 +155,22 @@ static bool isNmea0183(const char *msg)
 {
   return msg[0] == '$' || msg[0] == '!' || msg[0] == '\\';
 }
+
+/*
+ * Parse the value of -src or -dst. It must be a whole decimal number from 0 to 255:
+ * strtol() alone would also take leading whitespace, a sign, or trailing junk.
+ * Aborts with a message naming the option when it is not.
+ */
+static int parseAddressFilter(const char *option, const char *value)
+{
+  char *end;
+  long  address = strtol(value, &end, 10);
+  if (!isdigit((unsigned char) value[0]) || *end != '\0' || address < 0 || address > UINT8_MAX)
+  {
+    logAbort("Invalid address for %s: '%s' (expected 0 to 255)\n", option, value);
+  }
+  return (int) address;
+}
 static bool            isMsgAllowed(const RawMessage *msg);
 static bool            isTargetPgnAllowed(uint32_t pgn);
 static void            printCanFormat(RawMessage *msg);
@@ -227,6 +243,10 @@ static void usage(char **argv, char **av)
   exit(1);
 }
 
+/*
+ * Parse the options, then decode every raw message read from stdin (or -file) and
+ * print it as text or JSON, keeping only those that pass the -src, -dst and PGN filters.
+ */
 int main(int argc, char **argv)
 {
   int    r;
@@ -355,20 +375,20 @@ int main(int argc, char **argv)
     }
     else if (ac > 2 && strcasecmp(av[1], "-src") == 0)
     {
-      onlySrc = strtol(av[2], 0, 10);
+      onlySrc = parseAddressFilter(av[1], av[2]);
       ac--;
       av++;
     }
     else if (ac > 2 && strcasecmp(av[1], "-dst") == 0)
     {
-      onlyDst = strtol(av[2], 0, 10);
+      onlyDst = parseAddressFilter(av[1], av[2]);
       ac--;
       av++;
     }
 #ifndef SKIP_SETSYSTEMCLOCK
     else if (ac > 2 && strcasecmp(av[1], "-clocksrc") == 0)
     {
-      clockSrc = strtol(av[2], 0, 10);
+      clockSrc = (int) parseNumberOption(av[1], av[2], 0, 255);
       ac--;
       av++;
     }

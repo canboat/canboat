@@ -335,15 +335,28 @@ pub struct DeviceArgs {
     #[arg(short = 'n', long, help_heading = help::node_heading())]
     pub no_claim: bool,
 
-    /// ISO NAME unique number [default: derived from the machine id].
+    /// ISO NAME unique number, 0..2097151 [default: derived from the machine id].
     ///
     /// The default is stable across restarts; on a machine that can't be
-    /// identified it is a random one, stored with the state files.
-    #[arg(short = 'u', long, value_name = "N", help_heading = help::node_heading())]
+    /// identified it is a random one, stored with the state files. The
+    /// NAME holds 21 bits, so a larger number is refused, not truncated.
+    #[arg(
+        short = 'u',
+        long,
+        value_name = "N",
+        value_parser = clap::value_parser!(u32).range(0..=0x1f_ffff),
+        help_heading = help::node_heading()
+    )]
     pub unique: Option<u32>,
 
-    /// ISO NAME manufacturer code [default: 999, Signal K].
-    #[arg(short = 'm', long, value_name = "N", help_heading = help::node_heading())]
+    /// ISO NAME manufacturer code, 0..2047 [default: 999, Signal K].
+    #[arg(
+        short = 'm',
+        long,
+        value_name = "N",
+        value_parser = clap::value_parser!(u16).range(0..=0x7ff),
+        help_heading = help::node_heading()
+    )]
     pub manufacturer: Option<u16>,
 
     /// ISO NAME System Instance, 0..15 [default: 15].
@@ -582,6 +595,16 @@ mod tests {
         assert_eq!(d.tx_pgn, [127508]);
         assert!(d.no_tx_rate_limit);
         assert_eq!(d.address, Some(7));
+    }
+
+    #[test]
+    fn a_name_field_too_wide_for_the_iso_name_is_refused() {
+        let d = parse(&["-u", "2097151", "-m", "2047"]);
+        assert_eq!((d.unique, d.manufacturer), (Some(0x1f_ffff), Some(0x7ff)));
+        let refused = |args: &[&str]| Cli::try_parse_from([&["x"], args].concat()).is_err();
+        assert!(refused(&["-u", "2097152"]));
+        assert!(refused(&["-m", "2048"]));
+        assert!(refused(&["-u", "12x"]));
     }
 
     #[test]
