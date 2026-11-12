@@ -336,10 +336,15 @@ fn api_model(server: &EditServer) -> Result<String, String> {
         })
         .collect();
     Ok(format!(
-        "{{\"pgns\":[{}],\"lookups\":[{}],\"fieldtypes\":[{}]}}",
+        "{{\"pgns\":[{}],\"lookups\":[{}],\"fieldtypes\":[{}],\"encodings\":[{}]}}",
         pgns.join(","),
         lookups.join(","),
-        fieldtypes.join(",")
+        fieldtypes.join(","),
+        crate::charset::ENCODINGS
+            .iter()
+            .map(|e| js(e))
+            .collect::<Vec<_>>()
+            .join(",")
     ))
 }
 

@@ -485,6 +485,11 @@ keel/keel edit
   set 1 field that comes before it (R05). "End set" ends the current set,
   so the fields added next do not repeat, or are set 1's again after a nested
   set.
+- **Rarer field attributes:** a field's ✎ editor has a "Structure" section
+  for `encoding`, `continues`, `trailingZeroIsDigit`, `proprietary`,
+  `dynamicFieldLength` and its overhead. It opens by itself when a field has
+  any of them. Changing a field's type keeps them, and the rules flag any
+  that no longer fit; renaming a field renames the references to it.
 - **Saving is rule-gated:** the editor refuses to write while any rule fails,
   names the target file from the PGN + `id`, and then offers to regenerate the
   artifacts. Scratch mode validates without writing; undo reverts the last save.
