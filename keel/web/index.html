@@ -394,6 +394,12 @@ function defToState(f) {
     bitLengthField: f.bitLengthField ?? "",
     allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
     primaryKey: !!f.primaryKey,
+    // Not editable here, but carried through so a rewrite keeps them.
+    spn: f.spn ?? "", continues: f.continues ?? "", encoding: f.encoding ?? "",
+    trailingZeroIsDigit: f.trailingZeroIsDigit ?? null,
+    proprietary: !!f.proprietary,
+    dynamicFieldLength: !!f.dynamicFieldLength,
+    dynamicFieldLengthOverhead: f.dynamicFieldLengthOverhead || "",
   };
 }
 
@@ -845,6 +851,34 @@ function extractBits(hex, bitOff, bits) {
 
 function ftByName(name) { return MODEL.fieldtypes.find(t => t.name === name); }
 
+// The form does not show the attributes it carries through, so once a type is
+// chosen, drop those that the new type does not allow (R06, R41, R43, R44),
+// and the references to it that need an integer field.
+function dropTypeAttrs(f) {
+  const ft = ftByName(f.type);
+  if (!ft) return;
+  if (ft.root !== "DYNAMIC_FIELD_LENGTH") { f.dynamicFieldLength = false; f.dynamicFieldLengthOverhead = ""; }
+  if (f.type !== "DECIMAL") f.trailingZeroIsDigit = null;
+  if (!["STRING_FIX", "STRING_LZ", "STRING_LAU"].includes(f.type)) f.encoding = "";
+  if (ft.root !== "NUMBER") f.continues = "";
+  if (ft.root !== "NUMBER" && ft.root !== "LOOKUP" && fieldsState.find(g => g.id === f.id) === f)
+    for (const g of fieldsState) {
+      if (g.continues === f.id) g.continues = "";
+      if (g.trailingZeroIsDigit && g.trailingZeroIsDigit.field === f.id) g.trailingZeroIsDigit = null;
+    }
+}
+
+// Renaming a field renames the carried-through references to it, unless
+// another field still has the old id.
+function renameRefs(oldId, newId) {
+  if (!oldId || oldId === newId || fieldsState.some(g => g.id === oldId)) return;
+  for (const g of fieldsState) {
+    if (g.continues === oldId) g.continues = newId;
+    if (g.trailingZeroIsDigit && g.trailingZeroIsDigit.field === oldId)
+      g.trailingZeroIsDigit = { ...g.trailingZeroIsDigit, field: newId };
+  }
+}
+
 function typeCombo(inp, f, tr) {
   const box = $("typeCombo");
   const q = inp.value.toLowerCase();
@@ -863,6 +897,7 @@ function typeCombo(inp, f, tr) {
       ev.preventDefault();
       inp.value = t.name;
       f.type = t.name;
+      dropTypeAttrs(f);
       // a fieldtype mandates its bits/unit/resolution: show them in the row
       // (fieldsYaml omits them again when they match the type's defaults)
       if (t.bits) f.bits = t.bits;
@@ -912,6 +947,11 @@ function renderFields() {
       if (listId) inp.setAttribute("list", listId);
       inp.oninput = () => { f[key] = inp.value; regenerateYaml(); scheduleRefresh(); };
       inp.onchange = () => renderGrid();
+      if (key === "id") {
+        let before = f.id;
+        inp.onfocus = () => { before = f.id; };
+        inp.onchange = () => { renameRefs(before, f.id); before = f.id; regenerateYaml(); renderGrid(); };
+      }
       td.appendChild(inp);
       return td;
     };
@@ -928,6 +968,7 @@ function renderFields() {
       inp.oninput = () => { f.type = inp.value; typeCombo(inp, f, tr); regenerateYaml(); scheduleRefresh(); };
       inp.onfocus = () => typeCombo(inp, f, tr);
       inp.onblur = () => setTimeout(hideTypeCombo, 200);
+      inp.onchange = () => { dropTypeAttrs(f); regenerateYaml(); scheduleRefresh(); };
       td.appendChild(inp);
       tr.appendChild(td);
     }
@@ -1344,6 +1385,11 @@ function fieldYaml(f, pad) {
       : "lookup";
     y += `${p}${key}: ${f.lookup}\n`;
   }
+  // Not editable here, but carried through so a rewrite keeps them.
+  if (f.proprietary) y += `${p}proprietary: true\n`;
+  if (f.dynamicFieldLength) y += `${p}dynamicFieldLength: true\n`;
+  if (has(f.dynamicFieldLengthOverhead))
+    y += `${p}dynamicFieldLengthOverhead: ${Number(f.dynamicFieldLengthOverhead)}\n`;
   if (has(f.note)) y += noteYaml(f.note, p);
   if (has(f.unit) && f.unit !== ft.unit) y += `${p}unit: ${yq(f.unit)}\n`;
   if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
@@ -1360,8 +1406,8 @@ function fieldYaml(f, pad) {
 // Format a range bound as the converter does: a float, so a whole number
 // still carries a trailing .0 (rangeMin: 0.0, not 0).
 function asFloat(v) {
-  const n = Number(v);
-  return Number.isInteger(n) ? n + ".0" : String(n);
+  const s = String(Number(v));
+  return /^-?\d+$/.test(s) ? s + ".0" : s;   // not on 3.4e+38
 }
 
 // A note: is a plain scalar, or a `|-` block scalar when it spans lines.
@@ -1419,12 +1465,15 @@ function applyTypeConstraints() {
 function applyFieldEditor() {
   if (fldEditIndex < 0) return;
   const f = fieldsState[fldEditIndex];
+  const before = { id: f.id, type: f.type };
   FE_TEXT.forEach(k => {
     const el = $("fe_" + k);
     // note keeps internal newlines; everything else is a single trimmed line
     f[k] = el.readOnly ? "" : (k === "note" ? el.value.replace(/\s+$/, "") : el.value.trim());
   });
   FE_BOOL.forEach(k => { f[k] = $("fe_" + k).checked; });
+  renameRefs(before.id, f.id);
+  if (f.type !== before.type) dropTypeAttrs(f);
   closeFieldEditor();
   regenerateYaml();
   renderFields();
