@@ -86,6 +86,10 @@ static bool                buildMaretronFrame(uint8_t       *out,
                                               size_t         payload_len);
 static void                writeCsvFrame(int out, uint64_t timestamp_ms, const MaretronFrame *frame);
 
+/*
+ * Parse the options, then relay between a Maretron IPG100, reached over TCP, and
+ * stdin/stdout: received frames go out in canboat format, lines read in are sent.
+ */
 int main(int argc, char **argv)
 {
   int    handle;
@@ -123,7 +127,7 @@ int main(int argc, char **argv)
     {
       ac--;
       av++;
-      timeout = strtol(av[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", av[1], 0, INT32_MAX);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(av[1], "-d") == 0)

@@ -119,6 +119,10 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, unsigned
 static void ngtMessageReceived(const unsigned char *msg, size_t msgLen);
 static void emitNetworkStatus(void);
 
+/*
+ * Parse the options, then relay between an Actisense NGT-1 (or a capture file) and
+ * stdin/stdout: received frames go out in canboat FAST format, lines read in are sent.
+ */
 int main(int argc, char **argv)
 {
   int            handle;
@@ -160,14 +164,14 @@ int main(int argc, char **argv)
     {
       argc--;
       argv++;
-      timeout = strtol(argv[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", argv[1], 0, INT32_MAX);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
     {
       argc--;
       argv++;
-      speed = strtol(argv[1], 0, 10);
+      speed = (int) parseNumberOption("-s", argv[1], 1, INT32_MAX);
       switch (speed)
       {
         case 38400:

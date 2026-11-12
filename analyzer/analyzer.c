@@ -388,7 +388,7 @@ int main(int argc, char **argv)
 #ifndef SKIP_SETSYSTEMCLOCK
     else if (ac > 2 && strcasecmp(av[1], "-clocksrc") == 0)
     {
-      clockSrc = strtol(av[2], 0, 10);
+      clockSrc = (int) parseNumberOption(av[1], av[2], 0, 255);
       ac--;
       av++;
     }

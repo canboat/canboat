@@ -73,6 +73,10 @@ static bool processReadBuffer(StringBuffer *in, int out);
 static void initializeDevice(void);
 static void sendNextInitCommand(void);
 
+/*
+ * Parse the options, then relay between a Digital Yacht iKonvert and stdin/stdout:
+ * received frames go out in canboat format, lines read in are sent to the bus.
+ */
 int main(int argc, char **argv)
 {
   int            handle;
@@ -139,21 +143,21 @@ int main(int argc, char **argv)
     {
       ac--;
       av++;
-      timeout = strtol(av[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", av[1], 0, INT32_MAX);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
     else if (strcasecmp(av[1], "-reset") == 0 && ac > 2)
     {
       ac--;
       av++;
-      resetTimeout = strtol(av[1], 0, 10);
+      resetTimeout = (long) parseNumberOption("-reset", av[1], 0, INT32_MAX);
       logDebug("reset timeout set to %ld seconds\n", resetTimeout);
     }
     else if (strcasecmp(av[1], "-s") == 0 && ac > 2)
     {
       ac--;
       av++;
-      speed = strtol(av[1], 0, 10);
+      speed = (int) parseNumberOption("-s", av[1], 1, INT32_MAX);
       switch (speed)
       {
         case 38400:
