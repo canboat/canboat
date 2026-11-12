@@ -179,6 +179,13 @@ uint64_t    getNow(void);
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);
 
+/*
+ * Parse the value of a command-line option as a whole decimal number from min to max.
+ * strtol() alone would also take leading whitespace, a sign or trailing junk, and wrap
+ * or saturate on overflow. Aborts with a message naming the option when it is not one.
+ */
+uint64_t parseNumberOption(const char *option, const char *value, uint64_t min, uint64_t max);
+
 enum ReadyDescriptor
 {
   FD1_ReadReady  = 0x0001,

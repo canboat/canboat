@@ -70,6 +70,49 @@ void usage(char **argv, char **av)
   exit(1);
 }
 
+/*
+ * Encode one <field>=<value> argument at b: the decimal field number as a byte, then
+ * the hexadecimal value little-endian, one byte per two digits. Returns the byte after
+ * it; calls usage() when the argument is not of that form, as a sign, a space, an odd
+ * number of digits or more than eight of them would be silently mis-encoded.
+ */
+static uint8_t *encodeField(char **argv, char **av, uint8_t *b)
+{
+  const char *p = strchr(av[0], '=');
+  char        field[8];
+  size_t      n;
+  size_t      digits;
+  uint32_t    v;
+
+  n = p ? (size_t) (p - av[0]) : 0;
+  if (n == 0 || n >= sizeof(field))
+  {
+    usage(argv, av);
+    return b;
+  }
+  memcpy(field, av[0], n);
+  field[n] = '\0';
+  p++;
+  digits = strspn(p, "0123456789abcdefABCDEF");
+  if (digits == 0 || digits % 2 != 0 || digits > 8 || p[digits] != '\0')
+  {
+    usage(argv, av);
+    return b;
+  }
+  *b++ = (uint8_t) parseNumberOption("<field>", field, 1, 255);
+  v    = (uint32_t) strtoul(p, NULL, 16);
+  for (n = digits / 2; n; n--)
+  {
+    *b++ = (v & 255);
+    v    = v >> 8;
+  }
+  return b;
+}
+
+/*
+ * Print, in canboat PLAIN format, a PGN 126208 Command that sets fields of <pgn> on
+ * device <dest>, from the fields and values on the command line.
+ */
 int main(int argc, char **argv)
 {
   int                      ac = argc;
@@ -80,10 +123,10 @@ int main(int argc, char **argv)
   size_t                   cnt = 0;
   command_group_function_t command;
   size_t                   i, bytes;
-  char                    *p, *e;
   uint8_t                 *b;
-  uint32_t                 v;
   char                     dateStr[DATE_LENGTH];
+
+  setProgName(argv[0]);
 
   if (ac > 1 && strcasecmp(av[1], "-version") == 0)
   {
@@ -95,35 +138,18 @@ int main(int argc, char **argv)
   }
 
   ac--, av++; /* lose the command name */
-  dest = strtol(av[0], 0, 10);
+  dest = (long) parseNumberOption("<dest>", av[0], 0, 255);
   ac--, av++; /* lose the dest */
-  prio = strtol(av[0], 0, 10);
+  prio = (long) parseNumberOption("<prio>", av[0], 0, 8);
   ac--, av++; /* lose the prio */
-  pgn = strtol(av[0], 0, 10);
+  pgn = (long) parseNumberOption("<pgn>", av[0], 0, 0x1ffff);
   ac--, av++; /* lose the pgn */
   b = &command.parameters[0];
 
   for (; ac; ac--, av++)
   {
-    p = strchr(av[0], '=');
-    if (p)
-    {
-      p++;
-      *b++ = strtol(av[0], 0, 10);
-
-      v = strtoul(p, &e, 16);
-      for (i = (e - p) / 2; i; i--)
-      {
-        *b++ = (v & 255);
-        v    = v >> 8;
-      }
-
-      cnt++;
-    }
-    else
-    {
-      usage(argv, av);
-    }
+    b = encodeField(argv, av, b);
+    cnt++;
   }
 
   command.functionCode = 1;
