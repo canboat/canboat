@@ -1008,8 +1008,8 @@ function dropTypeAttrs(f) {
     }
 }
 
-// Renaming a field renames the carried-through references to it, unless
-// another field still has the old id.
+// Renaming a field renames the carried-through references to it, and the
+// sets that count from it, unless another field still has the old id.
 function renameRefs(oldId, newId) {
   if (!oldId || oldId === newId || fieldsState.some(g => g.id === oldId)) return;
   for (const g of fieldsState) {
@@ -1017,6 +1017,8 @@ function renameRefs(oldId, newId) {
     if (g.trailingZeroIsDigit && g.trailingZeroIsDigit.field === oldId)
       g.trailingZeroIsDigit = { ...g.trailingZeroIsDigit, field: newId };
   }
+  for (let k = 0; k < 2; k++) if (repCountField[k] === oldId) repCountField[k] = newId;
+  if (repFlatCount === oldId) repFlatCount = newId;
 }
 
 function typeCombo(inp, f, tr) {
