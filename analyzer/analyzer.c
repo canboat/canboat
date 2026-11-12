@@ -197,6 +197,9 @@ static int parsePgnFilter(const char *value)
   return (int) pgn;
 }
 
+/*
+ * Report the argument that could not be parsed, print the command line help and exit(1).
+ */
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
