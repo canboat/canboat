@@ -186,6 +186,10 @@
       <button onclick="addField()">＋ field</button>
       <button onclick="addField('reserved')">＋ reserved</button>
       <button id="addRepBtn" onclick="addRepeatingSet()">＋ repeating field set</button>
+      <button id="addNestedBtn" onclick="addRepeatingSet(true)"
+        title="set 2, repeated inside each record of set 1">＋ nested set</button>
+      <button id="endSetBtn" onclick="endRepeatingSet()" style="display:none"
+        title="the fields added next do not repeat (are set 1's again, after a nested set)">⤓ end set</button>
       <span class="hint" id="bitBudget"></span>
     </div>
 
@@ -394,20 +398,30 @@ function defToState(f) {
     bitLengthField: f.bitLengthField ?? "",
     allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
     primaryKey: !!f.primaryKey,
+    // Not editable here, but carried through so a rewrite keeps them.
+    spn: f.spn ?? "", continues: f.continues ?? "", encoding: f.encoding ?? "",
+    trailingZeroIsDigit: f.trailingZeroIsDigit ?? null,
+    proprietary: !!f.proprietary,
+    dynamicFieldLength: !!f.dynamicFieldLength,
+    dynamicFieldLengthOverhead: f.dynamicFieldLengthOverhead || "",
   };
 }
 
 let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
 let samplesHex = [];         // assembled payloads (hex strings)
 let fieldsState = [];        // wizard field rows
-// Repeating field sets: fieldsState indices >= repAt[k] belong to set k+1.
-// A set is always a contiguous block of trailing fields; at most two, the
-// second following the first. -1 = that set is not defined.
+// Repeating field sets: set k+1 starts at fieldsState index repAt[k] and
+// ends before repEnd[k]. At most two. Set 2 either follows set 1, or
+// (repNested) is nested in it: then each record of set 1 holds its own
+// records of set 2, and the fields after set 2's end are set 1's again.
+// Otherwise the fields after a set's end do not repeat. repAt -1 = that set
+// is not defined; repEnd -1 = the set runs on, to the next set or the end.
+// A set holding a nested set has no end. Indices are 0-based.
 let repAt = [-1, -1];
 let repCountField = ["", ""]; // per set: id of the field holding the repeat count
-// The loaded PGN has a set nested in another, which the form cannot lay out:
-// its fields are then edited in the YAML only.
 let repNested = false;
+let repFlatCount = "";       // set 2's flat count, dropped while it is nested
+let repEnd = [-1, -1];
 let lastDecode = null;       // last /api/decode response
 let yamlDirty = false;       // textarea hand-edited: it wins over the form
 let baseYaml = null;         // existing PGN: full original YAML (fields: block
@@ -566,7 +580,7 @@ function flash(msg, ok) {
 
 function newWizard() {
   samplesHex = []; fieldsState = []; yamlDirty = false;
-  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false;
+  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false; repEnd = [-1, -1]; repFlatCount = "";
   baseYaml = null; currentPgn = null;
   $("sampleInput").placeholder = "";
   $("sampleInput").value = ""; $("messages").innerHTML = "";
@@ -602,13 +616,7 @@ async function openExisting(id) {
   $("m_prio").value = r.def.priority || "";
   fieldsState = r.def.fields.map(defToState);
   // seed repeating sets from the stored definition (start is 1-based order)
-  repAt = [-1, -1]; repCountField = ["", ""];
-  repNested = !!(r.def.repeating2 && r.def.repeating2.nested);
-  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
-    if (!rp) return;
-    repAt[k] = rp.start - 1;
-    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
-  });
+  seedRepeats(r.def);
   $("yamlText").value = r.yaml;
   yamlDirty = false;                      // form edits patch the fields: block
   $("savePath").textContent = r.path.replace(/^.*database\//, "database/");
@@ -697,13 +705,7 @@ async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
   const df = fieldsState.find(f => f.id === diffFieldId);
   if (df) df.match = gotValue;
   // clone repeating sets too
-  repAt = [-1, -1]; repCountField = ["", ""];
-  repNested = !!(r.def.repeating2 && r.def.repeating2.nested);
-  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
-    if (!rp) return;
-    repAt[k] = rp.start - 1;
-    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
-  });
+  seedRepeats(r.def);
   $("m_pgn").value = pgn;
   $("m_type").value = r.def.type;
   $("m_prio").value = r.def.priority || "";
@@ -719,7 +721,7 @@ async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
 function startDefinition(pgn, msgs) {
   samplesHex = msgs.map(m => m.hex);
   fieldsState = [];
-  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false;
+  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false; repEnd = [-1, -1]; repFlatCount = "";
   yamlDirty = false;
   $("m_pgn").value = pgn;
   $("m_prio").value = msgs[0].prio;
@@ -749,34 +751,138 @@ function addField(kind) {
   renderAll();
 }
 
+// Seed the repeating sets from a stored definition (start is a 1-based order).
+function seedRepeats(def) {
+  repAt = [-1, -1]; repCountField = ["", ""]; repNested = false; repEnd = [-1, -1]; repFlatCount = "";
+  [def.repeating1, def.repeating2].forEach((rp, k) => {
+    if (!rp) return;
+    repAt[k] = rp.start - 1;
+    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
+  });
+  repNested = !!(def.repeating2 && def.repeating2.nested);
+  // a set that runs on as far as it can has no end of its own
+  [def.repeating1, def.repeating2].forEach((rp, k) => {
+    if (rp && rp.start - 1 + rp.count < runsTo(k)) repEnd[k] = rp.start - 1 + rp.count;
+  });
+  normEnds();
+}
+
+// Where set k runs on to when it has no end of its own.
+function runsTo(k) {
+  return k === 0 && repAt[1] >= 0 && !repNested ? repAt[1] : fieldsState.length;
+}
+
+// Drop the end of a set that is gone, that holds a nested set, or that lies
+// where set 1 runs into set 2 anyway. An end at the end of the field list
+// stays: the fields added next go after it.
+function normEnds() {
+  for (let k = 0; k < 2; k++) {
+    const intoSet2 = k === 0 && repAt[1] >= 0 && !repNested;
+    if (repAt[k] < 0 || (k === 0 && repNested) || repEnd[k] > runsTo(k) ||
+        (intoSet2 && repEnd[k] === repAt[1]))
+      repEnd[k] = -1;
+  }
+}
+
+// The set the fields added next go into, when it can be ended there: the
+// deepest set, while it has no end yet. -1 = none.
+function endableSet() {
+  const d = repDepth();
+  return d && repEnd[d - 1] < 0 ? d - 1 : -1;
+}
+
 // Highest defined repeating set (0, 1 or 2).
 function repDepth() { return repAt[1] >= 0 ? 2 : repAt[0] >= 0 ? 1 : 0; }
 
 // Begin the next repeating set at the current end of the field list; the
-// fields added after it belong to the set. At most two, and only trailing.
-function addRepeatingSet() {
+// fields added after it belong to the set. At most two. Set 2 follows set 1,
+// or with `nested` repeats inside each record of it.
+function addRepeatingSet(nested) {
   const d = repDepth();
   if (d >= 2) return flash("a PGN has at most two repeating field sets", false);
+  if (nested && d !== 1) return flash("start set 1 first: a nested set goes inside it", false);
+  if (nested && repEnd[0] >= 0) return flash("set 1 has ended: a nested set goes inside it", false);
   if (!fieldsState.length) return flash("add the fields first, then mark where the set starts", false);
   if (d === 1 && fieldsState.length <= repAt[0])
     return flash("add at least one field to set 1 before starting set 2", false);
   repAt[d] = fieldsState.length; // set begins after the current last field
+  if (d === 1) repNested = !!nested;
+  normEnds();
+  renderAll();
+}
+
+// End the deepest set at the current end of the field list; the fields
+// added after it do not repeat, or are set 1's again after a nested set.
+function endRepeatingSet() {
+  const k = endableSet();
+  if (k < 0) return;
+  if (fieldsState.length <= repAt[k])
+    return flash(`add at least one field to set ${k + 1} before ending it`, false);
+  repEnd[k] = fieldsState.length;
+  renderAll();
+}
+
+// Let set k run on again, to the next set or the end.
+function removeSetEnd(k) {
+  repEnd[k] = -1;
+  renderAll();
+}
+
+// Switch set 2 between following set 1 and being nested in it. Set 2 can
+// only stop being nested when no set 1 fields follow it, and only be nested
+// when set 1 runs on into it.
+function setNested(on) {
+  if (!on && repEnd[1] >= 0 && repEnd[1] < fieldsState.length) {
+    flash("set 1 has fields after set 2: remove them, or the end of set 2, first", false);
+  } else if (on && repEnd[0] >= 0) {
+    flash("set 1 ends before set 2: remove that end first", false);
+  } else {
+    repNested = on;
+    // A nested set counts from a field of set 1; drop one from before it,
+    // but remember it so that undoing the nesting brings it back.
+    const at = id => fieldsState.findIndex(f => f.id === id);
+    if (on && repCountField[1] && at(repCountField[1]) < repAt[0]) {
+      repFlatCount = repCountField[1];
+      repCountField[1] = "";
+    } else if (!on) {
+      if (!repCountField[1] && repFlatCount && at(repFlatCount) >= 0 && at(repFlatCount) < repAt[1])
+        repCountField[1] = repFlatCount;
+      repFlatCount = "";
+    }
+    normEnds();
+  }
   renderAll();
 }
 
 function removeRepeatingSet(k) {
   repAt[k] = -1;
   repCountField[k] = "";
+  repEnd[k] = -1;
+  if (k === 1) { repNested = false; repFlatCount = ""; }
+  normEnds();
   renderAll();
 }
 
 function deleteField(i) {
+  // Set 2 starts after set 1's first field, and a nested set 2 counts from
+  // a field of set 1, so set 1 keeps at least one field ahead of set 2.
+  if (repAt[1] >= 0 && i >= repAt[0] && i < repAt[1] && repAt[1] - repAt[0] === 1)
+    return flash("set 1 needs a field before set 2: remove set 2 first", false);
+  // A set no longer counts from a deleted field, even if a later one reuses its id.
+  // The count resolves to the first field with that id, so only deleting that one
+  // drops it.
+  const resolves = id => id && fieldsState.findIndex(f => f.id === id) === i;
+  for (let k = 0; k < 2; k++)
+    if (resolves(repCountField[k])) repCountField[k] = "";
+  if (resolves(repFlatCount)) repFlatCount = "";
   fieldsState.splice(i, 1);
   // keep set boundaries anchored to the same fields
   for (let k = 0; k < 2; k++) {
     if (repAt[k] > i) repAt[k]--;
     if (repAt[k] > fieldsState.length) repAt[k] = fieldsState.length;
+    if (repEnd[k] > i) repEnd[k]--;
   }
+  normEnds();
   renderAll();
 }
 
@@ -789,15 +895,21 @@ function repDividerRow(k) {
   td.style.background = "var(--panel)";
   td.style.borderTop = "2px solid var(--accent)";
   const label = document.createElement("b");
-  label.textContent = `↻ repeating field set ${k + 1} — count from `;
+  label.textContent = k === 1 && repNested
+    ? `↻ repeating field set 2, inside each record of set 1 — count from `
+    : `↻ repeating field set ${k + 1} — count from `;
   td.appendChild(label);
   const sel = document.createElement("select");
   sel.style.width = "auto";
   const none = document.createElement("option");
-  none.value = ""; none.textContent = "(fills remaining bytes)";
+  // A nested set repeats once per record of set 1, so it counts from a
+  // field of that record (R05).
+  const nestedSet = k === 1 && repNested;
+  none.value = "";
+  none.textContent = nestedSet ? "(choose a set 1 field)" : "(fills remaining bytes)";
   sel.appendChild(none);
   fieldsState.forEach((f, i) => {
-    if (i < repAt[k]) {
+    if (i < repAt[k] && (!nestedSet || i >= repAt[0])) {
       const o = document.createElement("option");
       o.value = f.id; o.textContent = f.id;
       sel.appendChild(o);
@@ -806,12 +918,46 @@ function repDividerRow(k) {
   sel.value = repCountField[k];
   sel.onchange = () => { repCountField[k] = sel.value; regenerateYaml(); scheduleRefresh(); };
   td.appendChild(sel);
+  if (k === 1) {
+    const lab = document.createElement("label");
+    lab.style.marginLeft = "8px"; lab.style.whiteSpace = "nowrap";
+    const cb = document.createElement("input");
+    cb.type = "checkbox"; cb.style.width = "auto"; cb.style.minWidth = "0"; cb.style.margin = "0 4px 0 0";
+    cb.style.verticalAlign = "middle";
+    cb.checked = repNested;
+    cb.onchange = () => setNested(cb.checked);
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(" nested in set 1"));
+    td.appendChild(lab);
+  }
   if (repDepth() === k + 1) {   // only the deepest set is removable (sets stay trailing)
     const rm = document.createElement("button");
     rm.className = "lkbtn"; rm.textContent = "✕ remove set"; rm.style.marginLeft = "8px";
     rm.onclick = () => removeRepeatingSet(k);
     td.appendChild(rm);
   }
+  tr.appendChild(td);
+  return tr;
+}
+
+// A divider marking where set k (0-based) ends: the fields below are set 1's
+// again after a nested set, and do not repeat otherwise.
+function repEndRow(k) {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 10;
+  td.style.background = "var(--panel)";
+  td.style.borderTop = "2px dashed var(--accent)";
+  const label = document.createElement("b");
+  label.textContent = k === 1 && repNested
+    ? "↑ end of set 2 — the fields below are set 1's again"
+    : `↑ end of set ${k + 1} — the fields below do not repeat`;
+  td.appendChild(label);
+  const rm = document.createElement("button");
+  rm.className = "lkbtn"; rm.textContent = "✕ remove end"; rm.style.marginLeft = "8px";
+  rm.title = "the set then runs on, to the next set or the end";
+  rm.onclick = () => removeSetEnd(k);
+  td.appendChild(rm);
   tr.appendChild(td);
   return tr;
 }
@@ -845,6 +991,36 @@ function extractBits(hex, bitOff, bits) {
 
 function ftByName(name) { return MODEL.fieldtypes.find(t => t.name === name); }
 
+// The form does not show the attributes it carries through, so once a type is
+// chosen, drop those that the new type does not allow (R06, R41, R43, R44),
+// and the references to it that need an integer field.
+function dropTypeAttrs(f) {
+  const ft = ftByName(f.type);
+  if (!ft) return;
+  if (ft.root !== "DYNAMIC_FIELD_LENGTH") { f.dynamicFieldLength = false; f.dynamicFieldLengthOverhead = ""; }
+  if (f.type !== "DECIMAL") f.trailingZeroIsDigit = null;
+  if (!["STRING_FIX", "STRING_LZ", "STRING_LAU"].includes(f.type)) f.encoding = "";
+  if (ft.root !== "NUMBER") f.continues = "";
+  if (ft.root !== "NUMBER" && ft.root !== "LOOKUP" && fieldsState.find(g => g.id === f.id) === f)
+    for (const g of fieldsState) {
+      if (g.continues === f.id) g.continues = "";
+      if (g.trailingZeroIsDigit && g.trailingZeroIsDigit.field === f.id) g.trailingZeroIsDigit = null;
+    }
+}
+
+// Renaming a field renames the carried-through references to it, and the
+// sets that count from it, unless another field still has the old id.
+function renameRefs(oldId, newId) {
+  if (!oldId || oldId === newId || fieldsState.some(g => g.id === oldId)) return;
+  for (const g of fieldsState) {
+    if (g.continues === oldId) g.continues = newId;
+    if (g.trailingZeroIsDigit && g.trailingZeroIsDigit.field === oldId)
+      g.trailingZeroIsDigit = { ...g.trailingZeroIsDigit, field: newId };
+  }
+  for (let k = 0; k < 2; k++) if (repCountField[k] === oldId) repCountField[k] = newId;
+  if (repFlatCount === oldId) repFlatCount = newId;
+}
+
 function typeCombo(inp, f, tr) {
   const box = $("typeCombo");
   const q = inp.value.toLowerCase();
@@ -863,6 +1039,7 @@ function typeCombo(inp, f, tr) {
       ev.preventDefault();
       inp.value = t.name;
       f.type = t.name;
+      dropTypeAttrs(f);
       // a fieldtype mandates its bits/unit/resolution: show them in the row
       // (fieldsYaml omits them again when they match the type's defaults)
       if (t.bits) f.bits = t.bits;
@@ -901,6 +1078,7 @@ function renderFields() {
   const tb = $("fields").querySelector("tbody");
   tb.innerHTML = "";
   fieldsState.forEach((f, i) => {
+    for (let k = 1; k >= 0; k--) if (repEnd[k] === i) tb.appendChild(repEndRow(k));
     if (repAt[0] === i) tb.appendChild(repDividerRow(0));
     if (repAt[1] === i) tb.appendChild(repDividerRow(1));
     const tr = document.createElement("tr");
@@ -912,6 +1090,11 @@ function renderFields() {
       if (listId) inp.setAttribute("list", listId);
       inp.oninput = () => { f[key] = inp.value; regenerateYaml(); scheduleRefresh(); };
       inp.onchange = () => renderGrid();
+      if (key === "id") {
+        let before = f.id;
+        inp.onfocus = () => { before = f.id; };
+        inp.onchange = () => { renameRefs(before, f.id); before = f.id; regenerateYaml(); renderGrid(); };
+      }
       td.appendChild(inp);
       return td;
     };
@@ -928,6 +1111,7 @@ function renderFields() {
       inp.oninput = () => { f.type = inp.value; typeCombo(inp, f, tr); regenerateYaml(); scheduleRefresh(); };
       inp.onfocus = () => typeCombo(inp, f, tr);
       inp.onblur = () => setTimeout(hideTypeCombo, 200);
+      inp.onchange = () => { dropTypeAttrs(f); regenerateYaml(); scheduleRefresh(); };
       td.appendChild(inp);
       tr.appendChild(td);
     }
@@ -1018,8 +1202,17 @@ function renderFields() {
   // trailing repeating-set dividers (a set declared but not yet populated)
   if (repAt[0] === fieldsState.length) tb.appendChild(repDividerRow(0));
   if (repAt[1] === fieldsState.length) tb.appendChild(repDividerRow(1));
+  for (let k = 1; k >= 0; k--) if (repEnd[k] === fieldsState.length) tb.appendChild(repEndRow(k));
   const addRep = $("addRepBtn");
   if (addRep) addRep.disabled = repDepth() >= 2;
+  const addNested = $("addNestedBtn");
+  if (addNested) addNested.disabled = repDepth() !== 1 || repEnd[0] >= 0;
+  const endSet = $("endSetBtn");
+  if (endSet) {
+    const k = endableSet();
+    endSet.style.display = k >= 0 ? "" : "none";
+    endSet.textContent = `⤓ end set ${k + 1}`;
+  }
   const total = fieldsState.reduce((a, f) => a + fieldBits(f), 0);
   const frame = $("m_type").value === "Single" ? 64 : null;
   $("bitBudget").textContent =
@@ -1344,6 +1537,11 @@ function fieldYaml(f, pad) {
       : "lookup";
     y += `${p}${key}: ${f.lookup}\n`;
   }
+  // Not editable here, but carried through so a rewrite keeps them.
+  if (f.proprietary) y += `${p}proprietary: true\n`;
+  if (f.dynamicFieldLength) y += `${p}dynamicFieldLength: true\n`;
+  if (has(f.dynamicFieldLengthOverhead))
+    y += `${p}dynamicFieldLengthOverhead: ${Number(f.dynamicFieldLengthOverhead)}\n`;
   if (has(f.note)) y += noteYaml(f.note, p);
   if (has(f.unit) && f.unit !== ft.unit) y += `${p}unit: ${yq(f.unit)}\n`;
   if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
@@ -1360,8 +1558,8 @@ function fieldYaml(f, pad) {
 // Format a range bound as the converter does: a float, so a whole number
 // still carries a trailing .0 (rangeMin: 0.0, not 0).
 function asFloat(v) {
-  const n = Number(v);
-  return Number.isInteger(n) ? n + ".0" : String(n);
+  const s = String(Number(v));
+  return /^-?\d+$/.test(s) ? s + ".0" : s;   // not on 3.4e+38
 }
 
 // A note: is a plain scalar, or a `|-` block scalar when it spans lines.
@@ -1419,12 +1617,15 @@ function applyTypeConstraints() {
 function applyFieldEditor() {
   if (fldEditIndex < 0) return;
   const f = fieldsState[fldEditIndex];
+  const before = { id: f.id, type: f.type };
   FE_TEXT.forEach(k => {
     const el = $("fe_" + k);
     // note keeps internal newlines; everything else is a single trimmed line
     f[k] = el.readOnly ? "" : (k === "note" ? el.value.replace(/\s+$/, "") : el.value.trim());
   });
   FE_BOOL.forEach(k => { f[k] = $("fe_" + k).checked; });
+  renameRefs(before.id, f.id);
+  if (f.type !== before.type) dropTypeAttrs(f);
   closeFieldEditor();
   regenerateYaml();
   renderFields();
@@ -1453,25 +1654,28 @@ async function loadMatchOptions(f) {
 
 // A repeating set is a `- repeat:` item holding its own fields, so count and
 // start are the block's length and position; only countField is authored.
+// A nested set 2 is a `- repeat:` item among set 1's fields.
 function fieldsYaml() {
-  const ends = [repAt[1] >= 0 ? repAt[1] : fieldsState.length, fieldsState.length];
-  const opens = new Map();                    // field index -> set number
-  for (let k = 0; k < 2; k++) {
-    if (repAt[k] < 0 || ends[k] - repAt[k] <= 0) continue;   // declared but empty: skip
-    opens.set(repAt[k], k);
-  }
-  const firstRep = opens.size ? Math.min(...opens.keys()) : -1;
+  const nested = repNested && repAt[0] >= 0;
+  // [start, end) of each set; a set declared but still empty is left out.
+  const span = [0, 1]
+    .map(k => [repAt[k], repEnd[k] >= 0 ? repEnd[k] : runsTo(k)])
+    .map(([s, e]) => (s >= 0 && e > s ? [s, e] : null));
+  const inSet = (k, i) => span[k] && i >= span[k][0] && i < span[k][1];
+  const opener = (k, pad) => {
+    let y = `${pad}- repeat:\n`;
+    if (repCountField[k] && fieldsState.some(g => g.id === repCountField[k]))
+      y += `${pad}    countField: ${repCountField[k]}\n`;
+    return y + `${pad}    fields:\n`;
+  };
 
   let y = "fields:\n";
   fieldsState.forEach((f, i) => {
-    if (opens.has(i)) {
-      const k = opens.get(i);
-      y += `- repeat:\n`;
-      if (repCountField[k] && fieldsState.some(g => g.id === repCountField[k]))
-        y += `    countField: ${repCountField[k]}\n`;
-      y += `    fields:\n`;
-    }
-    y += fieldYaml(f, firstRep >= 0 && i >= firstRep ? "    " : "");
+    if (span[0] && i === span[0][0]) y += opener(0, "");
+    if (span[1] && i === span[1][0]) y += opener(1, nested ? "    " : "");
+    // flat sets never overlap; a nested set lies within set 1
+    const depth = (inSet(0, i) ? 1 : 0) + (inSet(1, i) ? 1 : 0);
+    y += fieldYaml(f, "    ".repeat(depth));
   });
   return y;
 }
@@ -1500,10 +1704,6 @@ function syncSavePath() {
 
 function regenerateYaml() {
   if (yamlDirty) { syncSavePath(); return; }
-  if (repNested) {
-    flash("this PGN has a nested repeating set: edit its fields in the YAML", false);
-    return;
-  }
   if (baseYaml !== null) {
     // Existing PGN: replace the fields: block, repeating sets and all; notes,
     // samples and every other authored key survive. The repeating1/repeating2

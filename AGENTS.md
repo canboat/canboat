@@ -478,10 +478,13 @@ keel/keel edit
   sample carries that the enumeration doesn't name yet are flagged so you can
   name them straight from the evidence. Lookup values are decimal (a `0x…`
   prefix is accepted); a `bit` enum's value is the bit position.
-- **Repeating field sets:** "+ repeating field set" marks the trailing fields
-  that repeat (at most two, second after first) and its optional count field.
-  A set nested in another is shown but not laid out by the form: edit that
-  PGN's fields in the YAML.
+- **Repeating field sets:** "+ repeating field set" starts a set of fields
+  that repeat (at most two, second after first) and sets its optional count field.
+  "+ nested set" starts set 2 inside each record of set 1 instead (the "nested
+  in set 1" box switches an existing set 2); a nested set must count from a
+  set 1 field that comes before it (R05). "End set" ends the current set,
+  so the fields added next do not repeat, or are set 1's again after a nested
+  set.
 - **Saving is rule-gated:** the editor refuses to write while any rule fails,
   names the target file from the PGN + `id`, and then offers to regenerate the
   artifacts. Scratch mode validates without writing; undo reverts the last save.

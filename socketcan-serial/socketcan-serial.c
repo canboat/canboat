@@ -281,6 +281,10 @@ static uint32_t readSysfsBitrate(const char *iface);
 static bool     readLoadSample(const char *iface, uint64_t now, LoadSample *out);
 static bool     computeLoadPct(const LoadSample *prev, const LoadSample *curr, uint32_t bitrate, uint8_t *out);
 
+/*
+ * Parse the options, then claim an address on a SocketCAN interface and relay between
+ * it and stdin/stdout in canboat format.
+ */
 int main(int argc, char **argv)
 {
   const char *name   = argv[0];
@@ -322,32 +326,32 @@ int main(int argc, char **argv)
     else if (strcasecmp(argv[1], "-t") == 0 && argc > 2)
     {
       argc--, argv++;
-      timeout = strtol(argv[1], 0, 10);
+      timeout = (long) parseNumberOption("-t", argv[1], 0, INT32_MAX);
     }
     else if (strcasecmp(argv[1], "-a") == 0 && argc > 2)
     {
       argc--, argv++;
-      preferredAddress = (unsigned int) strtol(argv[1], 0, 10) & 0xff;
+      preferredAddress = (unsigned int) parseNumberOption("-a", argv[1], 0, 255);
     }
     else if (strcasecmp(argv[1], "-u") == 0 && argc > 2)
     {
       argc--, argv++;
-      uniqueNumber = (uint32_t) strtoul(argv[1], 0, 10);
+      uniqueNumber = (uint32_t) parseNumberOption("-u", argv[1], 0, 0x1fffff);
     }
     else if (strcasecmp(argv[1], "-m") == 0 && argc > 2)
     {
       argc--, argv++;
-      manufacturerCode = (unsigned int) strtoul(argv[1], 0, 10);
+      manufacturerCode = (unsigned int) parseNumberOption("-m", argv[1], 0, 0x7ff);
     }
     else if (strcasecmp(argv[1], "-hb") == 0 && argc > 2)
     {
       argc--, argv++;
-      heartbeatInterval = strtol(argv[1], 0, 10);
+      heartbeatInterval = (long) parseNumberOption("-hb", argv[1], 0, 65532);
     }
     else if (strcasecmp(argv[1], "-si") == 0 && argc > 2)
     {
       argc--, argv++;
-      systemInstance = (unsigned int) strtoul(argv[1], 0, 10) & 0x0f;
+      systemInstance = (unsigned int) parseNumberOption("-si", argv[1], 0, 15);
     }
     else if (!device)
     {
