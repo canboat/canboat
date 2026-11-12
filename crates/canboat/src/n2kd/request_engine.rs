@@ -54,6 +54,7 @@ pub const DEVICE_REQUEST_INTERVAL: Duration = Duration::from_secs(300);
 /// How often the request thread looks for work when nothing is due.
 const IDLE_POLL: Duration = Duration::from_millis(500);
 
+const ADDR_NULL: u8 = 254;
 const ADDR_GLOBAL: u8 = 255;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -123,8 +124,12 @@ impl RequestEngine {
     /// the engine knows not to re-request data that just arrived, and
     /// ends the wait when this is the answer, or a PGN 59392 refusal,
     /// for the outstanding request. `data` is only read for PGN 59392;
-    /// callers without the payload pass `&[]`.
+    /// callers without the payload pass `&[]`. Sources 254 (no address)
+    /// and 255 (a gateway's own messages) are not devices to ask.
     pub fn note_device_seen(&self, pgn: u32, src: u8, data: &[u8]) {
+        if src >= ADDR_NULL {
+            return;
+        }
         let now = Instant::now();
         let mut state = self.state.lock().unwrap();
         let entry = state.devices.entry(src).or_default();
@@ -393,6 +398,19 @@ mod tests {
         // Fourth call: all three were just stamped requested →
         // nothing left to do.
         assert_eq!(e.next_due(&mut cursor, RequestKind::Claim), None);
+    }
+
+    #[test]
+    fn null_and_global_sources_are_not_devices() {
+        // An NGT-1 sends its own pseudo-PGNs from 255; a device that
+        // couldn't claim sends from 254. Asking either would be a
+        // broadcast.
+        let e = RequestEngine::new();
+        e.note_device_seen(262400, 255, &[]);
+        e.note_device_seen(PGN_CLAIM, 254, &[]);
+        assert_eq!(e.device_count(), 0);
+        let mut cursors = [0u8; 3];
+        assert_eq!(e.next_request(&mut cursors), None);
     }
 
     #[test]
