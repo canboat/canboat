@@ -674,8 +674,10 @@ impl Hub {
         }
     }
 
+    /// The JSON line carries no payload, so a PGN 59392 refusal can't
+    /// end the engine's wait; it times out instead.
     fn note_device_seen(&self, pgn: u32, src: u8) {
-        self.engine.note_device_seen(pgn, src);
+        self.engine.note_device_seen(pgn, src, &[]);
     }
 
     fn store(&self, line: &str) {
