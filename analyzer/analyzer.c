@@ -23,6 +23,9 @@ limitations under the License.
 #define GLOBALS
 #include "analyzer.h"
 
+#include <errno.h>
+#include <limits.h>
+
 #include "parse.h"
 
 enum RawFormats
@@ -187,6 +190,32 @@ static void            printCanRaw(const RawMessage *msg);
 static void            showBuffers(void);
 static unsigned int    getMessageByteCount(const char *const msg);
 
+/*
+ * Parse a PGN filter argument. It must be a whole positive decimal number that fits
+ * in an int: strtol() alone would also take leading whitespace, a sign, or trailing
+ * junk, and a value too big for an int would wrap. Returns 0 when it is not one.
+ */
+static int parsePgnFilter(const char *value)
+{
+  char *end;
+  long  pgn;
+
+  if (!isdigit((unsigned char) value[0]))
+  {
+    return 0;
+  }
+  errno = 0;
+  pgn   = strtol(value, &end, 10);
+  if (errno == ERANGE || *end != '\0' || pgn <= 0 || pgn > INT_MAX)
+  {
+    return 0;
+  }
+  return (int) pgn;
+}
+
+/*
+ * Report the argument that could not be parsed, print the command line help and exit(1).
+ */
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
@@ -431,7 +460,7 @@ int main(int argc, char **argv)
 
     else
     {
-      int prn = strtol(av[1], 0, 10);
+      int prn = parsePgnFilter(av[1]);
       if (prn > 0 && onlyPgn < ARRAY_SIZE(onlyPgnList))
       {
         onlyPgnList[onlyPgn++] = prn;
