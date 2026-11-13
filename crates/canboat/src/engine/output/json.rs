@@ -272,12 +272,8 @@ fn write_json_inner<W: fmt::Write>(
         // 15-bit Reserved on a 26-byte AIS Class B report reads 7 bits
         // of 0xFF, which is not 0x7FFF, and the two computations
         // disagreed.
-        if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty())
-            && !is_padding(f)
-        {
-            return false;
-        }
-        true
+        !(matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty())
+            && !is_padding(f))
     };
     let write_field = |buf: &mut String, sep: &str, f: &DecodedField| -> fmt::Result {
         buf.write_str(sep)?;
