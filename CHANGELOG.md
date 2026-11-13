@@ -6,6 +6,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [10.0.0](https://github.com/canboat/canboat/compare/v9.2.0...v10.0.0) (2026-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* a set-1 record of a nested PGN carries its own "list2" array in JSON, instead of "list2" being a sibling of "list". The XML schema gains RepeatingFieldSet2Parent, and the C Pgn struct and the Rust PgnInfo and DecodedField structs gain a field.
+* **json:** DecodedPgn has a new public field, decoded_bits, so code that builds a DecodedPgn with a struct literal must set it. -debug and -empty JSON gain the trailing Reserved/Spare fields and "trailing". Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com> Claude-Session: https://claude.ai/code/session_017gZmLYCr5eSMaAAmZGgARg
+* **decode:** leave out a value above RangeMax as out of range ([#1180](https://github.com/canboat/canboat/issues/1180))
+* **json:** each 126208 list entry with a value now has a "parameterId" key, the camelCase id of the field of the commanded PGN that the parameter names, between "parameter" and the value. The key is "parameterId" in every JSON key style.
+* **decode:** a field that selects its PGN variant and has no lookup is now written as its description (a string, or {"value","name"} with -nv) instead of as a number. In the samples this is about 11,700 messages: 130822 command, 130817 deviceType, 130823 reportType, 130827 messageId, 61184 and 130816 proprietaryId, and Garmin 126720 unknownId1-4. In the Rust library such a field is a FieldValue::Lookup with its description as name, instead of a FieldValue::Integer.
+* **decode:** a lookup value the lookup doesn't name and that is not one of the field's sentinels now appears as its number instead of being left out (JSON) or shown as Unknown (text). In the samples this is about 400 messages: 127501 Binary Switch Bank Status indicators of 2 (error), 129540 Range Residual Mode 2, 129038 Nav Status 13, and catch-all Industry Code 6.
+* **json:** a NAME (ISO_NAME field, plain or as -nv's "value") and any integer field wider than 53 bits are now written as a JSON string of their digits instead of as a bare number: about 1,100 messages in the samples, mostly 130840's source.
+* **database:** 65379 subMode, 65288 alarmPriority, 128776 speedControl and 130829 helm and subHelm are now numbers in JSON ("subMode":0) instead of hex strings ("subMode":"00 00"), and their all-ones value is left out as not available.
+* **database:** these lookup values are written with their new names, in JSON and text output alike. A reader that matches on "Auto Turn" for SeaTalk command 17, or on any of the other old names for the renamed codes, needs the new name.
+* **json:** JSON output now includes "list":[] / "list2":[] for a PGN with a repeating set and no records (about 6,800 messages in the samples, e.g. 129029 with 0 reference stations and B&G 130824 with no keys), where it used to leave the key out. 129029 and other PGNs with a count of 0 and trailing padding no longer give a list with one empty record ([{}] in JSON, n/a fields in text). DecodedPgn::has_repeating_set is true whenever the PGN defines the set.
+
+### Added
+
+* **127750:** converter status is sent every 1500 ms ([#1185](https://github.com/canboat/canboat/issues/1185)) ([3c70098](https://github.com/canboat/canboat/commit/3c7009811d2fbacbdd4f3d14794d4453be29771a))
+* **cli:** filter devices by manufacturer, with an allow or a deny list ([#1179](https://github.com/canboat/canboat/issues/1179)) ([fd96b48](https://github.com/canboat/canboat/commit/fd96b4893a6391e2e0fd361e428116440522f836))
+* **database:** define the trailing spare bytes of 130820, 130818 and 262386 ([#1183](https://github.com/canboat/canboat/issues/1183)) ([4ae7204](https://github.com/canboat/canboat/commit/4ae7204ec4a5f5a5e5227c6190a7975eb884c026)), closes [#1169](https://github.com/canboat/canboat/issues/1169)
+* **database:** give each lookup name to one code, and check it ([#1161](https://github.com/canboat/canboat/issues/1161)) ([b424570](https://github.com/canboat/canboat/commit/b424570df24942161c166921ecaa19eaef675af6))
+* **database:** give six number fields and three bitmaps real types instead of BINARY ([#1175](https://github.com/canboat/canboat/issues/1175)) ([33f4ebd](https://github.com/canboat/canboat/commit/33f4ebd61f394fe7a6dad4f6d2cc6bb5efa156ce))
+* **database:** H5000 calibration keys and the 130822 settings dump ([#1196](https://github.com/canboat/canboat/issues/1196)) ([7b4672a](https://github.com/canboat/canboat/commit/7b4672ae71abb407d4f1f5fea569022e0d21e8df)), closes [#1184](https://github.com/canboat/canboat/issues/1184)
+* **database:** read the 130827 Furuno NavPilot rudder angle as signed ([#1159](https://github.com/canboat/canboat/issues/1159)) ([4021a37](https://github.com/canboat/canboat/commit/4021a37de5eaeceffb0c1c22a4777bbc44233efb))
+* **decode:** leave out a value above RangeMax as out of range ([#1180](https://github.com/canboat/canboat/issues/1180)) ([8d12296](https://github.com/canboat/canboat/commit/8d122968dbc35ff6379a47db6cfcc227c4544bdc))
+* **decode:** name a matched field without a lookup by its description ([#1171](https://github.com/canboat/canboat/issues/1171)) ([0a25548](https://github.com/canboat/canboat/commit/0a2554822069e2e557edd7fb0ef79624f1d12c48))
+* **decode:** show a lookup value the lookup doesn't name, unless it is a sentinel ([#1170](https://github.com/canboat/canboat/issues/1170)) ([1c2583c](https://github.com/canboat/canboat/commit/1c2583cc9c4a75f7b3f57304fa2e25f90fba1809))
+* **json:** name the field a group-function parameter is for, as parameterId ([#1174](https://github.com/canboat/canboat/issues/1174)) ([dd0b84e](https://github.com/canboat/canboat/commit/dd0b84ec54e5950ef20b93a2b1c795ce110c1ce2))
+* **json:** under -empty, write the whole message: trailing padding and uncovered bytes ([#1186](https://github.com/canboat/canboat/issues/1186)) ([6ef95c7](https://github.com/canboat/canboat/commit/6ef95c7d22a3f1195d132b05d9154a8bac0b5928))
+* **json:** write a NAME and any integer wider than 53 bits as a string of its digits ([#1172](https://github.com/canboat/canboat/issues/1172)) ([9545842](https://github.com/canboat/canboat/commit/9545842f09e362d81cbcb37e5a00d16e187b7606))
+* **json:** write a repeating set with no records as [], and a count of 0 as none ([#1163](https://github.com/canboat/canboat/issues/1163)) ([bf96219](https://github.com/canboat/canboat/commit/bf96219d832067b100277bbb5b9a253c1408c8b7))
+* **keel:** edit the rarer field attributes in the field editor, and keep them on a type change ([#1207](https://github.com/canboat/canboat/issues/1207)) ([2a42e00](https://github.com/canboat/canboat/commit/2a42e004e01094b25049dddf737277f33c324ff1))
+* **keel:** lay out and save nested repeating sets in the editor ([#1204](https://github.com/canboat/canboat/issues/1204)) ([6efe723](https://github.com/canboat/canboat/commit/6efe7234970aeb52c65ca0aa5605c9c5753bb26b))
+* nested repeating field sets, and the 130822 table dumps that need them ([#1200](https://github.com/canboat/canboat/issues/1200)) ([071e89f](https://github.com/canboat/canboat/commit/071e89f0b2a8c6e5d44e8f4b5a1e37690ac22d7c))
+* **victron:** decode VREG AC input and output phase currents ([#1181](https://github.com/canboat/canboat/issues/1181)) ([7cbd7a2](https://github.com/canboat/canboat/commit/7cbd7a2f9d49681657e140537c6c33208d7dd9ac))
+
+
+### Fixed
+
+* **126208:** take the Industry Code from parameter 1 when parameter 3 is missing ([#1192](https://github.com/canboat/canboat/issues/1192)) ([af1676f](https://github.com/canboat/canboat/commit/af1676ffeaab421109644db2cdeba1d89add65e6))
+* **analyzer:** read an unsigned 64-bit field's values as readings, not sentinels ([#1173](https://github.com/canboat/canboat/issues/1173)) ([4d2faf2](https://github.com/canboat/canboat/commit/4d2faf2bc7a0ab99c7042aee366f200f1c2d3e6c))
+* **analyzer:** validate address filters ([#1201](https://github.com/canboat/canboat/issues/1201)) ([5fa45f1](https://github.com/canboat/canboat/commit/5fa45f10a29e1572787cd018282dfc1e5e69ba91))
+* **analyzer:** validate PGN filter arguments ([#1202](https://github.com/canboat/canboat/issues/1202)) ([36096b2](https://github.com/canboat/canboat/commit/36096b2be5fbbd973b749849e4172ad1c8b55df2))
+* **candump:** read candump's pretty lines with a -t timestamp ([#1188](https://github.com/canboat/canboat/issues/1188)) ([41a1512](https://github.com/canboat/canboat/commit/41a1512f49269b5a2e08c4160b382329d92cbaa0))
+* **convert:** leave canboat pseudo PGNs out of frame formats ([#1182](https://github.com/canboat/canboat/issues/1182)) ([d22e666](https://github.com/canboat/canboat/commit/d22e666e69efa85128b9e991704a99f735f98c49))
+* **convert:** write gateway pseudo PGNs and short single frames back as read ([#1166](https://github.com/canboat/canboat/issues/1166)) ([9d46edc](https://github.com/canboat/canboat/commit/9d46edca59c048baa5e2ea95c28501e6fa85ed48)), closes [#1152](https://github.com/canboat/canboat/issues/1152)
+* **convert:** write whole messages to n2k-ascii and actisense-ebl ([#1189](https://github.com/canboat/canboat/issues/1189)) ([fd1ce90](https://github.com/canboat/canboat/commit/fd1ce909cb5512ac3513644ea5286ddc50452ba4))
+* **database:** derive 130818 Furuno air pressure offset's range instead of authoring ±99.9 Pa ([#1160](https://github.com/canboat/canboat/issues/1160)) ([ad1d2fa](https://github.com/canboat/canboat/commit/ad1d2fa55ed57f80e851569ee9f5dfce22212db5))
+* **encode:** read an INDIRECT_LOOKUP given by name ([#1165](https://github.com/canboat/canboat/issues/1165)) ([68c9732](https://github.com/canboat/canboat/commit/68c9732234c336c637dfe00739ec3d459ba248ad)), closes [#1155](https://github.com/canboat/canboat/issues/1155)
+* **json:** a lookup entry named by digits encodes as that entry ([#1191](https://github.com/canboat/canboat/issues/1191)) ([1952e87](https://github.com/canboat/canboat/commit/1952e87aa0d0189b4b8a6f19f6da9ea2c8ba027e))
+* **keel:** keep every field attribute when the editor rewrites a PGN ([#1205](https://github.com/canboat/canboat/issues/1205)) ([e885147](https://github.com/canboat/canboat/commit/e885147b016bf4c496778af67a517288a9d223af))
+* **n2kd:** close stream clients when a shutdown-aware server stops ([#1193](https://github.com/canboat/canboat/issues/1193)) ([27f3fef](https://github.com/canboat/canboat/commit/27f3fef69bcb27d730435bb7d15e4a5fafb248cc))
+* refuse partial or out-of-range numbers on the command line ([#1206](https://github.com/canboat/canboat/issues/1206)) ([6ce848c](https://github.com/canboat/canboat/commit/6ce848c6048ae81414c90dd3cee57699f98c6738))
+
 ## [9.2.0](https://github.com/canboat/canboat/compare/v9.1.0...v9.2.0) (2026-11-04)
 
 
