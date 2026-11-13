@@ -2,7 +2,7 @@ pgn: 130825
 id: mercuryCommandResponse
 description: 'Mercury: Command/Response'
 type: Fast
-variantOrder: 5
+variantOrder: 9
 priority: 7
 missing:
 - Fields

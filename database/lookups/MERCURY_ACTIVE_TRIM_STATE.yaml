@@ -1,0 +1,7 @@
+name: MERCURY_ACTIVE_TRIM_STATE
+kind: pair
+bits: 8
+values:
+  0: Configuration Mode
+  1: Normal
+  2: Not Detected

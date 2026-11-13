@@ -9896,6 +9896,25 @@ Pgn pgnList[] = {
      .repeatingField1 = 255,
      .explanation = "Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are only partially identified."},
 
+    {"Mercury: Active Trim Status",
+     130825,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 7, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE", .partOfPrimaryKey = true},
+      {.name = "Target Instance", .camelName = "targetInstance", .fieldType = "UINT8", .resolution = 1.0, .description = "Active Trim module the report is for; not available (0xFF) addresses all"},
+      {.name = "Configuration Mode", .camelName = "configurationMode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .description = "Whether an Active Trim module is detected, and if so whether it is in configuration mode", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_ACTIVE_TRIM_STATE, .lookup.name = "MERCURY_ACTIVE_TRIM_STATE"},
+      {.name = "Major Profile", .camelName = "majorProfile", .fieldType = "UINT8", .resolution = 1.0, .description = "0 .. 4, shown as profile 1 .. 5"},
+      {.name = "Running Profile", .camelName = "runningProfile", .fieldType = "UINT8", .resolution = 1.0, .description = "0 .. 4, shown as profile 1 .. 5"},
+      {.name = "Status Flags", .camelName = "statusFlags", .fieldType = "BITLOOKUP", .size = 8, .resolution = 1.0, .description = "Engaged clear = Off", .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupMERCURY_ACTIVE_TRIM_STATUS, .lookup.name = "MERCURY_ACTIVE_TRIM_STATUS"}
+     },
+     .camelDescription = "mercuryActiveTrimStatus",
+     .priority = 7,
+     .explanation = "Mercury command channel opcode 7: the Active Trim status report. Tried before the general Mercury\ncommand/response definition. Profiles run 0 to 4 and are shown to the user as 1 to 5; a higher profile\ntrims more aggressively. The major profile is the average of the running profile, which can be changed\nunderway."},
+
     {"Maretron: Data Instance Channel Correlation",
      130825,
      PACKET_COMPLETE,
@@ -9967,7 +9986,7 @@ Pgn pgnList[] = {
 
     {"Mercury: Cruise Control Data",
      130825,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FIELDS_UNKNOWN,
      PACKET_FAST,
      {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
@@ -9976,14 +9995,79 @@ Pgn pgnList[] = {
       {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Cruise Control", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE"},
       {.name = "Engine Instance", .camelName = "engineInstance", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Cruise State", .camelName = "cruiseState", .fieldType = "UINT8", .resolution = 1.0, .description = "Cruise engagement/mode byte; 0 = disengaged, 5 = engaged"},
+      {.name = "Cruise State", .camelName = "cruiseState", .fieldType = "UINT8", .resolution = 1.0, .description = "0 = disengaged, 1 = RPM cruise, 2 = Smart Tow, 3 = speed cruise, 5 = status update"},
       {.name = "Cruise RPM Setpoint", .camelName = "cruiseRpmSetpoint", .fieldType = "UINT16", .resolution = 1.0, .unit = "rpm"},
-      {.name = "Cruise Speed Setpoint", .camelName = "cruiseSpeedSetpoint", .fieldType = "DILUTION_OF_PRECISION_UFIX16", .unit = "km/h"},
+      {.name = "Cruise Speed Setpoint", .camelName = "cruiseSpeedSetpoint", .fieldType = "UFIX16", .resolution = 0.01, .unit = "km/h"},
       {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
      },
      .camelDescription = "mercuryCruiseControlData",
      .priority = 7,
-     .explanation = "Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a cruise engagement/mode byte (0 = disengaged, 5 = engaged), and the cruise RPM and speed setpoints (0xFFFF = not available). Some payload bytes are not yet identified."},
+     .explanation = "Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a message type byte, the cruise RPM setpoint in 1 rpm steps and the cruise speed setpoint in 0.01 km/h steps (0xFFFF = not available). An RPM cruise command leaves the speed setpoint not available and a speed cruise command leaves the RPM setpoint not available. Some payload bytes are not yet identified."},
+
+    {"Mercury: Maintenance Reset Command",
+     130825,
+     PACKET_LOOKUPS_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1, .description = "Maintenance Reset Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE", .partOfPrimaryKey = true},
+      {.name = "Engine Instance", .camelName = "engineInstance", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Item", .camelName = "item", .fieldType = "UINT8", .resolution = 1.0, .description = "Maintenance item"},
+      {.name = "Value", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0, .description = "100 when sent by a display"}
+     },
+     .camelDescription = "mercuryMaintenanceResetCommand",
+     .priority = 7,
+     .explanation = "Mercury command channel opcode 1: resets a maintenance item of one engine.\nTried before the general Mercury command/response definition."},
+
+    {"Mercury: Maintenance Reset Response",
+     130825,
+     PACKET_LOOKUPS_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "Maintenance Reset Response", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE", .partOfPrimaryKey = true},
+      {.name = "Instance", .camelName = "instance", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Item", .camelName = "item", .fieldType = "UINT8", .resolution = 1.0, .description = "Maintenance item, from the command"},
+      {.name = "OK", .camelName = "ok", .fieldType = "UINT8", .resolution = 1.0, .description = "Non-zero when the reset succeeded"}
+     },
+     .camelDescription = "mercuryMaintenanceResetResponse",
+     .priority = 7,
+     .explanation = "Mercury command channel opcode 2: the answer to a Maintenance Reset Command.\nTried before the general Mercury command/response definition."},
+
+    {"Mercury: Oil Level Check Command",
+     130825,
+     PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 12, .description = "Oil Level Check Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE", .partOfPrimaryKey = true},
+      {.name = "Engine Instance", .camelName = "engineInstance", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "mercuryOilLevelCheckCommand",
+     .priority = 7,
+     .explanation = "Mercury command channel opcode 12: asks for an oil level check of one engine.\nTried before the general Mercury command/response definition."},
+
+    {"Mercury: Oil Level Reset Response",
+     130825,
+     PACKET_FIELDS_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 144, .description = "Mercury Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Opcode", .camelName = "opcode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 13, .description = "Oil Level Reset Response", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMERCURY_COMMAND_OPCODE, .lookup.name = "MERCURY_COMMAND_OPCODE", .partOfPrimaryKey = true},
+      {.name = "Non-Zero Instance", .camelName = "nonZeroInstance", .fieldType = "UINT8", .resolution = 1.0, .description = "1 when the engine instance is not 0, else 0"},
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 24, .resolution = 1.0}
+     },
+     .camelDescription = "mercuryOilLevelResetResponse",
+     .priority = 7,
+     .explanation = "Mercury command channel opcode 13. Tried before the general Mercury command/response definition."},
 
     {"Mercury: Command/Response",
      130825,
