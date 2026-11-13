@@ -499,7 +499,7 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
         }
         // Before the filter: it is the request this prompts that gets an
         // unknown device's Address Claim.
-        hub.note_device_seen(meta.pgn, meta.src);
+        hub.note_device_seen(meta.pgn, meta.src, trimmed);
         if let Some(filter) = manufacturers.as_mut() {
             let claim = claim_in_line(meta.pgn, trimmed, protocol);
             if !filter.keep(meta.pgn, meta.src, claim) {
@@ -594,6 +594,17 @@ fn extract_meta(line: &str) -> Option<Meta> {
     Some(Meta { pgn, src })
 }
 
+/// The PGN a PGN 59392 ISO Acknowledgement line is about. It is in
+/// `fields`, as `pgn`, `Pgn` or `PGN` depending on the `--id` style; the
+/// record's own `pgn` comes before `fields`, so search after it.
+fn acknowledged_pgn(line: &str) -> Option<u32> {
+    let fields = &line[line.find("\"fields\":")?..];
+    ["pgn", "Pgn", "PGN"]
+        .iter()
+        .find_map(|key| json::int(fields, key))
+        .and_then(|p| u32::try_from(p).ok())
+}
+
 struct Hub {
     /// Per-`(pgn, src)` snapshot cache, shared (via `Arc`) with the
     /// connect-and-dump snapshot / AIS listeners in `n2kd::serving::tcp`
@@ -674,8 +685,15 @@ impl Hub {
         }
     }
 
-    fn note_device_seen(&self, pgn: u32, src: u8) {
-        self.engine.note_device_seen(pgn, src);
+    /// The JSON line carries no payload, so a PGN 59392 refusal is read
+    /// from its decoded fields.
+    fn note_device_seen(&self, pgn: u32, src: u8, line: &str) {
+        self.engine.note_device_seen(pgn, src, &[]);
+        if pgn == request_engine::PGN_ISO_ACK
+            && let Some(refused) = acknowledged_pgn(line)
+        {
+            self.engine.note_refusal(src, refused);
+        }
     }
 
     fn store(&self, line: &str) {
@@ -698,6 +716,15 @@ impl Hub {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn acknowledged_pgn_reads_the_field_not_the_record() {
+        let camel = r#"{"timestamp":"2026-11-12T21:00:00.000Z","prio":6,"src":120,"dst":1,"pgn":59392,"description":"ISO Acknowledgement","fields":{"control":"NAK","pgn":126998}}"#;
+        let spaces = r#"{"timestamp":"2026-11-12T21:00:00.000Z","prio":6,"src":120,"dst":1,"pgn":59392,"description":"ISO Acknowledgement","fields":{"Control":"NAK","PGN":126996}}"#;
+        assert_eq!(acknowledged_pgn(camel), Some(126998));
+        assert_eq!(acknowledged_pgn(spaces), Some(126996));
+        assert_eq!(acknowledged_pgn(r#"{"pgn":59392}"#), None);
+    }
 
     #[test]
     fn parse_banner_reads_units_and_protocol() {
