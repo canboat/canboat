@@ -6,11 +6,10 @@ variantOrder: 4
 priority: 7
 missing:
 - Fields
-- FieldLengths
-- Resolution
-explanation: 'Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a cruise engagement/mode byte
-  (0 = disengaged, 5 = engaged), and the cruise RPM and speed setpoints (0xFFFF = not available). Some payload bytes are not
-  yet identified.'
+explanation: 'Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a message type byte, the cruise
+  RPM setpoint in 1 rpm steps and the cruise speed setpoint in 0.01 km/h steps (0xFFFF = not available). An RPM cruise command
+  leaves the speed setpoint not available and a speed cruise command leaves the RPM setpoint not available. Some payload bytes
+  are not yet identified.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -47,14 +46,15 @@ fields:
 - id: cruiseState
   name: Cruise State
   type: UINT8
-  description: Cruise engagement/mode byte; 0 = disengaged, 5 = engaged
+  description: 0 = disengaged, 1 = RPM cruise, 2 = Smart Tow, 3 = speed cruise, 5 = status update
 - id: cruiseRpmSetpoint
   name: Cruise RPM Setpoint
   type: UINT16
   unit: rpm
 - id: cruiseSpeedSetpoint
   name: Cruise Speed Setpoint
-  type: DILUTION_OF_PRECISION_UFIX16
+  type: UFIX16
+  resolution: 0.01
   unit: km/h
 - id: reserved10
   name: Reserved

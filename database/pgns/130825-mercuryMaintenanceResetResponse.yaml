@@ -1,0 +1,50 @@
+pgn: 130825
+id: mercuryMaintenanceResetResponse
+description: 'Mercury: Maintenance Reset Response'
+type: Fast
+variantOrder: 6
+priority: 7
+missing:
+- Lookups
+- SampleData
+explanation: |-
+  Mercury command channel opcode 2: the answer to a Maintenance Reset Command.
+  Tried before the general Mercury command/response definition.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: opcode
+  name: Opcode
+  type: LOOKUP
+  bits: 8
+  match: 2
+  lookup: MERCURY_COMMAND_OPCODE
+  description: Maintenance Reset Response
+  primaryKey: true
+- id: instance
+  name: Instance
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8
+  description: Maintenance item, from the command
+- id: ok
+  name: OK
+  type: UINT8
+  description: Non-zero when the reset succeeded
