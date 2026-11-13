@@ -133,15 +133,25 @@ impl RequestEngine {
         let now = Instant::now();
         let mut state = self.state.lock().unwrap();
         let entry = state.devices.entry(src).or_default();
-        let answers = if let Some(kind) = RequestKind::from_pgn(pgn) {
+        if let Some(kind) = RequestKind::from_pgn(pgn) {
             entry.last_received[kind.index()] = Some(now);
-            Some(pgn)
+            self.answer(&mut state, src, pgn);
         } else if pgn == PGN_ISO_ACK && data.len() >= 8 {
-            Some(u32::from_le_bytes([data[5], data[6], data[7], 0]))
-        } else {
-            None
-        };
-        if answers.is_some() && state.outstanding == answers.map(|p| (src, p)) {
+            let refused = u32::from_le_bytes([data[5], data[6], data[7], 0]);
+            self.answer(&mut state, src, refused);
+        }
+    }
+
+    /// Note that `src` answered a request for `pgn` with PGN 59392, for
+    /// callers that decoded the acknowledgement themselves. Ends the
+    /// wait when that is the outstanding request.
+    pub fn note_refusal(&self, src: u8, pgn: u32) {
+        let mut state = self.state.lock().unwrap();
+        self.answer(&mut state, src, pgn);
+    }
+
+    fn answer(&self, state: &mut State, src: u8, pgn: u32) {
+        if state.outstanding == Some((src, pgn)) {
             state.outstanding = None;
             self.answered.notify_all();
         }
@@ -472,6 +482,16 @@ mod tests {
         let nak = vec![0x01, 0xff, 0xff, 0xff, 0xff, 0x16, 0xf0, 0x01];
         answer_later(&e, PGN_ISO_ACK, 9, nak);
         assert!(e.wait_for_answer(Duration::from_secs(5)));
+    }
+
+    #[test]
+    fn decoded_refusal_ends_the_wait() {
+        let e = RequestEngine::new();
+        e.expect(9, PGN_CONFIG_INFO);
+        e.note_refusal(9, PGN_PROD_INFO);
+        e.note_refusal(10, PGN_CONFIG_INFO);
+        e.note_refusal(9, PGN_CONFIG_INFO);
+        assert!(e.wait_for_answer(Duration::from_millis(10)));
     }
 
     #[test]
