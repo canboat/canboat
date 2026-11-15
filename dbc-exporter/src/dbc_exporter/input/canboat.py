@@ -48,6 +48,7 @@ class Field:
             field_dict["Resolution"] if "Resolution" in field_dict else 1
         )
         self.signed: bool = field_dict["Signed"] if "Signed" in field_dict else None
+        self.offset = field_dict.get("Offset", 0)
 
         lookup = field_dict["LookupEnumeration"] if "LookupEnumeration" in field_dict else None
         if lookup in lookups:
@@ -492,7 +493,7 @@ class CanboatReader:
         # cantools >= 39 bundles scale/offset/choices into a conversion object
         # instead of taking them as direct Signal arguments.
         conversion = BaseConversion.factory(
-            scale=field.resolution, choices=field.enum_values
+            scale=field.resolution, offset=field.offset, choices=field.enum_values
         )
 
         return Signal(
