@@ -34,9 +34,9 @@ limitations under the License.
 #include "parse.h"
 
 static int    openCanDevice(char *device, int *socket);
-static void   writeRawPGNToCanSocket(RawMessage *msg, int socket);
-static void   sendCanFrame(struct can_frame *frame, int socket);
-static void   sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
+static bool   writeRawPGNToCanSocket(RawMessage *msg, int socket);
+static bool   sendCanFrame(struct can_frame *frame, int socket);
+static bool   sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
 unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp);
 
 int main(int argc, char **argv)
@@ -100,7 +100,11 @@ int main(int argc, char **argv)
     {
       usleep(usWait);
     }
-    writeRawPGNToCanSocket(&m, socket);
+    if (!writeRawPGNToCanSocket(&m, socket))
+    {
+      close(socket);
+      return 1;
+    }
   }
 
   close(socket);
@@ -148,7 +152,7 @@ static int openCanDevice(char *device, int *canSocket)
   return 0;
 }
 
-static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
+static bool writeRawPGNToCanSocket(RawMessage *msg, int socket)
 {
   struct can_frame frame;
   memset(&frame, 0, sizeof(frame));
@@ -156,13 +160,13 @@ static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
   if (msg->pgn >= (1 << 18)) // PGNs can't have more than 18 bits, otherwise it overwrites priority bits
   {
     logError("Invalid PGN, too big (0x%x). Skipping.\n", msg->pgn);
-    return;
+    return true;
   }
 
   if (msg->len > FASTPACKET_MAX_SIZE) // Only reassembly, not transmission, of ISO TP messages is implemented
   {
     logError("PGN %u length %u exceeds fast packet maximum %u. Skipping.\n", msg->pgn, msg->len, FASTPACKET_MAX_SIZE);
-    return;
+    return true;
   }
 
   frame.can_id = getCanIdFromISO11783Bits(msg->prio, msg->pgn, msg->src, msg->dst);
@@ -171,26 +175,28 @@ static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
   {
     frame.can_dlc = msg->len;
     memcpy(frame.data, msg->data, msg->len);
-    sendCanFrame(&frame, socket);
+    return sendCanFrame(&frame, socket);
   }
   else
   { // Send PGN as n2k fast packet (spans multiple CAN frames, but CAN ID is still same for each frame)
-    sendN2kFastPacket(msg, &frame, socket);
+    return sendN2kFastPacket(msg, &frame, socket);
   }
 }
 
-static void sendCanFrame(struct can_frame *frame, int socket)
+static bool sendCanFrame(struct can_frame *frame, int socket)
 {
   if (write(socket, frame, sizeof(struct can_frame)) != sizeof(struct can_frame))
   {
     perror("write");
+    return false;
   }
+  return true;
 }
 
 /*
   See pgn.h for n2k fast packet data format
 */
-static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket)
+static bool sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket)
 {
   int index              = 0;
   int remainingDataBytes = msg->len;
@@ -221,9 +227,13 @@ static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int sock
         remainingDataBytes = 0;
       }
     }
-    sendCanFrame(frame, socket);
+    if (!sendCanFrame(frame, socket))
+    {
+      return false;
+    }
     index++;
   }
+  return true;
 }
 
 unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp)

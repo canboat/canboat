@@ -39,3 +39,14 @@ $(SOCKETCAN_WRITER): socketcan-writer.c $(COMMON)
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 
+
+.PHONY: tests
+ifneq (,$(findstring linux,$(PLATFORM)))
+tests: $(TARGETDIR)/test-socketcan-write
+	python3 tests/test_write_failure.py $(TARGETDIR)/test-socketcan-write
+
+$(TARGETDIR)/test-socketcan-write: socketcan-writer.c tests/fail_write.c $(COMMON)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../analyzer -I../common -o $@ socketcan-writer.c ../common/common.c ../common/parse.c tests/fail_write.c -Wl,--wrap=write $(LDLIBS)
+else
+tests:
+endif
