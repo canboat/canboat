@@ -501,7 +501,7 @@ class CanboatReader:
             start=field.bit_offset,
             length=field.bit_length,
             byte_order="little_endian",
-            is_signed=field.signed,
+            is_signed=field.signed and not field.offset,
             conversion=conversion,
             unit=field.unit,
             comment=field.description,
