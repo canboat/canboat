@@ -40,6 +40,7 @@ tests:  compile
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 	$(MAKE) -C group-function/tests tests
+	python3 tools/test_contract_order.py
 
 # The Cargo workspace at the repo root (crates/*, keel/) is deliberately
 # OPT-IN and is NOT a dependency of all/compile/tests: a plain `make` of the C
