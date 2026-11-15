@@ -35,3 +35,10 @@ $(REPLAY): replay.c $(COMMON)
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 
+
+.PHONY: tests
+tests: $(TARGETDIR)/test-replay-fractions
+	$(TARGETDIR)/test-replay-fractions
+
+$(TARGETDIR)/test-replay-fractions: tests/test_fractions.c replay.c $(COMMON)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../common -o $@ tests/test_fractions.c ../common/common.c $(LDLIBS)
