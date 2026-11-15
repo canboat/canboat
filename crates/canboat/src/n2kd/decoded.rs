@@ -60,6 +60,7 @@ pub struct Handles {
     gp_lon: FieldRef,
     gp_date: FieldRef,
     gp_time: FieldRef,
+    gp_method: FieldRef,
     // PGN 129539 GNSS DOPs. canboat.json has HDOP/VDOP/TDOP — no
     // PDOP field is defined, so the JSON path's `json::value("PDOP")`
     // always returned None. We model the same here by simply
@@ -98,6 +99,7 @@ impl Handles {
             gp_lon: f::gnss_position_data::LONGITUDE,
             gp_date: f::gnss_position_data::DATE,
             gp_time: f::gnss_position_data::TIME,
+            gp_method: f::gnss_position_data::METHOD,
             dops_actual_mode: f::gnss_dops::ACTUAL_MODE,
             dops_hdop: f::gnss_dops::HDOP,
             dops_vdop: f::gnss_dops::VDOP,
@@ -465,6 +467,12 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     let Some(lon) = decoded.field(h.gp_lon).and_then(|f| f.value.as_f64()) else {
         return;
     };
+    let method = decoded
+        .field(h.gp_method)
+        .and_then(|f| f.value.lookup_value());
+    let valid = matches!(method, Some(1..=5));
+    let status = if valid { 'A' } else { 'V' };
+    let mode = if valid { 'A' } else { 'N' };
     // Round to 7 decimal degrees BEFORE the degree-minute split so
     // we match the JSON path verbatim — that path goes through
     // analyzer's `%.7f` formatter and n2kd then parses the string
@@ -503,7 +511,7 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     create(
         out,
         src,
-        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},A"),
+        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},{status}"),
     );
 
     // RMC's sog/cog come from the cached PGN 129026 slot. If we
@@ -517,7 +525,7 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
         out,
         src,
         &format!(
-            "RMC,{time_str},A,{lat_str},{lat_hem},{lon_str},{lon_hem},{sog_str},{cog_str},{date_str},,,A"
+            "RMC,{time_str},{status},{lat_str},{lat_hem},{lon_str},{lon_hem},{sog_str},{cog_str},{date_str},,,{mode}"
         ),
     );
 }
@@ -709,7 +717,7 @@ mod tests {
     #[test]
     fn a_position_emits_gll_and_rmc() {
         let out = convert(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.1745000,"Longitude":5.4230000,"Date":{"value":19245,"name":"2022.09.10"},"Time":{"value":436180000,"name":"12:06:58"}}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.1745000,"Longitude":5.4230000,"Date":{"value":19245,"name":"2022.09.10"},"Time":{"value":436180000,"name":"12:06:58"}}}"#,
         );
         let lines: Vec<&str> = out.lines().filter(|l| !l.is_empty()).collect();
         assert_eq!(lines.len(), 2, "GLL then RMC, got {out}");
@@ -735,7 +743,7 @@ mod tests {
     #[test]
     fn southern_and_western_positions_flip_the_hemispheres() {
         let out = convert(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":-33.8688000,"Longitude":-70.6693000}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":-33.8688000,"Longitude":-70.6693000}}"#,
         );
         assert!(out.contains(",S,"), "got {out}");
         assert!(out.contains(",W,"), "got {out}");
@@ -745,7 +753,9 @@ mod tests {
     /// no recent fix those fields stay blank rather than reading zero.
     #[test]
     fn rmc_speed_and_course_are_blank_without_a_recent_fix() {
-        let out = convert(r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#);
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+        );
         let rmc = out
             .lines()
             .find(|l| l.contains("RMC"))
@@ -766,7 +776,7 @@ mod tests {
         assert_checksums_valid(&vtg);
 
         let out = convert_with(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
             &mut rl,
         );
         let rmc = out
@@ -899,5 +909,29 @@ mod tests {
         let mut seen: Vec<usize> = rates.iter().map(|r| rate_index(*r)).collect();
         seen.sort_unstable();
         assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
+    }
+    #[test]
+    fn batch_b_no_gnss_is_not_a_valid_fix() {
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":0,"name":"no GNSS"},"Latitude":53.0,"Longitude":5.0}}"#,
+        );
+        let gll = out
+            .lines()
+            .find(|l| l.contains("GLL,"))
+            .unwrap()
+            .split('*')
+            .next()
+            .unwrap();
+        let rmc = out
+            .lines()
+            .find(|l| l.contains("RMC,"))
+            .unwrap()
+            .split('*')
+            .next()
+            .unwrap();
+        assert!(gll.ends_with(",V"), "got {gll}");
+        assert_eq!(rmc.split(',').nth(2), Some("V"));
+        assert!(rmc.ends_with(",N"), "got {rmc}");
+        assert_checksums_valid(&out);
     }
 }
