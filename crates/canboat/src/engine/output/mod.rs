@@ -305,14 +305,23 @@ pub fn format_time(
     let abs = seconds.abs();
     let sign = if neg { "-" } else { "" };
     let whole = abs.trunc() as u64;
+    let (whole, frac_rounded) = if precision == 0 {
+        (whole, 0)
+    } else {
+        let scale = 10f64.powi(precision as i32);
+        let rounded = ((abs - whole as f64) * scale).round() as u64;
+        if rounded as f64 >= scale {
+            (whole.saturating_add(1), 0)
+        } else {
+            (whole, rounded)
+        }
+    };
     let h = whole / 3600;
     let m = (whole / 60) % 60;
     let s = whole % 60;
     if precision == 0 {
         return write!(w, "{sign}{:02}:{:02}:{:02}", h, m, s);
     }
-    let frac = (abs - whole as f64) * 10f64.powi(precision as i32);
-    let frac_rounded = frac.round() as u64;
     if trim_zero_fraction && frac_rounded == 0 {
         write!(w, "{sign}{:02}:{:02}:{:02}", h, m, s)
     } else {
@@ -466,5 +475,18 @@ mod c_g_tests {
         s.clear();
         write_c_g(&mut s, f64::NEG_INFINITY).unwrap();
         assert_eq!(s, "-inf");
+    }
+    #[test]
+    fn batch_b_fraction_rounding_carries_into_seconds() {
+        for (value, precision, expected) in [
+            (59.99999, 4, "00:01:00.0000"),
+            (3599.9999999, 3, "01:00:00.000"),
+            (-59.99999, 4, "-00:01:00.0000"),
+            (0.9999999, 6, "00:00:01.000000"),
+        ] {
+            let mut out = String::new();
+            super::format_time(value, precision, false, &mut out).unwrap();
+            assert_eq!(out, expected);
+        }
     }
 }
