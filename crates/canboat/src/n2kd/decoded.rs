@@ -155,10 +155,21 @@ pub fn convert_nmea0183(
     // converter. `rl`/`src` are passed in so the fragment stays hygienic.
     macro_rules! emit {
         ($rl:expr, $src:expr, $rate:expr, $call:expr) => {{
+            let previous = if $rl.enabled() {
+                Some(*$rl.last_passed_slot($src as usize, rate_index($rate)))
+            } else {
+                None
+            };
             if $rl.should_drop_fast($src, $rate) {
                 return 0;
             }
             $call;
+            if out.len() == before
+                && let Some(previous) = previous
+            {
+                // Ignored data must not suppress the next usable record.
+                *$rl.last_passed_slot($src as usize, rate_index($rate)) = previous;
+            }
         }};
     }
     if id == pgn::RUDDER.id {
@@ -899,5 +910,20 @@ mod tests {
         let mut seen: Vec<usize> = rates.iter().map(|r| rate_index(*r)).collect();
         seen.sort_unstable();
         assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
+    }
+    #[test]
+    fn batch_b_empty_conversion_does_not_consume_rate_slot() {
+        let mut rl = RateLimiter::new(true);
+        let ignored = convert_with(
+            r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":1,"name":"Outside Temperature"},"Temperature":21.5}}"#,
+            &mut rl,
+        );
+        assert!(ignored.is_empty());
+        let out = convert_with(
+            r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":0,"name":"Sea Temperature"},"Temperature":18.5}}"#,
+            &mut rl,
+        );
+        assert!(out.contains("MTW,18.5,C"), "got {out}");
+        assert_checksums_valid(&out);
     }
 }
