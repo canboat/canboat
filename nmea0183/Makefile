@@ -36,3 +36,10 @@ clean:
 
 $(TARGET1):	nmeareader.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
+
+.PHONY: tests
+tests: $(TARGETDIR)/test-nmea-stdin-eof
+	$(TARGETDIR)/test-nmea-stdin-eof
+
+$(TARGETDIR)/test-nmea-stdin-eof: tests/test_stdin_eof.c nmeareader.c $(COMMON)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../common -o $@ tests/test_stdin_eof.c ../common/common.c $(LDLIBS)
