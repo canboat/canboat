@@ -94,15 +94,15 @@ pub fn extract_bits(
     let mut max_signed = max_v as i64;
 
     if signed {
-        // For signed fields, max is halved (positive range only) and
-        // negative values are sign-extended to i64.
-        max_signed = (max_v >> 1) as i64;
         if offset != 0 {
             // J1939 Excess-K notation — caller-supplied offset shifts
             // the representable range. Apply to both value and max.
             value_signed = value as i64 + offset;
             max_signed += offset;
         } else {
+            // Only two's-complement fields lose the sign bit. Excess-K
+            // fields use every raw bit and shift the entire range.
+            max_signed = (max_v >> 1) as i64;
             let sign_bit = 1u64 << (bits - 1);
             if value & sign_bit != 0 {
                 // Sign-extend by OR-ing in the inverse of the unsigned
@@ -196,6 +196,14 @@ pub fn classify_sentinel(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn signed_offset_keeps_full_raw_range() {
+        let e = extract_bits(&[0x00, 0x00, 0x00, 0x80], 0, 32, true, -2_000_000_000).unwrap();
+        assert_eq!(e.value, 147_483_648);
+        assert_eq!(e.max, 2_294_967_295);
+        assert!(!is_unavailable(e));
+    }
 
     #[test]
     fn extracts_8_bit_unsigned() {
