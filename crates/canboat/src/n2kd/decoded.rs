@@ -45,6 +45,7 @@ pub struct Handles {
     // PGN 129026 SOG / COG.
     sc_sog: FieldRef,
     sc_cog: FieldRef,
+    sc_reference: FieldRef,
     // PGN 127245 Rudder.
     ru_position: FieldRef,
     // PGN 128259 Speed.
@@ -88,6 +89,7 @@ impl Handles {
             wd_reference: f::wind_data::REFERENCE,
             sc_sog: f::cog_sog_rapid_update::SOG,
             sc_cog: f::cog_sog_rapid_update::COG,
+            sc_reference: f::cog_sog_rapid_update::COG_REFERENCE,
             ru_position: f::rudder::POSITION,
             sp_speed_water_referenced: f::speed::SPEED_WATER_REFERENCED,
             wd_depth: f::water_depth::DEPTH,
@@ -339,18 +341,27 @@ fn sog_cog(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &mu
     let Some(sog) = decoded.field(h.sc_sog).and_then(|f| f.value.as_f64()) else {
         return;
     };
-    let Some(cog) = decoded.field(h.sc_cog).and_then(|f| f.as_f64_in("deg")) else {
-        return;
+    let cog = decoded.field(h.sc_cog).and_then(|f| f.as_f64_in("deg"));
+    let reference = decoded
+        .field(h.sc_reference)
+        .and_then(|f| f.value.lookup_value());
+    let (true_course, magnetic_course) = match reference {
+        Some(0) => (cog, None),
+        Some(1) => (None, cog),
+        _ => (None, None),
     };
-    // Cache the last (sog, cog) for the position handler's RMC
-    // emission — same single-slot global behaviour as the JSON path.
-    rl.record_sog_cog(sog, cog);
+    // RMC has only a true-course field. Keep speed available even when
+    // the input course is magnetic or its reference is unavailable.
+    rl.record_sog_cog(sog, true_course);
     create(
         out,
         src,
         &format!(
-            "VTG,{:.1},T,,M,{:.2},N,{:.2},K",
-            cog,
+            "VTG,{},T,{},M,{:.2},N,{:.2},K",
+            true_course.map(|c| format!("{c:.1}")).unwrap_or_default(),
+            magnetic_course
+                .map(|c| format!("{c:.1}"))
+                .unwrap_or_default(),
             sog * MS_TO_KNOTS,
             sog * MS_TO_KMH
         ),
@@ -510,7 +521,10 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     // haven't seen one within the last second, leave the fields
     // blank — matches the JSON-path behaviour.
     let (sog_str, cog_str) = match rl.recent_sog_cog() {
-        Some((sog, cog)) => (format!("{:.2}", sog * MS_TO_KNOTS), format!("{:.1}", cog)),
+        Some((sog, cog)) => (
+            format!("{:.2}", sog * MS_TO_KNOTS),
+            cog.map(|c| format!("{c:.1}")).unwrap_or_default(),
+        ),
         None => (String::new(), String::new()),
     };
     create(
@@ -759,7 +773,7 @@ mod tests {
     fn a_recent_sog_cog_fills_in_rmc() {
         let mut rl = RateLimiter::new(false);
         let vtg = convert_with(
-            r#"{"pgn":129026,"src":7,"fields":{"SOG":5.0,"COG":90.0}}"#,
+            r#"{"pgn":129026,"src":7,"fields":{"COG Reference":{"value":0,"name":"True"},"SOG":5.0,"COG":90.0}}"#,
             &mut rl,
         );
         assert!(vtg.contains("VTG,"), "got {vtg}");
@@ -899,5 +913,21 @@ mod tests {
         let mut seen: Vec<usize> = rates.iter().map(|r| rate_index(*r)).collect();
         seen.sort_unstable();
         assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
+    }
+    #[test]
+    fn batch_b_magnetic_course_is_not_true_course() {
+        let mut rl = RateLimiter::new(false);
+        let vtg = convert_with(
+            r#"{"pgn":129026,"src":7,"fields":{"COG Reference":{"value":1,"name":"Magnetic"},"SOG":5.0,"COG":90.0}}"#,
+            &mut rl,
+        );
+        assert!(vtg.contains("VTG,,T,90.0,M,"), "got {vtg}");
+        let out = convert_with(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+            &mut rl,
+        );
+        let rmc = out.lines().find(|l| l.contains("RMC,")).unwrap();
+        assert_eq!(rmc.split(',').nth(7), Some("9.72"));
+        assert_eq!(rmc.split(',').nth(8), Some(""));
     }
 }
