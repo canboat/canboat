@@ -65,6 +65,7 @@ pub struct Handles {
     // always returned None. We model the same here by simply
     // emitting an empty PDOP slot in the GSA sentence.
     dops_actual_mode: FieldRef,
+    dops_desired_mode: FieldRef,
     dops_hdop: FieldRef,
     dops_vdop: FieldRef,
     // PGN 130311 Environmental Parameters.
@@ -99,6 +100,7 @@ impl Handles {
             gp_date: f::gnss_position_data::DATE,
             gp_time: f::gnss_position_data::TIME,
             dops_actual_mode: f::gnss_dops::ACTUAL_MODE,
+            dops_desired_mode: f::gnss_dops::DESIRED_MODE,
             dops_hdop: f::gnss_dops::HDOP,
             dops_vdop: f::gnss_dops::VDOP,
             env_temp_source: f::environmental_parameters::TEMPERATURE_SOURCE,
@@ -431,12 +433,23 @@ fn environmental(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles) {
 }
 
 fn gps_dop(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles) {
-    let mode: String = decoded
+    let mode = match decoded
         .field(h.dops_actual_mode)
         .and_then(|f| f.value.lookup_value())
-        .and_then(|n| char::from_digit(n as u32, 10))
-        .map(|c| c.to_string())
-        .unwrap_or_default();
+    {
+        Some(0) => "1", // N2K 1D cannot supply a 2D/3D position fix.
+        Some(1) => "2",
+        Some(2) => "3",
+        _ => "",
+    };
+    let selection = match decoded
+        .field(h.dops_desired_mode)
+        .and_then(|f| f.value.lookup_value())
+    {
+        Some(3) => "A",
+        Some(0..=2) => "M",
+        _ => "",
+    };
     // canboat.json's gnssDops doesn't carry a PDOP field — the JSON
     // path's `json::value(msg, "PDOP")` always returned None, so the
     // GSA slot is always empty. Match that.
@@ -454,7 +467,7 @@ fn gps_dop(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles) {
     create(
         out,
         src,
-        &format!("GSA,M,{mode},,,,,,,,,,,,,{pdop},{hdop},{vdop}"),
+        &format!("GSA,{selection},{mode},,,,,,,,,,,,,{pdop},{hdop},{vdop}"),
     );
 }
 
@@ -700,7 +713,7 @@ mod tests {
     #[test]
     fn gnss_dops_become_gsa() {
         let out = convert(
-            r#"{"pgn":129539,"src":7,"fields":{"Actual Mode":{"value":3,"name":"3D"},"HDOP":0.83,"VDOP":1.25}}"#,
+            r#"{"pgn":129539,"src":7,"fields":{"Desired Mode":{"value":2,"name":"3D"},"Actual Mode":{"value":2,"name":"3D"},"HDOP":0.83,"VDOP":1.25}}"#,
         );
         assert!(out.contains("GSA,M,3,,,,,,,,,,,,,,0.83,1.25"), "got {out}");
         assert_checksums_valid(&out);
@@ -899,5 +912,13 @@ mod tests {
         let mut seen: Vec<usize> = rates.iter().map(|r| rate_index(*r)).collect();
         seen.sort_unstable();
         assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
+    }
+    #[test]
+    fn batch_b_gsa_uses_nmea_fix_codes() {
+        let out = convert(
+            r#"{"pgn":129539,"src":7,"fields":{"Desired Mode":{"value":3,"name":"Auto"},"Actual Mode":{"value":2,"name":"3D"},"HDOP":0.83,"VDOP":1.25}}"#,
+        );
+        assert!(out.contains("GSA,A,3,"), "got {out}");
+        assert_checksums_valid(&out);
     }
 }
