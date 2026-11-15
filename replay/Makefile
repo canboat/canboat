@@ -35,3 +35,7 @@ $(REPLAY): replay.c $(COMMON)
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 
+
+.PHONY: tests
+tests: $(REPLAY)
+	python3 tests/test_pipe_output.py $(REPLAY)

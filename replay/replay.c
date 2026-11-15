@@ -95,6 +95,7 @@ int main(int argc, char **argv)
     prev = now;
 
     fprintf(stdout, "%s", line);
+    fflush(stdout);
   }
   return 0;
 }
