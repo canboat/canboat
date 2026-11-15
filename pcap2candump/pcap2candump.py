@@ -37,7 +37,7 @@ for fileName in sys.argv[1:]:
             # A SocketCAN record includes padding up to CAN_MTU even when
             # the CAN payload has fewer than eight bytes. Advance by the
             # PCAP captured length, not by the CAN DLC.
-            captured_length, = struct.unpack_from("<I", fileContent, offset + 8)
+            captured_length, = struct.unpack_from("<I" if magic == 0xa1b2c3d4 else ">I", fileContent, offset + 8)
             offset += 16 + captured_length
 
 
