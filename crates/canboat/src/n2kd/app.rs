@@ -594,11 +594,18 @@ fn extract_meta(line: &str) -> Option<Meta> {
     Some(Meta { pgn, src })
 }
 
-/// The PGN a PGN 59392 ISO Acknowledgement line is about. It is in
-/// `fields`, as `pgn`, `Pgn` or `PGN` depending on the `--id` style; the
-/// record's own `pgn` comes before `fields`, so search after it.
+/// The PGN a PGN 59392 ISO Acknowledgement line refuses, or `None` for a
+/// positive ACK. Fields are named `pgn`, `Pgn` or `PGN` (and `control`,
+/// `Control`) depending on the `--id` style; the record's own `pgn` comes
+/// before `fields`, so search after it.
 fn acknowledged_pgn(line: &str) -> Option<u32> {
     let fields = &line[line.find("\"fields\":")?..];
+    let control = ["control", "Control"]
+        .iter()
+        .find_map(|key| json::lookup_text(fields, key));
+    if matches!(control, Some("ACK" | "0")) {
+        return None;
+    }
     ["pgn", "Pgn", "PGN"]
         .iter()
         .find_map(|key| json::int(fields, key))
@@ -724,6 +731,8 @@ mod tests {
         assert_eq!(acknowledged_pgn(camel), Some(126998));
         assert_eq!(acknowledged_pgn(spaces), Some(126996));
         assert_eq!(acknowledged_pgn(r#"{"pgn":59392}"#), None);
+        let ack = r#"{"pgn":59392,"src":120,"fields":{"control":"ACK","pgn":126998}}"#;
+        assert_eq!(acknowledged_pgn(ack), None, "a positive ACK is no refusal");
     }
 
     #[test]

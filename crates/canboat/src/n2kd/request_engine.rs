@@ -42,6 +42,8 @@ pub const PGN_ISO_REQUEST: u32 = 59904;
 /// PGN 59392 — ISO Acknowledgement, a device's answer when it can't
 /// or won't send the requested PGN.
 pub const PGN_ISO_ACK: u32 = 59392;
+/// PGN 59392's Control value for a positive acknowledgement.
+const ACK_CONTROL_ACK: u8 = 0;
 
 /// How long to wait for an answer before sending the next request.
 /// J1939 gives a device 1.25 s to respond; the rest is room for a
@@ -136,7 +138,9 @@ impl RequestEngine {
         if let Some(kind) = RequestKind::from_pgn(pgn) {
             entry.last_received[kind.index()] = Some(now);
             self.answer(&mut state, src, pgn);
-        } else if pgn == PGN_ISO_ACK && data.len() >= 8 {
+        } else if pgn == PGN_ISO_ACK && data.len() >= 8 && data[0] != ACK_CONTROL_ACK {
+            // Control 1-3 (NAK, Access Denied, Cannot Respond) is a
+            // refusal; after a positive ACK the PGN may still come.
             let refused = u32::from_le_bytes([data[5], data[6], data[7], 0]);
             self.answer(&mut state, src, refused);
         }
@@ -505,6 +509,18 @@ mod tests {
             PGN_ISO_ACK,
             9,
             &[0x01, 0xff, 0xff, 0xff, 0xff, 0x16, 0xf0, 0x01],
+        );
+        assert!(!e.wait_for_answer(Duration::from_millis(100)));
+    }
+
+    #[test]
+    fn positive_ack_does_not_end_the_wait() {
+        let e = RequestEngine::new();
+        e.expect(9, PGN_CONFIG_INFO);
+        e.note_device_seen(
+            PGN_ISO_ACK,
+            9,
+            &[0x00, 0xff, 0xff, 0xff, 0xff, 0x16, 0xf0, 0x01],
         );
         assert!(!e.wait_for_answer(Duration::from_millis(100)));
     }
