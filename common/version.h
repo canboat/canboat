@@ -21,4 +21,4 @@ limitations under the License.
 // x-release-please-start-version
 #define VERSION "9.2.0"
 // x-release-please-end-version
-#define SCHEMA_VERSION "2.8.0"
+#define SCHEMA_VERSION "2.9.0"

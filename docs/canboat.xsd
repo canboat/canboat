@@ -1,4 +1,4 @@
-<xs:schema version="2.8.0"
+<xs:schema version="2.9.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
