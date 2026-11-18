@@ -42,8 +42,10 @@ class LookupContractTests(unittest.TestCase):
         self.assertChange(changes, "10:130", "label")
 
     def test_indirect_keys_with_shared_first_value(self):
-        changes = self.changes("LookupIndirectEnumerations", {"EnumValues": [{"Value1": 10, "Value2": 130, "Name": "First"}, {"Value1": 10, "Value2": 140, "Name": "Last"}]}, lambda e: e["EnumValues"][1].update(Name="Changed"))
-        self.assertChange(changes, "10:140", "label")
+        for index, key in [(0, "10:130"), (1, "10:140")]:
+            with self.subTest(key=key):
+                changes = self.changes("LookupIndirectEnumerations", {"EnumValues": [{"Value1": 10, "Value2": 130, "Name": "First"}, {"Value1": 10, "Value2": 140, "Name": "Last"}]}, lambda e: e["EnumValues"][index].update(Name="Changed"))
+                self.assertChange(changes, key, "label")
 
     def test_fieldtype_label(self):
         changes = self.changes("LookupFieldTypeEnumerations", {"EnumFieldTypeValues": [{"value": 0, "name": "First", "FieldType": "NUMBER", "Bits": "16"}]}, lambda e: e["EnumFieldTypeValues"][0].update(name="Changed"))
