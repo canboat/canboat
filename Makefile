@@ -41,6 +41,8 @@ tests:  compile
 	$(MAKE) -C candump2analyzer/tests tests
 	$(MAKE) -C group-function/tests tests
 	python3 pcap2candump/test_records.py
+	$(MAKE) -C nmea0183 tests
+	for t in tools/test_*.py; do python3 $$t || exit 1; done
 
 # The Cargo workspace at the repo root (crates/*, keel/) is deliberately
 # OPT-IN and is NOT a dependency of all/compile/tests: a plain `make` of the C
