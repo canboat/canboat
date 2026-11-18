@@ -47,7 +47,7 @@ for fileName in sys.argv[1:]:
             datalen, = struct.unpack_from("B", fileContent, offset + 20)
             # Only the captured bytes belong to this record; a short snaplen
             # cuts the payload below the DLC.
-            datalen = min(datalen, captured_length - 8, 8)
+            datalen = min(datalen, captured_length - 8)
             b1, = struct.unpack_from("B", fileContent, offset + 21)
             b2, = struct.unpack_from("B", fileContent, offset + 22)
             b3, = struct.unpack_from("B", fileContent, offset + 23)
