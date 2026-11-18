@@ -384,25 +384,37 @@ mod tests {
         assert_eq!(read_all(d).lines().count(), 2);
     }
 
-    #[test]
-    fn short_dlc_advances_by_incl_len_not_dlc() {
-        // First record dlc=3 but a full 16-byte SocketCAN payload; a
-        // dlc-based stride would desync the second record.
+    /// Two records whose first has dlc=3 but a full 16-byte SocketCAN
+    /// payload, with the pcap headers in little- or big-endian order.
+    fn two_record_pcap(little_endian: bool) -> Vec<u8> {
+        let word = |v: u32| {
+            if little_endian {
+                v.to_le_bytes()
+            } else {
+                v.to_be_bytes()
+            }
+        };
         let mut b = Vec::new();
-        b.extend_from_slice(&PCAP_MAGIC_US.to_le_bytes());
+        b.extend_from_slice(&word(PCAP_MAGIC_US));
         b.extend_from_slice(&[0u8; 20]);
         for dlc in [3u8, 8u8] {
-            b.extend_from_slice(&1_502_984_881u32.to_le_bytes());
-            b.extend_from_slice(&0u32.to_le_bytes());
-            b.extend_from_slice(&16u32.to_le_bytes());
-            b.extend_from_slice(&16u32.to_le_bytes());
+            b.extend_from_slice(&word(1_502_984_881));
+            b.extend_from_slice(&word(0));
+            b.extend_from_slice(&word(16));
+            b.extend_from_slice(&word(16));
             b.extend_from_slice(&0x89F50B23u32.to_be_bytes());
             b.push(dlc);
             b.extend_from_slice(&[0, 0, 0]);
             b.extend_from_slice(&[0xaa, 0xbb, 0xcc, 0, 0, 0, 0, 0]);
         }
+        b
+    }
+
+    #[test]
+    fn short_dlc_advances_by_incl_len_not_dlc() {
+        // A dlc-based stride would desync the second record.
         let mut d = VecDeque::new();
-        d.push_back(Source::Plain(b));
+        d.push_back(Source::Plain(two_record_pcap(true)));
         let lines: Vec<_> = read_all(d).lines().map(String::from).collect();
         assert_eq!(lines.len(), 2);
         assert!(lines[0].ends_with(",3,aa,bb,cc"));
@@ -430,18 +442,15 @@ mod tests {
 
     #[test]
     fn big_endian_pcap_matches_little_endian() {
-        let little = one_record_pcap();
-        let mut big = little.clone();
-        big[0..4].reverse();
-        for offset in (24..40).step_by(4) {
-            big[offset..offset + 4].reverse();
-        }
+        let little = two_record_pcap(true);
+        let big = two_record_pcap(false);
         let expected = read_all(VecDeque::from([Source::Plain(little.clone())]));
-        assert!(!expected.is_empty());
+        assert_eq!(expected.lines().count(), 2);
         assert_eq!(
             read_all(VecDeque::from([Source::Plain(big.clone())])),
             expected
         );
+        // Each source sets its own byte order.
         assert_eq!(
             read_all(VecDeque::from([Source::Plain(big), Source::Plain(little)])),
             expected.repeat(2)
