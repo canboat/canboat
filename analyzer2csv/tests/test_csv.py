@@ -52,8 +52,12 @@ class CsvTests(unittest.TestCase):
                 self.assertEqual(row, ['2026-11-15T12:00:00', text, '126996'])
 
     def test_single_empty_value(self):
-        _, row = self.convert({'timestamp': '2026-11-15T12:00:00', 'pgn': 126996}, ['description'])
-        self.assertEqual(row, [''])
+        for record in [{}, {'description': None}, {'description': False}]:
+            with self.subTest(record=record):
+                _, row = self.convert({'timestamp': '2026-11-15T12:00:00', 'pgn': 126996, **record}, ['description'])
+                self.assertEqual(row, [''])
+        _, row = self.convert({'timestamp': '2026-11-15T12:00:00', 'pgn': 126996, 'description': 0}, ['description'])
+        self.assertEqual(row, ['0'])
 
 
 if __name__ == '__main__':
