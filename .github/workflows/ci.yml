@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: update & install tools
-        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools php-cli
 
       - name: make
         run: make
