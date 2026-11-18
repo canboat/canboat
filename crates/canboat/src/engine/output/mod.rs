@@ -387,6 +387,24 @@ mod tests {
     }
 
     #[test]
+    fn fraction_rounding_carries_into_seconds() {
+        for (value, precision, expected) in [
+            (59.99999, 4, "00:01:00.0000"),
+            (3599.9999999, 3, "01:00:00.000"),
+            (-59.99999, 4, "-00:01:00.0000"),
+            (0.9999999, 6, "00:00:01.000000"),
+        ] {
+            let mut out = String::new();
+            format_time(value, precision, false, &mut out).unwrap();
+            assert_eq!(out, expected, "{value} at precision {precision}");
+        }
+        // A fraction that rounds up to a whole second is a zero fraction.
+        let mut out = String::new();
+        format_time(59.99999, 4, true, &mut out).unwrap();
+        assert_eq!(out, "00:01:00");
+    }
+
+    #[test]
     fn many_decimals_match_printf() {
         // Precisions past 10 come from resolutions near 1e-11 (GPS almanac
         // rates); `printf("%.*f")` prints those exactly as written here.
@@ -475,18 +493,5 @@ mod c_g_tests {
         s.clear();
         write_c_g(&mut s, f64::NEG_INFINITY).unwrap();
         assert_eq!(s, "-inf");
-    }
-    #[test]
-    fn batch_b_fraction_rounding_carries_into_seconds() {
-        for (value, precision, expected) in [
-            (59.99999, 4, "00:01:00.0000"),
-            (3599.9999999, 3, "01:00:00.000"),
-            (-59.99999, 4, "-00:01:00.0000"),
-            (0.9999999, 6, "00:00:01.000000"),
-        ] {
-            let mut out = String::new();
-            super::format_time(value, precision, false, &mut out).unwrap();
-            assert_eq!(out, expected);
-        }
     }
 }
