@@ -427,8 +427,9 @@ mod tests {
         assert!(!is_container(Path::new("foo.raw")));
         assert!(!is_container(Path::new("foo.json")));
     }
+
     #[test]
-    fn batch_b_big_endian_pcap_matches_little_endian() {
+    fn big_endian_pcap_matches_little_endian() {
         let little = one_record_pcap();
         let mut big = little.clone();
         big[0..4].reverse();
