@@ -1008,7 +1008,7 @@ mod tests {
     }
 
     #[test]
-    fn batch_b_magnetic_course_is_not_true_course() {
+    fn magnetic_course_is_not_true_course() {
         let mut rl = RateLimiter::new(false);
         let vtg = convert_with(
             r#"{"pgn":129026,"src":7,"fields":{"COG Reference":{"value":1,"name":"Magnetic"},"SOG":5.0,"COG":90.0}}"#,
@@ -1022,5 +1022,37 @@ mod tests {
         let rmc = out.lines().find(|l| l.contains("RMC,")).unwrap();
         assert_eq!(rmc.split(',').nth(7), Some("9.72"));
         assert_eq!(rmc.split(',').nth(8), Some(""));
+    }
+
+    #[test]
+    fn course_without_a_usable_reference_is_blank() {
+        // Without a True or Magnetic reference the course is not assumed to
+        // be true: VTG leaves both course fields blank but keeps the speed,
+        // and RMC gets the speed without a course.
+        for reference in [
+            "",
+            r#""COG Reference":{"value":2,"name":"Error"},"#,
+            r#""COG Reference":{"value":3,"name":"Null"},"#,
+        ] {
+            let mut rl = RateLimiter::new(false);
+            let vtg = convert_with(
+                &format!(
+                    r#"{{"pgn":129026,"src":7,"fields":{{{reference}"SOG":5.0,"COG":90.0}}}}"#
+                ),
+                &mut rl,
+            );
+            assert!(
+                vtg.contains("VTG,,T,,M,9.72,N,18.00,K"),
+                "{reference}: got {vtg}"
+            );
+            assert_checksums_valid(&vtg);
+            let out = convert_with(
+                r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+                &mut rl,
+            );
+            let rmc = out.lines().find(|l| l.contains("RMC,")).unwrap();
+            assert_eq!(rmc.split(',').nth(7), Some("9.72"), "{reference}");
+            assert_eq!(rmc.split(',').nth(8), Some(""), "{reference}");
+        }
     }
 }
