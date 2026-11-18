@@ -307,8 +307,6 @@ bool extractNumber(const Field   *field,
 
   if (hasSign)
   {
-    maxv >>= 1;
-
     if (field && field->offset != 0.0) /* J1939 Excess-K notation; a fraction is in unitOffset */
     {
       *value += (int64_t) field->offset;
@@ -316,6 +314,7 @@ bool extractNumber(const Field   *field,
     }
     else
     {
+      maxv >>= 1;
       bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
 
       if (negative)

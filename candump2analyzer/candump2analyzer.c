@@ -321,7 +321,7 @@ int main(int argc, char **argv)
       {
         format = FMT_4;
       }
-      else if (sscanf(p, "%07x %02hhx %02hhx %02hhx %02hhx", &currentTimeInt, u, u + 1, u + 2, u + 3) == 5)
+      else if (sscanf(p, "%07x %02hhx %02hhx %02hhx %02hhx %02x", &currentTimeInt, u, u + 1, u + 2, u + 3, &size) == 6)
       {
         format = FMT_5;
       }

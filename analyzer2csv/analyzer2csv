@@ -17,13 +17,7 @@ if ($file === false)
   die("Cannot read stdin");
 }
 
-$sep='';
-foreach ($keys as $key)
-{
-  print($sep . $key);
-  $sep=',';
-}
-print("\n");
+fputcsv(STDOUT, $keys, ',', '"', '');
 
 while (($line = fgets($file)) !== false)
 {
@@ -33,25 +27,34 @@ while (($line = fgets($file)) !== false)
   {
     if (array_key_exists('timestamp', $p) && array_key_exists('pgn', $p))
     {
-      $sep='';
-      foreach($keys as $key)
+      $row = array();
+      foreach ($keys as $key)
       {
-        print($sep);
-        $sep = ',';
-        if (array_key_exists($key, $p)) 
+        if (array_key_exists($key, $p))
         {
-          print($p[$key]);
+          $row[] = $p[$key];
         }
         else if ($key == 'message')
         {
-          print('"' . str_replace('"', '""', $line) . '"');
+          $row[] = $line;
         }
         else if ($key == 'length' && array_key_exists('data', $p))
         {
-          print(strlen($p['data'])/2);
+          $row[] = strlen($p['data']) / 2;
+        }
+        else
+        {
+          $row[] = '';
         }
       }
-      print("\n");
+      if (count($row) == 1 && ($row[0] === '' || $row[0] === null || $row[0] === false))
+      {
+        echo "\"\"\n"; // fputcsv writes a lone empty field as an empty line, which reads back as no fields
+      }
+      else
+      {
+        fputcsv(STDOUT, $row, ',', '"', '');
+      }
     }
   }
 }
