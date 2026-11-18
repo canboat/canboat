@@ -973,7 +973,7 @@ mod tests {
     }
 
     #[test]
-    fn batch_b_empty_conversion_does_not_consume_rate_slot() {
+    fn empty_conversion_does_not_consume_rate_slot() {
         let mut rl = RateLimiter::new(true);
         let ignored = convert_with(
             r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":1,"name":"Outside Temperature"},"Temperature":21.5}}"#,
