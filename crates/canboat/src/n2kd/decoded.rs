@@ -564,8 +564,11 @@ fn nmea_date_string(date: &str) -> String {
 
 fn latlon_to_nmea(decimal: f64, is_lat: bool) -> (String, char) {
     let abs = decimal.abs();
-    let deg = abs.floor();
-    let combined = deg * 100.0 + (abs - deg) * 60.0;
+    // Round the complete minute count first so 59.99995 minutes carries
+    // into the next degree instead of producing an invalid 60.0000.
+    let minute_ticks = (abs * 60.0 * 10_000.0).round() as u64;
+    let deg = minute_ticks / 600_000;
+    let combined = deg as f64 * 100.0 + (minute_ticks % 600_000) as f64 / 10_000.0;
     let hem = if is_lat {
         if decimal < 0.0 { 'S' } else { 'N' }
     } else if decimal < 0.0 {
@@ -573,7 +576,10 @@ fn latlon_to_nmea(decimal: f64, is_lat: bool) -> (String, char) {
     } else {
         'E'
     };
-    (format!("{combined:.4}"), hem)
+    (
+        format!("{combined:0width$.4}", width = if is_lat { 9 } else { 10 }),
+        hem,
+    )
 }
 
 // =====================================================================
@@ -728,12 +734,12 @@ mod tests {
         let lines: Vec<&str> = out.lines().filter(|l| !l.is_empty()).collect();
         assert_eq!(lines.len(), 2, "GLL then RMC, got {out}");
         assert!(
-            lines[0].contains("GLL,5310.4700,N,525.3800,E,120658,A"),
+            lines[0].contains("GLL,5310.4700,N,00525.3800,E,120658,A"),
             "got {}",
             lines[0]
         );
         assert!(
-            lines[1].contains("RMC,120658,A,5310.4700,N,525.3800,E,"),
+            lines[1].contains("RMC,120658,A,5310.4700,N,00525.3800,E,"),
             "got {}",
             lines[1]
         );
@@ -882,16 +888,22 @@ mod tests {
             latlon_to_nmea(-53.1745, true),
             ("5310.4700".to_string(), 'S')
         );
-        assert_eq!(latlon_to_nmea(5.423, false), ("525.3800".to_string(), 'E'));
-        assert_eq!(latlon_to_nmea(-5.423, false), ("525.3800".to_string(), 'W'));
+        assert_eq!(
+            latlon_to_nmea(5.423, false),
+            ("00525.3800".to_string(), 'E')
+        );
+        assert_eq!(
+            latlon_to_nmea(-5.423, false),
+            ("00525.3800".to_string(), 'W')
+        );
     }
 
     /// Zero is the equator / prime meridian; the hemisphere letter is the
     /// positive one rather than being omitted.
     #[test]
     fn a_zero_coordinate_takes_the_positive_hemisphere() {
-        assert_eq!(latlon_to_nmea(0.0, true), ("0.0000".to_string(), 'N'));
-        assert_eq!(latlon_to_nmea(0.0, false), ("0.0000".to_string(), 'E'));
+        assert_eq!(latlon_to_nmea(0.0, true), ("0000.0000".to_string(), 'N'));
+        assert_eq!(latlon_to_nmea(0.0, false), ("00000.0000".to_string(), 'E'));
     }
 
     /// The rate-limit slots are distinct, so one sentence class throttling
@@ -931,5 +943,21 @@ mod tests {
         );
         assert!(out.contains("GSA,M,2,"), "got {out}");
         assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn coordinates_keep_fixed_width_and_carry_minutes() {
+        assert_eq!(latlon_to_nmea(5.423, true), ("0525.3800".into(), 'N'));
+        assert_eq!(latlon_to_nmea(5.423, false), ("00525.3800".into(), 'E'));
+        assert_eq!(latlon_to_nmea(53.99999999, true), ("5400.0000".into(), 'N'));
+        assert_eq!(
+            latlon_to_nmea(-179.99999999, false),
+            ("18000.0000".into(), 'W')
+        );
+        assert_eq!(latlon_to_nmea(53.9999999, true), ("5400.0000".into(), 'N'));
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.9999999,"Longitude":179.9999999}}"#,
+        );
+        assert!(out.contains("GLL,5400.0000,N,18000.0000,E,"), "got {out}");
     }
 }
