@@ -447,8 +447,9 @@ fn gps_dop(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles) {
         .and_then(|f| f.value.lookup_value())
     {
         Some(3) => "A",
-        Some(0..=2) => "M",
-        _ => "",
+        // Strict parsers accept only M or A here, so a record without a
+        // usable Desired Mode keeps the M that was always written.
+        _ => "M",
     };
     // canboat.json's gnssDops doesn't carry a PDOP field — the JSON
     // path's `json::value(msg, "PDOP")` always returned None, so the
@@ -913,12 +914,22 @@ mod tests {
         seen.sort_unstable();
         assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
     }
+
     #[test]
-    fn batch_b_gsa_uses_nmea_fix_codes() {
+    fn gsa_uses_nmea_fix_codes() {
         let out = convert(
             r#"{"pgn":129539,"src":7,"fields":{"Desired Mode":{"value":3,"name":"Auto"},"Actual Mode":{"value":2,"name":"3D"},"HDOP":0.83,"VDOP":1.25}}"#,
         );
         assert!(out.contains("GSA,A,3,"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn gsa_without_desired_mode_keeps_manual_selection() {
+        let out = convert(
+            r#"{"pgn":129539,"src":7,"fields":{"Actual Mode":{"value":1,"name":"2D"},"HDOP":0.83,"VDOP":1.25}}"#,
+        );
+        assert!(out.contains("GSA,M,2,"), "got {out}");
         assert_checksums_valid(&out);
     }
 }
