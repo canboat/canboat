@@ -45,6 +45,7 @@ CONTRACTS = (
     ("NMEA 2000", "docs/canboat.json"),
     ("SAE J1939", "docs/canboat-j1939.json"),
     ("Quick PCS", "docs/canboat-quick.json"),
+    ("CANboat pseudo-PGNs", "docs/canboat-pseudo.json"),
 )
 # GitHub refuses issue bodies over 65536 characters; stay well clear.
 MAX_BODY = 60000

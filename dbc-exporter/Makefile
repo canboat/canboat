@@ -8,7 +8,7 @@ TARGETDIR=../$(BUILDDIR)
 VENV=$(TARGETDIR)/venv
 
 
-all: ../docs/canboat.dbc
+all: tests ../docs/canboat.dbc
 
 ../docs/canboat.dbc: dbc-exporter ../docs/canboat.json
 	"$(VENV)/bin/canboat-dbc-exporter" ../docs/canboat.json ../docs/canboat.dbc
@@ -25,3 +25,7 @@ $(VENV):
 clean:
 	-[ -x "$(VENV)/bin/python3" ] && "$(VENV)/bin/python3" setup.py clean || :
 	-rm -rf "$(VENV)" build dist
+
+.PHONY: tests
+tests: dbc-exporter
+	PYTHONPATH=src "$(VENV)/bin/python3" -m unittest discover -s tests
