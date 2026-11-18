@@ -29,7 +29,10 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(REPLAY): replay.c $(COMMON)
+$(TARGETDIR):
+	mkdir -p $(TARGETDIR)
+
+$(REPLAY): replay.c $(COMMON) | $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(REPLAY) -I../common replay.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
@@ -41,8 +44,9 @@ clean:
 TESTDIR=$(TARGETDIR)-tests
 
 .PHONY: tests
-tests: $(TESTDIR)/test-replay-fractions
+tests: $(TESTDIR)/test-replay-fractions $(REPLAY)
 	$(TESTDIR)/test-replay-fractions
+	python3 tests/test_pipe_output.py $(REPLAY)
 
 $(TESTDIR):
 	mkdir -p $(TESTDIR)
