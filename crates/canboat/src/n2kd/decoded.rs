@@ -506,9 +506,25 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     let method = decoded
         .field(h.gp_method)
         .and_then(|f| f.value.lookup_value());
-    let valid = matches!(method, Some(1..=5));
-    let status = if valid { 'A' } else { 'V' };
-    let mode = if valid { 'A' } else { 'N' };
+    // The NMEA 0183 (2.3+) mode indicator has a letter for each NMEA 2000
+    // GNSS method. Only a real fix (methods 1-5) gets status A; estimated,
+    // manual and simulated positions are reported but marked invalid.
+    let mode = match method {
+        Some(1) => 'A',
+        Some(2) => 'D',
+        Some(3) => 'P',
+        Some(4) => 'R',
+        Some(5) => 'F',
+        Some(6) => 'E',
+        Some(7) => 'M',
+        Some(8) => 'S',
+        _ => 'N',
+    };
+    let status = if matches!(method, Some(1..=5)) {
+        'A'
+    } else {
+        'V'
+    };
     // Round to 7 decimal degrees BEFORE the degree-minute split so
     // we match the JSON path verbatim — that path goes through
     // analyzer's `%.7f` formatter and n2kd then parses the string
@@ -547,7 +563,7 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     create(
         out,
         src,
-        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},{status}"),
+        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},{status},{mode}"),
     );
 
     // RMC's sog/cog come from the cached PGN 129026 slot. If we
@@ -1067,27 +1083,48 @@ mod tests {
     }
 
     #[test]
-    fn batch_b_no_gnss_is_not_a_valid_fix() {
-        let out = convert(
-            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":0,"name":"no GNSS"},"Latitude":53.0,"Longitude":5.0}}"#,
-        );
-        let gll = out
-            .lines()
-            .find(|l| l.contains("GLL,"))
-            .unwrap()
-            .split('*')
-            .next()
-            .unwrap();
-        let rmc = out
-            .lines()
-            .find(|l| l.contains("RMC,"))
-            .unwrap()
-            .split('*')
-            .next()
-            .unwrap();
-        assert!(gll.ends_with(",V"), "got {gll}");
-        assert_eq!(rmc.split(',').nth(2), Some("V"));
-        assert!(rmc.ends_with(",N"), "got {rmc}");
-        assert_checksums_valid(&out);
+    fn gnss_method_sets_status_and_mode_letter() {
+        for (method, status, mode) in [
+            (r#""Method":{"value":0,"name":"no GNSS"},"#, "V", "N"),
+            (r#""Method":{"value":1,"name":"GNSS fix"},"#, "A", "A"),
+            (r#""Method":{"value":2,"name":"DGNSS fix"},"#, "A", "D"),
+            (r#""Method":{"value":3,"name":"Precise GNSS"},"#, "A", "P"),
+            (
+                r#""Method":{"value":4,"name":"RTK Fixed Integer"},"#,
+                "A",
+                "R",
+            ),
+            (r#""Method":{"value":5,"name":"RTK float"},"#, "A", "F"),
+            (
+                r#""Method":{"value":6,"name":"Estimated (DR) mode"},"#,
+                "V",
+                "E",
+            ),
+            (r#""Method":{"value":7,"name":"Manual Input"},"#, "V", "M"),
+            (r#""Method":{"value":8,"name":"Simulate mode"},"#, "V", "S"),
+            ("", "V", "N"),
+        ] {
+            let out = convert(&format!(
+                r#"{{"pgn":129029,"src":7,"fields":{{{method}"Latitude":53.0,"Longitude":5.0}}}}"#
+            ));
+            let sentence = |kind: &str| {
+                out.lines()
+                    .find(|l| l.contains(kind))
+                    .unwrap()
+                    .split('*')
+                    .next()
+                    .unwrap()
+                    .to_string()
+            };
+            let gll = sentence("GLL,");
+            let rmc = sentence("RMC,");
+            assert!(
+                gll.ends_with(&format!(",{status},{mode}")),
+                "{method}: got {gll}"
+            );
+            assert_eq!(rmc.split(',').nth(2), Some(status), "{method}: got {rmc}");
+            assert!(rmc.ends_with(&format!(",{mode}")), "{method}: got {rmc}");
+            assert_checksums_valid(&out);
+        }
     }
 }
