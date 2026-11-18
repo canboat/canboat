@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [10.0.1](https://github.com/canboat/canboat/compare/v10.0.0...v10.0.1) (2026-11-18)
+
+
+### Fixed
+
+* **candump:** preserve the first Navico frame payload ([#1215](https://github.com/canboat/canboat/issues/1215)) ([39b3ec2](https://github.com/canboat/canboat/commit/39b3ec2a6e98b5e772cae8c18085a94ee76ac24d))
+* **contract:** detect reordered retained fields ([#1226](https://github.com/canboat/canboat/issues/1226)) ([1f08965](https://github.com/canboat/canboat/commit/1f08965c4918c61bd8ae25f11863027d353eb9e1))
+* **contract:** retain non-ordinary lookup identities ([#1214](https://github.com/canboat/canboat/issues/1214)) ([e7751bd](https://github.com/canboat/canboat/commit/e7751bdc849e07b8c9f56673e3e118c016daf4a4))
+* **csv:** escape JSON messages and selected values ([#1219](https://github.com/canboat/canboat/issues/1219)) ([0802f76](https://github.com/canboat/canboat/commit/0802f76e3606099bfd16676bbeca45fd1a07585e))
+* **dbc:** retain published signal offsets ([#1217](https://github.com/canboat/canboat/issues/1217)) ([059e76a](https://github.com/canboat/canboat/commit/059e76a0ae1fea20320090704fe917abb153d22a))
+* **decode:** preserve the full offset-encoded range ([#1223](https://github.com/canboat/canboat/issues/1223)) ([508520c](https://github.com/canboat/canboat/commit/508520cbd3576c4d3a8551b79eb00e45674bc415))
+* **nmea0183:** flag positions without a GNSS fix ([#1229](https://github.com/canboat/canboat/issues/1229)) ([699bd79](https://github.com/canboat/canboat/commit/699bd79159f31b133fcb961e4966a849905380cb))
+* **nmea0183:** format coordinates with valid minute fields ([#1224](https://github.com/canboat/canboat/issues/1224)) ([f8b0e63](https://github.com/canboat/canboat/commit/f8b0e63a6673e57f303bcd009b5c3009caad2803))
+* **nmea0183:** preserve magnetic course references ([#1227](https://github.com/canboat/canboat/issues/1227)) ([5e275a7](https://github.com/canboat/canboat/commit/5e275a73977f5296fa0070e85c8da328b99756a0))
+* **nmea0183:** reserve rate slots only for emitted data ([#1231](https://github.com/canboat/canboat/issues/1231)) ([060b70e](https://github.com/canboat/canboat/commit/060b70ed7f527a732cf8e2e07110fdf2ceb57f3a))
+* **nmea0183:** stop reading regular files at EOF ([#1216](https://github.com/canboat/canboat/issues/1216)) ([9bb38c6](https://github.com/canboat/canboat/commit/9bb38c6ca8fc78fbe1b08abcb8c65df49cdadb33))
+* **nmea0183:** stop selecting stdin after EOF ([#1228](https://github.com/canboat/canboat/issues/1228)) ([8b18c75](https://github.com/canboat/canboat/commit/8b18c7501496f35ef961491ea0aeec534c952815))
+* **nmea0183:** translate GNSS modes into GSA codes ([#1225](https://github.com/canboat/canboat/issues/1225)) ([5533041](https://github.com/canboat/canboat/commit/5533041cca1c564871dbecbbb674cfb4a38eb4c7))
+* **pcap:** advance by the captured record length ([#1218](https://github.com/canboat/canboat/issues/1218)) ([5a6d726](https://github.com/canboat/canboat/commit/5a6d726aed04025a8e734c1472feebebbbc13564))
+* **pcap:** read big-endian capture record headers ([#1232](https://github.com/canboat/canboat/issues/1232)) ([55ea6d9](https://github.com/canboat/canboat/commit/55ea6d946cd200aba59465238f4f662ab3c07afe))
+* **releases:** report pseudo-PGN contract changes ([#1222](https://github.com/canboat/canboat/issues/1222)) ([724bff3](https://github.com/canboat/canboat/commit/724bff393eba72c399dfcfe8c0a36b41847df034))
+* **replay:** flush each frame into output pipes ([#1221](https://github.com/canboat/canboat/issues/1221)) ([bad4b48](https://github.com/canboat/canboat/commit/bad4b4895d4c4e42a3f62fb286808377b43426b9))
+* **replay:** scale fractional seconds as milliseconds ([#1220](https://github.com/canboat/canboat/issues/1220)) ([b5f018f](https://github.com/canboat/canboat/commit/b5f018f8c8f3b63b85121bd8ad1cb53a5904d0e8))
+* **time:** carry rounded fractions into whole seconds ([#1233](https://github.com/canboat/canboat/issues/1233)) ([1cf6935](https://github.com/canboat/canboat/commit/1cf6935732af14350b1bf43ce4fbfdb9575bc282))
+
 ## [10.0.0](https://github.com/canboat/canboat/compare/v9.2.0...v10.0.0) (2026-11-16)
 
 
