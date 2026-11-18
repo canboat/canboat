@@ -45,6 +45,7 @@ pub struct Handles {
     // PGN 129026 SOG / COG.
     sc_sog: FieldRef,
     sc_cog: FieldRef,
+    sc_reference: FieldRef,
     // PGN 127245 Rudder.
     ru_position: FieldRef,
     // PGN 128259 Speed.
@@ -60,6 +61,7 @@ pub struct Handles {
     gp_lon: FieldRef,
     gp_date: FieldRef,
     gp_time: FieldRef,
+    gp_method: FieldRef,
     // PGN 129539 GNSS DOPs. canboat.json has HDOP/VDOP/TDOP — no
     // PDOP field is defined, so the JSON path's `json::value("PDOP")`
     // always returned None. We model the same here by simply
@@ -89,6 +91,7 @@ impl Handles {
             wd_reference: f::wind_data::REFERENCE,
             sc_sog: f::cog_sog_rapid_update::SOG,
             sc_cog: f::cog_sog_rapid_update::COG,
+            sc_reference: f::cog_sog_rapid_update::COG_REFERENCE,
             ru_position: f::rudder::POSITION,
             sp_speed_water_referenced: f::speed::SPEED_WATER_REFERENCED,
             wd_depth: f::water_depth::DEPTH,
@@ -99,6 +102,7 @@ impl Handles {
             gp_lon: f::gnss_position_data::LONGITUDE,
             gp_date: f::gnss_position_data::DATE,
             gp_time: f::gnss_position_data::TIME,
+            gp_method: f::gnss_position_data::METHOD,
             dops_actual_mode: f::gnss_dops::ACTUAL_MODE,
             dops_desired_mode: f::gnss_dops::DESIRED_MODE,
             dops_hdop: f::gnss_dops::HDOP,
@@ -352,18 +356,27 @@ fn sog_cog(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &mu
     let Some(sog) = decoded.field(h.sc_sog).and_then(|f| f.value.as_f64()) else {
         return;
     };
-    let Some(cog) = decoded.field(h.sc_cog).and_then(|f| f.as_f64_in("deg")) else {
-        return;
+    let cog = decoded.field(h.sc_cog).and_then(|f| f.as_f64_in("deg"));
+    let reference = decoded
+        .field(h.sc_reference)
+        .and_then(|f| f.value.lookup_value());
+    let (true_course, magnetic_course) = match reference {
+        Some(0) => (cog, None),
+        Some(1) => (None, cog),
+        _ => (None, None),
     };
-    // Cache the last (sog, cog) for the position handler's RMC
-    // emission — same single-slot global behaviour as the JSON path.
-    rl.record_sog_cog(sog, cog);
+    // RMC has only a true-course field. Keep speed available even when
+    // the input course is magnetic or its reference is unavailable.
+    rl.record_sog_cog(sog, true_course);
     create(
         out,
         src,
         &format!(
-            "VTG,{:.1},T,,M,{:.2},N,{:.2},K",
-            cog,
+            "VTG,{},T,{},M,{:.2},N,{:.2},K",
+            true_course.map(|c| format!("{c:.1}")).unwrap_or_default(),
+            magnetic_course
+                .map(|c| format!("{c:.1}"))
+                .unwrap_or_default(),
             sog * MS_TO_KNOTS,
             sog * MS_TO_KMH
         ),
@@ -490,6 +503,28 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     let Some(lon) = decoded.field(h.gp_lon).and_then(|f| f.value.as_f64()) else {
         return;
     };
+    let method = decoded
+        .field(h.gp_method)
+        .and_then(|f| f.value.lookup_value());
+    // The NMEA 0183 (2.3+) mode indicator has a letter for each NMEA 2000
+    // GNSS method. Only a real fix (methods 1-5) gets status A; estimated,
+    // manual and simulated positions are reported but marked invalid.
+    let mode = match method {
+        Some(1) => 'A',
+        Some(2) => 'D',
+        Some(3) => 'P',
+        Some(4) => 'R',
+        Some(5) => 'F',
+        Some(6) => 'E',
+        Some(7) => 'M',
+        Some(8) => 'S',
+        _ => 'N',
+    };
+    let status = if matches!(method, Some(1..=5)) {
+        'A'
+    } else {
+        'V'
+    };
     // Round to 7 decimal degrees BEFORE the degree-minute split so
     // we match the JSON path verbatim — that path goes through
     // analyzer's `%.7f` formatter and n2kd then parses the string
@@ -528,21 +563,24 @@ fn position(out: &mut String, src: u8, decoded: &DecodedPgn, h: &Handles, rl: &R
     create(
         out,
         src,
-        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},A"),
+        &format!("GLL,{lat_str},{lat_hem},{lon_str},{lon_hem},{time_str},{status},{mode}"),
     );
 
     // RMC's sog/cog come from the cached PGN 129026 slot. If we
     // haven't seen one within the last second, leave the fields
     // blank — matches the JSON-path behaviour.
     let (sog_str, cog_str) = match rl.recent_sog_cog() {
-        Some((sog, cog)) => (format!("{:.2}", sog * MS_TO_KNOTS), format!("{:.1}", cog)),
+        Some((sog, cog)) => (
+            format!("{:.2}", sog * MS_TO_KNOTS),
+            cog.map(|c| format!("{c:.1}")).unwrap_or_default(),
+        ),
         None => (String::new(), String::new()),
     };
     create(
         out,
         src,
         &format!(
-            "RMC,{time_str},A,{lat_str},{lat_hem},{lon_str},{lon_hem},{sog_str},{cog_str},{date_str},,,A"
+            "RMC,{time_str},{status},{lat_str},{lat_hem},{lon_str},{lon_hem},{sog_str},{cog_str},{date_str},,,{mode}"
         ),
     );
 }
@@ -740,7 +778,7 @@ mod tests {
     #[test]
     fn a_position_emits_gll_and_rmc() {
         let out = convert(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.1745000,"Longitude":5.4230000,"Date":{"value":19245,"name":"2022.09.10"},"Time":{"value":436180000,"name":"12:06:58"}}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.1745000,"Longitude":5.4230000,"Date":{"value":19245,"name":"2022.09.10"},"Time":{"value":436180000,"name":"12:06:58"}}}"#,
         );
         let lines: Vec<&str> = out.lines().filter(|l| !l.is_empty()).collect();
         assert_eq!(lines.len(), 2, "GLL then RMC, got {out}");
@@ -766,7 +804,7 @@ mod tests {
     #[test]
     fn southern_and_western_positions_flip_the_hemispheres() {
         let out = convert(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":-33.8688000,"Longitude":-70.6693000}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":-33.8688000,"Longitude":-70.6693000}}"#,
         );
         assert!(out.contains(",S,"), "got {out}");
         assert!(out.contains(",W,"), "got {out}");
@@ -776,7 +814,9 @@ mod tests {
     /// no recent fix those fields stay blank rather than reading zero.
     #[test]
     fn rmc_speed_and_course_are_blank_without_a_recent_fix() {
-        let out = convert(r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#);
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+        );
         let rmc = out
             .lines()
             .find(|l| l.contains("RMC"))
@@ -790,14 +830,14 @@ mod tests {
     fn a_recent_sog_cog_fills_in_rmc() {
         let mut rl = RateLimiter::new(false);
         let vtg = convert_with(
-            r#"{"pgn":129026,"src":7,"fields":{"SOG":5.0,"COG":90.0}}"#,
+            r#"{"pgn":129026,"src":7,"fields":{"COG Reference":{"value":0,"name":"True"},"SOG":5.0,"COG":90.0}}"#,
             &mut rl,
         );
         assert!(vtg.contains("VTG,"), "got {vtg}");
         assert_checksums_valid(&vtg);
 
         let out = convert_with(
-            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#,
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
             &mut rl,
         );
         let rmc = out
@@ -991,5 +1031,100 @@ mod tests {
         );
         assert!(out.contains("MTW,18.5,C"), "got {out}");
         assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn magnetic_course_is_not_true_course() {
+        let mut rl = RateLimiter::new(false);
+        let vtg = convert_with(
+            r#"{"pgn":129026,"src":7,"fields":{"COG Reference":{"value":1,"name":"Magnetic"},"SOG":5.0,"COG":90.0}}"#,
+            &mut rl,
+        );
+        assert!(vtg.contains("VTG,,T,90.0,M,"), "got {vtg}");
+        let out = convert_with(
+            r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+            &mut rl,
+        );
+        let rmc = out.lines().find(|l| l.contains("RMC,")).unwrap();
+        assert_eq!(rmc.split(',').nth(7), Some("9.72"));
+        assert_eq!(rmc.split(',').nth(8), Some(""));
+    }
+
+    #[test]
+    fn course_without_a_usable_reference_is_blank() {
+        // Without a True or Magnetic reference the course is not assumed to
+        // be true: VTG leaves both course fields blank but keeps the speed,
+        // and RMC gets the speed without a course.
+        for reference in [
+            "",
+            r#""COG Reference":{"value":2,"name":"Error"},"#,
+            r#""COG Reference":{"value":3,"name":"Null"},"#,
+        ] {
+            let mut rl = RateLimiter::new(false);
+            let vtg = convert_with(
+                &format!(
+                    r#"{{"pgn":129026,"src":7,"fields":{{{reference}"SOG":5.0,"COG":90.0}}}}"#
+                ),
+                &mut rl,
+            );
+            assert!(
+                vtg.contains("VTG,,T,,M,9.72,N,18.00,K"),
+                "{reference}: got {vtg}"
+            );
+            assert_checksums_valid(&vtg);
+            let out = convert_with(
+                r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.0,"Longitude":5.0}}"#,
+                &mut rl,
+            );
+            let rmc = out.lines().find(|l| l.contains("RMC,")).unwrap();
+            assert_eq!(rmc.split(',').nth(7), Some("9.72"), "{reference}");
+            assert_eq!(rmc.split(',').nth(8), Some(""), "{reference}");
+        }
+    }
+
+    #[test]
+    fn gnss_method_sets_status_and_mode_letter() {
+        for (method, status, mode) in [
+            (r#""Method":{"value":0,"name":"no GNSS"},"#, "V", "N"),
+            (r#""Method":{"value":1,"name":"GNSS fix"},"#, "A", "A"),
+            (r#""Method":{"value":2,"name":"DGNSS fix"},"#, "A", "D"),
+            (r#""Method":{"value":3,"name":"Precise GNSS"},"#, "A", "P"),
+            (
+                r#""Method":{"value":4,"name":"RTK Fixed Integer"},"#,
+                "A",
+                "R",
+            ),
+            (r#""Method":{"value":5,"name":"RTK float"},"#, "A", "F"),
+            (
+                r#""Method":{"value":6,"name":"Estimated (DR) mode"},"#,
+                "V",
+                "E",
+            ),
+            (r#""Method":{"value":7,"name":"Manual Input"},"#, "V", "M"),
+            (r#""Method":{"value":8,"name":"Simulate mode"},"#, "V", "S"),
+            ("", "V", "N"),
+        ] {
+            let out = convert(&format!(
+                r#"{{"pgn":129029,"src":7,"fields":{{{method}"Latitude":53.0,"Longitude":5.0}}}}"#
+            ));
+            let sentence = |kind: &str| {
+                out.lines()
+                    .find(|l| l.contains(kind))
+                    .unwrap()
+                    .split('*')
+                    .next()
+                    .unwrap()
+                    .to_string()
+            };
+            let gll = sentence("GLL,");
+            let rmc = sentence("RMC,");
+            assert!(
+                gll.ends_with(&format!(",{status},{mode}")),
+                "{method}: got {gll}"
+            );
+            assert_eq!(rmc.split(',').nth(2), Some(status), "{method}: got {rmc}");
+            assert!(rmc.ends_with(&format!(",{mode}")), "{method}: got {rmc}");
+            assert_checksums_valid(&out);
+        }
     }
 }
