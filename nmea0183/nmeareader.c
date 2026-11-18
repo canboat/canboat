@@ -132,7 +132,13 @@ int main(int argc, char **argv)
     if ((r & FD2_ReadReady) > 0)
     {
       b = read(0, msg, sizeof(msg));
-      if (b < 0)
+      if (b == 0)
+      {
+        // EOF remains readable forever; keep reading the device without
+        // repeatedly selecting the closed input stream.
+        readonly = 1;
+      }
+      else if (b < 0)
       {
         break;
       }
