@@ -462,7 +462,9 @@ mod tests {
         assert_eq!(expected.lines().count(), 2);
         // A non-zero fraction differs between the byte orders.
         assert!(
-            expected.lines().all(|l| l.starts_with("2017-08-17T15:48:01.664Z,")),
+            expected
+                .lines()
+                .all(|l| l.starts_with("2017-08-17T15:48:01.664Z,")),
             "got {expected}"
         );
         assert_eq!(
