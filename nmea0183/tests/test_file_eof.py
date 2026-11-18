@@ -27,4 +27,5 @@ with tempfile.NamedTemporaryFile() as capture:
     capture.write(sentence)
     capture.flush()
     result = subprocess.run([str(binary), '-r', capture.name], capture_output=True, timeout=3, check=True)
-    assert result.stdout == sentence, result.stdout
+    if result.stdout != sentence:
+        sys.exit('unexpected output: %r' % result.stdout)
