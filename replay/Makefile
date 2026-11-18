@@ -29,7 +29,10 @@ CFLAGS= -Wall -O2
 
 all: $(TARGETS)
 
-$(REPLAY): replay.c $(COMMON)
+$(TARGETDIR):
+	mkdir -p $(TARGETDIR)
+
+$(REPLAY): replay.c $(COMMON) | $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(REPLAY) -I../common replay.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:

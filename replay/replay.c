@@ -98,8 +98,11 @@ int main(int argc, char **argv)
     }
     prev = now;
 
-    fprintf(stdout, "%s", line);
-    fflush(stdout);
+    if (fprintf(stdout, "%s", line) < 0 || fflush(stdout) != 0)
+    {
+      logError("Cannot write to stdout: %s\n", strerror(errno));
+      return 1;
+    }
   }
   return 0;
 }
