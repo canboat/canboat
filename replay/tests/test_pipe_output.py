@@ -21,6 +21,7 @@ import pathlib
 import select
 import subprocess
 import sys
+import time
 
 binary = pathlib.Path(sys.argv[1]).resolve()
 line = b'2026-11-15T12:00:00.000,3,126993,0,255,1,00\n'
@@ -30,25 +31,35 @@ process = subprocess.Popen([str(binary)], stdin=subprocess.PIPE, stdout=subproce
 try:
     process.stdin.write(line)
     process.stdin.flush()
-    ready, _, _ = select.select([process.stdout], [], [], 2)
-    if not ready:
-        sys.exit('replay buffered the frame while waiting for more input')
-    output = process.stdout.readline()
+    output = b''
+    deadline = time.monotonic() + 2
+    while len(output) < len(line):
+        ready, _, _ = select.select([process.stdout], [], [], max(0, deadline - time.monotonic()))
+        if not ready:
+            sys.exit('replay buffered the frame while waiting for more input: %r' % output)
+        chunk = os.read(process.stdout.fileno(), len(line) - len(output))
+        if not chunk:
+            break
+        output += chunk
     if output != line:
         sys.exit('unexpected output: %r' % output)
-finally:
     process.stdin.close()
     try:
-        process.wait(timeout=3)
+        status = process.wait(timeout=3)
     except subprocess.TimeoutExpired:
+        sys.exit('replay did not exit at end of input')
+    if status != 0:
+        sys.exit('replay exited %d at end of input' % status)
+finally:
+    if process.poll() is None:
         process.kill()
         process.wait()
-    process.stdout.close()
-    process.stderr.close()
+    for stream in (process.stdin, process.stdout, process.stderr):
+        stream.close()
 
 # A frame that cannot be written is an error, not a silent success.
 if os.path.exists('/dev/full'):
     with open('/dev/full', 'wb') as full:
-        result = subprocess.run([str(binary)], input=line, stdout=full, stderr=subprocess.PIPE, timeout=3)
-    if result.returncode == 0:
-        sys.exit('replay exited 0 although stdout rejected the frame')
+        result = subprocess.run([str(binary)], input=line, stdout=full, stderr=subprocess.PIPE, timeout=3, check=False)
+    if result.returncode != 1:
+        sys.exit('replay exited %d although stdout rejected the frame, expected 1' % result.returncode)
