@@ -117,7 +117,7 @@ int main(int argc, char **argv)
     if ((r & FD1_ReadReady) > 0)
     {
       b = read(handle, msg, sizeof(msg));
-      if (b < 0)
+      if (b < 0 || (b == 0 && isFile))
       {
         break;
       }
