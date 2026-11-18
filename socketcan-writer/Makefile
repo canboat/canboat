@@ -19,6 +19,9 @@
 PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
+# Test programs stay out of $(TARGETDIR), which `make install` copies wholesale;
+# a trailing / on BUILDDIR must not put them inside it.
+TESTDIR=$(patsubst %/,%,$(TARGETDIR))-tests
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
@@ -37,15 +40,18 @@ $(SOCKETCAN_WRITER): socketcan-writer.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(SOCKETCAN_WRITER) -I../analyzer -I../common socketcan-writer.c ../common/common.c ../common/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
-	-rm -f $(TARGETS) *.elf *.gdb
+	-rm -f $(TARGETS) $(TESTDIR)/test-socketcan-write *.elf *.gdb
 
 
 .PHONY: tests
 ifneq (,$(findstring linux,$(PLATFORM)))
-tests: $(TARGETDIR)/test-socketcan-write
-	python3 tests/test_write_failure.py $(TARGETDIR)/test-socketcan-write
+tests: $(TESTDIR)/test-socketcan-write
+	python3 tests/test_write_failure.py $(TESTDIR)/test-socketcan-write
 
-$(TARGETDIR)/test-socketcan-write: socketcan-writer.c tests/fail_write.c $(COMMON)
+$(TESTDIR):
+	mkdir -p $(TESTDIR)
+
+$(TESTDIR)/test-socketcan-write: socketcan-writer.c tests/fail_write.c $(COMMON) | $(TESTDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../analyzer -I../common -o $@ socketcan-writer.c ../common/common.c ../common/parse.c tests/fail_write.c -Wl,--wrap=write $(LDLIBS)
 else
 tests:
