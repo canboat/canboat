@@ -261,7 +261,9 @@ impl PcapPlainReader {
             let ts_usec = word(base + 4);
             let incl_len = word(base + 8) as usize;
             let rec = base + 16;
-            if incl_len < 8 || rec + incl_len > self.cur.len() {
+            // rec <= len: the loop head checked off + 16. Subtracting cannot
+            // wrap where rec + incl_len could on a 32-bit target.
+            if incl_len < 8 || incl_len > self.cur.len() - rec {
                 // Truncated / non-CAN tail — abandon this buffer.
                 self.off = self.cur.len();
                 continue;
@@ -394,12 +396,24 @@ mod tests {
                 v.to_be_bytes()
             }
         };
+        let half = |v: u16| {
+            if little_endian {
+                v.to_le_bytes()
+            } else {
+                v.to_be_bytes()
+            }
+        };
         let mut b = Vec::new();
         b.extend_from_slice(&word(PCAP_MAGIC_US));
-        b.extend_from_slice(&[0u8; 20]);
+        b.extend_from_slice(&half(2)); // version 2.4
+        b.extend_from_slice(&half(4));
+        b.extend_from_slice(&word(0)); // thiszone
+        b.extend_from_slice(&word(0)); // sigfigs
+        b.extend_from_slice(&word(65_535)); // snaplen
+        b.extend_from_slice(&word(227)); // LINKTYPE_CAN_SOCKETCAN
         for dlc in [3u8, 8u8] {
             b.extend_from_slice(&word(1_502_984_881));
-            b.extend_from_slice(&word(0));
+            b.extend_from_slice(&word(664_000));
             b.extend_from_slice(&word(16));
             b.extend_from_slice(&word(16));
             b.extend_from_slice(&0x89F50B23u32.to_be_bytes());
@@ -446,6 +460,11 @@ mod tests {
         let big = two_record_pcap(false);
         let expected = read_all(VecDeque::from([Source::Plain(little.clone())]));
         assert_eq!(expected.lines().count(), 2);
+        // A non-zero fraction differs between the byte orders.
+        assert!(
+            expected.lines().all(|l| l.starts_with("2017-08-17T15:48:01.664Z,")),
+            "got {expected}"
+        );
         assert_eq!(
             read_all(VecDeque::from([Source::Plain(big.clone())])),
             expected
