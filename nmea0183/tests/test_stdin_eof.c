@@ -35,8 +35,8 @@ static void check(int ok, const char *what)
  * reports an error so the loop ends. */
 int capture_ready(SOCKET device, SOCKET input, SOCKET extra, int timeout)
 {
-  (void) extra;
   (void) timeout;
+  check(extra == INVALID_SOCKET, "no wait selects a third descriptor");
   if (ready_calls++ == 0)
   {
     device_fd = device;
