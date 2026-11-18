@@ -34,5 +34,9 @@ $(TARGETDIR):
 clean:
 	-rm -f $(TARGETLIST) *.elf *.gdb
 
-$(TARGET1):	nmeareader.c $(COMMON)
+$(TARGET1):	nmeareader.c $(COMMON) | $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
+
+.PHONY: tests
+tests: $(TARGET1)
+	python3 tests/test_file_eof.py $(TARGET1)
