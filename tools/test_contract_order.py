@@ -16,7 +16,7 @@ class FieldOrderTests(unittest.TestCase):
         return contract.diff_signatures(contract.extract_signature(self.old), contract.extract_signature(new))
 
     def test_same_size_field_reordering_is_not_invisible(self):
-        self.assertEqual([c.severity for c in self.changes(['b', 'a'])], ['minor'])
+        self.assertEqual([(c.category, c.severity) for c in self.changes(['b', 'a'])], [('field-order', 'minor')])
 
     def test_insertion_is_not_also_reported_as_reordering(self):
         self.assertEqual([c.category for c in self.changes(['c', 'a', 'b'])], ['field-added'])
