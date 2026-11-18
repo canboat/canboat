@@ -19,13 +19,14 @@
 import csv
 import io
 import json
+import os
 import pathlib
 import shutil
 import subprocess
 import sys
 import unittest
 
-PHP = sys.argv.pop(1) if len(sys.argv) > 1 else 'php'
+PHP = os.environ.get('PHP', 'php')
 SCRIPT = pathlib.Path(__file__).resolve().parents[1] / 'analyzer2csv'
 
 
@@ -35,6 +36,7 @@ class CsvTests(unittest.TestCase):
         line = json.dumps(record, ensure_ascii=False)
         result = subprocess.run([PHP, '-n', str(SCRIPT), *keys], input=line+'\n', text=True, capture_output=True, check=True)
         rows = list(csv.reader(io.StringIO(result.stdout), strict=True))
+        self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0], keys)
         return line, rows[1]
 
@@ -48,6 +50,10 @@ class CsvTests(unittest.TestCase):
             with self.subTest(text=text):
                 _, row = self.convert({'timestamp': '2026-11-15T12:00:00', 'pgn': 126996, 'description': text}, ['timestamp', 'description', 'pgn'])
                 self.assertEqual(row, ['2026-11-15T12:00:00', text, '126996'])
+
+    def test_single_empty_value(self):
+        _, row = self.convert({'timestamp': '2026-11-15T12:00:00', 'pgn': 126996}, ['description'])
+        self.assertEqual(row, [''])
 
 
 if __name__ == '__main__':

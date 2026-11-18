@@ -47,7 +47,14 @@ while (($line = fgets($file)) !== false)
           $row[] = '';
         }
       }
-      fputcsv(STDOUT, $row, ',', '"', '');
+      if ($row === array(''))
+      {
+        echo "\"\"\n"; // fputcsv writes a lone empty field as an empty line, which reads back as no fields
+      }
+      else
+      {
+        fputcsv(STDOUT, $row, ',', '"', '');
+      }
     }
   }
 }
