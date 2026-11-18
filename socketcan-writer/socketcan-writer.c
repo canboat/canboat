@@ -33,10 +33,22 @@ limitations under the License.
 #include "common.h"
 #include "parse.h"
 
-static int    openCanDevice(char *device, int *socket);
-static void   writeRawPGNToCanSocket(RawMessage *msg, int socket);
-static void   sendCanFrame(struct can_frame *frame, int socket);
-static void   sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
+// A full transmit queue (ENOBUFS, EAGAIN) is normal on a busy bus: retry
+// for up to SEND_RETRIES * SEND_RETRY_US, then drop the message and go on.
+#define SEND_RETRIES 50
+#define SEND_RETRY_US 1000
+
+enum SendResult
+{
+  SEND_OK,
+  SEND_DROPPED, // the queue stayed full; the message was not (fully) sent
+  SEND_FAILED   // a real write error; stop
+};
+
+static int             openCanDevice(char *device, int *socket);
+static bool            writeRawPGNToCanSocket(RawMessage *msg, int socket);
+static enum SendResult sendCanFrame(struct can_frame *frame, int socket);
+static enum SendResult sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket);
 unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp);
 
 int main(int argc, char **argv)
@@ -100,7 +112,11 @@ int main(int argc, char **argv)
     {
       usleep(usWait);
     }
-    writeRawPGNToCanSocket(&m, socket);
+    if (!writeRawPGNToCanSocket(&m, socket))
+    {
+      close(socket);
+      return 1;
+    }
   }
 
   close(socket);
@@ -148,7 +164,7 @@ static int openCanDevice(char *device, int *canSocket)
   return 0;
 }
 
-static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
+static bool writeRawPGNToCanSocket(RawMessage *msg, int socket)
 {
   struct can_frame frame;
   memset(&frame, 0, sizeof(frame));
@@ -156,13 +172,13 @@ static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
   if (msg->pgn >= (1 << 18)) // PGNs can't have more than 18 bits, otherwise it overwrites priority bits
   {
     logError("Invalid PGN, too big (0x%x). Skipping.\n", msg->pgn);
-    return;
+    return true;
   }
 
   if (msg->len > FASTPACKET_MAX_SIZE) // Only reassembly, not transmission, of ISO TP messages is implemented
   {
     logError("PGN %u length %u exceeds fast packet maximum %u. Skipping.\n", msg->pgn, msg->len, FASTPACKET_MAX_SIZE);
-    return;
+    return true;
   }
 
   frame.can_id = getCanIdFromISO11783Bits(msg->prio, msg->pgn, msg->src, msg->dst);
@@ -171,26 +187,56 @@ static void writeRawPGNToCanSocket(RawMessage *msg, int socket)
   {
     frame.can_dlc = msg->len;
     memcpy(frame.data, msg->data, msg->len);
-    sendCanFrame(&frame, socket);
+    return sendCanFrame(&frame, socket) != SEND_FAILED;
   }
   else
   { // Send PGN as n2k fast packet (spans multiple CAN frames, but CAN ID is still same for each frame)
-    sendN2kFastPacket(msg, &frame, socket);
+    return sendN2kFastPacket(msg, &frame, socket) != SEND_FAILED;
   }
 }
 
-static void sendCanFrame(struct can_frame *frame, int socket)
+static enum SendResult sendCanFrame(struct can_frame *frame, int socket)
 {
-  if (write(socket, frame, sizeof(struct can_frame)) != sizeof(struct can_frame))
+  int busy = 0;
+
+  for (;;)
   {
-    perror("write");
+    ssize_t r = write(socket, frame, sizeof(struct can_frame));
+
+    if (r == sizeof(struct can_frame))
+    {
+      return SEND_OK;
+    }
+    if (r < 0 && errno == EINTR)
+    {
+      continue;
+    }
+    if (r < 0 && (errno == ENOBUFS || errno == EAGAIN))
+    {
+      if (busy++ < SEND_RETRIES)
+      {
+        usleep(SEND_RETRY_US);
+        continue;
+      }
+      logError("CAN transmit queue stays full, dropping CAN id 0x%08x\n", (unsigned int) (frame->can_id & CAN_EFF_MASK));
+      return SEND_DROPPED;
+    }
+    if (r < 0)
+    {
+      logError("Cannot write CAN frame: %s\n", strerror(errno));
+    }
+    else
+    {
+      logError("Short write of CAN frame: %zd of %zu bytes\n", r, sizeof(struct can_frame));
+    }
+    return SEND_FAILED;
   }
 }
 
 /*
   See pgn.h for n2k fast packet data format
 */
-static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket)
+static enum SendResult sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int socket)
 {
   int index              = 0;
   int remainingDataBytes = msg->len;
@@ -221,9 +267,15 @@ static void sendN2kFastPacket(RawMessage *msg, struct can_frame *frame, int sock
         remainingDataBytes = 0;
       }
     }
-    sendCanFrame(frame, socket);
+    enum SendResult result = sendCanFrame(frame, socket);
+    if (result != SEND_OK)
+    {
+      // A fast packet missing a frame is useless, so the rest goes too.
+      return result;
+    }
     index++;
   }
+  return SEND_OK;
 }
 
 unsigned long time_diff(struct timeval x, struct timeval y, char *timestamp)
