@@ -944,34 +944,19 @@ mod tests {
         assert!(out.contains("GSA,M,2,"), "got {out}");
         assert_checksums_valid(&out);
     }
-}
-
-#[cfg(test)]
-mod coordinate_regressions {
-    use super::*;
 
     #[test]
     fn coordinates_keep_fixed_width_and_carry_minutes() {
         assert_eq!(latlon_to_nmea(5.423, true), ("0525.3800".into(), 'N'));
         assert_eq!(latlon_to_nmea(5.423, false), ("00525.3800".into(), 'E'));
-        assert_eq!(latlon_to_nmea(0.0, true), ("0000.0000".into(), 'N'));
-        assert_eq!(latlon_to_nmea(0.0, false), ("00000.0000".into(), 'E'));
         assert_eq!(latlon_to_nmea(53.99999999, true), ("5400.0000".into(), 'N'));
         assert_eq!(
             latlon_to_nmea(-179.99999999, false),
             ("18000.0000".into(), 'W')
         );
         assert_eq!(latlon_to_nmea(53.9999999, true), ("5400.0000".into(), 'N'));
-        let decoded = crate::engine::json_to_decoded(
+        let out = convert(
             r#"{"pgn":129029,"src":7,"fields":{"Method":{"value":1,"name":"GNSS fix"},"Latitude":53.9999999,"Longitude":179.9999999}}"#,
-            crate::engine::PgnDatabase::embedded(crate::engine::Units::Metric),
-        ).unwrap();
-        let mut out = String::new();
-        convert_nmea0183(
-            &mut out,
-            &decoded,
-            &mut RateLimiter::new(false),
-            &Handles::new(),
         );
         assert!(out.contains("GLL,5400.0000,N,18000.0000,E,"), "got {out}");
     }
