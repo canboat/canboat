@@ -43,19 +43,21 @@ try:
         output += chunk
     if output != line:
         sys.exit('unexpected output: %r' % output)
-    process.stdin.close()
     try:
-        status = process.wait(timeout=3)
+        rest, _ = process.communicate(timeout=3)
     except subprocess.TimeoutExpired:
         sys.exit('replay did not exit at end of input')
-    if status != 0:
-        sys.exit('replay exited %d at end of input' % status)
+    if rest:
+        sys.exit('unexpected output after the frame: %r' % rest)
+    if process.returncode != 0:
+        sys.exit('replay exited %d at end of input' % process.returncode)
 finally:
     if process.poll() is None:
         process.kill()
         process.wait()
     for stream in (process.stdin, process.stdout, process.stderr):
-        stream.close()
+        if not stream.closed:
+            stream.close()
 
 # A frame that cannot be written is an error, not a silent success.
 if os.path.exists('/dev/full'):
