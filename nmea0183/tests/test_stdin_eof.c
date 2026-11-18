@@ -16,8 +16,10 @@ ssize_t capture_read(int fd, void *data, size_t len);
 
 static int    ready_calls;
 static int    device_reads;
+static int    stdin_reads;
 static SOCKET device_fd = INVALID_SOCKET;
 static int    failures;
+static char   path[] = "/tmp/canboat-stdin-eof-XXXXXX";
 
 static void check(int ok, const char *what)
 {
@@ -42,7 +44,15 @@ int capture_ready(SOCKET device, SOCKET input, SOCKET extra, int timeout)
     check(input == STDIN, "first wait selects stdin");
     return FD2_ReadReady;
   }
+  if (ready_calls > 2)
+  {
+    /* The device read did not end the loop; stop rather than spin forever. */
+    fprintf(stderr, "FAIL: reader waits again after the device read error\n");
+    unlink(path);
+    exit(1);
+  }
   check(device == device_fd, "wait after stdin EOF still selects the device");
+  check(stdin_reads == 1, "stdin EOF is read before the second wait");
   check(input == INVALID_SOCKET, "wait after stdin EOF does not select stdin");
   return FD1_ReadReady;
 }
@@ -53,6 +63,7 @@ ssize_t capture_read(int fd, void *data, size_t len)
   (void) len;
   if (fd == STDIN)
   {
+    stdin_reads++;
     return 0;
   }
   check(fd == device_fd, "device read uses the selected device");
@@ -62,7 +73,6 @@ ssize_t capture_read(int fd, void *data, size_t len)
 
 int main(void)
 {
-  char path[] = "/tmp/canboat-stdin-eof-XXXXXX";
   /* Held open until the reader returns, so the device the reader opens
    * cannot land on descriptor 0 even when the test starts without stdin. */
   int fd = mkstemp(path);
