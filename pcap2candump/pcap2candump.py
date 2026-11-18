@@ -38,8 +38,14 @@ for fileName in sys.argv[1:]:
         while (offset < len(fileContent) - 0x18):
             timestamp, = struct.unpack_from(byte_order + "L", fileContent, offset)
             nano, = struct.unpack_from(byte_order + "I", fileContent, offset + 4)
+            captured_length, = struct.unpack_from(byte_order + "I", fileContent, offset + 8)
+            if captured_length < 8 or offset + 16 + captured_length > len(fileContent):
+                break  # truncated or not a SocketCAN record
             canid, = struct.unpack_from(">I", fileContent, offset + 16)
             datalen, = struct.unpack_from("B", fileContent, offset + 20)
+            # Only the captured bytes belong to this record; a short snaplen
+            # cuts the payload below the DLC.
+            datalen = min(datalen, captured_length - 8, 8)
             b1, = struct.unpack_from("B", fileContent, offset + 21)
             b2, = struct.unpack_from("B", fileContent, offset + 22)
             b3, = struct.unpack_from("B", fileContent, offset + 23)
@@ -57,7 +63,6 @@ for fileName in sys.argv[1:]:
             # A SocketCAN record includes padding up to CAN_MTU even when
             # the CAN payload has fewer than eight bytes. Advance by the
             # PCAP captured length, not by the CAN DLC.
-            captured_length, = struct.unpack_from(byte_order + "I", fileContent, offset + 8)
             offset += 16 + captured_length
 
 
