@@ -933,3 +933,12 @@ fn dms_format_text() {
 fn recombine_frames_text_debug() {
     run_case("recombine-frames.in", "recombine-frames.out", &["--debug"]);
 }
+
+#[test]
+fn signed_offset_range() {
+    run_case(
+        "pgn-signed-offset-range.in",
+        "pgn-signed-offset-range.out",
+        &["--json", "--nv", "--units", "si", "--fixtime", "pgn-test"],
+    );
+}
