@@ -19,6 +19,9 @@
 PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
+# Test programs stay out of $(TARGETDIR), which `make install` copies wholesale;
+# a trailing / on BUILDDIR must not put them inside it.
+TESTDIR=$(patsubst %/,%,$(TARGETDIR))-tests
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 TARGET1=$(TARGETDIR)/nmea0183-serial
@@ -32,11 +35,18 @@ $(TARGETDIR):
 	mkdir -p $(TARGETDIR)
 
 clean:
-	-rm -f $(TARGETLIST) *.elf *.gdb
+	-rm -f $(TARGETLIST) $(TESTDIR)/test-nmea-stdin-eof *.elf *.gdb
 
 $(TARGET1):	nmeareader.c $(COMMON) | $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
 
 .PHONY: tests
-tests: $(TARGET1)
+tests: $(TESTDIR)/test-nmea-stdin-eof $(TARGET1)
+	$(TESTDIR)/test-nmea-stdin-eof
 	python3 tests/test_file_eof.py $(TARGET1)
+
+$(TESTDIR):
+	mkdir -p $(TESTDIR)
+
+$(TESTDIR)/test-nmea-stdin-eof: tests/test_stdin_eof.c nmeareader.c $(COMMON) | $(TESTDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../common -o $@ tests/test_stdin_eof.c ../common/common.c $(LDLIBS)
