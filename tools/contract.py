@@ -52,8 +52,8 @@ import sys
 # Note: a field's "order" is kept in the signature (rename detection ignores
 # it) but is deliberately NOT classified here. Its sequence index shifts as a
 # side effect of inserting/removing earlier fields, which would double-report a
-# break already captured by the add/remove. Genuine layout breaks surface
-# through bits/type/lookup changes instead.
+# break already captured by the add/remove. _diff_fields compares the relative
+# order of retained fields separately, so same-width swaps remain visible.
 FIELD_ATTRS = {
     "type": "minor",  # FieldType -> generated TS type changes (downstream regenerates)
     "lookup": "minor",  # which enum the TS type references + label source
@@ -123,11 +123,12 @@ def _pgn_signature(pgn):
     }
 
 
-def _lookup_values(enum, value_key, name_key="Name"):
+def _lookup_values(enum, value_key, id_keys=("Value",), definition=False):
     out = {}
     for v in enum.get(value_key, []):
         # keyed by numeric value (stringified for stable JSON), -> label
-        out[str(v.get("Value"))] = v.get(name_key)
+        key = ":".join(str(v[k]) for k in id_keys)
+        out[key] = dict(v) if definition else v.get("Name")
     return out
 
 
@@ -146,17 +147,17 @@ def extract_signature(db):
     for enum in db.get("LookupIndirectEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "indirect",
-            "values": _lookup_values(enum, "EnumValues"),
+            "values": _lookup_values(enum, "EnumValues", ("Value1", "Value2")),
         }
     for enum in db.get("LookupBitEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "bit",
-            "values": _lookup_values(enum, "EnumBitValues"),
+            "values": _lookup_values(enum, "EnumBitValues", ("Bit",)),
         }
     for enum in db.get("LookupFieldTypeEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "fieldtype",
-            "values": _lookup_values(enum, "EnumFieldTypeValues"),
+            "values": _lookup_values(enum, "EnumFieldTypeValues", ("value",), definition=True),
         }
 
     return {
@@ -199,6 +200,16 @@ def _diff_fields(changes, anchor, old_fields, new_fields):
 
     removed = old_ids - new_ids
     added = new_ids - old_ids
+
+    # Sequence numbers shift after an insertion, but the relative order of
+    # retained fields must not change unnoticed when their widths match.
+    shared_ids = old_ids & new_ids
+    def relative_order(fields):
+        return sorted(shared_ids, key=lambda fid: (fields[fid].get("order") or 0, fid))
+    old_order, new_order = relative_order(old_fields), relative_order(new_fields)
+    if old_order != new_order:
+        changes.append(Change("minor", "field-order", anchor,
+                              "retained field order: %r -> %r" % (old_order, new_order)))
 
     # Light 1:1 rename detection: a single removed + single added field whose
     # signatures (minus order) are identical is almost certainly a rename.
@@ -392,8 +403,8 @@ def _diff_lookups(changes, old_sig, new_sig):
                         "minor",
                         "lookup-label",
                         name,
-                        "value %s label: %r -> %r"
-                        % (value, ov[value], nv[value]),
+                        "value %s %s: %r -> %r"
+                        % (value, "definition" if new[name]["kind"] == "fieldtype" else "label", ov[value], nv[value]),
                     )
                 )
 
