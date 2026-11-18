@@ -980,6 +980,8 @@ mod tests {
             &mut rl,
         );
         assert!(ignored.is_empty());
+        // The MTW check alone also passes whenever a second elapses here.
+        assert!(rl.last_passed_slot(7, rate_index(Rate::Environmental)).is_none());
         let out = convert_with(
             r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":0,"name":"Sea Temperature"},"Temperature":18.5}}"#,
             &mut rl,
