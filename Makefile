@@ -40,7 +40,7 @@ tests:  compile
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 	$(MAKE) -C group-function/tests tests
-	python3 nmea0183/tests/test_file_eof.py $(BUILDDIR)/nmea0183-serial
+	$(MAKE) -C nmea0183 tests
 	for t in tools/test_*.py; do python3 $$t || exit 1; done
 
 # The Cargo workspace at the repo root (crates/*, keel/) is deliberately

@@ -36,3 +36,7 @@ clean:
 
 $(TARGET1):	nmeareader.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(TARGET1) $(CFLAGS) -I../common nmeareader.c ../common/common.c
+
+.PHONY: tests
+tests: $(TARGET1)
+	python3 tests/test_file_eof.py $(TARGET1)
