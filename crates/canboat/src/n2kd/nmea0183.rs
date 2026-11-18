@@ -35,9 +35,9 @@ use crate::n2kd::decoded::{self, Handles};
 pub struct RateLimiter {
     last_passed: [[Option<Instant>; RATE_COUNT]; 256],
     enabled: bool,
-    /// `(sog_ms, cog_deg, captured_at)` — None until we've seen at
+    /// `(sog_ms, true_cog_deg, captured_at)` — None until we've seen at
     /// least one PGN 129026. Only honoured for ≤ 1s after capture.
-    last_sog_cog: Option<(f64, f64, Instant)>,
+    last_sog_cog: Option<(f64, Option<f64>, Instant)>,
     /// Cycling 0..9 — the next multi-fragment AIVDM message bumps
     /// this and uses the resulting digit as its sequence id, matching
     /// canboat C's `sequenceId` static in `gps_ais.c::aisToNmea0183`.
@@ -79,14 +79,14 @@ impl RateLimiter {
     /// handler (when it gets struct-path support in a later phase)
     /// will consume for RMC emission.
     #[inline]
-    pub(crate) fn record_sog_cog(&mut self, sog_ms: f64, cog_deg: f64) {
+    pub(crate) fn record_sog_cog(&mut self, sog_ms: f64, cog_deg: Option<f64>) {
         self.last_sog_cog = Some((sog_ms, cog_deg, Instant::now()));
     }
 
-    /// `(sog_ms, cog_deg)` if [`Self::record_sog_cog`] was called
+    /// `(sog_ms, optional_true_cog_deg)` if [`Self::record_sog_cog`] was called
     /// within the last second.
     #[inline]
-    pub(crate) fn recent_sog_cog(&self) -> Option<(f64, f64)> {
+    pub(crate) fn recent_sog_cog(&self) -> Option<(f64, Option<f64>)> {
         let (sog, cog, ts) = self.last_sog_cog?;
         if ts.elapsed() < Duration::from_secs(1) {
             Some((sog, cog))
@@ -202,7 +202,7 @@ mod tests {
     #[test]
     fn vtg_format() {
         // 5.144 m/s ≈ 10 kn; COG already in degrees.
-        let msg = r#"{"pgn":129026,"src":3,"fields":{"SOG":5.144,"COG":180.0}}"#;
+        let msg = r#"{"pgn":129026,"src":3,"fields":{"COG Reference":{"value":0,"name":"True"},"SOG":5.144,"COG":180.0}}"#;
         let mut out = String::new();
         let mut rl = RateLimiter::new(false);
         convert(&mut out, msg, &mut rl);
