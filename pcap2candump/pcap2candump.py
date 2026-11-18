@@ -35,7 +35,9 @@ for fileName in sys.argv[1:]:
             errprint("File", fileName + ": invalid magic")
             exit(1)
         offset = 0x18
-        while (offset < len(fileContent) - 0x18):
+        # A record needs at least its 16-byte header and the 8-byte SocketCAN
+        # header; the captured length check below bounds the rest.
+        while offset + 16 + 8 <= len(fileContent):
             timestamp, = struct.unpack_from(byte_order + "L", fileContent, offset)
             nano, = struct.unpack_from(byte_order + "I", fileContent, offset + 4)
             captured_length, = struct.unpack_from(byte_order + "I", fileContent, offset + 8)
