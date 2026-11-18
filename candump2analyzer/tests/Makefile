@@ -72,3 +72,8 @@ test-timed:
 	  cut -d, -f2- $(TEMPDIR)/$$f.full | diff - $$f.out || exit 1; \
 	  cut -d, -f1 $(TEMPDIR)/$$f.full | diff - $$f.ts || exit 1; \
 	done
+
+tests: test-navico-first
+
+test-navico-first:
+	python3 test_navico_first.py $(CANDUMP2ANALYZER)

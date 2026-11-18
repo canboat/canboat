@@ -123,11 +123,12 @@ def _pgn_signature(pgn):
     }
 
 
-def _lookup_values(enum, value_key, name_key="Name"):
+def _lookup_values(enum, value_key, id_keys=("Value",), definition=False):
     out = {}
     for v in enum.get(value_key, []):
         # keyed by numeric value (stringified for stable JSON), -> label
-        out[str(v.get("Value"))] = v.get(name_key)
+        key = ":".join(str(v[k]) for k in id_keys)
+        out[key] = dict(v) if definition else v.get("Name")
     return out
 
 
@@ -146,17 +147,17 @@ def extract_signature(db):
     for enum in db.get("LookupIndirectEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "indirect",
-            "values": _lookup_values(enum, "EnumValues"),
+            "values": _lookup_values(enum, "EnumValues", ("Value1", "Value2")),
         }
     for enum in db.get("LookupBitEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "bit",
-            "values": _lookup_values(enum, "EnumBitValues"),
+            "values": _lookup_values(enum, "EnumBitValues", ("Bit",)),
         }
     for enum in db.get("LookupFieldTypeEnumerations", []):
         lookups[enum["Name"]] = {
             "kind": "fieldtype",
-            "values": _lookup_values(enum, "EnumFieldTypeValues"),
+            "values": _lookup_values(enum, "EnumFieldTypeValues", ("value",), definition=True),
         }
 
     return {
@@ -402,8 +403,8 @@ def _diff_lookups(changes, old_sig, new_sig):
                         "minor",
                         "lookup-label",
                         name,
-                        "value %s label: %r -> %r"
-                        % (value, ov[value], nv[value]),
+                        "value %s %s: %r -> %r"
+                        % (value, "definition" if new[name]["kind"] == "fieldtype" else "label", ov[value], nv[value]),
                     )
                 )
 
