@@ -19,8 +19,9 @@
 PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
-# Test programs stay out of $(TARGETDIR), which `make install` copies wholesale.
-TESTDIR=$(TARGETDIR)-tests
+# Test programs stay out of $(TARGETDIR), which `make install` copies wholesale;
+# a trailing / on BUILDDIR must not put them inside it.
+TESTDIR=$(patsubst %/,%,$(TARGETDIR))-tests
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 TARGET1=$(TARGETDIR)/nmea0183-serial
