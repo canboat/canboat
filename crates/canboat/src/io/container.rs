@@ -36,7 +36,7 @@ use crate::engine::format::{days_to_ymd, iso11783_decompose};
 use flate2::read::GzDecoder;
 use tar::Archive;
 
-/// libpcap little-endian, microsecond-timestamp magic (0xa1b2c3d4).
+/// libpcap microsecond-timestamp magic (0xa1b2c3d4).
 const PCAP_MAGIC_US: u32 = 0xa1b2c3d4;
 
 /// SocketCAN flag bits carried in the high byte of the 32-bit CAN id
@@ -172,6 +172,7 @@ struct PcapPlainReader {
     cur: Vec<u8>,
     /// Record cursor into `cur`.
     off: usize,
+    little_endian: bool,
     /// Formatted-but-not-yet-read output bytes for the current line.
     out: Vec<u8>,
     out_pos: usize,
@@ -185,6 +186,7 @@ impl PcapPlainReader {
             sources,
             cur: Vec::new(),
             off: 0,
+            little_endian: true,
             out: Vec::new(),
             out_pos: 0,
             line: String::with_capacity(96),
@@ -209,10 +211,14 @@ impl PcapPlainReader {
                 continue;
             }
             let magic = u32::from_le_bytes(bytes[0..4].try_into().unwrap());
-            if magic != PCAP_MAGIC_US {
-                log::warn!("container: skipping capture with bad pcap magic 0x{magic:08x}");
-                continue;
-            }
+            self.little_endian = match magic {
+                PCAP_MAGIC_US => true,
+                0xd4c3b2a1 => false,
+                _ => {
+                    log::warn!("container: skipping capture with bad pcap magic 0x{magic:08x}");
+                    continue;
+                }
+            };
             self.cur = bytes;
             self.off = 24; // skip the 24-byte global header
             return Ok(true);
@@ -223,7 +229,7 @@ impl PcapPlainReader {
     /// Format the next CAN frame into `self.out` (with a trailing
     /// newline). Returns `Ok(false)` at end of all sources.
     ///
-    /// Record layout (little-endian pcap, classic-CAN payloads):
+    /// Record layout (file byte order, classic-CAN payloads):
     ///
     /// ```text
     ///   pcap record header (16 bytes): ts_sec, ts_usec, incl_len, orig_len
@@ -243,12 +249,21 @@ impl PcapPlainReader {
                 continue;
             }
             let base = self.off;
-            let ts_sec = u32::from_le_bytes(self.cur[base..base + 4].try_into().unwrap());
-            let ts_usec = u32::from_le_bytes(self.cur[base + 4..base + 8].try_into().unwrap());
-            let incl_len =
-                u32::from_le_bytes(self.cur[base + 8..base + 12].try_into().unwrap()) as usize;
+            let word = |offset: usize| {
+                let bytes = self.cur[offset..offset + 4].try_into().unwrap();
+                if self.little_endian {
+                    u32::from_le_bytes(bytes)
+                } else {
+                    u32::from_be_bytes(bytes)
+                }
+            };
+            let ts_sec = word(base);
+            let ts_usec = word(base + 4);
+            let incl_len = word(base + 8) as usize;
             let rec = base + 16;
-            if incl_len < 8 || rec + incl_len > self.cur.len() {
+            // rec <= len: the loop head checked off + 16. Subtracting cannot
+            // wrap where rec + incl_len could on a 32-bit target.
+            if incl_len < 8 || incl_len > self.cur.len() - rec {
                 // Truncated / non-CAN tail — abandon this buffer.
                 self.off = self.cur.len();
                 continue;
@@ -371,25 +386,49 @@ mod tests {
         assert_eq!(read_all(d).lines().count(), 2);
     }
 
-    #[test]
-    fn short_dlc_advances_by_incl_len_not_dlc() {
-        // First record dlc=3 but a full 16-byte SocketCAN payload; a
-        // dlc-based stride would desync the second record.
+    /// Two records whose first has dlc=3 but a full 16-byte SocketCAN
+    /// payload, with the pcap headers in little- or big-endian order.
+    fn two_record_pcap(little_endian: bool) -> Vec<u8> {
+        let word = |v: u32| {
+            if little_endian {
+                v.to_le_bytes()
+            } else {
+                v.to_be_bytes()
+            }
+        };
+        let half = |v: u16| {
+            if little_endian {
+                v.to_le_bytes()
+            } else {
+                v.to_be_bytes()
+            }
+        };
         let mut b = Vec::new();
-        b.extend_from_slice(&PCAP_MAGIC_US.to_le_bytes());
-        b.extend_from_slice(&[0u8; 20]);
+        b.extend_from_slice(&word(PCAP_MAGIC_US));
+        b.extend_from_slice(&half(2)); // version 2.4
+        b.extend_from_slice(&half(4));
+        b.extend_from_slice(&word(0)); // thiszone
+        b.extend_from_slice(&word(0)); // sigfigs
+        b.extend_from_slice(&word(65_535)); // snaplen
+        b.extend_from_slice(&word(227)); // LINKTYPE_CAN_SOCKETCAN
         for dlc in [3u8, 8u8] {
-            b.extend_from_slice(&1_502_984_881u32.to_le_bytes());
-            b.extend_from_slice(&0u32.to_le_bytes());
-            b.extend_from_slice(&16u32.to_le_bytes());
-            b.extend_from_slice(&16u32.to_le_bytes());
+            b.extend_from_slice(&word(1_502_984_881));
+            b.extend_from_slice(&word(664_000));
+            b.extend_from_slice(&word(16));
+            b.extend_from_slice(&word(16));
             b.extend_from_slice(&0x89F50B23u32.to_be_bytes());
             b.push(dlc);
             b.extend_from_slice(&[0, 0, 0]);
             b.extend_from_slice(&[0xaa, 0xbb, 0xcc, 0, 0, 0, 0, 0]);
         }
+        b
+    }
+
+    #[test]
+    fn short_dlc_advances_by_incl_len_not_dlc() {
+        // A dlc-based stride would desync the second record.
         let mut d = VecDeque::new();
-        d.push_back(Source::Plain(b));
+        d.push_back(Source::Plain(two_record_pcap(true)));
         let lines: Vec<_> = read_all(d).lines().map(String::from).collect();
         assert_eq!(lines.len(), 2);
         assert!(lines[0].ends_with(",3,aa,bb,cc"));
@@ -413,5 +452,29 @@ mod tests {
         assert!(is_container(Path::new("FOO.PCAP")));
         assert!(!is_container(Path::new("foo.raw")));
         assert!(!is_container(Path::new("foo.json")));
+    }
+
+    #[test]
+    fn big_endian_pcap_matches_little_endian() {
+        let little = two_record_pcap(true);
+        let big = two_record_pcap(false);
+        let expected = read_all(VecDeque::from([Source::Plain(little.clone())]));
+        assert_eq!(expected.lines().count(), 2);
+        // A non-zero fraction differs between the byte orders.
+        assert!(
+            expected
+                .lines()
+                .all(|l| l.starts_with("2017-08-17T15:48:01.664Z,")),
+            "got {expected}"
+        );
+        assert_eq!(
+            read_all(VecDeque::from([Source::Plain(big.clone())])),
+            expected
+        );
+        // Each source sets its own byte order.
+        assert_eq!(
+            read_all(VecDeque::from([Source::Plain(big), Source::Plain(little)])),
+            expected.repeat(2)
+        );
     }
 }
