@@ -38,7 +38,6 @@ limitations under the License.
 #include "license.h"
 
 #define FORMAT_DT "%Y-%m-%dT%H:%M:%S"
-#define FORMAT_MS "%d"
 
 int main(int argc, char **argv)
 {
@@ -46,6 +45,7 @@ int main(int argc, char **argv)
   struct tm tm;
   char     *r;
   int       ms;
+  int       i;
   uint64_t  now;
   uint64_t  prev = UINT64_C(0);
 
@@ -71,9 +71,13 @@ int main(int argc, char **argv)
     ms = 0;
 
     r = strptime(line, FORMAT_DT, &tm);
-    if (r)
+    if (r && *r == '.')
     {
-      sscanf(r + 1, FORMAT_MS, &ms);
+      r++;
+      for (i = 0; i < 3; i++)
+      {
+        ms = ms * 10 + (isdigit((unsigned char) *r) ? *r++ - '0' : 0);
+      }
     }
     now = timegm(&tm);
     logDebug("%-1.24s = %" PRIu64 " s r='%-1.10s'\n", line, now, r);

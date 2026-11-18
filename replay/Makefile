@@ -33,9 +33,20 @@ $(REPLAY): replay.c $(COMMON)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(REPLAY) -I../common replay.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
-	-rm -f $(TARGETS) *.elf *.gdb
+	-rm -f $(TARGETS) $(TESTDIR)/test-replay-fractions *.elf *.gdb
 
+
+# Test executables go beside the build directory, not in it: `make install`
+# installs everything in $(BUILDDIR).
+TESTDIR=$(TARGETDIR)-tests
 
 .PHONY: tests
-tests: $(REPLAY)
+tests: $(TESTDIR)/test-replay-fractions $(REPLAY)
+	$(TESTDIR)/test-replay-fractions
 	python3 tests/test_pipe_output.py $(REPLAY)
+
+$(TESTDIR):
+	mkdir -p $(TESTDIR)
+
+$(TESTDIR)/test-replay-fractions: tests/test_fractions.c replay.c $(COMMON) | $(TESTDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../common -o $@ tests/test_fractions.c ../common/common.c $(LDLIBS)
