@@ -1,5 +1,3 @@
-
-
 #
 # (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #
@@ -22,6 +20,7 @@ import csv
 import io
 import json
 import pathlib
+import shutil
 import subprocess
 import sys
 import unittest
@@ -30,6 +29,7 @@ PHP = sys.argv.pop(1) if len(sys.argv) > 1 else 'php'
 SCRIPT = pathlib.Path(__file__).resolve().parents[1] / 'analyzer2csv'
 
 
+@unittest.skipUnless(shutil.which(PHP), 'needs php')
 class CsvTests(unittest.TestCase):
     def convert(self, record, keys):
         line = json.dumps(record, ensure_ascii=False)
