@@ -36,9 +36,16 @@ clean:
 	-rm -f $(TARGETS) *.elf *.gdb
 
 
-.PHONY: tests
-tests: $(TARGETDIR)/test-replay-fractions
-	$(TARGETDIR)/test-replay-fractions
+# Test executables go beside the build directory, not in it: `make install`
+# installs everything in $(BUILDDIR).
+TESTDIR=$(TARGETDIR)-tests
 
-$(TARGETDIR)/test-replay-fractions: tests/test_fractions.c replay.c $(COMMON)
+.PHONY: tests
+tests: $(TESTDIR)/test-replay-fractions
+	$(TESTDIR)/test-replay-fractions
+
+$(TESTDIR):
+	mkdir -p $(TESTDIR)
+
+$(TESTDIR)/test-replay-fractions: tests/test_fractions.c replay.c $(COMMON) | $(TESTDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -I../common -o $@ tests/test_fractions.c ../common/common.c $(LDLIBS)
