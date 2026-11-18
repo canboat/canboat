@@ -309,7 +309,8 @@ pub fn run(
         if !synthetic && let Some(filter) = manufacturers.as_mut() {
             filter.set_coalesced(pre_coalesced.load(Ordering::Relaxed));
             if !filter.keep_frame(&frame) {
-                hubs.engine.note_device_seen(frame.pgn, frame.src);
+                hubs.engine
+                    .note_device_seen(frame.pgn, frame.src, &frame.data);
                 continue;
             }
         }
@@ -419,9 +420,11 @@ pub fn run(
             }
         }
 
-        // Feed the periodic claim/product-info request engine.
-        // Updates "last received" stamps for PGN 60928 and 126996.
-        hubs.engine.note_device_seen(decoded.pgn, decoded.src);
+        // Feed the claim/product-info request engine: "last received"
+        // stamps for PGN 60928, 126996 and 126998, and the answer or
+        // PGN 59392 refusal it waits for.
+        hubs.engine
+            .note_device_seen(decoded.pgn, decoded.src, &decoded.data);
 
         // Learn `src → NAME` for the per-device 0183 filter. The NAME
         // is the 64-bit ISO Address Claim identity, so even a device
