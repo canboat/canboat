@@ -130,7 +130,7 @@ this repository in v8 and is the [`canboat` crate](./crates/canboat/README.md).)
 | [nmea2000 Home Assistant integration](https://github.com/tomer-w/ha-nmea2000) | NMEA 2000 PGNs as Home Assistant devices and entities | through nmea2000 | v8.1.0 | 2026-10 |
 | [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) | Windows GUI | canboat.json downloaded from master at runtime | latest | 2026-07 |
 | [nmea2000-rs](https://github.com/herostrat/nmea2000-rs) | Rust NMEA 2000 decoder and encoder | code generated from canboat.json at build time | v6.1.3 | 2026-02 |
-| [open-ships n2k](https://github.com/open-ships/n2k) | Go NMEA 2000 library and bus node | Go types, decoders and encoders generated from a vendored canboat.json | v9.0.0 | 2026-10 |
+| [open-ships n2k](https://github.com/open-ships/n2k) | Go NMEA 2000 library and bus node | Generates Go types, decoders and encoders from a vendored canboat.json, including support for nested B&G H5000 calibration tables | v10.0.0 | [2026-11](https://github.com/open-ships/n2k/releases/tag/v1.12.0) |
 | [pgntui](https://github.com/phobicdotno/pgntui) | Terminal UI for NMEA 2000 (Python) | vendored canboat.json | v6.2.0 | 2026-06 |
 | [signalk-server-go](https://github.com/wdantuma/signalk-server-go) | Signal K server in Go | decodes NMEA 2000 with a vendored canboat.xml | v6.2.2 | 2026-09 |
 | [Smart Boat Innovations integrations](https://github.com/SmartBoatInnovations) | [ha-smart2000usb](https://github.com/SmartBoatInnovations/ha-smart2000usb) and [ha-smart2000esp](https://github.com/SmartBoatInnovations/ha-smart2000esp): NMEA 2000 into Home Assistant over USB-CAN or an ESP32 | decoders generated from canboat.json | v5.0.3 | 2026-04 |
