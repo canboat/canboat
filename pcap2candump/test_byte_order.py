@@ -27,14 +27,14 @@ class ByteOrderTests(unittest.TestCase):
             header = struct.pack(order + 'IHHIIII', 0xa1b2c3d4, 2, 4, 0, 0, 65535, 227)
             return header + b''.join(struct.pack(order + 'IIII', 1700000000 + i, 123456, 16, 16) + struct.pack('>IBBBB8s', 0x09f119cc, 8, 0, 0, 0, bytes(range(8))) for i in range(2))
 
-        expected = ''.join(f'({1700000000 + i}.123456) slcan0 9f119cc#0001020304050607\n' for i in range(2))
+        expected = ''.join(f'({1700000000 + i}.123456) slcan0 09F119CC#0001020304050607\n' for i in range(2))
         # One process, big-endian first: the second file must not inherit its byte order.
         self.assertEqual(self.convert(capture('>'), capture('<')), expected * 2)
 
     def test_payload_longer_than_eight_bytes_is_kept(self):
         header = struct.pack('>IHHIIII', 0xa1b2c3d4, 2, 4, 0, 0, 65535, 227)
         record = struct.pack('>IIII', 1700000000, 1, 72, 72) + struct.pack('>IBBBB64s', 0x09f119cc, 12, 0, 0, 0, bytes(range(64)))
-        self.assertEqual(self.convert(header + record), '(1700000000.000001) slcan0 9f119cc#' + bytes(range(12)).hex() + '\n')
+        self.assertEqual(self.convert(header + record), '(1700000000.000001) slcan0 09F119CC#' + bytes(range(12)).hex() + '\n')
 
     def test_short_record_payload_stops_at_captured_length(self):
         # A snaplen of 9 keeps the SocketCAN header and one payload byte of
@@ -48,7 +48,7 @@ class ByteOrderTests(unittest.TestCase):
                 capture.write(header + body)
                 capture.flush()
                 result = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name('pcap2candump.py')), capture.name], capture_output=True, text=True, check=True)
-                self.assertEqual(result.stdout, '(1700000000.000001) slcan0 9f119cc#aa\n(1700000000.000002) slcan0 9f119cc#bb\n(1700000000.000003) slcan0 9f119cc#\n')
+                self.assertEqual(result.stdout, '(1700000000.000001) slcan0 09F119CC#aa\n(1700000000.000002) slcan0 09F119CC#bb\n(1700000000.000003) slcan0 09F119CC#\n')
 
 
 if __name__ == '__main__':

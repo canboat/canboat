@@ -58,7 +58,13 @@ for fileName in sys.argv[1:]:
             #
             # (1502984883.726457) slcan0 09F119CC#FF765ACBF7FA04FF
             #
-            print(f"({timestamp}.{nano:06d}) slcan0 {canid:x}#", end = "")
+            # SocketCAN stores flags in the upper bits. candump represents
+            # extended identifiers by their width, not by the EFF flag.
+            identifier = canid & 0x1FFFFFFF
+            if canid & 0x20000000:  # Error frames retain CAN_ERR_FLAG.
+                identifier |= 0x20000000
+            width = 8 if canid & 0xA0000000 or identifier > 0x7FF else 3
+            print(f"({timestamp}.{nano:06d}) slcan0 {identifier:0{width}X}#", end = "")
             for b in data:
                 print(f"{b:02x}", end = "")
             print()
