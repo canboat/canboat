@@ -97,3 +97,15 @@ samples:
     accumulatedOnPeriod: 22203452
     accumulatedErrorPeriod: 13149351
     switchStatus: "On"
+- raw: "2023-01-01-00:00:00.000,6,130837,110,255,23,89,98,d2,06,ff,ff,ff,ff,ff,ff,e0,c6,95,09,1a,bf,00,00,86,55,92,03,fe"  # from maretron-sim100-input-error.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 210
+    indicatorNumber: 6
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 160810720
+    accumulatedOnPeriod: 48922
+    accumulatedErrorPeriod: 59921798
+    switchStatus: "Error"

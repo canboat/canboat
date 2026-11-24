@@ -3521,7 +3521,8 @@
         "MaxValue":3,
         "EnumValues":[
           {"Name":"Off", "Value":0},
-          {"Name":"On", "Value":1}
+          {"Name":"On", "Value":1},
+          {"Name":"Error", "Value":2}
         ]
       },
       {

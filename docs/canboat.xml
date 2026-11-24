@@ -2930,6 +2930,7 @@ limitations under the License.
     <LookupEnumeration Name="OFF_ON" MaxValue="3">
       <EnumPair Value="0" Name="Off" />
       <EnumPair Value="1" Name="On" />
+      <EnumPair Value="2" Name="Error" />
     </LookupEnumeration>
     <LookupEnumeration Name="OFF_ON_CONTROL" MaxValue="3">
       <EnumPair Value="0" Name="Off" />

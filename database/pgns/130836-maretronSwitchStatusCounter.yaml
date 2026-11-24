@@ -97,3 +97,15 @@ samples:
     onCounter: ~
     errorCounter: ~
     switchStatus: ~
+- raw: "2023-01-01-00:00:00.000,6,130836,110,255,23,89,98,d2,04,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,fe"  # from maretron-sim100-input-error.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 210
+    indicatorNumber: 4
+    startDate: ~
+    startTime: ~
+    offCounter: ~
+    onCounter: ~
+    errorCounter: ~
+    switchStatus: "Error"

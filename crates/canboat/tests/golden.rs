@@ -372,12 +372,25 @@ fn pgn_below_range_min_json() {
 
 /// A lookup value the lookup does not name is a value unless it is one of
 /// the field's own sentinels (#1156, test-unnamed-lookup in
-/// analyzer/tests/Makefile): a 2-bit "error" of 2 is printed, not left out.
+/// analyzer/tests/Makefile): 129540's 2-bit Range Residual Mode of 2 is
+/// printed, not left out.
 #[test]
 fn pgn_unnamed_lookup_json() {
     run_case(
         "pgn-unnamed-lookup.in",
         "pgn-unnamed-lookup.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
+/// A Maretron SIM100's inputs in error, 2 in a 2-bit OFF_ON field, in 127501
+/// and in 130836/130837's Switch Status (test-switch-error in
+/// analyzer/tests/Makefile).
+#[test]
+fn pgn_switch_error_json() {
+    run_case(
+        "pgn-switch-error.in",
+        "pgn-switch-error.out",
         &["--json", "--fixtime", "pgn-test"],
     );
 }
