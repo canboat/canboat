@@ -34,6 +34,11 @@ for fileName in sys.argv[1:]:
         elif magic != 0xa1b2c3d4:
             errprint("File", fileName + ": invalid magic")
             exit(1)
+        link_type, = struct.unpack_from(byte_order + "I", fileContent, 20)
+        link_type &= 0xffff  # The upper half contains additional PCAP information.
+        if link_type != 227:  # LINKTYPE_CAN_SOCKETCAN
+            errprint("File", fileName + ": unsupported link type", link_type)
+            exit(1)
         offset = 0x18
         # A record needs at least its 16-byte header and the 8-byte SocketCAN
         # header; the captured length check below bounds the rest.

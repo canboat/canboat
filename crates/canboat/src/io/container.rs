@@ -219,6 +219,17 @@ impl PcapPlainReader {
                     continue;
                 }
             };
+            let network = bytes[20..24].try_into().unwrap();
+            let link_type = if self.little_endian {
+                u32::from_le_bytes(network)
+            } else {
+                u32::from_be_bytes(network)
+            } & 0xffff;
+            if link_type != 227 {
+                // LINKTYPE_CAN_SOCKETCAN
+                log::warn!("container: skipping capture with unsupported link type {link_type}");
+                continue;
+            }
             self.cur = bytes;
             self.off = 24; // skip the 24-byte global header
             return Ok(true);
@@ -332,7 +343,8 @@ mod tests {
     fn one_record_pcap() -> Vec<u8> {
         let mut b = Vec::new();
         b.extend_from_slice(&PCAP_MAGIC_US.to_le_bytes());
-        b.extend_from_slice(&[0u8; 20]); // rest of global header
+        b.extend_from_slice(&[0u8; 16]); // version, timezone, accuracy, snaplen
+        b.extend_from_slice(&227u32.to_le_bytes()); // LINKTYPE_CAN_SOCKETCAN
         b.extend_from_slice(&1_502_984_881u32.to_le_bytes()); // ts_sec
         b.extend_from_slice(&664_000u32.to_le_bytes()); // ts_usec
         b.extend_from_slice(&16u32.to_le_bytes()); // incl_len
@@ -476,5 +488,51 @@ mod tests {
             read_all(VecDeque::from([Source::Plain(big), Source::Plain(little)])),
             expected.repeat(2)
         );
+    }
+    #[test]
+    fn unsupported_link_types_are_skipped_before_reading_packets() {
+        for little_endian in [true, false] {
+            for link_type in [0u32, 1, 113, 228] {
+                let mut bad = two_record_pcap(little_endian);
+                let bytes = if little_endian {
+                    link_type.to_le_bytes()
+                } else {
+                    link_type.to_be_bytes()
+                };
+                bad[20..24].copy_from_slice(&bytes);
+                let good = two_record_pcap(!little_endian);
+                let expected = read_all(VecDeque::from([Source::Plain(good.clone())]));
+                assert_eq!(
+                    read_all(VecDeque::from([
+                        Source::Plain(bad.clone()),
+                        Source::Plain(good.clone())
+                    ])),
+                    expected
+                );
+                assert_eq!(
+                    read_all(VecDeque::from([
+                        Source::Gz(gzip(&bad)),
+                        Source::Gz(gzip(&good))
+                    ])),
+                    expected
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn socketcan_link_type_ignores_additional_information_bits() {
+        for little_endian in [true, false] {
+            let mut capture = two_record_pcap(little_endian);
+            let expected = read_all(VecDeque::from([Source::Plain(capture.clone())]));
+            // FCS-length-present flag with a zero FCS length, outside LinkType.
+            let network = 227u32 | (1 << 26);
+            capture[20..24].copy_from_slice(&if little_endian {
+                network.to_le_bytes()
+            } else {
+                network.to_be_bytes()
+            });
+            assert_eq!(read_all(VecDeque::from([Source::Plain(capture)])), expected);
+        }
     }
 }
