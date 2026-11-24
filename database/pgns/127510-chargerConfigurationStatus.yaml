@@ -17,7 +17,7 @@ fields:
   name: Charger Enable/Disable
   type: LOOKUP
   bits: 2
-  lookup: OFF_ON
+  lookup: OFF_ON_CONTROL
 - id: reserved
   name: Reserved
   type: RESERVED
@@ -45,12 +45,12 @@ fields:
   name: Equalize One Time Enable/Disable
   type: LOOKUP
   bits: 2
-  lookup: OFF_ON
+  lookup: OFF_ON_CONTROL
 - id: overChargeEnableDisable
   name: Over Charge Enable/Disable
   type: LOOKUP
   bits: 2
-  lookup: OFF_ON
+  lookup: OFF_ON_CONTROL
 - id: equalizeTime
   name: Equalize Time
   type: DURATION_UFIX16_MIN
