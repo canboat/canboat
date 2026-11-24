@@ -383,6 +383,20 @@ mod imp {
     /// historical `ip link … restart-ms 100`).
     const CAN_RESTART_MS: u32 = 100;
 
+    fn bring_up_with_restart<E: std::fmt::Display>(
+        iface: &str,
+        set_restart: impl FnOnce() -> Result<(), E>,
+        bring_up: impl FnOnce() -> Result<(), E>,
+    ) -> Result<(), E> {
+        if let Err(e) = set_restart() {
+            log::warn!(
+                "CAN {iface}: could not enable automatic bus-off restart: {e}; \
+                 continuing without it (bus-off may require manual recovery)"
+            );
+        }
+        bring_up()
+    }
+
     /// Configure and bring up a SocketCAN link via netlink (RTM_NEWLINK),
     /// replacing an external `ip link set … up type can bitrate 250000 …`
     /// unit. A CAN controller must be *down* to set its bit timing, so we
@@ -406,15 +420,17 @@ mod imp {
             // resets a controller left half-configured by a prior failed
             // bring-up. An already-down interface makes this a no-op.
             let _ = ci.bring_down();
-            let result = ci
-                .set_bitrate(bitrate, None::<u32>)
-                .and_then(|()| ci.set_restart_ms(CAN_RESTART_MS))
-                .and_then(|()| ci.bring_up());
+            let result = ci.set_bitrate(bitrate, None::<u32>).and_then(|()| {
+                bring_up_with_restart(
+                    iface,
+                    || ci.set_restart_ms(CAN_RESTART_MS),
+                    || ci.bring_up(),
+                )
+            });
             match result {
                 Ok(()) => {
                     log::info!(
-                        "CAN {iface}: configured {bitrate} bit/s, \
-                         restart-ms {CAN_RESTART_MS}, link up (attempt {attempt})"
+                        "CAN {iface}: configured {bitrate} bit/s, link up (attempt {attempt})"
                     );
                     return;
                 }
@@ -791,6 +807,57 @@ mod imp {
 
     #[cfg(test)]
     mod tests {
+        #[test]
+        fn restart_rejection_does_not_prevent_bring_up() {
+            let mut raised = false;
+            let result = super::bring_up_with_restart(
+                "test-can",
+                || Err("restart is unsupported"),
+                || {
+                    raised = true;
+                    Ok(())
+                },
+            );
+            assert!(raised, "restart rejection must not leave the link down");
+            assert_eq!(result, Ok(()));
+        }
+
+        #[test]
+        fn successful_restart_is_configured_before_bring_up() {
+            let calls = std::cell::RefCell::new(Vec::new());
+            let result: Result<(), &str> = super::bring_up_with_restart(
+                "test-can",
+                || {
+                    calls.borrow_mut().push("restart");
+                    Ok(())
+                },
+                || {
+                    calls.borrow_mut().push("up");
+                    Ok(())
+                },
+            );
+            assert_eq!(result, Ok(()));
+            assert_eq!(*calls.borrow(), vec!["restart", "up"]);
+        }
+
+        #[test]
+        fn bring_up_failure_is_not_hidden_by_restart_result() {
+            for restart_ok in [true, false] {
+                let result = super::bring_up_with_restart(
+                    "test-can",
+                    || {
+                        if restart_ok {
+                            Ok(())
+                        } else {
+                            Err("restart is unsupported")
+                        }
+                    },
+                    || Err("bring-up failed"),
+                );
+                assert_eq!(result, Err("bring-up failed"));
+            }
+        }
+
         use super::*;
         use crate::engine::format::{iso11783_compose, iso11783_decompose};
         use crate::engine::iso_tp::PGN_TP_CM;
