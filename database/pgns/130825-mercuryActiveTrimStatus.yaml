@@ -1,0 +1,81 @@
+pgn: 130825
+id: mercuryActiveTrimStatus
+description: 'Mercury: Active Trim Status'
+type: Fast
+variantOrder: 0
+priority: 7
+explanation: |-
+  Mercury command channel opcode 7: the Active Trim status report. Tried before the general Mercury
+  command/response definition. Profiles run 0 to 4 and are shown to the user as 1 to 5; a higher profile
+  trims more aggressively. The major profile is the average of the running profile, which can be changed
+  underway.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: opcode
+  name: Opcode
+  type: LOOKUP
+  bits: 8
+  match: 7
+  lookup: MERCURY_COMMAND_OPCODE
+  primaryKey: true
+- id: targetInstance
+  name: Target Instance
+  type: UINT8
+  description: Active Trim module the report is for; not available (0xFF) addresses all
+- id: configurationMode
+  name: Configuration Mode
+  type: LOOKUP
+  bits: 8
+  lookup: MERCURY_ACTIVE_TRIM_STATE
+  description: Whether an Active Trim module is detected, and if so whether it is in configuration mode
+- id: majorProfile
+  name: Major Profile
+  type: UINT8
+  description: 0 .. 4, shown as profile 1 .. 5
+- id: runningProfile
+  name: Running Profile
+  type: UINT8
+  description: 0 .. 4, shown as profile 1 .. 5
+- id: statusFlags
+  name: Status Flags
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: MERCURY_ACTIVE_TRIM_STATUS
+  description: Engaged clear = Off
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130825,1,255,8,40,08,90,98,07,ff,02,00"
+  - "2023-01-01-00:00:00.000,7,130825,1,255,3,41,00,00"
+  expects:
+    manufacturerCode: "Mercury Marine"
+    opcode: 7
+    targetInstance: ~
+    configurationMode: "Not Detected"
+    majorProfile: 0
+    runningProfile: 0
+    statusFlags: []
+- raw:
+  - "2023-01-01-00:00:00.000,7,130825,1,255,8,60,08,90,98,07,00,02,00"
+  - "2023-01-01-00:00:00.000,7,130825,1,255,3,61,00,00"
+  expects:
+    manufacturerCode: "Mercury Marine"
+    opcode: 7
+    targetInstance: 0
+    configurationMode: "Not Detected"

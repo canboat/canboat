@@ -1,0 +1,10 @@
+name: MERCURY_ACTIVE_TRIM_STATUS
+kind: bit
+bits: 8
+values:
+  0: Engaged
+  1: No GPS
+  2: Fault
+  3: Override
+  4: Trim Too High
+  7: Profile Adjustment Locked
