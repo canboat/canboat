@@ -1,0 +1,46 @@
+pgn: 130825
+id: mercuryOilLevelResetResponse
+description: 'Mercury: Oil Level Reset Response'
+type: Fast
+variantOrder: 8
+priority: 7
+missing:
+- Fields
+- SampleData
+explanation: |-
+  Mercury command channel opcode 13. Tried before the general Mercury command/response definition.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: opcode
+  name: Opcode
+  type: LOOKUP
+  bits: 8
+  match: 13
+  lookup: MERCURY_COMMAND_OPCODE
+  description: Oil Level Reset Response
+  primaryKey: true
+- id: nonZeroInstance
+  name: Non-Zero Instance
+  type: UINT8
+  description: 1 when the engine instance is not 0, else 0
+- id: data
+  name: Data
+  type: BINARY
+  bits: 24
