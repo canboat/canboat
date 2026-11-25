@@ -441,35 +441,47 @@ mod tests {
     }
 
     /// A bus frame resets the clock; a frame canboat made does not, and
-    /// once the time is up reading ends with an error.
+    /// once the time is up reading ends with an error. The test sets the
+    /// clock rather than timing frames sent from a thread, so only a stall
+    /// of seconds could fail it.
     #[test]
     fn a_silent_bus_times_out() {
         let (tx, mut rx) = mpsc::channel();
-        let mut idle = Idle::new(&mut rx, 1);
         tx.send(frame(127508)).unwrap();
-        assert_eq!(idle.read_frame().unwrap().unwrap().pgn, 127508);
-        let start = Instant::now();
-        let sender = thread::spawn(move || {
-            for _ in 0..3 {
-                thread::sleep(Duration::from_millis(200));
-                let _ = tx.send(frame(262400));
-            }
-            thread::sleep(Duration::from_secs(2));
-            drop(tx);
+        tx.send(frame(262400)).unwrap();
+        let mut idle = Idle::new(&mut rx, 10);
+        let timeout = Duration::from_secs(10);
+        assert_eq!(idle.timeout, Some(timeout));
+        let ago = |d: Duration| Instant::now().checked_sub(d).unwrap();
+        // Should reading never time out, the sender goes after a while, so
+        // that the test fails rather than hangs.
+        let (done, wait) = mpsc::channel::<()>();
+        thread::scope(|s| {
+            s.spawn(move || {
+                let _ = wait.recv_timeout(timeout * 3);
+                drop(tx);
+            });
+            let earlier = ago(timeout / 2);
+            idle.last = earlier;
+            assert_eq!(idle.read_frame().unwrap().unwrap().pgn, 127508);
+            assert!(idle.last > earlier);
+            idle.last = earlier;
+            assert_eq!(idle.read_frame().unwrap().unwrap().pgn, 262400);
+            assert_eq!(idle.last, earlier);
+            // Once the timeout has passed since the bus was last heard,
+            // reading ends at once; before then, it waits for the rest.
+            idle.last = ago(timeout);
+            let start = Instant::now();
+            let err = idle.read_frame().expect_err("the time is up");
+            assert_eq!(err.kind(), io::ErrorKind::TimedOut);
+            assert!(start.elapsed() < timeout / 2);
+            let last = ago(timeout - Duration::from_millis(100));
+            idle.last = last;
+            let err = idle.read_frame().expect_err("the time is up");
+            assert_eq!(err.kind(), io::ErrorKind::TimedOut);
+            assert!(last.elapsed() >= timeout);
+            drop(done);
         });
-        let mut synthetic = 0;
-        let err = loop {
-            match idle.read_frame() {
-                Ok(Some(_)) => synthetic += 1,
-                Ok(None) => panic!("ended without a timeout"),
-                Err(e) => break e,
-            }
-        };
-        assert_eq!(synthetic, 3);
-        assert_eq!(err.kind(), io::ErrorKind::TimedOut);
-        let waited = start.elapsed();
-        assert!(waited >= Duration::from_millis(900) && waited < Duration::from_millis(1500));
-        sender.join().unwrap();
     }
 
     /// With --rx-filter, only the named PGNs, network management and
