@@ -430,8 +430,11 @@ chain. Add a new FieldType **before** referencing it.
 
 **Proprietary PGNs** start with the company preamble — `manufacturerCode`
 (11 bits, `lookup: MANUFACTURER_CODE`), `reserved` (2), `industryCode`
-(3, `lookup: INDUSTRY_CODE`) — each with a `match:` value and `primaryKey:
-true`. The editor inserts this automatically from the PGN range. When several
+(3, `lookup: INDUSTRY_CODE`) — with a `match:` value on `manufacturerCode`
+and `industryCode`. The editor inserts this automatically from the PGN range.
+The preamble does not take `primaryKey`: that marks fields that tell one
+object's records from another's (an instance, a source id, an MMSI), and the
+preamble is the same for every record of a variant. When several
 messages share a PRN, disambiguate with a `match:` value on the discriminating
 field(s); a variant with no match fields is the greedy fallback and must sort
 last.

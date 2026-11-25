@@ -1007,10 +1007,10 @@ function repEndRow(k) {
 function addProprietaryPreamble() {
   fieldsState.unshift(
     { id: "manufacturerCode", name: "Manufacturer Code", type: "LOOKUP", bits: 11,
-      lookup: "MANUFACTURER_CODE", match: detectPreamble(0, 11), primaryKey: true },
+      lookup: "MANUFACTURER_CODE", match: detectPreamble(0, 11) },
     { id: "reserved", name: "Reserved", type: "RESERVED", bits: 2 },
     { id: "industryCode", name: "Industry Code", type: "LOOKUP", bits: 3,
-      lookup: "INDUSTRY_CODE", match: detectPreamble(13, 3), primaryKey: true },
+      lookup: "INDUSTRY_CODE", match: detectPreamble(13, 3) },
   );
   renderAll();
 }
