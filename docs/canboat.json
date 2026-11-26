@@ -82005,7 +82005,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MERCURY_COMMAND_OPCODE"
+            "LookupEnumeration":"MERCURY_COMMAND_OPCODE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,

@@ -36,6 +36,7 @@ fields:
   description: Cruise Control
   match: 4
   lookup: MERCURY_COMMAND_OPCODE
+  primaryKey: true
 - id: engineInstance
   name: Engine Instance
   type: UINT8
