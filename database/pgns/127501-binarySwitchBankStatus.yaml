@@ -242,3 +242,13 @@ samples:
     indicator26: "Off"
     indicator27: "Off"
     indicator28: "Off"
+- raw: "2023-01-01-00:00:00.000,3,127501,110,255,8,d2,aa,fa,ff,ff,ff,ff,ff"  # from maretron-sim100-input-error.raw
+  expects:
+    instance: 210
+    indicator1: "Error"
+    indicator2: "Error"
+    indicator3: "Error"
+    indicator4: "Error"
+    indicator5: "Error"
+    indicator6: "Error"
+    indicator7: ~

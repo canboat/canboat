@@ -2,9 +2,10 @@
 
 #
 # A lookup value the lookup does not name is a value unless it is one of
-# the field's own sentinels (#1156): 127501's 2-bit Indicator11 of 2
-# ("error"), 129540's Range Residual Mode 2, 129038's Nav Status 13 and
-# a catch-all's Industry Code 6 are printed as numbers.
+# the field's own sentinels (#1156): 129540's Range Residual Mode 2,
+# 129038's Nav Status 13 and a catch-all's Industry Code 6 are printed as
+# numbers. 127501's 2-bit Indicator11 of 2 is the error its OFF_ON lookup
+# names.
 #
 .PHONY: test-unnamed-lookup
 tests: test-unnamed-lookup

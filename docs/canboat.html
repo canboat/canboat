@@ -9440,10 +9440,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Battery Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Charger Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Charger Enable/Disable</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>6 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Charge Current Limit</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -9456,13 +9456,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-CHARGER_MODE">CHARGER_MODE</a></td><td/></tr><tr><td>8</td><td>Estimated Temperature</td><td>If there is no battery temperature sensor the charger will use this field to steer the charging algorithm</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-DEVICE_TEMP_STATE">DEVICE_TEMP_STATE</a></td><td/></tr><tr><td>9</td><td>Equalize One Time Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-DEVICE_TEMP_STATE">DEVICE_TEMP_STATE</a></td><td/></tr><tr><td>9</td><td>Equalize One Time Enable/Disable</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>10</td><td>Over Charge Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>10</td><td>Over Charge Enable/Disable</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>11</td><td>Equalize Time</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931920</div></td><td>16 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>11</td><td>Equalize Time</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 3931920</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-127511">0x1F217:
@@ -9489,16 +9489,16 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>DC Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Inverter Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Inverter Enable/Disable</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>5</td><td>Inverter Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>5</td><td>Inverter Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-INVERTER_MODE">INVERTER_MODE</a></td><td/></tr><tr><td>6</td><td>Load Sense Enable/Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-INVERTER_MODE">INVERTER_MODE</a></td><td/></tr><tr><td>6</td><td>Load Sense Enable/Disable</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>7</td><td>Load Sense Power Threshold</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>7</td><td>Load Sense Power Threshold</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Load Sense Interval</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -25399,7 +25399,7 @@ Tried before the general Mercury command/response definition.</p><p>
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Under way using engine</td></tr><tr><td>1</td><td>At anchor</td></tr><tr><td>2</td><td>Not under command</td></tr><tr><td>3</td><td>Restricted maneuverability</td></tr><tr><td>4</td><td>Constrained by her draught</td></tr><tr><td>5</td><td>Moored</td></tr><tr><td>6</td><td>Aground</td></tr><tr><td>7</td><td>Engaged in Fishing</td></tr><tr><td>8</td><td>Under way sailing</td></tr><tr><td>9</td><td>Hazardous material - High Speed</td></tr><tr><td>10</td><td>Hazardous material - Wing in Ground</td></tr><tr><td>11</td><td>Power-driven vessel towing astern</td></tr><tr><td>12</td><td>Power-driven vessel pushing ahead or towing alongside</td></tr><tr><td>14</td><td>AIS-SART</td></tr></table><h3 id="lookup-OFF_ON">OFF_ON
         (0 - 3)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr></table><h3 id="lookup-OFF_ON_CONTROL">OFF_ON_CONTROL
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Error</td></tr></table><h3 id="lookup-OFF_ON_CONTROL">OFF_ON_CONTROL
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Reserved</td></tr><tr><td>3</td><td>Take no action (no change)</td></tr></table><h3 id="lookup-OK_WARNING">OK_WARNING
         (0 - 3)

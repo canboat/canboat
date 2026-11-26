@@ -3521,7 +3521,8 @@
         "MaxValue":3,
         "EnumValues":[
           {"Name":"Off", "Value":0},
-          {"Name":"On", "Value":1}
+          {"Name":"On", "Value":1},
+          {"Name":"Error", "Value":2}
         ]
       },
       {
@@ -38005,10 +38006,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
-            "UnknownValue":3,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":4,
@@ -38097,10 +38097,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
-            "UnknownValue":3,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":10,
@@ -38112,10 +38111,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
-            "UnknownValue":3,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":11,
@@ -38209,10 +38207,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
-            "UnknownValue":3,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":5,
@@ -38240,10 +38237,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
-            "UnknownValue":3,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":7,
