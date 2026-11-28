@@ -82119,6 +82119,7 @@ underway.</Explanation>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MERCURY_COMMAND_OPCODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
