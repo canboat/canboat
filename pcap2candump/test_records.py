@@ -37,7 +37,7 @@ class CaptureRecordsTests(unittest.TestCase):
                     data = bytes(range(length))
                     payload = struct.pack('>IBBBB8s', 0x09f119cc, length, 0, 0, 0, data.ljust(8, b'\0'))
                     records.append(struct.pack('<IIII', 1700000000 + i, 123456, len(payload), len(payload)) + payload)
-                    expected.append(f'({1700000000 + i}.123456) slcan0 9f119cc#{data.hex()}')
+                    expected.append(f'({1700000000 + i}.123456) slcan0 09F119CC#{data.hex()}')
                 capture.write(header + b''.join(records))
                 capture.flush()
                 result = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name('pcap2candump.py')), capture.name], capture_output=True, text=True, check=True)
