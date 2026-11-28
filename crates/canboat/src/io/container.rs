@@ -269,16 +269,22 @@ impl PcapPlainReader {
                 continue;
             }
 
+            self.off = rec + incl_len;
+            let canid =
+                u32::from_be_bytes(self.cur[rec..rec + 4].try_into().unwrap()) & CAN_EFF_MASK;
+            // Match candump2analyzer: standard CAN identifiers are not NMEA 2000.
+            if canid <= 0x7ff {
+                continue;
+            }
             let frame = {
-                let canid =
-                    u32::from_be_bytes(self.cur[rec..rec + 4].try_into().unwrap()) & CAN_EFF_MASK;
                 let dlc = (self.cur[rec + 4] as usize).min(incl_len - 8).min(8);
                 let data = &self.cur[rec + 8..rec + 8 + dlc];
                 let (prio, pgn, src, dst) = iso11783_decompose(canid);
-                let ts = format_plain_ts(ts_sec as u64 * 1000 + (ts_usec as u64) / 1000);
+                let ts = format_plain_ts(
+                    ts_sec as u64 * 1000 + (f64::from(ts_usec) / 1000.0).round_ties_even() as u64,
+                );
                 RawFrame::new(Some(ts), prio, pgn, src, dst, data.iter().copied())
             };
-            self.off = rec + incl_len;
 
             self.line.clear();
             let _ = write_line(&mut self.line, &frame);
@@ -476,5 +482,64 @@ mod tests {
             read_all(VecDeque::from([Source::Plain(big), Source::Plain(little)])),
             expected.repeat(2)
         );
+    }
+    #[test]
+    fn standard_frames_are_skipped_without_losing_following_records() {
+        for little in [false, true] {
+            for id in [0u32, 0x123, 0x7ff, 0x8000_0123] {
+                let mut capture = two_record_pcap(little);
+                capture[40..44].copy_from_slice(&id.to_be_bytes());
+                let output = read_all(VecDeque::from([Source::Plain(capture.clone())]));
+                assert_eq!(output.lines().count(), 1, "{output}");
+                assert!(output.contains(",128267,35,255,8,"), "{output}");
+                capture[72..76].copy_from_slice(&id.to_be_bytes());
+                assert!(read_all(VecDeque::from([Source::Plain(capture)])).is_empty());
+            }
+            let mut capture = two_record_pcap(little);
+            capture[40..44].copy_from_slice(&0x800u32.to_be_bytes());
+            assert_eq!(
+                read_all(VecDeque::from([Source::Plain(capture)]))
+                    .lines()
+                    .count(),
+                2
+            );
+        }
+    }
+
+    #[test]
+    fn timestamps_round_to_nearest_even_millisecond_and_carry() {
+        let cases = [
+            (499u32, "01.000"),
+            (500, "01.000"),
+            (501, "01.001"),
+            (1499, "01.001"),
+            (1500, "01.002"),
+            (1501, "01.002"),
+            (123499, "01.123"),
+            (123500, "01.124"),
+            (124500, "01.124"),
+            (999499, "01.999"),
+            (999500, "02.000"),
+            (999900, "02.000"),
+        ];
+        for little in [false, true] {
+            for (usec, expected) in cases {
+                let mut capture = two_record_pcap(little);
+                let word = if little {
+                    usec.to_le_bytes()
+                } else {
+                    usec.to_be_bytes()
+                };
+                capture[28..32].copy_from_slice(&word);
+                capture[60..64].copy_from_slice(&word);
+                let output = read_all(VecDeque::from([Source::Plain(capture)]));
+                assert_eq!(output.lines().count(), 2);
+                let prefix = format!("2017-08-17T15:48:{expected}Z,");
+                assert!(
+                    output.lines().all(|line| line.starts_with(&prefix)),
+                    "usec={usec}, little={little}: {output}"
+                );
+            }
+        }
     }
 }
