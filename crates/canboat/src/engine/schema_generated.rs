@@ -17,7 +17,7 @@
 // ==========================================================================
 use crate::engine::types::{BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, LookupTable, LookupValue, PacketType, PgnInfo};
 pub const SCHEMA_VERSION: &str = "2.9.0";
-pub const VERSION: &str = "10.0.0";
+pub const VERSION: &str = "10.1.0";
 pub const COPYRIGHT_ID: &str = "(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.";
 /// Index of each entry in `PGNS_SI` / `PGNS_METRIC`, by PGN id.
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
