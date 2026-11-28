@@ -41,7 +41,7 @@ clean:
 
 # Test executables go beside the build directory, not in it: `make install`
 # installs everything in $(BUILDDIR).
-TESTDIR=$(TARGETDIR)-tests
+TESTDIR=$(abspath $(TARGETDIR))-tests
 
 .PHONY: tests
 tests: $(TESTDIR)/test-replay-fractions $(REPLAY)
